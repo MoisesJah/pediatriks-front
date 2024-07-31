@@ -1,0 +1,171 @@
+<!-- Modal para agregar nuevo evento -->
+<div *ngIf="!event" class="modal-header">
+  <h4 class="modal-title">Agregar Cita</h4>
+  <button type="button" class="close" aria-label="Close" (click)="closeModal()">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+
+<div *ngIf="!event" class="modal-body">
+  <form [formGroup]="eventForm">
+    <div class="form-group mb-3">
+      <label for="therapy_type">Seleccionar Tipo de Terapia</label>
+      <select class="form-control" id="therapy_type" formControlName="therapyType">
+        <option value="" disabled>Seleccionar Tipo de Terapia</option>
+        <option *ngFor="let option of therapyOptions" [value]="option">{{ option }}</option>
+      </select>
+    </div>
+    <div class="form-group mb-3">
+      <label for="calendar_event_description">Descripción de la Cita</label>
+      <input type="text" class="form-control" id="calendar_event_description" formControlName="eventDescription"/>
+    </div>
+    <div class="form-group mb-3">
+      <label for="patient_selection">Seleccionar Paciente</label>
+      <select class="form-control" id="patient_selection" formControlName="selectedPatient">
+        <option value="" disabled>Seleccionar Paciente</option>
+        <option *ngFor="let option of patientOptions" [value]="option">{{ option }}</option>
+      </select>
+    </div>
+    <div class="form-group mb-3">
+      <label for="calendar_event_location">Ubicación de la Cita</label>
+      <input type="text" class="form-control" id="calendar_event_location" formControlName="eventLocation"/>
+    </div>
+    <div class="form-group mb-3">
+      <label for="kt_calendar_datepicker_date">Fecha de Inicio</label>
+      <input type="text" class="form-control" id="kt_calendar_datepicker_date" formControlName="startDate" #datePicker placeholder="Seleccionar Fecha(s)"/>
+    </div>
+    <div class="form-group mb-3">
+      <label for="kt_calendar_datepicker_start_time">Hora de Inicio</label>
+      <input type="text" class="form-control" id="kt_calendar_datepicker_start_time" formControlName="startTime" #startTimePicker placeholder="Seleccionar Hora de Inicio"/>
+    </div>
+    <div class="form-group mb-3">
+      <label for="kt_calendar_datepicker_end_time">Hora de Fin</label>
+      <input type="text" class="form-control" id="kt_calendar_datepicker_end_time" formControlName="endTime" #endTimePicker placeholder="Seleccionar Hora de Fin"/>
+    </div>
+  </form>
+</div>
+
+<div *ngIf="!event" class="modal-footer">
+  <button type="button" class="btn btn-secondary" (click)="closeModal()">Cancelar</button>
+  <button type="button" class="btn btn-primary" (click)="submitEvent()">Guardar</button>
+</div>
+
+<!-- Modal para ver evento -->
+<div *ngIf="event" class="modal-content">
+  <!--begin::Modal header-->
+  <div class="modal-header border-0 justify-content-end">
+    <!--begin::Edit-->
+    <div class="btn btn-icon btn-sm btn-color-gray-500 btn-active-icon-primary me-2" data-bs-toggle="tooltip" title="Edit Event" id="kt_modal_view_event_edit" (click)="openEditModal()">
+      <i class="ki-duotone ki-pencil fs-2">
+        <span class="path1"></span>
+        <span class="path2"></span>
+      </i>
+    </div>
+    <!--end::Edit-->
+    <!--begin::Delete-->
+    <div class="btn btn-icon btn-sm btn-color-gray-500 btn-active-icon-danger me-2" data-bs-toggle="tooltip" title="Delete Event" id="kt_modal_view_event_delete" (click)="deleteEvent()">
+      <i class="ki-duotone ki-trash fs-2">
+        <span class="path1"></span>
+        <span class="path2"></span>
+        <span class="path3"></span>
+        <span class="path4"></span>
+        <span class="path5"></span>
+      </i>
+    </div>
+    <!--end::Delete-->
+    <!--begin::Close-->
+    <div class="btn btn-icon btn-sm btn-color-gray-500 btn-active-icon-primary" data-bs-toggle="tooltip" title="Hide Event" (click)="closeModal()">
+      <i class="ki-duotone ki-cross fs-2x">
+        <span class="path1"></span>
+        <span class="path2"></span>
+      </i>
+    </div>
+    <!--end::Close-->
+  </div>
+  <!--end::Modal header-->
+  <!--begin::Modal body-->
+  <div class="modal-body pt-0 pb-20 px-lg-17">
+    <!--begin::Row-->
+    <div class="d-flex">
+      <!--begin::Icon-->
+      <i class="ki-duotone ki-calendar-8 fs-1 text-muted me-5">
+        <span class="path1"></span>
+        <span class="path2"></span>
+        <span class="path3"></span>
+        <span class="path4"></span>
+        <span class="path5"></span>
+        <span class="path6"></span>
+      </i>
+      <!--end::Icon-->
+      <div class="mb-9">
+        <!--begin::Event name-->
+        <div class="d-flex align-items-center mb-2">
+          <span class="fs-3 fw-bold" data-kt-calendar="event_name">{{event?.title}}</span>
+          <span *ngIf="event?.allDay" class="badge badge-light-success" data-kt-calendar="all_day">Todo el día</span>
+        </div>
+        <!--end::Event name-->
+        <!--begin::Event description-->
+        <div class="fs-6" data-kt-calendar="event_description">{{event?.description}}</div>
+        <!--end::Event description-->
+      </div>
+    </div>
+    <!--end::Row-->
+    <!--begin::Row-->
+    <div class="d-flex align-items-center mb-2">
+      <!--begin::Bullet-->
+      <span class="bullet bullet-dot h-10px w-10px bg-success ms-2 me-7"></span>
+      <!--end::Bullet-->
+      <!--begin::Event start date/time-->
+      <div class="fs-6">
+        <span class="fw-bold me-2">Inicia:</span>
+        <span data-kt-calendar="event_start_date">{{event?.start | date:'short'}}</span>
+      </div>
+      <!--end::Event start date/time-->
+    </div>
+    <!--end::Row-->
+    <!--begin::Row-->
+    <div class="d-flex align-items-center mb-9">
+      <!--begin::Bullet-->
+      <span class="bullet bullet-dot h-10px w-10px bg-danger ms-2 me-7"></span>
+      <!--end::Bullet-->
+      <!--begin::Event end date/time-->
+      <div class="fs-6">
+        <span class="fw-bold me-2">Termina:</span>
+        <span data-kt-calendar="event_end_date">{{event?.end ? (event.end | date:'short') : 'No especificado'}}</span>
+      </div>
+      <!--end::Event end date/time-->
+    </div>
+    <!--end::Row-->
+    <!--begin::Row-->
+    <div class="d-flex align-items-center mb-2">
+      <!--begin::Icon-->
+      <i class="ki-duotone ki-user fs-1 text-muted me-5">
+        <span class="path1"></span>
+        <span class="path2"></span>
+      </i>
+      <!--end::Icon-->
+      <!--begin::Event patient-->
+      <div class="fs-6" data-kt-calendar="event_patient">{{event?.selectedPatient}}</div>
+      <!--end::Event patient-->
+    </div>
+    <!--end::Row-->
+    <!--begin::Row-->
+    <div class="d-flex align-items-center">
+      <!--begin::Icon-->
+      <i class="ki-duotone ki-geolocation fs-1 text-muted me-5">
+        <span class="path1"></span>
+        <span class="path2"></span>
+      </i>
+      <!--end::Icon-->
+      <!--begin::Event location-->
+      <div class="fs-6" data-kt-calendar="event_location">{{event?.location}}</div>
+      <!--end::Event location-->
+    </div>
+    <!--end::Row-->
+  </div>
+  <!--end::Modal body-->
+</div>
+
+
+
+

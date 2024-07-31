@@ -1,0 +1,51 @@
+<!-- Modal para editar evento -->
+<div *ngIf="event && isEditMode" class="modal-edit">
+  <div class="modal-header">
+    <h4 class="modal-title">Editar Cita</h4>
+    <button type="button" class="close" aria-label="Close" (click)="closeModal()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="editEventForm">
+      <div class="form-group mb-3">
+        <label for="edit_therapy_type">Seleccionar Tipo de Terapia</label>
+        <select class="form-control" id="edit_therapy_type" formControlName="therapyType">
+          <option value="" disabled>Seleccionar Tipo de Terapia</option>
+          <option *ngFor="let option of therapyOptions" [value]="option">{{ option }}</option>
+        </select>
+      </div>
+      <div class="form-group mb-3">
+        <label for="edit_event_description">Descripción de la Cita</label>
+        <input type="text" class="form-control" id="edit_event_description" formControlName="eventDescription"/>
+      </div>
+      <div class="form-group mb-3">
+        <label for="edit_patient_selection">Seleccionar Paciente</label>
+        <select class="form-control" id="edit_patient_selection" formControlName="selectedPatient">
+          <option value="" disabled>Seleccionar Paciente</option>
+          <option *ngFor="let option of patientOptions" [value]="option">{{ option }}</option>
+        </select>
+      </div>
+      <div class="form-group mb-3">
+        <label for="edit_event_location">Ubicación de la Cita</label>
+        <input type="text" class="form-control" id="edit_event_location" formControlName="eventLocation"/>
+      </div>
+      <div class="form-group mb-3">
+        <label for="edit_kt_calendar_datepicker_date">Fecha de Inicio</label>
+        <input type="text" class="form-control" id="edit_kt_calendar_datepicker_date" formControlName="startDate" #editDatePicker placeholder="Seleccionar Fecha de Inicio"/>
+      </div>
+      <div class="form-group mb-3">
+        <label for="edit_kt_calendar_datepicker_start_time">Hora de Inicio</label>
+        <input type="text" class="form-control" id="edit_kt_calendar_datepicker_start_time" formControlName="startTime" #editStartTimePicker placeholder="Seleccionar Hora de Inicio"/>
+      </div>
+      <div class="form-group mb-3">
+        <label for="edit_kt_calendar_datepicker_end_time">Hora de Fin</label>
+        <input type="text" class="form-control" id="edit_kt_calendar_datepicker_end_time" formControlName="endTime" #editEndTimePicker placeholder="Seleccionar Hora de Fin"/>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="closeModal()">Cerrar</button>
+    <button type="button" class="btn btn-primary" (click)="updateEvent()">Actualizar</button>
+  </div>
+</div>
