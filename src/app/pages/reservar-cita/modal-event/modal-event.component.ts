@@ -65,6 +65,8 @@ export class ModalEventComponent implements OnInit, AfterViewInit {
       flatpickr(this.datePicker.nativeElement, {
         locale: Spanish,
         weekNumbers: true,
+        mode:'multiple',
+        dateFormat: "Y-m-d",
         minDate: this.minDate
       });
     }
