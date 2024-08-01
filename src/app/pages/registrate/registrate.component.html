@@ -71,19 +71,18 @@
       >
         <!--begin::Card-->
         <div
-          class="bg-body d-flex flex-column align-items-stretch flex-center rounded-4 w-md-600px p-20"
+          class="bg-body d-flex flex-column align-items-stretch flex-center rounded-4 w-md-600px py-20 px-10 px-md-20"
         >
           <!--begin::Wrapper-->
           <div
-            class="d-flex flex-center flex-column flex-column-fluid px-lg-10 pb-15 pb-lg-20"
+            class="d-flex flex-center flex-column flex-column-fluid px-lg-10"
           >
             <!--begin::Form-->
             <form
               [formGroup]="registerForm"
-			  (ngSubmit)="handleSubmit()"
+              (ngSubmit)="handleSubmit()"
               class="form w-100"
               id="kt_sign_up_form"
-              
             >
               <!--begin::Heading-->
               <div class="text-center mb-11">
@@ -97,7 +96,7 @@
                 <!--begin::nombre-->
                 <input
                   type="text"
-				  formControlName="name"
+                  formControlName="name"
                   placeholder="Nombre"
                   autocomplete="off"
                   class="form-control bg-transparent"
@@ -108,7 +107,7 @@
                 <!--begin::dni-->
                 <input
                   type="text"
-				  formControlName="dni"
+                  formControlName="dni"
                   placeholder="DNI"
                   autocomplete="off"
                   class="form-control bg-transparent"
@@ -148,7 +147,7 @@
                   <!--begin::Input wrapper-->
                   <div class="position-relative mb-3">
                     <input
-					  formControlName="password"
+                      formControlName="password"
                       class="form-control bg-transparent"
                       type="password"
                       placeholder="Contraseña"
@@ -174,18 +173,25 @@
               <!--begin::Submit button-->
               <div class="d-grid mb-10">
                 <button
+                  [disabled]="registerForm.invalid || isLoading"
                   type="submit"
                   id="kt_sign_up_submit"
-                  class="btn btn-primary"
+                  class="btn text-white btn-primary"
                 >
                   <!--begin::Indicator label-->
-                  <span class="indicator-label">Regístrarte</span>
+                  <span class="indicator-label">
+                    @if (isLoading) {
+                      Registrando...
+                    }@else {
+                      Registrar
+                    }
+                  </span>
                   <!--end::Indicator label-->
                   <!--begin::Indicator progress-->
-                  <span class="indicator-progress"
+                  <span *ngIf="isLoading" class="indicator-progress"
                     >Please wait...
                     <span
-                      class="spinner-border spinner-border-sm align-middle ms-2"
+                      class="spinner-border align-middle ms-2"
                     ></span
                   ></span>
                   <!--end::Indicator progress-->

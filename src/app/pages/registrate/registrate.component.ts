@@ -1,6 +1,7 @@
 import { Component, inject } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { tap } from 'rxjs';
 import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
@@ -12,14 +13,30 @@ export class RegistrateComponent {
   authService = inject(AuthService);
   router = inject(Router);
 
+  isLoading = false;
+  errors = {};
+
   registerForm = new FormGroup({
-    name: new FormControl('', { nonNullable: true }),
-    email: new FormControl('', { nonNullable: true }),
-    dni: new FormControl('', { nonNullable: true }),
-    password: new FormControl('', { nonNullable: true }),
+    name: new FormControl('', {
+      nonNullable: true,
+      validators: [Validators.required, Validators.minLength(3)],
+    }),
+    email: new FormControl('', {
+      nonNullable: true,
+      validators: [Validators.required, Validators.email],
+    }),
+    dni: new FormControl('', {
+      nonNullable: true,
+      validators: [Validators.required, Validators.minLength(8)],
+    }),
+    password: new FormControl('', {
+      nonNullable: true,
+      validators: [Validators.required, Validators.minLength(8)],
+    }),
   });
 
   handleSubmit() {
+    this.isLoading = true;
     this.authService
       .register({
         name: this.registerForm.value.name!,
@@ -27,15 +44,19 @@ export class RegistrateComponent {
         dni: this.registerForm.value.dni!,
         password: this.registerForm.value.password!,
       })
+      .pipe(tap(() => (this.isLoading = false)))
       .subscribe({
-        next:(value)=> {
+        next: (value) => {
           console.log(value);
           this.router.navigate(['/login']);
         },
-        error(err) {
-          console.error(err);
+        error: (err) => {
+          this.errors = err.error.errors;
+          this.isLoading = false;
+          console.log(this.errors);
         },
       });
-    console.log(this.registerForm.value);
+
+    console.log(this.registerForm.errors);
   }
 }

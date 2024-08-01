@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
 
@@ -13,9 +13,20 @@ export class LoginComponent {
   router = inject(Router);
 
   loginForm = new FormGroup({
-    email: new FormControl('', { nonNullable: true }),
-    password: new FormControl('', { nonNullable: true }),
+    email: new FormControl('', {
+      nonNullable: true,
+      validators: [Validators.email, Validators.required],
+    }),
+    password: new FormControl('', {
+      nonNullable: true,
+      validators: [Validators.required, Validators.minLength(8)],
+    }),
   });
+
+  storeCredentials(token: string, user: string) {
+    localStorage.setItem('token', token);
+    localStorage.setItem('user', JSON.stringify(user));
+  }
 
   handleSubmit() {
     this.authService
@@ -24,8 +35,8 @@ export class LoginComponent {
         password: this.loginForm.value.password!,
       })
       .subscribe({
-        next: (value) => {
-          console.log(value);
+        next: (value: any) => {
+          this.storeCredentials(value.token, value.user);
           this.router.navigate(['/dashboard']);
         },
         error(err) {

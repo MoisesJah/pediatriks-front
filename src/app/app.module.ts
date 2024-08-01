@@ -8,7 +8,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FlatpickrModule } from 'angularx-flatpickr';
 import { ModalEventModule } from './pages/reservar-cita/modal-event/modal-event.module';
 import { ModalEditModule } from './pages/reservar-cita/modal-event/modal-edit/modal-edit.module';
-import { HttpClientModule, provideHttpClient } from '@angular/common/http';
+import { HttpClientModule, provideHttpClient, withInterceptors } from '@angular/common/http';
 import { Psicologia1Component } from './pages/reservar-cita/psicologia-1/psicologia-1.component';
 import { Psicologia2Component } from './pages/reservar-cita/psicologia-2/psicologia-2.component';
 import { Lenguaje1Component } from './pages/reservar-cita/lenguaje-1/lenguaje-1.component';
@@ -22,6 +22,7 @@ import { Fisica2Component } from './pages/reservar-cita/fisica-2/fisica-2.compon
 import { Fisica3Component } from './pages/reservar-cita/fisica-3/fisica-3.component';
 import { NeuroComponent } from './pages/reservar-cita/neuro/neuro.component';
 import { PediasuitComponent } from './pages/reservar-cita/pediasuit/pediasuit.component';
+import { tokenInterceptor } from './interceptors/token.interceptor';
 
 
 
@@ -53,7 +54,7 @@ import { PediasuitComponent } from './pages/reservar-cita/pediasuit/pediasuit.co
     ModalEventModule,
     ModalEditModule,
   ],
-  providers: [provideHttpClient()],
+  providers: [provideHttpClient(withInterceptors([tokenInterceptor]))],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
