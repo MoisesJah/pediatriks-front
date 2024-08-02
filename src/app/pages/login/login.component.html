@@ -1,4 +1,4 @@
-<div id="body" class="min-vh-100 auth-bg bgi-size-cover bgi-attachment-fixed bgi-position-center bgi-no-repeat " >
+<div id="body" class="min-vh-100 d-flex align-items-center auth-bg bgi-size-cover bgi-attachment-fixed bgi-position-center bgi-no-repeat " >
   <!--begin::Theme mode setup on page load-->
   <script>var defaultThemeMode = "light"; var themeMode; if ( document.documentElement ) { if ( document.documentElement.hasAttribute("data-bs-theme-mode")) { themeMode = document.documentElement.getAttribute("data-bs-theme-mode"); } else { if ( localStorage.getItem("data-bs-theme") !== null ) { themeMode = localStorage.getItem("data-bs-theme"); } else { themeMode = defaultThemeMode; } } if (themeMode === "system") { themeMode = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"; } document.documentElement.setAttribute("data-bs-theme", themeMode); }</script>
   <!--end::Theme mode setup on page load-->
@@ -18,18 +18,18 @@
           <a href="index.html" class="mb-7">
             <img alt="Logo" src="assets/media/logos/file.png" style="width: 350px; height: auto; display: flex; align-items: center; "/>
           </a>
-          <h2 class="text" style="color: white; ">CENTRO ESPECIALIZADO EN TERAPIAS INFANTILES</h2>
+          <h2 class="text text-center" style="color: white; text-wrap: balance;">CENTRO ESPECIALIZADO EN TERAPIAS INFANTILES</h2>
           <!--end::Title-->
         </div>
         <!--begin::Aside-->
       </div>
       <!--begin::Aside-->
       <!--begin::Body-->
-      <div class="d-flex flex-column-fluid flex-lg-row-auto justify-content-center justify-content-lg-end p-12 p-lg-20">
+      <div class="d-flex flex-column-fluid flex-lg-row-auto justify-content-center justify-content-lg-end p-12">
         <!--begin::Card-->
         <div class="bg-body d-flex flex-column align-items-stretch flex-center rounded-4 w-md-600px p-20">
           <!--begin::Wrapper-->
-          <div class="d-flex flex-center flex-column flex-column-fluid px-lg-10 pb-lg-20">
+          <div class="d-flex flex-center flex-column flex-column-fluid px-lg-10">
             <!--begin::Form-->
             <form [formGroup]="loginForm" (ngSubmit)="handleSubmit()" class="form w-100">
               <!--begin::Heading-->

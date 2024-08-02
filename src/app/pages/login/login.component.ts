@@ -28,6 +28,16 @@ export class LoginComponent {
     localStorage.setItem('user', JSON.stringify(user));
   }
 
+  redirectToDashboard(value: any) {
+    this.storeCredentials(value.token, value.user);
+
+    if (value.user.tipo_user === 'administrador') {
+      this.router.navigate(['admin/dashboard']);
+    } else {
+      this.router.navigate(['/dashboard']);
+    }
+  }
+
   handleSubmit() {
     this.authService
       .login({
@@ -36,8 +46,7 @@ export class LoginComponent {
       })
       .subscribe({
         next: (value: any) => {
-          this.storeCredentials(value.token, value.user);
-          this.router.navigate(['/dashboard']);
+          this.redirectToDashboard(value);
         },
         error(err) {
           console.error(err);

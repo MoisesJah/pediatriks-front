@@ -8,7 +8,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FlatpickrModule } from 'angularx-flatpickr';
 import { ModalEventModule } from './pages/reservar-cita/modal-event/modal-event.module';
 import { ModalEditModule } from './pages/reservar-cita/modal-event/modal-edit/modal-edit.module';
-import { HttpClientModule, provideHttpClient, withInterceptors } from '@angular/common/http';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { Psicologia1Component } from './pages/reservar-cita/psicologia-1/psicologia-1.component';
 import { Psicologia2Component } from './pages/reservar-cita/psicologia-2/psicologia-2.component';
 import { Lenguaje1Component } from './pages/reservar-cita/lenguaje-1/lenguaje-1.component';
@@ -23,6 +23,7 @@ import { Fisica3Component } from './pages/reservar-cita/fisica-3/fisica-3.compon
 import { NeuroComponent } from './pages/reservar-cita/neuro/neuro.component';
 import { PediasuitComponent } from './pages/reservar-cita/pediasuit/pediasuit.component';
 import { tokenInterceptor } from './interceptors/token.interceptor';
+import { AdminDashboardComponent } from './pages/admin/dashboard/dashboard.component';
 
 
 
@@ -41,7 +42,8 @@ import { tokenInterceptor } from './interceptors/token.interceptor';
     Fisica2Component,
     Fisica3Component,
     NeuroComponent,
-    PediasuitComponent
+    PediasuitComponent,
+    AdminDashboardComponent
   ],
   imports: [
     BrowserModule,

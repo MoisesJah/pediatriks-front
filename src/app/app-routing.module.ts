@@ -4,9 +4,9 @@ import { RouterModule, Routes } from '@angular/router';
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: 'login', loadChildren: () => import('./pages/login/login.module').then(m => m.LoginModule) },
+  { path: 'registrate', loadChildren: () => import('./pages/registrate/registrate.module').then(m => m.RegistrateModule) },
   { path: 'dashboard', loadChildren: () => import('./pages/dashboard/dashboard.module').then(m => m.DashboardModule) },
   { path: 'reservar-cita', loadChildren: () => import('./pages/reservar-cita/reservar-cita.module').then(m => m.ReservarCitaModule) },
-  { path: 'registrate', loadChildren: () => import('./pages/registrate/registrate.module').then(m => m.RegistrateModule) },
   { path: 'sedes', loadChildren: () => import('./pages/sedes/sedes.module').then(m => m.SedesModule) },
   { path: 'psicologia-1', loadChildren: () => import('./pages/reservar-cita/psicologia-1/psicologia-1.module').then(m => m.Psicologia1Module) },
   { path: 'psicologia-2', loadChildren: () => import('./pages/reservar-cita/psicologia-2/psicologia-2.module').then(m => m.Psicologia2Module) },
