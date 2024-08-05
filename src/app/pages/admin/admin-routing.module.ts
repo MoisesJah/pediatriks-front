@@ -15,6 +15,14 @@ const routes: Routes = [
         (m) => m.AdminDashboardComponent
       ),
   },
+
+  {
+    path: 'usuarios',
+    // outlet: 'content',
+
+    loadComponent: () =>
+      import('./users/users.component').then((m) => m.UsersComponent),
+  },
 ];
 
 @NgModule({

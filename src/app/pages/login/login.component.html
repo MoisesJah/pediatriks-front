@@ -62,8 +62,11 @@
                   <span class="indicator-label">Iniciar Sesión</span>
                   <!--end::Indicator label-->
                   <!--begin::Indicator progress-->
-                  <span class="indicator-progress">Please wait...
-                  <span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
+                 @if (isLoading) {
+                  <ng-template>
+                    <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+                  </ng-template>
+                 }
                   <!--end::Indicator progress-->
                 </button>
               </div>

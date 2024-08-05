@@ -1,7 +1,9 @@
+import { NgIf } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
+import { LoadingService } from 'src/app/services/loading.service';
 
 @Component({
   selector: 'app-login',
@@ -10,6 +12,7 @@ import { AuthService } from 'src/app/services/auth.service';
 })
 export class LoginComponent {
   authService = inject(AuthService);
+  isLoading = inject(LoadingService).loading$;
   router = inject(Router);
 
   errors: Record<string,string> = {"error":""};
@@ -35,7 +38,6 @@ export class LoginComponent {
     console.log(value.user);
 
     if (value.user.tipo_user === 'administrador') {
-      console.log('admin');
       this.router.navigate(['admin/dashboard']);
     } else {
       this.router.navigate(['/dashboard']);
@@ -59,5 +61,6 @@ export class LoginComponent {
           console.log(this.errors);
         },
       });
+      console.log(this.isLoading)
   }
 }
