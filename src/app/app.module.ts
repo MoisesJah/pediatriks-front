@@ -24,7 +24,7 @@ import { NeuroComponent } from './pages/reservar-cita/neuro/neuro.component';
 import { PediasuitComponent } from './pages/reservar-cita/pediasuit/pediasuit.component';
 import { tokenInterceptor } from './interceptors/token.interceptor';
 import { AdminDashboardComponent } from './pages/admin/dashboard/dashboard.component';
-
+import { DropdownComponent } from './components/ui/dropdown/dropdown.component';
 
 
 @NgModule({
@@ -43,7 +43,7 @@ import { AdminDashboardComponent } from './pages/admin/dashboard/dashboard.compo
     Fisica3Component,
     NeuroComponent,
     PediasuitComponent,
-    AdminDashboardComponent
+    // AdminDashboardComponent,
   ],
   imports: [
     BrowserModule,
@@ -55,7 +55,8 @@ import { AdminDashboardComponent } from './pages/admin/dashboard/dashboard.compo
     FlatpickrModule.forRoot(),
     ModalEventModule,
     ModalEditModule,
-  ],
+    DropdownComponent,
+],
   providers: [provideHttpClient(withInterceptors([tokenInterceptor]))],
   bootstrap: [AppComponent]
 })

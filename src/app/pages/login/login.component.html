@@ -52,10 +52,12 @@
                 <!--end::Password-->
               </div>
               <!--end::Input group=-->
+
+              <div *ngIf="errors.error" class="text-danger mx-1">{{errors.error}}</div>
              
               <!--begin::Submit button-->
               <div class="d-grid my-10">
-                <button type="submit" id="kt_sign_in_submit" class="btn btn-primary">
+                <button type="submit" [disabled]="!loginForm.valid" id="kt_sign_in_submit" class="btn btn-primary">
                   <!--begin::Indicator label-->
                   <span class="indicator-label">Iniciar Sesión</span>
                   <!--end::Indicator label-->
@@ -67,8 +69,9 @@
               </div>
               <!--end::Submit button-->
               <!--begin::Sign up-->
-              <div class="text-gray-500 text-center fw-semibold fs-6">¿No eres un miembro todavía?
-                <a routerLink="/registrate" class="link-primary">Regístrate</a></div>
+              <div class="text-gray-700 text-center fw-semibold fs-6">¿No eres un miembro todavía?
+                <a routerLink="/registrate" class="link-primary">Regístrate</a>
+              </div>
               <!--end::Sign up-->
             </form>
             <!--end::Form-->

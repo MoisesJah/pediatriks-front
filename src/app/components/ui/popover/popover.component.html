@@ -1,0 +1,13 @@
+<a
+  [ngbPopover]="popover"
+  style="display: inline-block; height: fit-content"
+  [placement]="'bottom-end'"
+  [autoClose]="'outside'"
+  [popperOptions]="popperOptions"
+>
+  <ng-content select="[popover-toggle]"></ng-content>
+</a>
+
+<ng-template #popover>
+  <ng-content select="[popover-body]"></ng-content>
+</ng-template>

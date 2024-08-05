@@ -1,0 +1,12 @@
+<div ngbDropdown placement="bottom-end" [container]="'body'">
+  <a
+    class=""
+    id="dropdownConfig"
+    ngbDropdownToggle
+  >
+    <ng-content select="[dropdown-toggle]"></ng-content>
+</a>
+  <div class="dropdown-menu" ngbDropdownMenu aria-labelledby="dropdownConfig">
+    <ng-content select="[dropdown-menu]"></ng-content>
+  </div>
+</div>

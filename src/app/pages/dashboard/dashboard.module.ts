@@ -3,19 +3,19 @@ import { CommonModule } from '@angular/common';
 
 import { DashboardRoutingModule } from './dashboard-routing.module';
 import { DashboardComponent } from './dashboard.component';
-import { RouterModule, Routes } from '@angular/router';
+import { RouterModule, RouterOutlet, Routes } from '@angular/router';
 
 const routes: Routes = [{ path: '', component: DashboardComponent }];
 
 @NgModule({
-  declarations: [DashboardComponent],
+  declarations: [],
   imports: [
     CommonModule,
     DashboardRoutingModule,
     RouterModule.forChild(routes),
   ],
-  exports: [DashboardComponent],
+  exports: [RouterOutlet],
   providers: [],
-  bootstrap: [DashboardComponent],
+  // bootstrap: [DashboardComponent],
 })
 export class DashboardModule {}

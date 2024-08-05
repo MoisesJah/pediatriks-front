@@ -3,22 +3,17 @@ import { RouterModule, Routes } from '@angular/router';
 import { authGuard } from 'src/app/guards/auth.guard';
 import { adminGuard } from 'src/app/guards/admin.guard';
 
+
 const routes: Routes = [
+  { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
   {
-    path: 'admin',
-    redirectTo: 'admin/dashboard',
-    pathMatch: 'full',
-    canMatch: [adminGuard],
-    canActivateChild: [authGuard],
-    children: [
-      {
-        path: 'dashboard',
-        loadChildren: () =>
-          import('./dashboard/dashboard.component').then(
-            (m) => m.AdminDashboardComponent
-          ),
-      },
-    ],
+    path: 'dashboard',
+    // outlet: 'content',
+
+    loadComponent: () =>
+      import('./dashboard/dashboard.component').then(
+        (m) => m.AdminDashboardComponent
+      ),
   },
 ];
 

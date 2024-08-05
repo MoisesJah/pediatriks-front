@@ -4,7 +4,7 @@ import { RegistrateComponent } from './registrate.component';
 import { authGuard } from 'src/app/guards/auth.guard';
 
 const routes: Routes = [
-  { path: '', component: RegistrateComponent },
+  { path: '', component: RegistrateComponent, canActivate: [authGuard] },
 ];
 
 @NgModule({

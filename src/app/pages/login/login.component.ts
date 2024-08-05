@@ -12,6 +12,8 @@ export class LoginComponent {
   authService = inject(AuthService);
   router = inject(Router);
 
+  errors: Record<string,string> = {"error":""};
+
   loginForm = new FormGroup({
     email: new FormControl('', {
       nonNullable: true,
@@ -30,8 +32,10 @@ export class LoginComponent {
 
   redirectToDashboard(value: any) {
     this.storeCredentials(value.token, value.user);
+    console.log(value.user);
 
     if (value.user.tipo_user === 'administrador') {
+      console.log('admin');
       this.router.navigate(['admin/dashboard']);
     } else {
       this.router.navigate(['/dashboard']);
@@ -39,6 +43,7 @@ export class LoginComponent {
   }
 
   handleSubmit() {
+    this.errors = {};
     this.authService
       .login({
         email: this.loginForm.value.email!,
@@ -48,8 +53,10 @@ export class LoginComponent {
         next: (value: any) => {
           this.redirectToDashboard(value);
         },
-        error(err) {
+        error: (err) => {
           console.error(err);
+          this.errors = err.error;
+          console.log(this.errors);
         },
       });
   }
