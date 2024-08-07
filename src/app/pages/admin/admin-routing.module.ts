@@ -8,8 +8,6 @@ const routes: Routes = [
   { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
   {
     path: 'dashboard',
-    // outlet: 'content',
-
     loadComponent: () =>
       import('./dashboard/dashboard.component').then(
         (m) => m.AdminDashboardComponent
@@ -18,8 +16,6 @@ const routes: Routes = [
 
   {
     path: 'usuarios',
-    // outlet: 'content',
-
     loadComponent: () =>
       import('./users/users.component').then((m) => m.UsersComponent),
   },

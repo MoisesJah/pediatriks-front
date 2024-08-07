@@ -1,0 +1,86 @@
+<div class="modal-header">
+  <h4 class="modal-title" id="modal-basic-title">Añadir Usuario</h4>
+  <button
+    type="button"
+    class="btn btn-sm btn-icon btn-active-color-primary btn-color-gray-800"
+    aria-label="Close"
+    (click)="close()"
+  >
+    <i class="ki-duotone ki-cross-square fs-1"
+      ><span class="path1"></span><span class="path2"></span
+    ></i>
+  </button>
+</div>
+<div class="modal-body">
+  <form [formGroup]="userForm" class="form d-flex flex-column gap-4">
+    <div class="form-group">
+      <label for="exampleFormControlInput1" class="required form-label"
+        >Nombres</label
+      >
+      <input type="text" formControlName="name" class="form-control" />
+    </div>
+    <div class="form-group">
+      <label for="exampleFormControlInput1" class="required form-label"
+        >DNI</label
+      >
+      <input
+        type="text"
+        pattern="[0-9]*"
+        formControlName="dni"
+        class="form-control"
+      />
+    </div>
+    <div class="form-group">
+      <label for="exampleFormControlInput1" class="required form-label">
+        Correo
+      </label>
+      <input type="email" formControlName="email" class="form-control" />
+    </div>
+
+    <div class="form-group">
+      <div class="d-flex align-items-center justify-content-between">
+        <label
+          for="password"
+          class="required form-label d-flex align-items-center justify-content-between"
+        >
+          Contraseña
+        </label>
+        <button
+          (click)="generatePassword()"
+          type="button"
+          class="btn btn-sm btn-secondary"
+        >
+          generar Contraseña
+        </button>
+      </div>
+      <div class="position-relative">
+        <input
+          formControlName="password"
+          type="password"
+          class="form-control"
+        />
+        <button
+          type="button"
+          class="btn btn-icon btn-sm top-0 end-0 btn-active-color-primary btn-color-gray-800 position-absolute"
+        >
+          <span class="ki-solid ki-copy fs-1"></span>
+        </button>
+      </div>
+    </div>
+  </form>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-secondary" (click)="close()">
+    Cancelar
+  </button>
+
+  <button
+    [disabled]="userForm.invalid || (isLoading | async)"
+    type="button"
+    class="btn btn-primary"
+    (click)="save()"
+  >
+    Guardar
+    <span *ngIf="isLoading | async" class="spinner-border spinner-border-sm align-middle ms-2"></span>
+  </button>
+</div>

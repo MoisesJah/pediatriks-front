@@ -30,6 +30,7 @@ import { AdminDashboardComponent } from './pages/admin/dashboard/dashboard.compo
 import { DropdownComponent } from './components/ui/dropdown/dropdown.component';
 import { loadingInterceptor } from './interceptors/loading.interceptor';
 import { LayoutComponent } from "./components/layout/layout.component";
+import { UserModalsModule } from './pages/admin/users/modals/modals.module';
 
 @NgModule({
   declarations: [
@@ -58,6 +59,7 @@ import { LayoutComponent } from "./components/layout/layout.component";
     NgbModule,
     FlatpickrModule.forRoot(),
     ModalEventModule,
+    UserModalsModule,
     ModalEditModule,
     DropdownComponent,
     LayoutComponent
