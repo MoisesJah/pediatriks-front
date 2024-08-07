@@ -12,7 +12,7 @@ import { LoadingService } from 'src/app/services/loading.service';
 })
 export class LoginComponent {
   authService = inject(AuthService);
-  isLoading = inject(LoadingService).loading$;
+  isLoading = inject(LoadingService).isLoading;
   router = inject(Router);
 
   errors: Record<string,string> = {"error":""};

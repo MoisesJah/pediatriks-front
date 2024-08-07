@@ -57,16 +57,12 @@
              
               <!--begin::Submit button-->
               <div class="d-grid my-10">
-                <button type="submit" [disabled]="!loginForm.valid" id="kt_sign_in_submit" class="btn btn-primary">
+                <button type="submit" [disabled]="!loginForm.valid || (isLoading | async)" id="kt_sign_in_submit" class="btn btn-primary">
                   <!--begin::Indicator label-->
                   <span class="indicator-label">Iniciar Sesión</span>
                   <!--end::Indicator label-->
                   <!--begin::Indicator progress-->
-                 @if (isLoading) {
-                  <ng-template>
-                    <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
-                  </ng-template>
-                 }
+                    <span *ngIf="isLoading | async" class="spinner-border spinner-border-sm align-middle ms-2"></span>
                   <!--end::Indicator progress-->
                 </button>
               </div>

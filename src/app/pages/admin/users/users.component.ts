@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import { IUser } from 'src/app/models/user';
+import { LoadingService } from 'src/app/services/loading.service';
 import { UserService } from 'src/app/services/user/user.service';
 
 @Component({
@@ -12,6 +13,8 @@ import { UserService } from 'src/app/services/user/user.service';
 })
 export class UsersComponent implements OnInit {
   users = inject(UserService);
+  isLoading = inject(LoadingService)
+
   list: Array<IUser> = [];
   user = {} as IUser;
 
@@ -22,7 +25,7 @@ export class UsersComponent implements OnInit {
       console.log(users);
     });
   }
-
+ 
   delete(id: number) {
     this.users.delete(id).subscribe(() => {
       this.list = this.list.filter((user) => user.id !== id);

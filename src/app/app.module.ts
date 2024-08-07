@@ -29,6 +29,7 @@ import { tokenInterceptor } from './interceptors/token.interceptor';
 import { AdminDashboardComponent } from './pages/admin/dashboard/dashboard.component';
 import { DropdownComponent } from './components/ui/dropdown/dropdown.component';
 import { loadingInterceptor } from './interceptors/loading.interceptor';
+import { LayoutComponent } from "./components/layout/layout.component";
 
 @NgModule({
   declarations: [
@@ -59,7 +60,8 @@ import { loadingInterceptor } from './interceptors/loading.interceptor';
     ModalEventModule,
     ModalEditModule,
     DropdownComponent,
-  ],
+    LayoutComponent
+],
   providers: [
     provideHttpClient(withInterceptors([tokenInterceptor, loadingInterceptor])),
   ],

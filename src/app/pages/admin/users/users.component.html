@@ -1,7 +1,7 @@
-<h1>Usuarios</h1>
 
-<div class="table-responsive">
-  <table class="table table-row-dashed">
+<div class="table-responsive container card content bg-white">
+  <h1>Usuarios</h1>
+  <table class="table table-row-dashed w-full">
     <thead>
       <tr>
         <th scope="col">#</th>
@@ -12,13 +12,13 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let user of list">
+      <tr *ngFor="let user of list; trackBy: user.id">
         <th scope="row">{{ user.id }}</th>
         <td>{{ user.name }}</td>
         <td>{{ user.email }}</td>
         <td>{{ user.dni }}</td>
         <td>
-          <button class="btn btn-danger" (click)="deleteUser(user.id)">
+          <button class="btn btn-danger" (click)="delete(user.id)">
             Eliminar
           </button>
         </td>

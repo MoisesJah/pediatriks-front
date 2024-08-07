@@ -1,1 +1,9 @@
-<router-outlet></router-outlet>
+<!-- mostrar el diseño solo para usuarios autenticados -->
+
+@if (auth.isAuthenticated()) {
+    <app-layout>
+        <router-outlet></router-outlet>
+    </app-layout>
+} @else {
+    <router-outlet></router-outlet>
+}
