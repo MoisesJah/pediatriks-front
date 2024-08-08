@@ -7,4 +7,5 @@ export interface CalendarEvent {
   location?: string;
   therapyType?: string;
   selectedPatient?: string;
+  doctor?: string; 
 }

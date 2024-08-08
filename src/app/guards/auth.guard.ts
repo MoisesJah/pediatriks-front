@@ -27,8 +27,8 @@ export const authGuard: CanActivateFn = (route, state) => {
 
   // if not admin and try to access admin and logged in, redirect to dashboard
   if(!authService.isAdmin() && authService.isAuthenticated()) {
-    router.navigateByUrl('/dashboard');
-    return false; 
+    router.navigateByUrl('/');
+    return false;
   }
 
   return true;

@@ -20,6 +20,13 @@
         <input type="text" class="form-control" id="edit_event_description" formControlName="eventDescription"/>
       </div>
       <div class="form-group mb-3">
+        <label for="edit_doctor_selection">Seleccionar Especialista</label>
+        <select class="form-control" id="edit_doctor_selection" formControlName="doctor">
+          <option value="" disabled>Seleccionar Especialista</option>
+          <option *ngFor="let option of doctorOptions" [value]="option">{{ option }}</option>
+        </select>
+      </div>
+      <div class="form-group mb-3">
         <label for="edit_patient_selection">Seleccionar Paciente</label>
         <select class="form-control" id="edit_patient_selection" formControlName="selectedPatient">
           <option value="" disabled>Seleccionar Paciente</option>

@@ -1,4 +1,4 @@
-import { Component, ViewChild, AfterViewInit, ChangeDetectorRef } from '@angular/core';
+import { Component, ViewChild, AfterViewInit, ChangeDetectorRef, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { CalendarOptions, DateSelectArg, EventClickArg, EventApi } from '@fullcalendar/core';
 import interactionPlugin from '@fullcalendar/interaction';
@@ -12,15 +12,26 @@ import { FullCalendarComponent } from '@fullcalendar/angular';
 import { ModalEventComponent } from 'src/app/pages/reservar-cita/modal-event/modal-event.component';
 import { ModalEditComponent } from 'src/app/pages/reservar-cita/modal-event/modal-edit/modal-edit.component';
 import { CalendarEvent } from 'src/app/models/calendar-event';
+import { Cronogramas } from 'src/app/fake/cronograma';
+import { Cronograma } from 'src/app/models/cronograma';
+import { ActivatedRoute, Params } from '@angular/router';
+import { map, Subscription } from 'rxjs';
+
+
 
 @Component({
   selector: 'app-reservar-cita',
   templateUrl: './reservar-cita.component.html',
   styleUrls: ['./reservar-cita.component.scss']
 })
-export class ReservarCitaComponent implements AfterViewInit {
+export class ReservarCitaComponent implements  OnInit,AfterViewInit,OnDestroy {
   @ViewChild(FullCalendarComponent)
   fullCalendarComponent!: FullCalendarComponent;
+
+  cronogramas: Cronograma[] = Cronogramas;
+  cronogramaActual: Cronograma | undefined;
+
+  subscriptions: Subscription[] = [];
 
   calendarVisible = true;
   calendarOptions: CalendarOptions = {
@@ -52,14 +63,29 @@ export class ReservarCitaComponent implements AfterViewInit {
   constructor(
     private changeDetector: ChangeDetectorRef,
     private router: Router,
-    private modalService: NgbModal
+    private modalService: NgbModal,
+    private rutaActiva: ActivatedRoute
   ) {}
+
+  ngOnInit(){
+    const tag = this.rutaActiva.snapshot.params.tag;
+    this.cronogramaActual = this.cronogramas.find(c => c.tag === tag);
+    const termSub = this.rutaActiva.params.pipe ( map ( ( p ) => p[ 'tag' ])).subscribe ( p => {
+    this.cronogramaActual = this.cronogramas.find(c => c.tag === p);
+    });
+    this.subscriptions.push( termSub );
+  }
 
   ngAfterViewInit() {
     if (!this.fullCalendarComponent) {
       console.error('FullCalendarComponent no está disponible');
     }
   }
+
+  ngOnDestroy(){
+    this.subscriptions.forEach( subscription => subscription.unsubscribe() );
+  }
+
 
   handleCalendarToggle() {
     this.calendarVisible = !this.calendarVisible;
@@ -91,11 +117,13 @@ export class ReservarCitaComponent implements AfterViewInit {
           description: newEvent.description,
           location: newEvent.location,
           therapyType: newEvent.therapyType,
-          selectedPatient: newEvent.selectedPatient
+          selectedPatient: newEvent.selectedPatient,
+          doctor: newEvent.doctor // Asegúrate de agregar el campo doctor aquí
         });
       }
     });
   }
+
 
   handleEventClick(clickInfo: EventClickArg) {
     const event = clickInfo.event;
@@ -108,7 +136,8 @@ export class ReservarCitaComponent implements AfterViewInit {
       description: event.extendedProps.description,
       location: event.extendedProps.location,
       therapyType: event.extendedProps.therapyType,
-      selectedPatient: event.extendedProps.selectedPatient
+      selectedPatient: event.extendedProps.selectedPatient,
+      doctor: event.extendedProps.doctor // Asegúrate de mostrar el campo doctor aquí
     });
 
     const modalRef = this.modalService.open(ModalEventComponent, {
@@ -125,7 +154,8 @@ export class ReservarCitaComponent implements AfterViewInit {
       description: event.extendedProps.description || '',
       location: event.extendedProps.location || '',
       therapyType: event.extendedProps.therapyType || '',
-      selectedPatient: event.extendedProps.selectedPatient || ''
+      selectedPatient: event.extendedProps.selectedPatient || '',
+      doctor: event.extendedProps.doctor || '' // Asegúrate de agregar el campo doctor aquí
     };
 
     modalRef.componentInstance.eventSubmitted.subscribe((updatedEvent: CalendarEvent) => {
@@ -144,7 +174,8 @@ export class ReservarCitaComponent implements AfterViewInit {
             description: updatedEvent.description,
             location: updatedEvent.location,
             therapyType: updatedEvent.therapyType,
-            selectedPatient: updatedEvent.selectedPatient
+            selectedPatient: updatedEvent.selectedPatient,
+            doctor: updatedEvent.doctor // Asegúrate de agregar el campo doctor aquí
           });
 
           // Forzar la detección de cambios para actualizar el componente
@@ -178,7 +209,8 @@ export class ReservarCitaComponent implements AfterViewInit {
           description: event.extendedProps.description,
           location: event.extendedProps.location,
           therapyType: event.extendedProps.therapyType,
-          selectedPatient: event.extendedProps.selectedPatient
+          selectedPatient: event.extendedProps.selectedPatient,
+          doctor: event.extendedProps.doctor // Asegúrate de agregar el campo doctor aquí
         });
       }
     }
@@ -191,7 +223,7 @@ export class ReservarCitaComponent implements AfterViewInit {
 
   navigateToDashboard(event: Event): void {
     event.preventDefault();
-    this.router.navigate(['/dashboard']);
+    this.router.navigate(['']);
   }
 
   navigateToSedes(event: Event): void {
@@ -201,7 +233,7 @@ export class ReservarCitaComponent implements AfterViewInit {
 
   navigateToReservarCita(event: Event): void {
     event.preventDefault();
-    this.router.navigate(['/reservar-cita']);
+    this.router.navigate(['/reservar-cita/general']);
   }
 
   navigateToPsico1(event: Event, route: string): void {
@@ -223,10 +255,9 @@ export class ReservarCitaComponent implements AfterViewInit {
     ];
 
     if (validRoutes.includes(selectedValue)) {
-      this.router.navigate([`/${selectedValue}`]);
+      this.router.navigate([`/reservar-cita/${selectedValue}`]);
     }
   }
-
 
   openModal() {
     const modalRef = this.modalService.open(ModalEventComponent, {
@@ -249,7 +280,8 @@ export class ReservarCitaComponent implements AfterViewInit {
           description: newEvent.description,
           location: newEvent.location,
           therapyType: newEvent.therapyType,
-          selectedPatient: newEvent.selectedPatient
+          selectedPatient: newEvent.selectedPatient,
+          doctor: newEvent.doctor // Asegúrate de agregar el campo doctor aquí
         });
       }
     });

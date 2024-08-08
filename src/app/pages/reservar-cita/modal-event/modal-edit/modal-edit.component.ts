@@ -18,6 +18,7 @@ export class ModalEditComponent implements OnInit, AfterViewInit {
   editEventForm: FormGroup;
   therapyOptions: string[] = ['Psicología', 'Lenguaje', 'Ocupacional', 'Física', 'Neuro', 'Pediasuit'];
   patientOptions: string[] = ['Juan', 'Pedro', 'Maria'];
+  doctorOptions: string[] = ['Dr. A', 'Dr. B', 'Dr. C'];
 
   @ViewChild('editDatePicker') editDatePicker!: ElementRef;
   @ViewChild('editStartTimePicker') editStartTimePicker!: ElementRef;
@@ -29,6 +30,7 @@ export class ModalEditComponent implements OnInit, AfterViewInit {
       eventDescription: [''],
       selectedPatient: ['', Validators.required],
       eventLocation: [''],
+      doctor: ['', Validators.required], // Añadir campo doctor aquí
       startDate: ['', Validators.required],
       startTime: ['', Validators.required],
       endDate: [''],
@@ -74,6 +76,7 @@ export class ModalEditComponent implements OnInit, AfterViewInit {
         therapyType: this.event.therapyType || '',
         eventDescription: this.event.description || '',
         eventLocation: this.event.location || '',
+        doctor: this.event.doctor || '', // Añadir valor del campo doctor aquí
         startDate: this.formatDate(new Date(this.event.start)),
         startTime: this.extractTime(this.event.start),
         endTime: this.event.end ? this.extractTime(this.event.end) : '',
@@ -123,7 +126,8 @@ export class ModalEditComponent implements OnInit, AfterViewInit {
       description: this.editEventForm.value.eventDescription,
       location: this.editEventForm.value.eventLocation,
       therapyType: this.editEventForm.value.therapyType,
-      selectedPatient: this.editEventForm.value.selectedPatient
+      selectedPatient: this.editEventForm.value.selectedPatient,
+      doctor: this.editEventForm.value.doctor // Añadir campo doctor aquí
     };
 
     console.log('Updated event:', updatedEvent); // Añade este log para verificar el evento actualizado
