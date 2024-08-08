@@ -1,5 +1,5 @@
 <div class="modal-header">
-  <h4 class="modal-title" id="modal-basic-title">Añadir Usuario</h4>
+  <h4 class="modal-title" id="modal-basic-title">Editar Información</h4>
   <button
     type="button"
     class="btn btn-sm btn-icon btn-active-color-primary btn-color-gray-800"
@@ -45,12 +45,12 @@
         >
           Contraseña
         </label>
-        <button
-          (click)="generatePassword()"
-          type="button"
-          class="btn btn-sm btn-secondary"
-        >
-          autogenerar
+        <button type="button" class="btn btn-sm btn-secondary">
+          <i class="ki-duotone ki-note">
+            <span class="path1"></span>
+            <span class="path2"></span>
+          </i>
+          regenerar
         </button>
       </div>
       <div class="position-relative">
@@ -70,17 +70,17 @@
   </form>
 </div>
 <div class="modal-footer">
-  <button type="button" class="btn btn-secondary" (click)="close()">
-    Cancelar
-  </button>
-
-  <button
-    [disabled]="userForm.invalid || (isLoading | async)"
-    type="button"
-    class="btn btn-primary"
-    (click)="save()"
-  >
-    Guardar
-    <span *ngIf="isLoading | async" class="spinner-border spinner-border-sm align-middle ms-2"></span>
-  </button>
-</div>
+    <button type="button" class="btn btn-secondary" (click)="close()">
+      Cancelar
+    </button>
+  
+    <button
+      [disabled]="userForm.invalid || (isLoading | async)"
+      type="button"
+      class="btn btn-primary"
+      (click)="edit(userForm.value, userId!)"
+    >
+      Guardar {{ userId }}
+      <span *ngIf="isLoading | async" class="spinner-border spinner-border-sm align-middle ms-2"></span>
+    </button>
+  </div>

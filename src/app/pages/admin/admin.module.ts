@@ -5,8 +5,7 @@ import { AdminDashboardComponent } from './dashboard/dashboard.component';
 
 
 @NgModule({
-  declarations: [
-  ],
+  declarations: [],
   imports: [
     CommonModule,
     AdminRoutingModule

@@ -1,0 +1,65 @@
+<div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Añadir Terapia</h4>
+    <button
+        type="button"
+        class="btn btn-sm btn-icon btn-active-color-primary btn-color-gray-800"
+        aria-label="Close"
+        (click)="close()"
+    >
+        <i class="ki-duotone ki-cross-square fs-1"
+            ><span class="path1"></span><span class="path2"></span
+        ></i>
+    </button>
+</div>
+
+<div class="modal-body">    
+    <form [formGroup]="terapiaForm" class="form d-flex flex-column gap-4">
+        <div class="form-group">
+            <label
+                class="required form-label"
+                for="name"
+            >
+                Nombre
+            </label>
+            <input
+                formControlName="nombre"
+                id="name"
+                type="text"
+                class="form-control"
+            />
+        </div>
+        <div class="form-group">
+            <label
+                class="required form-label"
+                for="description"
+            >
+                Descripción
+            </label>
+            <textarea
+                formControlName="descripcion"
+                id="description"
+                type="text"
+                class="form-control"    
+                data-kt-autosize="true"
+            ></textarea>
+        </div>
+
+        <div class="form-group">
+            <label
+                class="required form-label"
+                for="price"
+            >
+                Precio  
+            </label>
+            <input
+                formControlName="precio"
+                id="price"
+                type="text"
+                minlength="1"
+                pattern="[0-9]*"
+                inputmode="numeric"
+                class="form-control"
+            />
+        </div>
+    </form>
+</div>
