@@ -1,3 +1,4 @@
+
 <div
   id="kt_body"
   class="header-fixed header-tablet-and-mobile-fixed aside-fixed aside-secondary-disabled"
@@ -30,9 +31,13 @@
   <div class="d-flex flex-column flex-root">
     <!--begin::Page-->
     <div class="page d-flex flex-row flex-column-fluid">
-      
+
       <!--begin::Wrapper-->
       <div class="d-flex flex-column flex-row-fluid" id="kt_wrapper">
+
+
+      <div class=" d-flex flex-column flex-row-fluid" id="kt_wrapper">
+
         <div
           id="kt_header"
           class="header py-6 py-lg-0"
@@ -50,7 +55,7 @@
               <!--begin::Heading-->
               <h1 class="d-flex flex-column text-gray-900 fw-bold my-1">
                 <span class="fs-1" style="color: white"
-                  >Cronograma General</span
+                  >{{cronogramaActual?.nombre}}</span
                 >
               </h1>
               <!--end::Heading-->
@@ -73,7 +78,7 @@
                   >
                 </li>
                 <li class="breadcrumb-item" style="color: gray">
-                  Cronograma General
+                  {{cronogramaActual?.nombre}}
                 </li>
               </ul>
               <!--end::Breadcrumb-->
@@ -212,7 +217,7 @@
             <div class="card">
               <!--begin::Card header-->
               <div class="card-header">
-                <h2 class="card-title fw-bold">Cronograma General</h2>
+                <h2 class="card-title fw-bold">{{cronogramaActual?.nombre}}</h2>
                 <div class="card-toolbar d-flex">
                   <button
                     class="btn btn-flex btn-primary me-2"
@@ -226,20 +231,7 @@
                       (change)="handleSelectChange($event)"
                     >
                       <option value="" disabled selected>Opciones</option>
-                      <option value="reservar-cita">Cronograma General</option>
-                      <option value="psicologia-1">Psicología 1</option>
-                      <option value="psicologia-2">Psicología 2</option>
-                      <option value="lenguaje-1">Lenguaje 1</option>
-                      <option value="lenguaje-2">Lenguaje 2</option>
-                      <option value="lenguaje-3">Lenguaje 3</option>
-                      <option value="ocupacional-1">Ocupacional 1</option>
-                      <option value="ocupacional-2">Ocupacional 2</option>
-                      <option value="ocupacional-3">Ocupacional 3</option>
-                      <option value="fisica-1">Fisica 1</option>
-                      <option value="fisica-2">Fisica 2</option>
-                      <option value="fisica-3">Fisica 3</option>
-                      <option value="neuro">Neuro</option>
-                      <option value="pediasuit">Pediasuit</option>
+                      <option *ngFor="let item of cronogramas" [value]="item.tag">{{item.nombre}}</option>
                     </select>
                   </div>
                 </div>
@@ -269,6 +261,3 @@
           </div>
         </div>
       </div>
-    </div>
-  </div>
-</div>

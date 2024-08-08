@@ -24,6 +24,7 @@ export class ModalEventComponent implements OnInit, AfterViewInit {
   editEventForm: FormGroup;
   therapyOptions: string[] = ['Psicología', 'Lenguaje', 'Ocupacional', 'Física', 'Neuro', 'Pediasuit'];
   patientOptions: string[] = ['Juan', 'Pedro', 'Maria'];
+  doctorOptions: string[] = ['Dr. A', 'Dr. B', 'Dr. C']; // Opciones para los doctores
   minDate: string;
   isEditMode: boolean = false;
 
@@ -34,6 +35,7 @@ export class ModalEventComponent implements OnInit, AfterViewInit {
     this.eventForm = this.fb.group({
       therapyType: ['', Validators.required],
       eventDescription: [''],
+      doctor: ['', Validators.required], // Campo de selección de doctor
       selectedPatient: ['', Validators.required],
       eventLocation: [''],
       startDate: ['', Validators.required],
@@ -45,6 +47,7 @@ export class ModalEventComponent implements OnInit, AfterViewInit {
     this.editEventForm = this.fb.group({
       therapyType: ['', Validators.required],
       eventDescription: [''],
+      doctor: ['', Validators.required], // Campo de selección de doctor
       selectedPatient: ['', Validators.required],
       eventLocation: [''],
       startDate: ['', Validators.required],
@@ -65,7 +68,7 @@ export class ModalEventComponent implements OnInit, AfterViewInit {
       flatpickr(this.datePicker.nativeElement, {
         locale: Spanish,
         weekNumbers: true,
-        mode:'multiple',
+        mode: 'multiple',
         dateFormat: "Y-m-d",
         minDate: this.minDate
       });
@@ -91,6 +94,7 @@ export class ModalEventComponent implements OnInit, AfterViewInit {
       this.eventForm.patchValue({
         therapyType: this.event.therapyType || '',
         eventDescription: this.event.description || '',
+        doctor: this.event.doctor || '', // Valor del doctor
         eventLocation: this.event.location || '',
         startDate: this.formatDate(new Date(this.event.start)),
         endDate: this.event.end ? this.formatDate(new Date(this.event.end)) : '',
@@ -102,6 +106,7 @@ export class ModalEventComponent implements OnInit, AfterViewInit {
       this.editEventForm.patchValue({
         therapyType: this.event.therapyType || '',
         eventDescription: this.event.description || '',
+        doctor: this.event.doctor || '', // Valor del doctor
         eventLocation: this.event.location || '',
         startDate: this.formatDate(new Date(this.event.start)),
         endDate: this.event.end ? this.formatDate(new Date(this.event.end)) : '',
@@ -155,6 +160,7 @@ export class ModalEventComponent implements OnInit, AfterViewInit {
         description: this.eventForm.value.eventDescription,
         location: this.eventForm.value.eventLocation,
         therapyType: this.eventForm.value.therapyType,
+        doctor: this.eventForm.value.doctor, // Añadir el doctor
         selectedPatient: this.eventForm.value.selectedPatient
       };
 
@@ -163,7 +169,6 @@ export class ModalEventComponent implements OnInit, AfterViewInit {
 
     this.activeModal.close();
   }
-
 
   updateEvent() {
     if (this.editEventForm.invalid) {
@@ -189,6 +194,7 @@ export class ModalEventComponent implements OnInit, AfterViewInit {
       description: this.editEventForm.value.eventDescription,
       location: this.editEventForm.value.eventLocation,
       therapyType: this.editEventForm.value.therapyType,
+      doctor: this.editEventForm.value.doctor, // Añadir el doctor
       selectedPatient: this.editEventForm.value.selectedPatient
     };
 

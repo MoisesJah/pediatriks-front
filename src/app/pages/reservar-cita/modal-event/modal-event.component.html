@@ -20,6 +20,13 @@
       <input type="text" class="form-control" id="calendar_event_description" formControlName="eventDescription"/>
     </div>
     <div class="form-group mb-3">
+      <label for="doctor_selection">Seleccionar Especialista</label>
+      <select class="form-control" id="doctor_selection" formControlName="doctor">
+        <option value="" disabled>Seleccionar Especialista</option>
+        <option *ngFor="let option of doctorOptions" [value]="option">{{ option }}</option>
+      </select>
+    </div>
+    <div class="form-group mb-3">
       <label for="patient_selection">Seleccionar Paciente</label>
       <select class="form-control" id="patient_selection" formControlName="selectedPatient">
         <option value="" disabled>Seleccionar Paciente</option>
@@ -50,35 +57,25 @@
   <button type="button" class="btn btn-primary" (click)="submitEvent()">Guardar</button>
 </div>
 
+
+
 <!-- Modal para ver evento -->
 <div *ngIf="event" class="modal-content">
   <!--begin::Modal header-->
   <div class="modal-header border-0 justify-content-end">
     <!--begin::Edit-->
     <div class="btn btn-icon btn-sm btn-color-gray-500 btn-active-icon-primary me-2" data-bs-toggle="tooltip" title="Edit Event" id="kt_modal_view_event_edit" (click)="openEditModal()">
-      <i class="ki-duotone ki-pencil fs-2">
-        <span class="path1"></span>
-        <span class="path2"></span>
-      </i>
+      <i class="fas fa-pencil-alt fs-2"></i>
     </div>
     <!--end::Edit-->
     <!--begin::Delete-->
     <div class="btn btn-icon btn-sm btn-color-gray-500 btn-active-icon-danger me-2" data-bs-toggle="tooltip" title="Delete Event" id="kt_modal_view_event_delete" (click)="deleteEvent()">
-      <i class="ki-duotone ki-trash fs-2">
-        <span class="path1"></span>
-        <span class="path2"></span>
-        <span class="path3"></span>
-        <span class="path4"></span>
-        <span class="path5"></span>
-      </i>
+      <i class="fas fa-trash-alt fs-2"></i>
     </div>
     <!--end::Delete-->
     <!--begin::Close-->
     <div class="btn btn-icon btn-sm btn-color-gray-500 btn-active-icon-primary" data-bs-toggle="tooltip" title="Hide Event" (click)="closeModal()">
-      <i class="ki-duotone ki-cross fs-2x">
-        <span class="path1"></span>
-        <span class="path2"></span>
-      </i>
+      <i class="fas fa-times fs-2x"></i>
     </div>
     <!--end::Close-->
   </div>
@@ -88,14 +85,7 @@
     <!--begin::Row-->
     <div class="d-flex">
       <!--begin::Icon-->
-      <i class="ki-duotone ki-calendar-8 fs-1 text-muted me-5">
-        <span class="path1"></span>
-        <span class="path2"></span>
-        <span class="path3"></span>
-        <span class="path4"></span>
-        <span class="path5"></span>
-        <span class="path6"></span>
-      </i>
+      <i class="fas fa-calendar-alt fs-1 text-muted me-5"></i>
       <!--end::Icon-->
       <div class="mb-9">
         <!--begin::Event name-->
@@ -139,10 +129,17 @@
     <!--begin::Row-->
     <div class="d-flex align-items-center mb-2">
       <!--begin::Icon-->
-      <i class="ki-duotone ki-user fs-1 text-muted me-5">
-        <span class="path1"></span>
-        <span class="path2"></span>
-      </i>
+      <i class="fas fa-user-md fs-1 text-muted me-5"></i>
+      <!--end::Icon-->
+      <!--begin::Event doctor-->
+      <div class="fs-6" data-kt-calendar="event_doctor">{{event?.doctor}}</div>
+      <!--end::Event doctor-->
+    </div>
+    <!--end::Row-->
+    <!--begin::Row-->
+    <div class="d-flex align-items-center mb-2">
+      <!--begin::Icon-->
+      <i class="fas fa-user fs-1 text-muted me-5"></i>
       <!--end::Icon-->
       <!--begin::Event patient-->
       <div class="fs-6" data-kt-calendar="event_patient">{{event?.selectedPatient}}</div>
@@ -152,10 +149,7 @@
     <!--begin::Row-->
     <div class="d-flex align-items-center">
       <!--begin::Icon-->
-      <i class="ki-duotone ki-geolocation fs-1 text-muted me-5">
-        <span class="path1"></span>
-        <span class="path2"></span>
-      </i>
+      <i class="fas fa-map-marker-alt fs-1 text-muted me-5"></i>
       <!--end::Icon-->
       <!--begin::Event location-->
       <div class="fs-6" data-kt-calendar="event_location">{{event?.location}}</div>
