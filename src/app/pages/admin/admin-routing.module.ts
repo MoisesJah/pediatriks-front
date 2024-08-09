@@ -19,6 +19,11 @@ const routes: Routes = [
     loadComponent: () =>
       import('./users/users.component').then((m) => m.UsersComponent),
   },
+  {
+    path: 'personal',
+    loadComponent: () =>
+      import('./personal/personal.component').then((m) => m.PersonalComponent),
+  },
 ];
 
 @NgModule({

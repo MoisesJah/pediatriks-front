@@ -1,2 +1,8 @@
-<p>admin dashboard works!</p>
-<a routerLink="/admin/users"><button>users</button></a>
+
+<a routerLink="users" data-kt-menu-trigger="{default: 'click', lg: 'hover'}"data-kt-menu-placement="right-start"class="menu-item py-2"style=" transition: background-color 0.3s; border-radius:15px; "onmouseover="this.style.backgroundColor='rgb(245,248,250,0.8)';"onmouseout="this.style.backgroundColor='';"><button>users</button></a>
+<a routerLink="personal" data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-placement="right-start" class="menu-item py-2" style="transition: background-color 0.3s; border-radius: 15px;" onmouseover="this.style.backgroundColor='rgb(245,248,250,0.8)';" onmouseout="this.style.backgroundColor='';">
+  <button class="d-flex flex-column align-items-center">
+    <i class="fas fa-users fs-3"></i>
+    <span class="mt-2">Personal</span>
+  </button>
+</a>

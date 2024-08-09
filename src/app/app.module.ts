@@ -15,6 +15,8 @@ import { DropdownComponent } from './components/ui/dropdown/dropdown.component';
 import { loadingInterceptor } from './interceptors/loading.interceptor';
 import { LayoutComponent } from "./components/layout/layout.component";
 import { UserModalsModule } from './pages/admin/users/modals/modals.module';
+import { PersonalModalsModule } from './pages/admin/personal/modales/modales.module';
+
 
 @NgModule({
   declarations: [
@@ -32,7 +34,11 @@ import { UserModalsModule } from './pages/admin/users/modals/modals.module';
     UserModalsModule,
     ModalEditModule,
     DropdownComponent,
-    LayoutComponent
+    LayoutComponent,
+    AdminDashboardComponent,
+    PersonalModalsModule,
+
+
 ],
   providers: [
     provideHttpClient(withInterceptors([tokenInterceptor, loadingInterceptor])),

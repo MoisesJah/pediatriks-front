@@ -38,7 +38,7 @@ export class DashboardComponent {
     const selectedElements = document.querySelectorAll('.menu-item.selected');
     selectedElements.forEach(el => {
       el.classList.remove('selected');
-      (el as HTMLElement).style.backgroundColor = '';
+      (el as HTMLElement).style.backgroundColor = ''; 
     });
   }
 

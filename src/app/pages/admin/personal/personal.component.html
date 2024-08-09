@@ -1,0 +1,76 @@
+<div class="table-responsive container card shadow p-2 px-4 content bg-white">
+  <div class="d-flex p-4 justify-content-between align-items-center">
+    <h1>Personal</h1>
+    <button type="button" class="btn btn-primary" (click)="openCrearModal()">
+      <span class="d-flex align-items-center">
+        <span class="ki-solid ki-plus text-white fs-1"></span>
+        <span class="text-white ms-2">Nuevo Personal</span>
+      </span>
+    </button>
+  </div>
+
+  <div class="d-flex justify-content-between align-items-center my-4">
+    <div class="d-flex flex-column align-items-center position-relative">
+      <label for="filter-nombre" class="form-label">Nombre</label>
+      <input
+        id="filter-nombre"
+        type="text"
+        class="form-control"
+        (input)="onNameInput($event)"
+        [value]="searchName"
+        placeholder="Ingresar nombre"
+        (focus)="showSuggestions = true"
+        (blur)="hideSuggestions()"
+      />
+      <ul *ngIf="showSuggestions && suggestions.length > 0" class="list-group position-absolute" style="z-index: 1000;">
+        <li
+          *ngFor="let suggestion of suggestions"
+          (click)="selectSuggestion(suggestion)"
+          class="list-group-item list-group-item-action"
+        >
+          {{ suggestion }}
+        </li>
+      </ul>
+    </div>
+
+    <div class="d-flex align-items-center mt-4">
+      <button type="button" class="btn btn-primary" (click)="applyFilterClick()">
+        Filtrar
+      </button>
+    </div>
+  </div>
+
+  <table class="table table-row-dashed w-full">
+    <thead class="bg-gray-100 fw-semibold">
+      <tr>
+        <th scope="col">Nombre</th>
+        <th scope="col">DNI</th>
+        <th scope="col">Teléfono</th>
+        <th scope="col">Correo</th>
+        <th scope="col">Genero</th>
+        <th scope="col">Sueldo</th>
+        <th scope="col">Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let personal of filteredList; trackBy: trackById">
+        <td>{{ personal.nombre }}</td>
+        <td>{{ personal.dni }}</td>
+        <td>{{ personal.telefono }}</td>
+        <td>{{ personal.correo }}</td>
+        <td>{{ personal.genero }}</td>
+        <td>{{ personal.sueldo }}</td>
+        <td>
+          <div class="d-flex align-items-center gap-2">
+            <button class="btn btn-icon btn-sm bg-success" (click)="openEditarModal(personal.id_personal)">
+              <span class="ki-solid ki-pencil text-white fs-3"></span>
+            </button>
+            <button class="btn btn-icon btn-sm btn-danger" (click)="delete(personal.id_personal)">
+              <span class="ki-solid ki-trash text-white fs-3"></span>
+            </button>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
