@@ -6,11 +6,9 @@ import { authGuard } from './guards/auth.guard';
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: 'admin',   loadChildren: ()=> import('./pages/admin/admin.module').then(m => m.AdminModule) },
-  { path: 'login', loadChildren: () => import('./pages/login/login.module').then(m => m.LoginModule) },
+  { path: 'login',  loadChildren: () => import('./pages/login/login.module').then(m => m.LoginModule) },
   { path: 'registrate', loadChildren: () => import('./pages/registrate/registrate.module').then(m => m.RegistrateModule) },
-  { path: '', loadChildren: () => import('./pages/dashboard/dashboard.module').then(m => m.DashboardModule) },
-
-
+  { path: 'dashboard', loadChildren: () => import('./pages/dashboard/dashboard.module').then(m => m.DashboardModule) },
   { path: '**', redirectTo: 'login', pathMatch: 'full' }
 ];
 

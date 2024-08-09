@@ -6,12 +6,15 @@ import { authGuard } from 'src/app/guards/auth.guard';
 const routes: Routes = [
   {
     path: '', component: DashboardComponent,
-    children: [
-      { path: 'reservar-cita/:tag', loadChildren: () => import('../reservar-cita/reservar-cita.module').then(m => m.ReservarCitaModule) },
+    // children: [
+    //   { path: 'reservar-cita/:tag', loadChildren: () => import('../reservar-cita/reservar-cita.module').then(m => m.ReservarCitaModule) },
 
-      { path: 'sedes', loadChildren: () => import('../sedes/sedes.module').then(m => m.SedesModule) },
-    ]
+    //   { path: 'sedes', loadChildren: () => import('../sedes/sedes.module').then(m => m.SedesModule) },
+    // ]
   },
+  { path: 'reservar-cita/:tag', loadChildren: () => import('../reservar-cita/reservar-cita.module').then(m => m.ReservarCitaModule) },
+
+  { path: 'sedes', loadChildren: () => import('../sedes/sedes.module').then(m => m.SedesModule) },
 ];
 
 @NgModule({

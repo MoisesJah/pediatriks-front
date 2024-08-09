@@ -51,7 +51,8 @@ export class UsersComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Opens the create modal and subscribes to the onSaveComplete event to refresh the user list.
+   * Opens the create modal and subscribes to 
+   * the onSaveComplete event to refresh the user list.
    */
   openCreateModal() {
     const modalRef = this.modal.open(CreateModalComponent, {

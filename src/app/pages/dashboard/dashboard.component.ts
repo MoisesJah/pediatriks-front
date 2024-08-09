@@ -1,18 +1,15 @@
 import { Component } from '@angular/core';
 import { Router, RouterModule, RouterOutlet } from '@angular/router';
-import { NavbarComponent } from 'src/app/components/ui/navbar/navbar.component';
+import { HeaderComponent } from 'src/app/components/ui/header/header.component';
 
 @Component({
   selector: 'app-dashboard',
-  imports: [NavbarComponent,RouterOutlet],
+  imports: [HeaderComponent, RouterOutlet],
   standalone: true,
   templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.scss']
+  styleUrls: ['./dashboard.component.scss'],
 })
 export class DashboardComponent {
-
-
-
   navigateToSedes(event: Event): void {
     // Detener el comportamiento por defecto del click, si lo hubiera
     event.preventDefault();
@@ -21,7 +18,6 @@ export class DashboardComponent {
     this.removeSelectedClass();
     target.style.backgroundColor = '#00e4ef';
     target.classList.add('selected');
-
   }
 
   navigateToReservarCita(event: Event): void {
@@ -36,10 +32,9 @@ export class DashboardComponent {
 
   private removeSelectedClass(): void {
     const selectedElements = document.querySelectorAll('.menu-item.selected');
-    selectedElements.forEach(el => {
+    selectedElements.forEach((el) => {
       el.classList.remove('selected');
       (el as HTMLElement).style.backgroundColor = '';
     });
   }
-
 }

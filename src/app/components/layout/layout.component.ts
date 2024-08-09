@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
-import { NavbarComponent } from '../ui/navbar/navbar.component';
+import { HeaderComponent } from '../ui/header/header.component';
 import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-layout',
   standalone: true,
-  imports: [NavbarComponent],
+  imports: [HeaderComponent],
   templateUrl: './layout.component.html',
   styleUrl: './layout.component.scss'
 })
@@ -22,7 +22,8 @@ export class LayoutComponent {
     target.style.backgroundColor = '#00e4ef';
     target.classList.add('selected');
     // Navegar al componente sedes
-    this.router.navigate(['/sedes']);
+    this.router.navigate(['/dashboard/sedes']);
+    console.log('Sedes');
   }
 
   navigateToReservarCita(event: Event): void {
@@ -34,7 +35,7 @@ export class LayoutComponent {
     target.style.backgroundColor = '#00e4ef';
     target.classList.add('selected');
     // Navegar al componente reservar-cita
-    this.router.navigate(['/reservar-cita']);
+    this.router.navigate(['/dashboard/reservar-cita']);
   }
 
   private removeSelectedClass(): void {
