@@ -8,11 +8,13 @@ import { Subject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { LoadingService } from 'src/app/services/loading.service';
+import { HeaderComponent } from 'src/app/components/ui/header/header.component';
+import { EditModalComponent } from '../users/modals/edit-modal/edit-modal.component';
 
 @Component({
   selector: 'app-personal',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule,HeaderComponent],
   templateUrl: './personal.component.html',
   styleUrls: ['./personal.component.scss']
 })
@@ -57,27 +59,35 @@ export class PersonalComponent implements OnInit {
     });
   }
 
-  openEditarModal(personalId: string) {
-    const id = Number(personalId); // Convertir el ID a número si es necesario
-    this.personalService.getById(id).subscribe({
-      next: (personal: Personal) => {
-        const modalRef = this.modal.open(
-          EditarModalComponent,
-          { size: 'lg', animation: true }
-        );
+  // openEditarModal(personalId: string) {
+  //   const id = Number(personalId); // Convertir el ID a número si es necesario
+  //   this.personalService.getById(id).subscribe({
+  //     next: (personal: Personal) => {
+  //       const modalRef = this.modal.open(
+  //         EditarModalComponent,
+  //         { size: 'lg', animation: true }
+  //       );
 
-        // Pasar los datos del personal al modal
-        modalRef.componentInstance.loadPersonalData(personal);
+  //       // Pasar los datos del personal al modal
+  //       modalRef.componentInstance.loadPersonalData(personal);
 
-        // Actualizar la vista después de guardar los cambios
-        modalRef.componentInstance.onSaveComplete.subscribe(() => {
-          this.fetchPersonal(); // Llama a tu método para actualizar la lista
-        });
-      },
-      error: (err) => {
-        console.error('Error loading personal data:', err);
-      }
-    });
+  //       // Actualizar la vista después de guardar los cambios
+  //       modalRef.componentInstance.onSaveComplete.subscribe(() => {
+  //         this.fetchPersonal(); // Llama a tu método para actualizar la lista
+  //       });
+  //     },
+  //     error: (err) => {
+  //       console.error('Error loading personal data:', err);
+  //     }
+  //   });
+  // }
+
+  openEditarModal(personal: Personal) {
+    const modalRef = this.modal.open(EditarModalComponent, {
+      size: 'lg',
+      animation: true
+    })
+    modalRef.componentInstance.editForm.patchValue(personal);
   }
 
   private fetchPersonal(): void {

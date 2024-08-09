@@ -1,3 +1,11 @@
+<app-header>
+  <ng-container header-title>
+    <h1 class="d-flex flex-column text-gray-900 fw-bold my-1">  
+      <span class="" style="color: white">Personal</span>
+    </h1>
+  </ng-container>
+</app-header>
+
 <div class="table-responsive container card shadow p-2 px-4 content bg-white">
   <div class="d-flex p-4 justify-content-between align-items-center">
     <h1>Personal</h1>
@@ -62,7 +70,7 @@
         <td>{{ personal.sueldo }}</td>
         <td>
           <div class="d-flex align-items-center gap-2">
-            <button class="btn btn-icon btn-sm bg-success" (click)="openEditarModal(personal.id_personal)">
+            <button class="btn btn-icon btn-sm bg-success" (click)="openEditarModal(personal)">
               <span class="ki-solid ki-pencil text-white fs-3"></span>
             </button>
             <button class="btn btn-icon btn-sm btn-danger" (click)="delete(personal.id_personal)">

@@ -15,12 +15,13 @@ import { CreateModalComponent } from './modals/create-modal/create-modal.compone
 import { EditModalComponent } from './modals/edit-modal/edit-modal.component';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { DeleteModalComponent } from './modals/delete-modal/delete-modal.component';
+import { HeaderComponent } from 'src/app/components/ui/header/header.component';
 
 @UntilDestroy()
 @Component({
   selector: 'app-users',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule,HeaderComponent],
   templateUrl: './users.component.html',
   styleUrl: './users.component.scss',
 })

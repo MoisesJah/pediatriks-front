@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Inject,Input, Output, OnInit } from '@angular/core';
+import { Component, EventEmitter, Inject,Input, Output, OnInit, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { LoadingService } from 'src/app/services/loading.service';
@@ -12,9 +12,9 @@ import { HttpErrorResponse } from '@angular/common/http';
   styleUrls: ['./editar-modal.component.scss']
 })
 export class EditarModalComponent implements OnInit {
-  modal = Inject(NgbModal);
-  personalService = Inject(PersonalService);
-  isLoading = Inject(LoadingService).isLoading;
+  modal = inject(NgbModal);
+  personalService = inject(PersonalService);
+  isLoading = inject(LoadingService).isLoading;
 
   @Input() personalId!: number; // Asegúrate de que el ID sea pasado como Input
   editForm: FormGroup;
@@ -49,7 +49,7 @@ export class EditarModalComponent implements OnInit {
     if (this.editForm.valid) {
       console.log(this.editForm.value);
       this.personalService
-        .update(this.editForm.value)  // Asegúrate de que `update` sea el método correcto en el servicio
+        .update(this.editForm.value, this.personalId)  // Asegúrate de que `update` sea el método correcto en el servicio
         .subscribe(() => {
           this.onSaveComplete.emit();
           this.modal.dismissAll();
