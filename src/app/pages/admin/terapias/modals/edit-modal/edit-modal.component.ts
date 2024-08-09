@@ -1,23 +1,25 @@
 import { Component, EventEmitter, inject, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { ITerapia } from 'src/app/models/terapia';
 import { LoadingService } from 'src/app/services/loading.service';
 import { TerapiaService } from 'src/app/services/terapia/terapia.service';
 
 @Component({
-  selector: 'app-create-modal',
-  templateUrl: './create-modal.component.html',
-  styleUrl: './create-modal.component.scss'
+  selector: 'app-edit-modal',
+  templateUrl: './edit-modal.component.html',
+  styleUrl: './edit-modal.component.scss'
 })
-export class CreateModalComponent {
-  modal = inject(NgbModal);
-  terapiasService = inject(TerapiaService);
-  isLoading = inject(LoadingService).isLoading;
+export class EditModalComponent {
+  modal = inject(NgbActiveModal);
+  terapiaService = inject(TerapiaService);
+  isLoading = inject(LoadingService).isLoading
+
+  terapiaId: string | undefined;
 
   @Output() onSaveComplete = new EventEmitter();
 
   terapiaForm: FormGroup;
-
   constructor(private fb: FormBuilder) {
     this.terapiaForm = this.fb.group({
       nombre: ['', Validators.required],
@@ -26,16 +28,14 @@ export class CreateModalComponent {
     });
   }
 
-  save() {
-    this.terapiasService
-      .create(this.terapiaForm.value)
-      .subscribe(() => {
-        this.onSaveComplete.emit();
-        this.modal.dismissAll();
-      });
+  edit(terapia: ITerapia) {
+    this.terapiaService.update(terapia, this.terapiaId!).subscribe(() => {
+      this.onSaveComplete.emit();
+      this.modal.close();
+    })
   }
 
   close() {
-    this.modal.dismissAll();
+    this.modal.close();
   }
 }

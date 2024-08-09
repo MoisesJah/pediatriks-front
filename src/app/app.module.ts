@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { LOCALE_ID, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -16,11 +16,13 @@ import { loadingInterceptor } from './interceptors/loading.interceptor';
 import { LayoutComponent } from "./components/layout/layout.component";
 import { UserModalsModule } from './pages/admin/users/modals/modals.module';
 import { PersonalModalsModule } from './pages/admin/personal/modales/modales.module';
+import { TerapiasModalsModule } from './pages/admin/terapias/modals/modals.module';
+import { PacientesModalsModule } from './pages/admin/pacientes/modals/modals.module';
 
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
   ],
   imports: [
     BrowserModule,
@@ -37,8 +39,8 @@ import { PersonalModalsModule } from './pages/admin/personal/modales/modales.mod
     LayoutComponent,
     AdminDashboardComponent,
     PersonalModalsModule,
-
-
+    TerapiasModalsModule,
+    PacientesModalsModule
 ],
   providers: [
     provideHttpClient(withInterceptors([tokenInterceptor, loadingInterceptor])),

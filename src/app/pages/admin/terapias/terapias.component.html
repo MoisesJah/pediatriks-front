@@ -1,10 +1,47 @@
+<app-header>
+  <ng-container header-title>
+    <h1 class="d-flex flex-column text-gray-900 fw-bold my-1">  
+      <span class="" style="color: white">Terapias</span>
+    </h1>
+  </ng-container>
+</app-header>
+
 <div class="table-responsive container card shadow p-2 px-4 content bg-white">
-    <div class="d-flex p-4 justify-content-between align-items-center">
-      <h1>Usuarios</h1>
-      <button type="button" class="btn btn-primary" (click)="openCreateModal()">
-        <span class="d-flex align-items-center">
-          <span class="ki-solid ki-plus text-white fs-1"></span>
-          <span class="text-white ms-2">Añadir</span>
-        </span>
-      </button>
-    </div>
+  <div class="d-flex p-4 justify-content-between align-items-center">
+    <h1>Terapias</h1>
+    <button type="button" class="btn btn-primary" (click)="openCreateModal()">
+      <span class="d-flex align-items-center">
+        <span class="ki-solid ki-plus text-white fs-1"></span>
+        <span class="text-white ms-2">Añadir</span>
+      </span>
+    </button>
+  </div>
+
+  <table class="table table-row-dashed w-full">
+    <thead class="bg-gray-100 fw-semibold">
+      <tr>
+        <th scope="col">Nombre</th>
+        <th scope="col">Descripción</th>
+        <th scope="col">Precio</th>
+        <th scope="col">Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let terapia of terapiasList;">
+        <td>{{ terapia.nombre }}</td>
+        <td id="descripcion">{{ terapia.descripcion }}</td>
+        <td>{{ terapia.precio | currency:'S/':'symbol' }}</td>
+        <td>
+          <div class="d-flex align-items-center gap-2">
+            <button class="btn btn-icon btn-sm bg-success" (click)="openEditModal(terapia)">
+              <span class="ki-solid ki-pencil text-white fs-3"></span>
+            </button>
+            <button class="btn btn-icon btn-sm btn-danger" (click)="openDeleteModal(terapia)">
+              <span class="ki-solid ki-trash text-white fs-3"></span>
+            </button>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

@@ -1,0 +1,44 @@
+<div class="modal-header">
+  <h4 class="modal-title" id="modal-basic-title">Crear Paciente</h4>
+  <button
+    type="button"
+    class="btn btn-sm btn-icon btn-active-color-primary btn-color-gray-800"
+    aria-label="Close"
+    (click)="close()"
+  >
+    <i class="ki-duotone ki-cross-square fs-1"
+      ><span class="path1"></span><span class="path2"></span
+    ></i>
+  </button>
+</div>
+<div class="modal-body">
+  <form [formGroup]="pacienteForm" class="form d-flex flex-column gap-4">
+    <div class="d-flex flex-column gap-3">
+      <label for="name" class="required form-label">Nombres</label>
+      <input
+        type="text"
+        id=""
+        class="form-control"
+        formControlName="nombre"
+      />
+    </div>
+
+    <div class="d-flex flex-column gap-3">
+      <label for="lastName" class="required form-label">DNI</label>
+      <input
+        type="text"
+        id="lastName"
+        class="form-control"
+        formControlName="dni"
+      />
+    </div>
+
+    <div class="d-flex flex-column gap-3">
+      <label for="email" class="required form-label">Usuario</label>
+      <select2 class="form-control" [data]="users" [templates]="{option : option, group: group}" [disabled]="isLoading |async">
+        <ng-template #option let-data="data">{{data?.name}}</ng-template>
+        <ng-template #group let-label="label">Group: {{label}}</ng-template>
+      </select2>
+    </div>
+  </form>
+</div>

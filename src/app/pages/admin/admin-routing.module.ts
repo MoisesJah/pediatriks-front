@@ -3,7 +3,6 @@ import { RouterModule, Routes } from '@angular/router';
 import { authGuard } from 'src/app/guards/auth.guard';
 import { adminGuard } from 'src/app/guards/admin.guard';
 
-
 const routes: Routes = [
   { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
   {
@@ -18,6 +17,18 @@ const routes: Routes = [
     path: 'usuarios',
     loadComponent: () =>
       import('./users/users.component').then((m) => m.UsersComponent),
+  },
+  {
+    path: 'terapias',
+    loadComponent: () =>
+      import('./terapias/terapias.component').then((m) => m.TerapiasComponent),
+  },
+  {
+    path: 'pacientes',
+    loadComponent: () =>
+      import('./pacientes/pacientes.component').then(
+        (m) => m.PacientesComponent
+      ),
   },
   {
     path: 'personal',

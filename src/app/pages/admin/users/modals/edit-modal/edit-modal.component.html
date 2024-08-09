@@ -45,7 +45,7 @@
         >
           Contraseña
         </label>
-        <button type="button" class="btn btn-sm btn-secondary">
+        <button (click)="generatePassword()" type="button" class="btn btn-sm btn-secondary">
           <i class="ki-duotone ki-note">
             <span class="path1"></span>
             <span class="path2"></span>
@@ -80,7 +80,7 @@
       class="btn btn-primary"
       (click)="edit(userForm.value, userId!)"
     >
-      Guardar {{ userId }}
+      Actualizar 
       <span *ngIf="isLoading | async" class="spinner-border spinner-border-sm align-middle ms-2"></span>
     </button>
   </div>
