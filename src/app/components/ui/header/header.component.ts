@@ -6,13 +6,13 @@ import { CommonModule } from '@angular/common';
 import { PopoverComponent } from '../popover/popover.component';
 
 @Component({
-  selector: 'app-navbar',
-  templateUrl: './navbar.component.html',
+  selector: 'app-header',
+  templateUrl: './header.component.html',
   standalone: true,
   imports: [DropdownComponent, CommonModule, PopoverComponent,RouterLink],
-  styleUrl: './navbar.component.scss',
+  styleUrl: './header.component.scss',
 })
-export class NavbarComponent {
+export class HeaderComponent {
   authService = inject(AuthService);
   router = inject(Router);
 
