@@ -1,31 +1,67 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
+import { Observable } from 'rxjs';
+import { Terapia } from 'src/app/models/terapia'; // Ajusta la ruta si es necesario
 
 @Injectable({
   providedIn: 'root'
 })
 export class TerapiaService {
   apiUrl = environment.apiUrl;
+
   constructor(private http: HttpClient) { }
-  // add empty list for tables
-  getAll() {
-    return this.http.get(`${this.apiUrl}/terapia/list`);
+
+  getAll(): Observable<Terapia[]> {
+    return this.http.get<Terapia[]>(`${this.apiUrl}/terapia/list`);
   }
 
-  getById(id: string) {
-    return this.http.get(`${this.apiUrl}/terapia/list/${id}`);
+  getById(id: string): Observable<Terapia> {
+    return this.http.get<Terapia>(`${this.apiUrl}/terapia/list/${id}`);
   }
 
-  create(terapia: any) {
-    return this.http.post(`${this.apiUrl}/terapia/add`, terapia);
+  create(terapia: Terapia): Observable<Terapia> {
+    return this.http.post<Terapia>(`${this.apiUrl}/terapia/add`, terapia);
   }
 
-  update(terapia: any, id: string) {
-    return this.http.put(`${this.apiUrl}/terapia/edit/${id}`, terapia);
+  update(terapia: Terapia, id: string): Observable<Terapia> {
+    return this.http.put<Terapia>(`${this.apiUrl}/terapia/edit/${id}`, terapia);
   }
 
-  delete(id: string) {
-    return this.http.delete(`${this.apiUrl}/terapia/delete/${id}`);
+  delete(id: string): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/terapia/delete/${id}`);
+  }
+
+  // Nuevos métodos
+  getPersonalByTerapia(id: string): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/terapia/getpersonal/terapia/${id}`);
+  }
+
+  getAllPersonal(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/terapia/getpersonal`);
+  }
+
+  getCitasByTerapia(id: string): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/terapia/getcitas/terapia/${id}`);
+  }
+
+  getAllCitas(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/terapia/getcitas`);
+  }
+
+  getPacientesByTerapia(id: string): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/terapia/getpacientes/terapia/${id}`);
+  }
+
+  getAllPacientes(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/terapia/getpacientes`);
+  }
+
+  getHorariosByTerapia(id: string): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/terapia/gethorarios/terapia/${id}`);
+  }
+
+  getAllHorarios(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/terapia/gethorarios`);
   }
 }

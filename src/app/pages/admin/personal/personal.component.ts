@@ -9,12 +9,15 @@ import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { LoadingService } from 'src/app/services/loading.service';
 import { HeaderComponent } from 'src/app/components/ui/header/header.component';
-import { EditModalComponent } from '../users/modals/edit-modal/edit-modal.component';
+import { TipoPersonalService } from 'src/app/services/tipopersonal/tipopersonal.service';
+import { TerapiaService } from 'src/app/services/terapia/terapia.service';
+import { HorarioPersonalService } from 'src/app/services/horariopersonal/horariopersonal.service';
+import { HorarioPersonal } from 'src/app/models/horariop';
 
 @Component({
   selector: 'app-personal',
   standalone: true,
-  imports: [CommonModule,HeaderComponent],
+  imports: [CommonModule, HeaderComponent],
   templateUrl: './personal.component.html',
   styleUrls: ['./personal.component.scss']
 })
@@ -29,9 +32,18 @@ export class PersonalComponent implements OnInit {
   filterApplied: boolean = false;
   modal = inject(NgbModal);
   isLoading = inject(LoadingService).isLoading;
+  tipoPersonalService = inject(TipoPersonalService);
+  terapiaService = inject(TerapiaService);
+  horariopersonalService = inject(HorarioPersonalService);
+  tiposPersonalList: Array<any> = [];
+  terapiasList: Array<any> = [];
+  horariosList: Array<HorarioPersonal> = [];
 
   ngOnInit(): void {
     this.fetchPersonal();
+    this.fetchTiposPersonal();
+    this.fetchTerapias();
+    this.fetchHorarios();
 
     this.searchTerm$
       .pipe(
@@ -59,34 +71,11 @@ export class PersonalComponent implements OnInit {
     });
   }
 
-  // openEditarModal(personalId: string) {
-  //   const id = Number(personalId); // Convertir el ID a número si es necesario
-  //   this.personalService.getById(id).subscribe({
-  //     next: (personal: Personal) => {
-  //       const modalRef = this.modal.open(
-  //         EditarModalComponent,
-  //         { size: 'lg', animation: true }
-  //       );
-
-  //       // Pasar los datos del personal al modal
-  //       modalRef.componentInstance.loadPersonalData(personal);
-
-  //       // Actualizar la vista después de guardar los cambios
-  //       modalRef.componentInstance.onSaveComplete.subscribe(() => {
-  //         this.fetchPersonal(); // Llama a tu método para actualizar la lista
-  //       });
-  //     },
-  //     error: (err) => {
-  //       console.error('Error loading personal data:', err);
-  //     }
-  //   });
-  // }
-
   openEditarModal(personal: Personal) {
     const modalRef = this.modal.open(EditarModalComponent, {
       size: 'lg',
       animation: true
-    })
+    });
     modalRef.componentInstance.editForm.patchValue(personal);
   }
 
@@ -94,7 +83,20 @@ export class PersonalComponent implements OnInit {
     this.personalService.getAll().subscribe({
       next: (response: any) => {
         if (response && Array.isArray(response.data)) {
-          this.personalList = response.data;
+          this.personalList = response.data.map((personal: any) => {
+            // Encuentra el tipo de personal, terapia y horario correspondientes
+            const tipoPersonal = this.tiposPersonalList.find(tp => tp.id_tipopersonal === personal.id_tipopersonal);
+            const terapia = this.terapiasList.find(t => t.id_terapia === personal.id_terapia);
+            const horario = this.horariosList.find(h => h.id_horariop === personal.id_horario); // Usa 'id_horariop' en lugar de 'id'
+
+            return {
+              ...personal,
+              tipoPersonalName: tipoPersonal ? tipoPersonal.especialidad : 'Sin asignar',
+              terapiaName: terapia ? terapia.nombre : 'Sin asignar',
+              horarioIniciop: horario ? horario.horario_iniciop : 'No asignado',
+              horarioFinalp: horario ? horario.horario_finalp : 'No asignado'
+            };
+          });
           this.applyFilter();
         } else {
           console.error('Expected an array in response.data but received:', response.data);
@@ -102,6 +104,52 @@ export class PersonalComponent implements OnInit {
       },
       error: (err: any) => {
         console.error('Error fetching personal data:', err);
+      }
+    });
+  }
+
+
+  private fetchTiposPersonal(): void {
+    this.tipoPersonalService.getAll().subscribe({
+      next: (response: any) => {
+        if (response && Array.isArray(response.data)) {
+          this.tiposPersonalList = response.data;
+        } else {
+          console.error('Expected an array in response.data but received:', response.data);
+        }
+      },
+      error: (err: any) => {
+        console.error('Error fetching tipos personal data:', err);
+      }
+    });
+  }
+
+  private fetchTerapias(): void {
+    this.terapiaService.getAll().subscribe({
+      next: (response: any) => {
+        if (response && Array.isArray(response.data)) {
+          this.terapiasList = response.data;
+        } else {
+          console.error('Expected an array in response.data but received:', response.data);
+        }
+      },
+      error: (err: any) => {
+        console.error('Error fetching terapias data:', err);
+      }
+    });
+  }
+
+  private fetchHorarios(): void {
+    this.horariopersonalService.getAll().subscribe({
+      next: (response: any) => {
+        if (response && Array.isArray(response.data)) {
+          this.horariosList = response.data;
+        } else {
+          console.error('Expected an array in response.data but received:', response.data);
+        }
+      },
+      error: (err: any) => {
+        console.error('Error fetching horarios data:', err);
       }
     });
   }

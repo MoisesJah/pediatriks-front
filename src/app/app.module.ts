@@ -16,7 +16,7 @@ import { loadingInterceptor } from './interceptors/loading.interceptor';
 import { LayoutComponent } from "./components/layout/layout.component";
 import { UserModalsModule } from './pages/admin/users/modals/modals.module';
 import { PersonalModalsModule } from './pages/admin/personal/modales/modales.module';
-
+import { NgSelectModule } from '@ng-select/ng-select';
 
 @NgModule({
   declarations: [
@@ -37,6 +37,7 @@ import { PersonalModalsModule } from './pages/admin/personal/modales/modales.mod
     LayoutComponent,
     AdminDashboardComponent,
     PersonalModalsModule,
+    NgSelectModule
 
 
 ],

@@ -1,8 +1,5 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { authGuard } from 'src/app/guards/auth.guard';
-import { adminGuard } from 'src/app/guards/admin.guard';
-
 
 const routes: Routes = [
   { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
@@ -13,7 +10,6 @@ const routes: Routes = [
         (m) => m.AdminDashboardComponent
       ),
   },
-
   {
     path: 'usuarios',
     loadComponent: () =>
@@ -23,6 +19,11 @@ const routes: Routes = [
     path: 'personal',
     loadComponent: () =>
       import('./personal/personal.component').then((m) => m.PersonalComponent),
+  },
+  {
+    path: 'paquetes',
+    loadComponent: () =>
+      import('./paquetes/paquetes.component').then((m) => m.PaquetesComponent),
   },
 ];
 

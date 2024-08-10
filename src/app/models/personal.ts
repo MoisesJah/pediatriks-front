@@ -1,9 +1,9 @@
 export interface Personal {
   id_personal: number;
   id: number;
-  id_tipopersonal: number;
-  id_terapia: number;
-  id_horariop: number;
+  id_tipopersonal: string;
+  id_terapia: string;
+  id_horariop: string;
   nombre: string;
   dni: string;
   telefono: string;

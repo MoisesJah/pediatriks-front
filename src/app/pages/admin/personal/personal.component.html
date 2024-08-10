@@ -1,6 +1,6 @@
 <app-header>
   <ng-container header-title>
-    <h1 class="d-flex flex-column text-gray-900 fw-bold my-1">  
+    <h1 class="d-flex flex-column text-gray-900 fw-bold my-1">
       <span class="" style="color: white">Personal</span>
     </h1>
   </ng-container>
@@ -55,7 +55,10 @@
         <th scope="col">DNI</th>
         <th scope="col">Teléfono</th>
         <th scope="col">Correo</th>
-        <th scope="col">Genero</th>
+        <th scope="col">Género</th>
+        <th scope="col">Tipo de Personal</th>
+        <th scope="col">Terapia</th>
+        <th scope="col">Horario</th> 
         <th scope="col">Sueldo</th>
         <th scope="col">Acciones</th>
       </tr>
@@ -67,6 +70,9 @@
         <td>{{ personal.telefono }}</td>
         <td>{{ personal.correo }}</td>
         <td>{{ personal.genero }}</td>
+        <td>{{ personal.tipoPersonalName }}</td>
+        <td>{{ personal.terapiaName }}</td>
+        <td>{{ personal.horario }}</td>
         <td>{{ personal.sueldo }}</td>
         <td>
           <div class="d-flex align-items-center gap-2">
