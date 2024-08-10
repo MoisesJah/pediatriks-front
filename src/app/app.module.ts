@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { LOCALE_ID, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -16,11 +16,17 @@ import { loadingInterceptor } from './interceptors/loading.interceptor';
 import { LayoutComponent } from "./components/layout/layout.component";
 import { UserModalsModule } from './pages/admin/users/modals/modals.module';
 import { PersonalModalsModule } from './pages/admin/personal/modales/modales.module';
+<<<<<<< HEAD
 import { NgSelectModule } from '@ng-select/ng-select';
+=======
+import { TerapiasModalsModule } from './pages/admin/terapias/modals/modals.module';
+import { PacientesModalsModule } from './pages/admin/pacientes/modals/modals.module';
+
+>>>>>>> 922c31591d0f95ddc1095ab916ac18b9f58bd4a6
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
   ],
   imports: [
     BrowserModule,
@@ -37,9 +43,14 @@ import { NgSelectModule } from '@ng-select/ng-select';
     LayoutComponent,
     AdminDashboardComponent,
     PersonalModalsModule,
+<<<<<<< HEAD
     NgSelectModule
 
 
+=======
+    TerapiasModalsModule,
+    PacientesModalsModule
+>>>>>>> 922c31591d0f95ddc1095ab916ac18b9f58bd4a6
 ],
   providers: [
     provideHttpClient(withInterceptors([tokenInterceptor, loadingInterceptor])),
