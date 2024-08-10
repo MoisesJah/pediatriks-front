@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { CreateModalComponent } from './create-modal/create-modal.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { Select2Module } from 'ng-select2-component';
+//import { Select2Module } from 'ng-select2-component';
 
 
 
@@ -16,7 +16,7 @@ import { Select2Module } from 'ng-select2-component';
     NgbModule,
     ReactiveFormsModule,
     FormsModule,
-    Select2Module
+    //Select2Module
   ],
   exports: [
     CreateModalComponent

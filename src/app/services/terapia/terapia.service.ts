@@ -12,8 +12,8 @@ export class TerapiaService {
 
   constructor(private http: HttpClient) { }
 
-  getAll(): Observable<Terapia[]> {
-    return this.http.get<Terapia[]>(`${this.apiUrl}/terapia/list`);
+  getAll(): Observable<{ data: Terapia[] }> {
+    return this.http.get<{ data: Terapia[] }>(`${this.apiUrl}/terapia/list`);
   }
 
   getById(id: string): Observable<Terapia> {

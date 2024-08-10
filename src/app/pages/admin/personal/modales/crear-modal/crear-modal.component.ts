@@ -98,8 +98,8 @@ export class CrearModalComponent implements AfterViewInit {
   }
 
   getTerapiasList(): void {
-    this.terapiaService.getAll().subscribe(data => {
-      this.terapiasList = data;
+    this.terapiaService.getAll().subscribe((response) => {
+      this.terapiasList = response.data;
     });
   }
 

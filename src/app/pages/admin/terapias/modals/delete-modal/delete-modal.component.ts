@@ -1,6 +1,6 @@
 import { Component, EventEmitter, inject, Output } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { ITerapia } from 'src/app/models/terapia';
+import { Terapia } from 'src/app/models/terapia';
 import { LoadingService } from 'src/app/services/loading.service';
 import { TerapiaService } from 'src/app/services/terapia/terapia.service';
 

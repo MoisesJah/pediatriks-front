@@ -1,10 +1,5 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-<<<<<<< HEAD
-=======
-import { authGuard } from 'src/app/guards/auth.guard';
-import { adminGuard } from 'src/app/guards/admin.guard';
->>>>>>> 922c31591d0f95ddc1095ab916ac18b9f58bd4a6
 
 const routes: Routes = [
   { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
@@ -25,13 +20,13 @@ const routes: Routes = [
     loadComponent: () =>
       import('./terapias/terapias.component').then((m) => m.TerapiasComponent),
   },
-  {
-    path: 'pacientes',
-    loadComponent: () =>
-      import('./pacientes/pacientes.component').then(
-        (m) => m.PacientesComponent
-      ),
-  },
+ // {
+   // path: 'pacientes',
+    //loadComponent: () =>
+    //  import('./pacientes/pacientes.component').then(
+    //    (m) => m.PacientesComponent
+    //  ),
+ // },
   {
     path: 'personal',
     loadComponent: () =>
