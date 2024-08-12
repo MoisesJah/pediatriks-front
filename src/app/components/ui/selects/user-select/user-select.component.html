@@ -1,0 +1,9 @@
+<select2
+  [data]="userList | async"
+  
+  [placeholder]="placeholder"
+  (update)="onSelect($event)"
+  [displaySearchStatus]="showSearch"
+></select2>
+
+<!-- class="form-select form-select-sm form-select-solid" -->

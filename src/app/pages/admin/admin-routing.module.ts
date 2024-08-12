@@ -20,13 +20,13 @@ const routes: Routes = [
     loadComponent: () =>
       import('./terapias/terapias.component').then((m) => m.TerapiasComponent),
   },
- // {
-   // path: 'pacientes',
-    //loadComponent: () =>
-    //  import('./pacientes/pacientes.component').then(
-    //    (m) => m.PacientesComponent
-    //  ),
- // },
+  {
+    path: 'pacientes',
+    loadComponent: () =>
+      import('./pacientes/pacientes.component').then(
+        (m) => m.PacientesComponent
+      ),
+  },
   {
     path: 'personal',
     loadComponent: () =>

@@ -38,12 +38,22 @@
     </div>
 
     <div class="form-group">
-      <div class="d-flex align-items-center justify-content-between">
+      <label for="exampleFormControlInput1" class="required form-label">
+        Teléfono
+      </label>
+      <input type="email" formControlName="telefono" class="form-control" />
+    </div>
+
+    <div class="form-group" >
+      <div class="d-flex align-items-center justify-content-between" style="margin-bottom: 0.75rem;">
         <label
           for="password"
           class="required form-label d-flex align-items-center justify-content-between"
         >
           Contraseña
+          <span style="margin-left: 0.15rem;" ngbTooltip="Guarde la contraseña en un lugar seguro para no perderla">
+            <i class="ki-solid ki-information-2"></i>
+          </span>
         </label>
         <button (click)="generatePassword()" type="button" class="btn btn-sm btn-secondary">
           <i class="ki-duotone ki-note">
@@ -57,11 +67,12 @@
         <input
           formControlName="password"
           type="password"
-          class="form-control"
+          class="form-control pe-8"
         />
         <button
           type="button"
-          class="btn btn-icon btn-sm top-0 end-0 btn-active-color-primary btn-color-gray-800 position-absolute"
+          [cdkCopyToClipboard]="userForm.get('password')?.value"
+          class="btn btn-icon btn-sm top-0 copy-icon end-0 btn-active-color-primary btn-color-gray-800 position-absolute"
         >
           <span class="ki-solid ki-copy fs-1"></span>
         </button>

@@ -1,11 +1,35 @@
 /* You can add global styles to this file, and also import other style files */
+:root {
+  --select2-single-height: fit-content;
+  --select2-multiple-height: 28px;
+
+  --select2-selection-border-radius: 0.95rem;
+  --select2-selection-background: #fff;
+  --select2-selection-disabled-background: #eee;
+  --select2-selection-border-color: #aaa;
+  --select2-selection-focus-border-color: #000;
+  --select2-selection-text-color: #111;
+  --select2-selection-line-height: 28px;
+  --select2-selection-padding: 0.45rem 0.45rem 0.45rem 8px;
+}
+
+.select2-container--default
+  .select2-selection--single
+  .select2-selection__arrow {
+  height: 100%;
+}
+
 body {
   font-feature-settings: "calt", "cv02", "cv03", "cv04", "cv06", "cv08", "cv11",
     "tnum";
 }
 
-button, input, optgroup, select, textarea{
-    font-feature-settings: inherit;
+button,
+input,
+optgroup,
+select,
+textarea {
+  font-feature-settings: inherit;
 }
 
 .loader {
@@ -16,3 +40,8 @@ button, input, optgroup, select, textarea{
   z-index: 1000;
 }
 
+.copy-icon {
+  cursor: pointer;
+  inset-block: 0.5rem;
+  right: 0.75rem;
+}

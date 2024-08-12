@@ -1,4 +1,4 @@
-<!-- <div class="modal-header">
+<div class="modal-header">
   <h4 class="modal-title" id="modal-basic-title">Crear Paciente</h4>
   <button
     type="button"
@@ -15,12 +15,7 @@
   <form [formGroup]="pacienteForm" class="form d-flex flex-column gap-4">
     <div class="d-flex flex-column gap-3">
       <label for="name" class="required form-label">Nombres</label>
-      <input
-        type="text"
-        id=""
-        class="form-control"
-        formControlName="nombre"
-      />
+      <input type="text" id="" class="form-control" formControlName="nombre" />
     </div>
 
     <div class="d-flex flex-column gap-3">
@@ -35,10 +30,37 @@
 
     <div class="d-flex flex-column gap-3">
       <label for="email" class="required form-label">Usuario</label>
-      <select2 class="form-control" [data]="users" [templates]="{option : option, group: group}" [disabled]="isLoading |async">
-        <ng-template #option let-data="data">{{data?.name}}</ng-template>
-        <ng-template #group let-label="label">Group: {{label}}</ng-template>
-      </select2>
+      <app-user-select [onSelect]="selectUserId"></app-user-select>
+    </div>
+
+    <div class="d-flex flex-column gap-3">
+      <label for="email" class="required form-label">Fecha Nacimiento</label>
+      <input
+        mwlFlatpickr
+        [locale]="'es'"
+        placeholder="Seleccionar fecha"
+        formControlName="fecha_nacimiento"
+        [altInput]="true"
+        [altFormat]="'j/n/Y'"
+        class="form-control"
+      />
     </div>
   </form>
-</div> -->
+</div>
+
+<div class="modal-footer">
+  <button type="button" class="btn btn-secondary" (click)="close()">Cerrar</button>
+
+  <button
+    [disabled]="pacienteForm.invalid || (isLoading | async)"
+    type="button"
+    class="btn btn-primary"
+    (click)="save()"
+  >
+    Guardar
+    <span
+      *ngIf="isLoading | async"
+      class="spinner-border spinner-border-sm align-middle ms-2"
+    ></span>
+  </button>
+</div>

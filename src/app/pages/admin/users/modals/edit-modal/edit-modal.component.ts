@@ -32,6 +32,7 @@ export class EditModalComponent {
           Validators.pattern('^[0-9]*'),
         ],
       ],
+      telefono: ['', [Validators.required, Validators.pattern('^[0-9]*')]],
       password: ['', [Validators.required, Validators.minLength(8)]],
     });
 

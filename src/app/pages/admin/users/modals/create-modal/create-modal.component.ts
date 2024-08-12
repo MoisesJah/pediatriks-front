@@ -31,6 +31,7 @@ export class CreateModalComponent {
         Validators.minLength(8),
         Validators.pattern('^[0-9]*')],
       ],
+      telefono: ['', [Validators.required, Validators.pattern('^[0-9]*')]],
       password: ['', [Validators.required, Validators.minLength(8)]],
     });
   }
@@ -52,7 +53,6 @@ export class CreateModalComponent {
 
   save() {
     if (this.userForm.valid) {
-      console.log(this.userForm.value);
       this.userService
         .create(this.userForm.value)
         .subscribe(() => {
