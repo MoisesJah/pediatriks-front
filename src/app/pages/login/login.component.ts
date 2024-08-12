@@ -1,4 +1,3 @@
-import { NgIf } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -35,7 +34,6 @@ export class LoginComponent {
 
   redirectToDashboard(value: any) {
     this.storeCredentials(value.token, value.user);
-    console.log(value.user);
 
     if (value.user.tipo_user === 'administrador') {
       this.router.navigate(['admin/dashboard']);
@@ -58,9 +56,7 @@ export class LoginComponent {
         error: (err) => {
           console.error(err);
           this.errors = err.error;
-          console.log(this.errors);
         },
       });
-      console.log(this.isLoading)
   }
 }

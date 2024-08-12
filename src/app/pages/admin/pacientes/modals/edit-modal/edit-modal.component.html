@@ -1,0 +1,106 @@
+<div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Crear Paciente</h4>
+    <button
+      type="button"
+      class="btn btn-sm btn-icon btn-active-color-primary btn-color-gray-800"
+      aria-label="Close"
+      (click)="close()"
+    >
+      <i class="ki-duotone ki-cross-square fs-1"
+        ><span class="path1"></span><span class="path2"></span
+      ></i>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="pacienteForm" class="form d-flex flex-column gap-4">
+      <div class="d-flex flex-column gap-3">
+        <label for="name" class="required form-label">Nombres</label>
+        <input type="text" id="" class="form-control" formControlName="nombre" />
+      </div>
+  
+      <div class="d-flex flex-column gap-3">
+        <label for="lastName" class="required form-label">DNI</label>
+        <input
+          type="text"
+          id="lastName"
+          class="form-control"
+          formControlName="dni"
+        />
+      </div>
+  
+      <div class="d-flex flex-column gap-3">
+        <label for="email" class="required form-label">Fecha Nacimiento</label>
+        <input
+          mwlFlatpickr
+          [locale]="'es'"
+          placeholder="Seleccionar fecha"
+          formControlName="fecha_nacimiento"
+          [altInput]="true"
+          [altFormat]="'j/n/Y'"
+          class="form-control"
+        />
+      </div>
+  
+      
+      <div class="d-flex flex-column gap-3">
+        <label for="colegio" class="required form-label">Colegio</label>
+        <input
+          type="text"
+          id="colegio"
+          class="form-control"
+          formControlName="colegio"
+        />
+      </div>
+  
+      <div class="row">
+        <div class="col-6">
+          <label for="email" class="required form-label">Genero</label>
+          <app-genero-select (onSelect)="selectGenero($event)">
+          ></app-genero-select>
+        </div>
+  
+        <div class="col-6">
+          <label for="nro_hermano" class="required form-label">N° de Hermano </label>
+          <input
+            type="text"
+            id="n"
+            class="form-control"
+            formControlName="pos_hijo"
+          />
+        </div>
+      </div>
+  
+      <div class="d-flex flex-column gap-3">
+        <label for="email" class="required form-label">Padre de Familia</label>
+        <app-user-select (onSelect)="selectUserId($event)"></app-user-select>
+      </div>
+  
+      <div class="d-flex flex-column gap-3">
+        <label for="direccion" class=" form-label">Direccion</label>
+        <input
+          type="text"
+          id="direccion"
+          class="form-control"
+          formControlName="direccion"
+        />
+      </div>
+    </form>
+  </div>
+  
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="close()">Cerrar</button>
+  
+    <button
+      [disabled]="pacienteForm.invalid || (isLoading | async)"
+      type="button"
+      class="btn btn-primary"
+      (click)="edit()"
+    >
+      Guardar
+      <span
+        *ngIf="isLoading | async"
+        class="spinner-border spinner-border-sm align-middle ms-2"
+      ></span>
+    </button>
+  </div>
+  

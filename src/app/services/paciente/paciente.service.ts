@@ -19,7 +19,7 @@ export class PacienteService {
   }
 
   create(paciente: IPaciente) {
-    return this.http.post(`${this.apiUrl}/paciente/create`, paciente);
+    return this.http.post(`${this.apiUrl}/paciente/add`, paciente);
   }
 
   update(paciente: IPaciente, id: string) {

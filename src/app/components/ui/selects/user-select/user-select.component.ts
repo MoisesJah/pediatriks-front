@@ -1,5 +1,12 @@
 import { AsyncPipe } from '@angular/common';
-import { Component, EventEmitter, inject, Input, OnInit } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  inject,
+  Input,
+  OnInit,
+  Output,
+} from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Select2Data, Select2Module } from 'ng-select2-component';
 import { map, Observable, shareReplay } from 'rxjs';
@@ -11,16 +18,17 @@ import { UserService } from 'src/app/services/user/user.service';
   selector: 'app-user-select',
   templateUrl: './user-select.component.html',
   standalone: true,
-  imports: [Select2Module,AsyncPipe],
+  imports: [Select2Module, AsyncPipe],
   styleUrl: './user-select.component.scss',
 })
 export class UserSelectComponent implements OnInit {
   userService = inject(UserService);
-  @Input() onSelect = (event: any) => {};
+
+  @Output() onSelect = new EventEmitter<any>();
+
   @Input() placeholder: string = 'Seleccionar';
   @Input() showSearch: 'default' | 'hidden' | 'always' = 'default';
 
-  // userList: Select2Data = [];
   userList: Observable<Select2Data> = new Observable<Select2Data>();
 
   ngOnInit(): void {
@@ -28,7 +36,7 @@ export class UserSelectComponent implements OnInit {
       untilDestroyed(this),
       map((response) => {
         const usersData = response as { data: IUser[] };
-         return usersData.data.map((user) => {
+        return usersData.data.map((user) => {
           return {
             label: user.name,
             value: user.id,
@@ -40,7 +48,6 @@ export class UserSelectComponent implements OnInit {
         bufferSize: 1,
         refCount: true,
       })
-    )
+    );
   }
-
 }

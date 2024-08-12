@@ -7,6 +7,7 @@ import { IPaciente } from 'src/app/models/paciente';
 import { LoadingService } from 'src/app/services/loading.service';
 import { PacienteService } from 'src/app/services/paciente/paciente.service';
 import { CreateModalComponent } from './modals/create-modal/create-modal.component';
+import { EditModalComponent } from './modals/edit-modal/edit-modal.component';
 
 @UntilDestroy()
 @Component({
@@ -47,6 +48,21 @@ export class PacientesComponent implements OnInit {
     modalRef.componentInstance.onSaveComplete.subscribe(() => {
       this.fetchPacientes();
     });
+  }
+
+  openEditModal(paciente: IPaciente) {
+    const modalRef = this.modal.open(EditModalComponent, {
+      size: '300px',
+      animation: true,
+      centered: true,
+    })
+
+    modalRef.componentInstance.pacienteForm.patchValue(paciente);
+    modalRef.componentInstance.paciente = paciente;
+
+    modalRef.componentInstance.onSaveComplete.subscribe(() => {
+      this.fetchPacientes();
+    })
   }
 
   close() {
