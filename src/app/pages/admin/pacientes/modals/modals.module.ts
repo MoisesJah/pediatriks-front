@@ -7,7 +7,7 @@ import { UserSelectComponent } from 'src/app/components/ui/selects/user-select/u
 import { FlatpickrModule } from 'angularx-flatpickr';
 import { GeneroSelectComponent } from 'src/app/components/ui/selects/genero-select/genero-select.component';
 import { EditModalComponent } from './edit-modal/edit-modal.component';
-//import { Select2Module } from 'ng-select2-component';
+import { UserBetterComponent } from 'src/app/components/ui/selects/user-better/user-better.component';
 
 
 
@@ -22,6 +22,7 @@ import { EditModalComponent } from './edit-modal/edit-modal.component';
     ReactiveFormsModule,
     FormsModule,
     UserSelectComponent,
+    UserBetterComponent,
     GeneroSelectComponent,
     FlatpickrModule.forRoot(),
     //Select2Module

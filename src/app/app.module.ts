@@ -23,6 +23,7 @@ import { PacientesModalsModule } from './pages/admin/pacientes/modals/modals.mod
 @NgModule({
   declarations: [
     AppComponent,
+    // UserBetterComponent,
   ],
   imports: [
     BrowserModule,

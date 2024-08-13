@@ -8,7 +8,7 @@ import {
   Output,
 } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { Select2Data, Select2Module } from 'ng-select2-component';
+import { Select2Data, Select2Module, Select2UpdateValue } from 'ng-select2-component';
 import { map, Observable, shareReplay } from 'rxjs';
 import { IUser } from 'src/app/models/user';
 import { UserService } from 'src/app/services/user/user.service';
@@ -28,6 +28,8 @@ export class UserSelectComponent implements OnInit {
 
   @Input() placeholder: string = 'Seleccionar';
   @Input() showSearch: 'default' | 'hidden' | 'always' = 'default';
+  @Input() disabled: boolean = false;
+  @Input() value?: Select2UpdateValue;
 
   userList: Observable<Select2Data> = new Observable<Select2Data>();
 
@@ -49,5 +51,11 @@ export class UserSelectComponent implements OnInit {
         refCount: true,
       })
     );
+
+    console.log(this.value);
+  }
+
+  blue(e: any) {
+    console.log(e);
   }
 }

@@ -35,6 +35,16 @@
         <td>{{ paciente.dni }}</td>
         <!-- <td>{{ paciente.correo }}</td> -->
         <td>{{ paciente.genero }}</td>
+        <td>
+          <div class="d-flex align-items-center gap-2">
+            <button class="btn btn-icon btn-sm bg-success" (click)="openEditModal(paciente)">
+              <span class="ki-solid ki-pencil text-white fs-3"></span>
+            </button>
+            <button class="btn btn-icon btn-sm btn-danger" (click)="openDeleteModal(paciente)">
+              <span class="ki-solid ki-trash text-white fs-3"></span>
+            </button>
+          </div>
+        </td>
       </tr>
     </tbody>
   </table>

@@ -1,9 +1,11 @@
 <select2
   [data]="userList | async"
-  
+  (focus)="blue($event)"
+  [value]="value"  
   [placeholder]="placeholder"
   (update)="onSelect.emit($event)"
   [displaySearchStatus]="showSearch"
-></select2>
-
+  ></select2>
+  
+  <!-- [value]="value" -->
 <!-- class="form-select form-select-sm form-select-solid" -->

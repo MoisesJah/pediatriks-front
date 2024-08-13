@@ -1,4 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
+@import "@ng-select/ng-select/themes/default.theme.css";
+
 :root {
   --select2-single-height: fit-content;
   --select2-multiple-height: 28px;

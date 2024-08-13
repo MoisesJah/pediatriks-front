@@ -1,6 +1,7 @@
 import { Component, EventEmitter, inject, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { Select2UpdateValue } from 'ng-select2-component';
 import { IPaciente } from 'src/app/models/paciente';
 import { LoadingService } from 'src/app/services/loading.service';
 import { PacienteService } from 'src/app/services/paciente/paciente.service';
@@ -41,9 +42,14 @@ export class EditModalComponent {
   edit(){
     
   }
+  chicharee():Select2UpdateValue {
+    console.log('chicharee')
+    return 'chicharee'
+  }
 
   selectUserId(event: any) {
     this.userId = event.value
+    console.log(event)
   }
 
   selectGenero(event: any) {
