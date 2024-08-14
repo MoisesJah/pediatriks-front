@@ -30,6 +30,7 @@
     "@ngneat/until-destroy": "^10.0.0",
     "@popperjs/core": "^2.11.8",
     "@types/bootstrap": "^5.2.10",
+    "ag-grid-angular": "^32.1.0",
     "angularx-flatpickr": "^7.0.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
