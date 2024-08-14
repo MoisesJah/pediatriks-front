@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { UserSelectComponent } from './user-select.component';
+import { DeleteModalComponent } from './delete-modal.component';
 
-describe('UserSelectComponent', () => {
-  let component: UserSelectComponent;
-  let fixture: ComponentFixture<UserSelectComponent>;
+describe('DeleteModalComponent', () => {
+  let component: DeleteModalComponent;
+  let fixture: ComponentFixture<DeleteModalComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [UserSelectComponent]
+      declarations: [DeleteModalComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(UserSelectComponent);
+    fixture = TestBed.createComponent(DeleteModalComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

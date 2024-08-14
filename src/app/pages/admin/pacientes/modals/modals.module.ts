@@ -3,32 +3,30 @@ import { CommonModule } from '@angular/common';
 import { CreateModalComponent } from './create-modal/create-modal.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { UserSelectComponent } from 'src/app/components/ui/selects/user-select/user-select.component';
 import { FlatpickrModule } from 'angularx-flatpickr';
-import { GeneroSelectComponent } from 'src/app/components/ui/selects/genero-select/genero-select.component';
 import { EditModalComponent } from './edit-modal/edit-modal.component';
-import { UserBetterComponent } from 'src/app/components/ui/selects/user-better/user-better.component';
-
+import { NgSelectModule } from '@ng-select/ng-select';
+import { DeleteModalComponent } from './delete-modal/delete-modal.component';
 
 
 @NgModule({
   declarations: [
     CreateModalComponent,
-    EditModalComponent
+    EditModalComponent,
+    DeleteModalComponent
   ],
   imports: [
     CommonModule,
     NgbModule,
     ReactiveFormsModule,
     FormsModule,
-    UserSelectComponent,
-    UserBetterComponent,
-    GeneroSelectComponent,
+    NgSelectModule,
     FlatpickrModule.forRoot(),
-    //Select2Module
   ],
   exports: [
-    CreateModalComponent
+    CreateModalComponent,
+    EditModalComponent,
+    // DeleteModalComponent
   ]
 })
 export class PacientesModalsModule { }

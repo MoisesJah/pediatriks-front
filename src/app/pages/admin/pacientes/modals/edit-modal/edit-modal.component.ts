@@ -1,25 +1,40 @@
-import { Component, EventEmitter, inject, Output } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  EventEmitter,
+  inject,
+  OnDestroy,
+  Output,
+} from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { Select2UpdateValue } from 'ng-select2-component';
 import { IPaciente } from 'src/app/models/paciente';
 import { LoadingService } from 'src/app/services/loading.service';
 import { PacienteService } from 'src/app/services/paciente/paciente.service';
+import { generos } from '../genero.data';
+import { UserService } from 'src/app/services/user/user.service';
+import { map, Observable } from 'rxjs';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { IUser } from 'src/app/models/user';
 
+@UntilDestroy({ checkProperties: true })
 @Component({
   selector: 'app-edit-modal',
   templateUrl: './edit-modal.component.html',
-  styleUrl: './edit-modal.component.scss'
+  styleUrl: './edit-modal.component.scss',
 })
-export class EditModalComponent {
+export class EditModalComponent implements AfterViewInit, OnDestroy {
   modal = inject(NgbActiveModal);
   pacienteForm: FormGroup;
   isLoading = inject(LoadingService).isLoading;
   pacienteService = inject(PacienteService);
+  userService = inject(UserService);
 
+  userList: Observable<IUser[]> = new Observable();
   userId: number | undefined;
 
-  paciente?: IPaciente 
+  paciente?: IPaciente;
+  generos = generos;
 
   @Output() onSaveComplete = new EventEmitter();
 
@@ -28,33 +43,39 @@ export class EditModalComponent {
       nombre: ['', Validators.required],
       dni: ['', [Validators.required, Validators.pattern('^[0-9]*')]],
       fecha_nacimiento: ['', Validators.required],
+      id: ['', Validators.required],
       genero: [''],
       direccion: ['', Validators.required],
       pos_hijo: [''],
-      colegio: ['']
+      colegio: [''],
     });
   }
+
+  ngAfterViewInit(): void {
+    this.userList = this.userService.getAll().pipe(
+      untilDestroyed(this),
+      map((response) => {
+        const usersData = response as { data: IUser[] };
+        return usersData.data;
+      })
+    );
+  }
+
+  ngOnDestroy(): void {}
 
   close() {
     this.modal.close();
   }
 
-  edit(){
-    
-  }
-  chicharee():Select2UpdateValue {
-    console.log('chicharee')
-    return 'chicharee'
-  }
+  edit() {
+    const submitData = this.pacienteForm.value;
+    const id = this.paciente?.id_paciente!;
 
-  selectUserId(event: any) {
-    this.userId = event.value
-    console.log(event)
-  }
+    this.pacienteService.update(submitData, id).subscribe(() => {
+      this.onSaveComplete.emit();
+      this.modal.close();
+    });
 
-  selectGenero(event: any) {
-    this.pacienteForm.patchValue({
-      genero: event.value
-    })
+    console.log(submitData);
   }
 }

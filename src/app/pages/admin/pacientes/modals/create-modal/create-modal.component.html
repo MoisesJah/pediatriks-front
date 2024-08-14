@@ -41,7 +41,6 @@
       />
     </div>
 
-    
     <div class="d-flex flex-column gap-3">
       <label for="colegio" class="required form-label">Colegio</label>
       <input
@@ -55,12 +54,19 @@
     <div class="row">
       <div class="col-6">
         <label for="email" class="required form-label">Genero</label>
-        <app-genero-select (onSelect)="selectGenero($event)">
-        ></app-genero-select>
+        <ng-select
+          [items]="generos"
+          bindLabel="name"
+          bindValue="value"
+          placeholder="Seleccionar"
+          formControlName="genero"
+        ></ng-select>
       </div>
 
       <div class="col-6">
-        <label for="nro_hermano" class="required form-label">N° de Hermano </label>
+        <label for="nro_hermano" class="required form-label"
+          >N° de Hermano
+        </label>
         <input
           type="text"
           id="n"
@@ -72,12 +78,20 @@
 
     <div class="d-flex flex-column gap-3">
       <label for="email" class="required form-label">Padre de Familia</label>
-      <app-user-select (onSelect)="selectUserId($event)"></app-user-select>
-       <!-- <app-user-better></app-user-better> -->
+      <ng-select
+        [items]="userList | async"
+        [loading]="isLoading | async"
+        [loadingText]="'Cargando..'"
+        [notFoundText]="'Sin resultados'"
+        bindValue="id"
+        placeholder="Seleccionar"
+        bindLabel="name"
+        formControlName="id"
+      ></ng-select>
     </div>
 
     <div class="d-flex flex-column gap-3">
-      <label for="direccion" class=" form-label">Direccion</label>
+      <label for="direccion" class="form-label">Direccion</label>
       <input
         type="text"
         id="direccion"
@@ -89,7 +103,9 @@
 </div>
 
 <div class="modal-footer">
-  <button type="button" class="btn btn-secondary" (click)="close()">Cerrar</button>
+  <button type="button" class="btn btn-secondary" (click)="close()">
+    Cerrar
+  </button>
 
   <button
     [disabled]="pacienteForm.invalid || (isLoading | async)"
