@@ -1,12 +1,5 @@
 import { CommonModule } from '@angular/common';
-import {
-  Component,
-  EventEmitter,
-  inject,
-  OnDestroy,
-  OnInit,
-  Output,
-} from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { IUser } from 'src/app/models/user';
 import { LoadingService } from 'src/app/services/loading.service';
@@ -17,12 +10,16 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { DeleteModalComponent } from './modals/delete-modal/delete-modal.component';
 import { HeaderComponent } from 'src/app/components/ui/header/header.component';
 
+import { AgGridAngular } from 'ag-grid-angular'; // Angular Data Grid Component
+import { ColDef } from 'ag-grid-community';
+import { ActionButtonsComponent } from './modals/action-buttons/action-buttons.component';
+
 @UntilDestroy()
 @Component({
   selector: 'app-users',
   standalone: true,
-  imports: [CommonModule,HeaderComponent],
-  templateUrl: './users.component.html',
+  imports: [CommonModule, HeaderComponent, AgGridAngular],
+  templateUrl: './users.ag.component.html',
   styleUrl: './users.component.scss',
 })
 export class UsersComponent implements OnInit, OnDestroy {
@@ -31,7 +28,21 @@ export class UsersComponent implements OnInit, OnDestroy {
   modal = inject(NgbModal);
 
   userList: Array<IUser> = [];
-  // user = {} as IUser;
+
+  colDefs: ColDef[] = [
+    { field: 'name', headerName: 'Nombre', filter: true},
+    { field: 'dni', headerName: 'DNI', filter: true },
+    { field: 'telefono', headerName: 'Teléfono' },
+    { field: 'email', headerName: 'Correo', filter: true },
+    {
+      headerName: 'Acciones',
+      cellRenderer: ActionButtonsComponent,
+      cellRendererParams: {
+        onEdit: (data: any) => this.openEditModal(data),
+        onDelete: (data: any) => this.openDeleteModal(data),
+      },
+    },
+  ];
 
   ngOnInit(): void {
     this.fetchUsers();
@@ -52,7 +63,7 @@ export class UsersComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Opens the create modal and subscribes to 
+   * Opens the create modal and subscribes to
    * the onSaveComplete event to refresh the user list.
    */
   openCreateModal() {
@@ -91,5 +102,4 @@ export class UsersComponent implements OnInit, OnDestroy {
       this.fetchUsers();
     });
   }
-
 }

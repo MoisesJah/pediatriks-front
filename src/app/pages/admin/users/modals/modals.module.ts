@@ -6,6 +6,7 @@ import { NgbModule, NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 import { EditModalComponent } from './edit-modal/edit-modal.component';
 import { DeleteModalComponent } from './delete-modal/delete-modal.component';
 import {ClipboardModule} from '@angular/cdk/clipboard';
+import { ActionButtonsComponent } from './action-buttons/action-buttons.component';
 
 
 @NgModule({
@@ -13,6 +14,7 @@ import {ClipboardModule} from '@angular/cdk/clipboard';
     CreateModalComponent,
     EditModalComponent,
     DeleteModalComponent,
+    ActionButtonsComponent,
   ],
   imports: [
     CommonModule,

@@ -1,5 +1,8 @@
 /* You can add global styles to this file, and also import other style files */
 @import "@ng-select/ng-select/themes/default.theme.css";
+@import 'ag-grid-community/styles/ag-grid.css';
+/* Quartz Theme Specific CSS */
+@import 'ag-grid-community/styles/ag-theme-quartz.css';
 
 :root {
   --select2-single-height: fit-content;
@@ -13,6 +16,10 @@
   --select2-selection-text-color: #111;
   --select2-selection-line-height: 28px;
   --select2-selection-padding: 0.45rem 0.45rem 0.45rem 8px;
+}
+
+.ag-theme-quartz {
+  --ag-font-family: Inter, sans-serif;
 }
 
 ::-webkit-scrollbar {
