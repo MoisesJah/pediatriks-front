@@ -11,7 +11,7 @@ export class UserService {
   constructor(private http: HttpClient) {}
 
   getAll() {
-    return this.http.get(`${this.apiUrl}/usuario/list`);
+    return this.http.get<{ data: IUser[] }>(`${this.apiUrl}/usuario/list`);
   }
 
   getById(id: number) {

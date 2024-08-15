@@ -8,43 +8,78 @@ import { Terapia } from 'src/app/models/terapia';
 import { HeaderComponent } from 'src/app/components/ui/header/header.component';
 import { EditModalComponent } from './modals/edit-modal/edit-modal.component';
 import { DeleteModalComponent } from './modals/delete-modal/delete-modal.component';
+import { AgGridAngular } from 'ag-grid-angular';
+import { map, Observable } from 'rxjs';
+import { ActionButtonsComponent } from './modals/action-buttons/action-buttons.component';
+import { ColDef } from 'ag-grid-community';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
   selector: 'app-terapias',
   standalone: true,
-  imports: [CommonModule,HeaderComponent],
+  imports: [CommonModule, HeaderComponent, AgGridAngular],
   templateUrl: './terapias.component.html',
-  styleUrl: './terapias.component.scss'
+  styleUrl: './terapias.component.scss',
 })
 export class TerapiasComponent implements OnInit, OnDestroy {
-  modal = inject(NgbModal)
-  terapias = inject(TerapiaService)
+  modal = inject(NgbModal);
+  terapias = inject(TerapiaService);
 
-  terapiasList: Terapia[] = [];
+  terapiasList: Observable<Terapia[]> = new Observable();
+
+  colDefs: ColDef[] = [
+    { field: 'nombre', headerName: 'Nombre', filter: true },
+    { field: 'descripcion', headerName: 'Descripción', filter: true },
+    {
+      field: 'precio',
+      headerName: 'Precio',
+      filter: 'agNumberColumnFilter',
+      cellClass: 'fw-bold',
+
+      valueFormatter: (params) => this.formatCurrency(params.value),
+      // filterParams: {
+      //   numberParser: (num) => num.replace('$', ''),
+      // },
+    },
+    {
+      headerName: 'Acciones',
+      cellRenderer: ActionButtonsComponent,
+      cellRendererParams: {
+        onEdit: (data: any) => this.openEditModal(data),
+        onDelete: (data: any) => this.openDeleteModal(data),
+      },
+      maxWidth: 100,
+      resizable: false,
+    },
+  ];
 
   ngOnInit(): void {
     this.fetchTerapias();
   }
-  ngOnDestroy(): void {
 
+  formatCurrency(value: number) {
+    return new Intl.NumberFormat('es-PE', {
+      style: 'currency',
+      currency: 'PEN',
+    }).format(value);
   }
 
   fetchTerapias() {
-  this.terapias.getAll()
-    .pipe(untilDestroyed(this))
-    .subscribe((response) => {
-      const terapiasData = response as { data: Terapia[] };
-      this.terapiasList = terapiasData.data || [];
-    });
-}
+    this.terapiasList = this.terapias.getAll().pipe(
+      map((resp) => {
+        return resp.data as Terapia[];
+      }),
+      untilDestroyed(this)
+    );
+  }
 
+  ngOnDestroy(): void {}
 
   openCreateModal() {
     const modalRef = this.modal.open(CreateModalComponent, {
       size: '300px',
       animation: true,
-      centered: true
+      centered: true,
     });
 
     modalRef.componentInstance.onSaveComplete.subscribe(() => {
@@ -56,7 +91,7 @@ export class TerapiasComponent implements OnInit, OnDestroy {
     const modalRef = this.modal.open(EditModalComponent, {
       size: '300px',
       animation: true,
-      centered: true
+      centered: true,
     });
 
     modalRef.componentInstance.terapiaForm.patchValue(terapia);
@@ -70,7 +105,7 @@ export class TerapiasComponent implements OnInit, OnDestroy {
     const modalRef = this.modal.open(DeleteModalComponent, {
       size: '300px',
       animation: true,
-      centered: true
+      centered: true,
     });
     modalRef.componentInstance.terapiaId = terapia.id_terapia;
     modalRef.componentInstance.onSaveComplete.subscribe(() => {

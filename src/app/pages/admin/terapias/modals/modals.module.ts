@@ -5,13 +5,15 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { EditModalComponent } from './edit-modal/edit-modal.component';
 import { DeleteModalComponent } from './delete-modal/delete-modal.component';
+import { ActionButtonsComponent } from './action-buttons/action-buttons.component';
 
 
 @NgModule({
   declarations: [
     CreateModalComponent,
     EditModalComponent,
-    DeleteModalComponent
+    DeleteModalComponent,
+    ActionButtonsComponent,
   ],
   imports: [
     CommonModule,

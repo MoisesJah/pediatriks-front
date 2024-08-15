@@ -1,6 +1,6 @@
 <app-header>
   <ng-container header-title>
-    <h1 class="d-flex flex-column text-gray-900 fw-bold my-1">  
+    <h1 class="d-flex flex-column text-gray-900 fw-bold my-1">
       <span class="" style="color: white">Terapias</span>
     </h1>
   </ng-container>
@@ -17,7 +17,17 @@
     </button>
   </div>
 
-  <table class="table table-row-dashed w-full">
+  <div style="height: 470px" class="ag-theme-quartz">
+    <ag-grid-angular
+      style="width: 100%; height: 100%"
+      [rowData]="terapiasList | async"
+      [columnDefs]="colDefs"
+      [ariaHidden]="true"
+      [pagination]="true"
+    ></ag-grid-angular>
+  </div>
+
+  <!-- <table class="table table-row-dashed w-full">
     <thead class="bg-gray-100 fw-semibold">
       <tr>
         <th scope="col">Nombre</th>
@@ -43,5 +53,5 @@
         </td>
       </tr>
     </tbody>
-  </table>
+  </table> -->
 </div>
