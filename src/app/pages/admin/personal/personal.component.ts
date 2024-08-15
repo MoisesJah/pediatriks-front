@@ -1,5 +1,6 @@
 import { CrearModalComponent } from './modales/crear-modal/crear-modal.component';
 import { EditarModalComponent } from './modales/editar-modal/editar-modal.component';
+import { BorrarModalComponent } from './modales/borrar-modal/borrar-modal.component';
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, inject } from '@angular/core';
 import { PersonalService } from 'src/app/services/personal/personal.service';
@@ -77,6 +78,18 @@ export class PersonalComponent implements OnInit {
       animation: true
     });
     modalRef.componentInstance.editForm.patchValue(personal);
+  }
+
+  openBorrarModal(personal: Personal) {
+    const modalRef = this.modal.open(BorrarModalComponent, {
+      size: '300px',
+      animation: true,
+      centered: true,
+    });
+    modalRef.componentInstance.personalId = personal.id_personal;
+    modalRef.componentInstance.onSaveComplete.subscribe(() => {
+      this.fetchPersonal();
+    });
   }
 
   private fetchPersonal(): void {

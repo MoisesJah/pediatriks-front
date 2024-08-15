@@ -61,71 +61,56 @@
         step="0.01"
       />
     </div>
-    <!-- Tipo de Personal -->
-    <div class="form-group">
-      <label for="tipoPersonal" class="required form-label">Tipo de Personal</label>
-      <ng-select
-        id="tipoPersonal"
-        formControlName="id_tipopersonal"
-        [items]="tiposPersonalList"
-        bindLabel="especialidad"
-        bindValue="id_tipopersonal"
-        placeholder="Seleccione tipo de personal"
-        [typeahead]="searchTerm$"
-        [searchable]="true"
-        [clearable]="true"
-        [loading]="isLoading | async"
-      >
-      </ng-select>
-    </div>
-    <!-- Terapia -->
-    <div class="form-group">
-      <label for="terapia" class="required form-label">Terapia</label>
-      <ng-select
-        id="terapia"
-        formControlName="id_terapia"
-        [items]="terapiasList"
-        bindLabel="nombre"
-        bindValue="id_terapia"
-        placeholder="Seleccione terapia"
-        [typeahead]="searchTerm$"
-        [searchable]="true"
-        [clearable]="true"
-        [loading]="isLoading | async"
-      >
-      </ng-select>
-    </div>
-    <!-- Horario -->
-    <div class="form-group">
-      <label for="horario" class="required form-label">Horario</label>
-      <select id="horario" formControlName="id_horario" class="form-control">
-        <option *ngFor="let horario of horariosList" [value]="horario.id_horariop">
-          {{ horario.horario_iniciop }} - {{ horario.horario_finalp }}
-        </option>
-      </select>
-    </div>
-    <!-- Time Picker para Horario -->
-    <div class="form-group">
-      <label for="horarioInicio" class="required form-label">Inicio del Horario</label>
-      <input
-        type="text"
-        id="horarioInicio"
-        formControlName="horario_inicio"
-        class="form-control"
-        placeholder="HH:mm"
-      />
-    </div>
-    <div class="form-group">
-      <label for="horarioFin" class="required form-label">Fin del Horario</label>
-      <input
-        type="text"
-        id="horarioFin"
-        formControlName="horario_fin"
-        class="form-control"
-        placeholder="HH:mm"
-      />
-    </div>
-  </form>
+ <!-- Selector de Tipo de Personal -->
+ <div class="form-group">
+  <label for="id_tipopersonal" class="required form-label">Tipo de Personal</label>
+  <select id="id_tipopersonal" formControlName="id_tipopersonal" class="form-control">
+    <option *ngFor="let tipo of tiposPersonalList" [value]="tipo.id_tipopersonal">
+      {{ tipo.especialidad }}
+    </option>
+  </select>
+</div>
+
+<!-- Selector de Terapia -->
+<div class="form-group">
+  <label for="id_terapia" class="required form-label">Terapia</label>
+  <select id="id_terapia" formControlName="id_terapia" class="form-control">
+    <option *ngFor="let terapia of terapiasList" [value]="terapia.id_terapia">
+      {{ terapia.nombre }}
+    </option>
+  </select>
+</div>
+
+<!-- Selector de Horario -->
+<div class="form-group">
+  <label for="id_horario" class="required form-label">Horario</label>
+  <select id="id_horario" formControlName="id_horario" class="form-control">
+    <option *ngFor="let horario of horariosList" [value]="horario.id_horariop">
+      {{ horario.horario_iniciop }} - {{ horario.horario_finalp }}
+    </option>
+  </select>
+</div>
+
+<!-- Campos de texto para horario de inicio y fin -->
+<div class="form-group">
+  <label for="horarioInicio" class="required form-label">Inicio del Horario</label>
+  <input
+    type="text"
+    id="horarioInicio"
+    formControlName="horario_inicio"
+    class="form-control"
+    placeholder="HH:mm"
+  />  
+</div>
+<div class="form-group">
+  <label for="horarioFin" class="required form-label">Fin del Horario</label>
+  <input
+    type="text"
+    id="horarioFin"
+    formControlName="horario_fin"
+    class="form-control"
+    placeholder="HH:mm"
+  />
 </div>
 <div class="modal-footer">
   <button type="button" class="btn btn-secondary" (click)="close()">

@@ -58,7 +58,7 @@
         <th scope="col">Género</th>
         <th scope="col">Tipo de Personal</th>
         <th scope="col">Terapia</th>
-        <th scope="col">Horario</th> 
+        <th scope="col">Horario</th>
         <th scope="col">Sueldo</th>
         <th scope="col">Acciones</th>
       </tr>
@@ -79,7 +79,7 @@
             <button class="btn btn-icon btn-sm bg-success" (click)="openEditarModal(personal)">
               <span class="ki-solid ki-pencil text-white fs-3"></span>
             </button>
-            <button class="btn btn-icon btn-sm btn-danger" (click)="delete(personal.id_personal)">
+            <button class="btn btn-icon btn-sm btn-danger" (click)="openBorrarModal(personal)">
               <span class="ki-solid ki-trash text-white fs-3"></span>
             </button>
           </div>
