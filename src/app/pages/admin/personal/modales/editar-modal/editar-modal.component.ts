@@ -83,6 +83,7 @@ export class EditarModalComponent implements OnInit {
       this.personalService.getById(this.personalId).subscribe({
         next: (personal: Personal) => {
           this.editForm.patchValue(personal);
+          console.log('info',personal);
         },
         error: (err: HttpErrorResponse) => {
           console.error('Error al cargar datos del personal:', err.message);

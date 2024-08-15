@@ -1,5 +1,5 @@
 import { Component, EventEmitter, inject, Output, AfterViewInit, ViewChild, ElementRef, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { LoadingService } from 'src/app/services/loading.service';
 import { PersonalService } from 'src/app/services/personal/personal.service';
@@ -31,7 +31,7 @@ export class CrearModalComponent implements AfterViewInit, OnInit {
   terapiasList: Terapia[] = [];
   horariosList: HorarioPersonal[] = [];
 
-  searchTerm$ = new Subject<string>(); // Subject para la búsqueda
+  searchTerm$ = new Subject<string>();
 
   @Output() onSaveComplete = new EventEmitter<void>();
 
@@ -99,22 +99,40 @@ export class CrearModalComponent implements AfterViewInit, OnInit {
   }
 
   getTipoPersonalList(): void {
-    this.tipoPersonalService.getAll().subscribe(data => {
-      this.tiposPersonalList = Array.isArray(data) ? data : [];
+    this.tipoPersonalService.getAll().subscribe({
+      next: (response: TipoPersonal[]) => {
+        console.log('Respuesta del servicio TipoPersonal:', response);
+        this.tiposPersonalList = Array.isArray(response) ? response : [];
+        this.personalForm.patchValue({ id_tipopersonal: this.tiposPersonalList[0]?.id_tipopersonal || '' });
+      },
+      error: (err) => console.error('Error al cargar tipos de personal:', err)
     });
   }
 
   getTerapiasList(): void {
-    this.terapiaService.getAll().subscribe(response => {
-      this.terapiasList = Array.isArray(response.data) ? response.data : [];
+    this.terapiaService.getAll().subscribe({
+      next: (response: { data: Terapia[] }) => {
+        console.log('Terapias:', response.data);
+        this.terapiasList = Array.isArray(response.data) ? response.data : [];
+        this.personalForm.patchValue({ id_terapia: this.terapiasList[0]?.id_terapia || '' });
+      },
+      error: (err) => console.error('Error al cargar terapias:', err)
     });
   }
 
+
   getHorariosList(): void {
-    this.horarioPersonalService.getAll().subscribe(data => {
-      this.horariosList = Array.isArray(data) ? data : [];
+    this.horarioPersonalService.getAll().subscribe({
+      next: (response: HorarioPersonal[]) => {
+        console.log('Respuesta del servicio HorarioPersonal:', response);
+        this.horariosList = Array.isArray(response) ? response : [];
+        this.personalForm.patchValue({ id_horario: this.horariosList[0]?.id_horariop || '' });
+      },
+      error: (err) => console.error('Error al cargar horarios:', err)
     });
   }
+
+
 
   onSearchTermChange(term: string) {
     this.searchTerm$.next(term);

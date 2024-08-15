@@ -100,7 +100,7 @@ export class PersonalComponent implements OnInit {
             // Encuentra el tipo de personal, terapia y horario correspondientes
             const tipoPersonal = this.tiposPersonalList.find(tp => tp.id_tipopersonal === personal.id_tipopersonal);
             const terapia = this.terapiasList.find(t => t.id_terapia === personal.id_terapia);
-            const horario = this.horariosList.find(h => h.id_horariop === personal.id_horario); // Usa 'id_horariop' en lugar de 'id'
+            const horario = this.horariosList.find(h => h.id_horariop === personal.id_horario); 
 
             return {
               ...personal,
