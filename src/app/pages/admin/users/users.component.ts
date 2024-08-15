@@ -1,5 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnDestroy, OnInit } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  inject,
+  OnDestroy,
+  OnInit,
+} from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { IUser } from 'src/app/models/user';
 import { LoadingService } from 'src/app/services/loading.service';
@@ -11,8 +17,9 @@ import { DeleteModalComponent } from './modals/delete-modal/delete-modal.compone
 import { HeaderComponent } from 'src/app/components/ui/header/header.component';
 
 import { AgGridAngular } from 'ag-grid-angular'; // Angular Data Grid Component
-import { ColDef } from 'ag-grid-community';
+import { ColDef, GridReadyEvent } from 'ag-grid-community';
 import { ActionButtonsComponent } from './modals/action-buttons/action-buttons.component';
+import { map, Observable } from 'rxjs';
 
 @UntilDestroy()
 @Component({
@@ -26,11 +33,12 @@ export class UsersComponent implements OnInit, OnDestroy {
   users = inject(UserService);
   isLoading = inject(LoadingService);
   modal = inject(NgbModal);
+  // params: GridReadyEvent | undefined;
 
-  userList: Array<IUser> = [];
+  userList: Observable<IUser[]> = new Observable();
 
   colDefs: ColDef[] = [
-    { field: 'name', headerName: 'Nombre', filter: true},
+    { field: 'name', headerName: 'Nombre', filter: true },
     { field: 'dni', headerName: 'DNI', filter: true },
     { field: 'telefono', headerName: 'Teléfono' },
     { field: 'email', headerName: 'Correo', filter: true },
@@ -41,6 +49,8 @@ export class UsersComponent implements OnInit, OnDestroy {
         onEdit: (data: any) => this.openEditModal(data),
         onDelete: (data: any) => this.openDeleteModal(data),
       },
+      maxWidth: 100,
+      resizable: false,
     },
   ];
 
@@ -49,13 +59,12 @@ export class UsersComponent implements OnInit, OnDestroy {
   }
 
   private fetchUsers() {
-    return this.users
-      .getAll()
-      .pipe(untilDestroyed(this))
-      .subscribe((response) => {
-        const usersData = response as { data: IUser[] };
-        this.userList = usersData.data || [];
-      });
+    this.userList = this.users.getAll().pipe(
+      map((resp) => {
+        return resp.data;
+      }),
+      untilDestroyed(this)
+    );
   }
 
   ngOnDestroy(): void {

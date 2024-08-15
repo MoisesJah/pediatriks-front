@@ -7,13 +7,15 @@ import { FlatpickrModule } from 'angularx-flatpickr';
 import { EditModalComponent } from './edit-modal/edit-modal.component';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { DeleteModalComponent } from './delete-modal/delete-modal.component';
+import { ActionButtonsComponent } from './action-buttons/action-buttons.component';
 
 
 @NgModule({
   declarations: [
     CreateModalComponent,
     EditModalComponent,
-    DeleteModalComponent
+    DeleteModalComponent,
+    ActionButtonsComponent
   ],
   imports: [
     CommonModule,

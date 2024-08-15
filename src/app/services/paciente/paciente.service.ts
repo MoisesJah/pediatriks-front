@@ -11,7 +11,7 @@ export class PacienteService {
   constructor(private http: HttpClient) { }
 
   getAll() {
-    return this.http.get(`${this.apiUrl}/paciente/all`);
+    return this.http.get<{ data: IPaciente[] }>(`${this.apiUrl}/paciente/all`);
   }
 
   getById(id: string) {

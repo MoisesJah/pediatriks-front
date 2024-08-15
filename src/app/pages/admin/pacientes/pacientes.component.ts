@@ -9,34 +9,58 @@ import { PacienteService } from 'src/app/services/paciente/paciente.service';
 import { CreateModalComponent } from './modals/create-modal/create-modal.component';
 import { EditModalComponent } from './modals/edit-modal/edit-modal.component';
 import { DeleteModalComponent } from './modals/delete-modal/delete-modal.component';
+import { map, Observable } from 'rxjs';
+import { AgGridAngular } from 'ag-grid-angular';
+import { ColDef } from 'ag-grid-community';
+import { ActionButtonsComponent } from './modals/action-buttons/action-buttons.component';
 
 @UntilDestroy()
 @Component({
   selector: 'app-pacientes',
   standalone: true,
-  imports: [CommonModule, HeaderComponent],
+  imports: [CommonModule, HeaderComponent, AgGridAngular],
   templateUrl: './pacientes.component.html',
   styleUrl: './pacientes.component.scss',
 })
 export class PacientesComponent implements OnInit {
-  modal = inject(NgbModal)
-  pacienteService = inject(PacienteService)
-  isLoading = inject(LoadingService).isLoading
+  modal = inject(NgbModal);
+  pacienteService = inject(PacienteService);
 
-  pacientesList: IPaciente[] = [];
+  pacientesList: Observable<IPaciente[]> = new Observable();
+
+  colDefs: ColDef[] = [
+    { field: 'nombre', headerName: 'Nombres', filter: true },
+    { field: 'dni', headerName: 'DNI', filter: true },
+    { field: 'genero', headerName: 'Género' },
+    {
+      field: 'fecha_nacimiento',
+      headerName: 'Fecha Nacimiento',
+      filter: 'agDateColumnFilter',
+    },
+    { field: 'colegio', headerName: 'Colegio', filter: true },
+    {
+      headerName: 'Acciones',
+      cellRenderer: ActionButtonsComponent,
+      cellRendererParams: {
+        onEdit: (data: any) => this.openEditModal(data),
+        onDelete: (data: any) => this.openDeleteModal(data),
+      },
+      maxWidth: 100,
+      resizable: false,
+    },
+  ];
 
   ngOnInit(): void {
     this.fetchPacientes();
   }
 
   private fetchPacientes() {
-    return this.pacienteService
-      .getAll()
-      .pipe(untilDestroyed(this))
-      .subscribe((pacientes) => {
-        const response = pacientes as { data: IPaciente[] };
-        this.pacientesList = response.data || [];
-      });
+    this.pacientesList = this.pacienteService.getAll().pipe(
+      untilDestroyed(this),
+      map((resp) => {
+        return resp.data || [];
+      })
+    );
   }
 
   openCreateModal() {
@@ -56,14 +80,14 @@ export class PacientesComponent implements OnInit {
       size: '300px',
       animation: true,
       centered: true,
-    })
+    });
 
     modalRef.componentInstance.pacienteForm.patchValue(paciente);
     modalRef.componentInstance.paciente = paciente;
 
     modalRef.componentInstance.onSaveComplete.subscribe(() => {
       this.fetchPacientes();
-    })
+    });
   }
 
   openDeleteModal(paciente: IPaciente) {
@@ -71,14 +95,14 @@ export class PacientesComponent implements OnInit {
       size: '300px',
       animation: true,
       centered: true,
-    })
+    });
 
     modalRef.componentInstance.pacienteId = paciente.id_paciente;
 
     modalRef.componentInstance.onSaveComplete.subscribe(() => {
       this.fetchPacientes();
-    })
-  } 
+    });
+  }
 
   close() {
     this.modal.dismissAll();
