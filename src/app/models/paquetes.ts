@@ -1,5 +1,5 @@
 export interface Paquete {
-  id_paquete: string; 
+  id_paquetes: string;
   nombre: string;
   descripcion: string;
   cantidadsesiones: number;

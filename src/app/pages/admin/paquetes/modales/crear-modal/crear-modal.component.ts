@@ -35,6 +35,11 @@ export class CrearModalComponent {
       sesionesrestantes: ['', [Validators.required, Validators.min(0)]],
     });
   }
+  ngOnInit(): void {
+    // Suscribirse a los cambios en precioregular y descuento
+    this.paqueteForm.get('precioregular')?.valueChanges.subscribe(() => this.calculatePreciopaquete());
+    this.paqueteForm.get('descuento')?.valueChanges.subscribe(() => this.calculatePreciopaquete());
+  }
 
   close() {
     this.modal.dismissAll();
@@ -57,4 +62,16 @@ export class CrearModalComponent {
       });
     }
   }
+
+  private calculatePreciopaquete(): void {
+    const precioregular = this.paqueteForm.get('precioregular')?.value;
+    const descuento = this.paqueteForm.get('descuento')?.value;
+
+    if (precioregular && descuento != null) {
+      const descuentoDecimal = descuento / 100;
+      const preciopaquete = precioregular - (precioregular * descuentoDecimal);
+      this.paqueteForm.get('preciopaquete')?.setValue(preciopaquete, { emitEvent: false });
+    }
+  }
 }
+

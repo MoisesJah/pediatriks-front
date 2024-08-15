@@ -47,6 +47,8 @@ export class EditarModalComponent implements OnInit {
     } else {
       console.error('ID del paquete no proporcionado o no es una cadena', this.paqueteId);
     }
+    this.paqueteForm.get('precioregular')?.valueChanges.subscribe(() => this.calculatePreciopaquete());
+    this.paqueteForm.get('descuento')?.valueChanges.subscribe(() => this.calculatePreciopaquete());
   }
 
   close() {
@@ -83,6 +85,7 @@ export class EditarModalComponent implements OnInit {
     }
   }
 
+
   private loadPaqueteData(paqueteId?: string) {
     // Usa el paqueteId de la propiedad de clase si no se pasa como argumento
     const id = paqueteId || (typeof this.paqueteId === 'object' ? this.paqueteId.id_paquetes : this.paqueteId);
@@ -91,8 +94,20 @@ export class EditarModalComponent implements OnInit {
       console.log('Cargando datos para paqueteId:', id); // Verifica el valor del ID
       this.paqueteService.getById(id)
         .subscribe({
-          next: (paquete) => {
+          next: (paquete : any) => {
             this.paqueteForm.patchValue(paquete);
+            console.log('info',paquete);
+            this.paqueteForm.patchValue({
+              nombre: paquete.data.nombre,
+               descripcion: paquete.data.descripcion,
+              cantidadsesiones: paquete.data.cantidadsesiones,
+              precioregular: paquete.data.precioregular,
+              descuento: paquete.data.descuento,
+              preciopaquete: paquete.data.preciopaquete,
+              fechainicio: paquete.data.fechainicio,
+              fechafin: paquete.data.fechafin,
+              sesionesrestantes: paquete.data.sesionesrestantes
+            });
           },
           error: (err) => {
             console.error('Error al cargar datos del paquete:', err);
@@ -100,6 +115,18 @@ export class EditarModalComponent implements OnInit {
         });
     } else {
       console.error('ID del paquete no proporcionado');
+
+    }
+  }
+
+  private calculatePreciopaquete(): void {
+    const precioregular = this.paqueteForm.get('precioregular')?.value;
+    const descuento = this.paqueteForm.get('descuento')?.value;
+
+    if (precioregular && descuento != null) {
+      const descuentoDecimal = descuento / 100;
+      const preciopaquete = precioregular - (precioregular * descuentoDecimal);
+      this.paqueteForm.get('preciopaquete')?.setValue(preciopaquete, { emitEvent: false });
     }
   }
 }

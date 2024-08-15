@@ -88,23 +88,33 @@ export class PaquetesComponent implements OnInit, OnDestroy {
 
 
 // En el componente que abre el modal
-openEditarModal(paquete: { id_paquetes: string }) {
-  const modalRef = this.modal.open(EditarModalComponent);
-  modalRef.componentInstance.paqueteId = paquete.id_paquetes;
-}
+  openEditarModal(paquete: { id_paquetes: string }) {
+    const modalRef = this.modal.open(EditarModalComponent);
+    modalRef.componentInstance.paqueteId = paquete.id_paquetes;
+    modalRef.componentInstance.onSaveComplete.subscribe(() => {
+      this.fetchPaquetes();
+    });
+  }
 
 
   openBorrarModal(paquete: Paquete) {
+    if (!paquete.id_paquetes) {
+      console.error('El paquete no tiene un id_paquete definido.');
+      return;
+    }
+
     const modalRef = this.modal.open(BorrarModalComponent, {
       size: '300px',
       animation: true,
       centered: true,
     });
-    modalRef.componentInstance.paqueteId = paquete.id_paquete;
+    modalRef.componentInstance.paqueteId = paquete.id_paquetes;
+
     modalRef.componentInstance.onSaveComplete.subscribe(() => {
       this.fetchPaquetes();
     });
   }
+
 
   private applyFilter(): void {
     if (this.searchName.trim() === '') {
@@ -156,7 +166,7 @@ openEditarModal(paquete: { id_paquetes: string }) {
   }
 
   trackById(index: number, item: Paquete): string {
-    return item.id_paquete;
+    return item.id_paquetes;
   }
 
   delete(id: string): void {
