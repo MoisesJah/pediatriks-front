@@ -9,7 +9,7 @@
 <div class="table-responsive container card shadow p-2 px-4 content bg-white">
   <div class="d-flex p-4 justify-content-between align-items-center">
     <h1>Paquetes</h1>
-    <button type="button" class="btn btn-primary" >
+    <button type="button" class="btn btn-primary" (click)="openCrearModal()">
       <span class="d-flex align-items-center">
         <span class="ki-solid ki-plus text-white fs-1"></span>
         <span class="text-white ms-2">Añadir</span>
@@ -33,7 +33,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let paquete of paquetesList">
+      <tr *ngFor="let paquete of filteredList; trackBy: trackById">
         <td>{{ paquete.nombre }}</td>
         <td>{{ paquete.descripcion }}</td>
         <td>{{ paquete.cantidadsesiones }}</td>
@@ -45,10 +45,10 @@
         <td>{{ paquete.sesionesrestantes }}</td>
         <td>
           <div class="d-flex align-items-center gap-2">
-            <button class="btn btn-icon btn-sm bg-success">
+            <button class="btn btn-icon btn-sm bg-success" (click)="openEditarModal(paquete)">
               <span class="ki-solid ki-pencil text-white fs-3"></span>
             </button>
-            <button class="btn btn-icon btn-sm btn-danger">
+            <button class="btn btn-icon btn-sm btn-danger" (click)="openBorrarModal(paquete)">
               <span class="ki-solid ki-trash text-white fs-3"></span>
             </button>
           </div>

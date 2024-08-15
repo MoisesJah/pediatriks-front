@@ -28,4 +28,4 @@ import { BorrarModalComponent } from './borrar-modal/borrar-modal.component';
     EditarModalComponent
   ]
 })
-export class PersonalModalsModule { }
+export class PaquetesModalsModule { }

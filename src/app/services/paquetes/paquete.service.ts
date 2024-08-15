@@ -7,6 +7,7 @@ import { Paquete } from 'src/app/models/paquetes';
 @Injectable({
   providedIn: 'root'
 })
+
 export class PaqueteService {
   private apiUrl = `${environment.apiUrl}/paquete`;
 
@@ -17,11 +18,11 @@ export class PaqueteService {
   }
 
   getById(id: string): Observable<Paquete> {
-    return this.http.get<Paquete>(`${this.apiUrl}/show/${id}`); // Ruta para obtener un paquete específico
+    return this.http.get<Paquete>(`${this.apiUrl}/show/${id}`);
   }
 
-  create(paquete: Paquete, terapiaid: string): Observable<Paquete> {
-    return this.http.post<Paquete>(`${this.apiUrl}/add/terapia/${terapiaid}`, paquete); // Ruta para crear un paquete
+  create(paquete: Paquete): Observable<Paquete> {
+    return this.http.post<Paquete>(`${this.apiUrl}/add`, paquete);
   }
 
   update(id: string, paquete: Paquete): Observable<Paquete> {
@@ -32,3 +33,4 @@ export class PaqueteService {
     return this.http.delete<void>(`${this.apiUrl}/delete/${id}`); // Ruta para eliminar un paquete
   }
 }
+

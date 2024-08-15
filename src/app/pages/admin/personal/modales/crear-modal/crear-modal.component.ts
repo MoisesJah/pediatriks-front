@@ -1,5 +1,5 @@
-import { Component, EventEmitter, inject, Output, AfterViewInit, ViewChild, ElementRef } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component, EventEmitter, inject, Output, AfterViewInit, ViewChild, ElementRef, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { LoadingService } from 'src/app/services/loading.service';
 import { PersonalService } from 'src/app/services/personal/personal.service';
@@ -11,15 +11,14 @@ import { Spanish } from 'flatpickr/dist/l10n/es.js';
 import { TipoPersonal } from 'src/app/models/tipopersonal';
 import { HorarioPersonal } from 'src/app/models/horariop';
 import { Terapia } from 'src/app/models/terapia';
-import { Subject, Observable } from 'rxjs';
-import { debounceTime } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-crear-modal',
   templateUrl: './crear-modal.component.html',
   styleUrls: ['./crear-modal.component.scss']
 })
-export class CrearModalComponent implements AfterViewInit {
+export class CrearModalComponent implements AfterViewInit, OnInit {
   modal = inject(NgbModal);
   personalService = inject(PersonalService);
   tipoPersonalService = inject(TipoPersonalService);
@@ -46,28 +45,12 @@ export class CrearModalComponent implements AfterViewInit {
       telefono: ['', [Validators.required, Validators.pattern('^[0-9]*')]],
       correo: ['', [Validators.required, Validators.email]],
       genero: ['', Validators.required],
-      sueldo: ['', [Validators.required, Validators.min(0)]],
+      sueldo: [0, [Validators.required, Validators.min(0)]],
       id_tipopersonal: ['', Validators.required],
       id_terapia: ['', Validators.required],
       id_horario: ['', Validators.required],
       horario_inicio: ['', Validators.required],
       horario_fin: ['', Validators.required],
-    });
-  }
-
-  ngAfterViewInit(): void {
-    flatpickr(this.horarioInicioInput.nativeElement, {
-      enableTime: true,
-      noCalendar: true,
-      dateFormat: "H:i",
-      locale: Spanish
-    });
-
-    flatpickr(this.horarioFinInput.nativeElement, {
-      enableTime: true,
-      noCalendar: true,
-      dateFormat: "H:i",
-      locale: Spanish
     });
   }
 
@@ -77,35 +60,59 @@ export class CrearModalComponent implements AfterViewInit {
     this.getHorariosList();
   }
 
+  ngAfterViewInit(): void {
+    if (this.horarioInicioInput?.nativeElement) {
+      flatpickr(this.horarioInicioInput.nativeElement, {
+        enableTime: true,
+        noCalendar: true,
+        dateFormat: "H:i",
+        locale: Spanish
+      });
+    }
+
+    if (this.horarioFinInput?.nativeElement) {
+      flatpickr(this.horarioFinInput.nativeElement, {
+        enableTime: true,
+        noCalendar: true,
+        dateFormat: "H:i",
+        locale: Spanish
+      });
+    }
+  }
+
   close() {
     this.modal.dismissAll();
   }
 
   save() {
     if (this.personalForm.valid) {
-      console.log(this.personalForm.value);
-      this.personalService.create(this.personalForm.value).subscribe(() => {
-        this.onSaveComplete.emit();
-        this.modal.dismissAll();
+      this.personalService.create(this.personalForm.value).subscribe({
+        next: () => {
+          this.onSaveComplete.emit();
+          this.modal.dismissAll();
+        },
+        error: (err) => {
+          console.error('Error al guardar personal:', err);
+        }
       });
     }
   }
 
   getTipoPersonalList(): void {
     this.tipoPersonalService.getAll().subscribe(data => {
-      this.tiposPersonalList = data;
+      this.tiposPersonalList = Array.isArray(data) ? data : [];
     });
   }
 
   getTerapiasList(): void {
-    this.terapiaService.getAll().subscribe((response) => {
-      this.terapiasList = response.data;
+    this.terapiaService.getAll().subscribe(response => {
+      this.terapiasList = Array.isArray(response.data) ? response.data : [];
     });
   }
 
   getHorariosList(): void {
     this.horarioPersonalService.getAll().subscribe(data => {
-      this.horariosList = data;
+      this.horariosList = Array.isArray(data) ? data : [];
     });
   }
 
