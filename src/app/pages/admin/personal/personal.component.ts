@@ -14,11 +14,14 @@ import { TipoPersonalService } from 'src/app/services/tipopersonal/tipopersonal.
 import { TerapiaService } from 'src/app/services/terapia/terapia.service';
 import { HorarioPersonalService } from 'src/app/services/horariopersonal/horariopersonal.service';
 import { HorarioPersonal } from 'src/app/models/horariop';
+import { AgGridAngular } from 'ag-grid-angular';
+import { ColDef, GridReadyEvent } from 'ag-grid-community';
+import { ActionButtonsComponent } from './modales/action-buttons/action-buttons.component';
 
 @Component({
   selector: 'app-personal',
   standalone: true,
-  imports: [CommonModule, HeaderComponent],
+  imports: [CommonModule, HeaderComponent, AgGridAngular],
   templateUrl: './personal.component.html',
   styleUrls: ['./personal.component.scss']
 })
@@ -27,6 +30,7 @@ export class PersonalComponent implements OnInit {
   personalList: Array<Personal> = [];
   filteredList: Array<Personal> = [];
   searchName: string = '';
+  selectedCargo: string = '';
   searchTerm$ = new Subject<string>();
   suggestions: string[] = [];
   showSuggestions: boolean = false;
@@ -39,6 +43,29 @@ export class PersonalComponent implements OnInit {
   tiposPersonalList: Array<any> = [];
   terapiasList: Array<any> = [];
   horariosList: Array<HorarioPersonal> = [];
+
+  colDefs: ColDef[] = [
+    { field: 'nombre', headerName: 'Nombre', filter: true },
+    { field: 'dni', headerName: 'DNI', filter: true },
+    { field: 'telefono', headerName: 'Teléfono', filter: true },
+    { field: 'correo', headerName: 'Correo', filter: true },
+    { field: 'genero', headerName: 'Género', filter: true },
+    { field: 'tipoPersonalName', headerName: 'Tipo de Personal', filter: true },
+    { field: 'terapiaName', headerName: 'Especialidad', filter: true },
+    { field: 'horarioIniciop', headerName: 'Horario Inicio' },
+    { field: 'horarioFinalp', headerName: 'Horario Fin' },
+    { field: 'sueldo', headerName: 'Sueldo' },
+    {
+      headerName: 'Acciones',
+      cellRenderer: ActionButtonsComponent,
+      cellRendererParams: {
+        onEdit: (data: any) => this.openEditarModal(data),
+        onDelete: (data: any) => this.openBorrarModal(data),
+      },
+      maxWidth: 100,
+      resizable: false,
+    },
+  ];
 
   ngOnInit(): void {
     this.fetchPersonal();
@@ -100,7 +127,7 @@ export class PersonalComponent implements OnInit {
             // Encuentra el tipo de personal, terapia y horario correspondientes
             const tipoPersonal = this.tiposPersonalList.find(tp => tp.id_tipopersonal === personal.id_tipopersonal);
             const terapia = this.terapiasList.find(t => t.id_terapia === personal.id_terapia);
-            const horario = this.horariosList.find(h => h.id_horariop === personal.id_horario); 
+            const horario = this.horariosList.find(h => h.id_horariop === personal.id_horario);
 
             return {
               ...personal,
@@ -120,7 +147,6 @@ export class PersonalComponent implements OnInit {
       }
     });
   }
-
 
   private fetchTiposPersonal(): void {
     this.tipoPersonalService.getAll().subscribe({
@@ -168,24 +194,24 @@ export class PersonalComponent implements OnInit {
   }
 
   applyFilter(): void {
-    if (this.searchName.trim() === '') {
-      this.filteredList = [...this.personalList];
-    } else if (this.filterApplied) {
-      this.filteredList = this.personalList.filter(personal =>
-        personal.nombre.toLowerCase().includes(this.searchName.toLowerCase())
-      );
-    }
+    this.filteredList = this.personalList.filter(personal => {
+      const matchesName = this.searchName.trim() === '' || personal.nombre.toLowerCase().includes(this.searchName.toLowerCase());
+      const matchesCargo = this.selectedCargo === '' || personal.id_tipopersonal === this.selectedCargo;
+
+      return matchesName && matchesCargo;
+    });
   }
 
   onNameInput(event: Event): void {
     const input = event.target as HTMLInputElement;
     this.searchName = input.value;
+    this.applyFilter();
+  }
 
-    if (this.searchName.trim() === '') {
-      this.filteredList = [...this.personalList];
-    } else {
-      this.searchTerm$.next(this.searchName);
-    }
+  onCargoChange(event: Event): void {
+    const select = event.target as HTMLSelectElement;
+    this.selectedCargo = select.value;
+    this.applyFilter();
   }
 
   filterSuggestions(term: string): string[] {
@@ -202,31 +228,12 @@ export class PersonalComponent implements OnInit {
   selectSuggestion(suggestion: string): void {
     this.searchName = suggestion;
     this.showSuggestions = false;
+    this.applyFilter();
   }
 
   hideSuggestions(): void {
     setTimeout(() => {
       this.showSuggestions = false;
     }, 100);
-  }
-
-  applyFilterClick(): void {
-    this.filterApplied = true;
-    this.applyFilter();
-  }
-
-  trackById(index: number, item: Personal): number {
-    return item.id_personal;
-  }
-
-  delete(id: number): void {
-    this.personalService.delete(id).subscribe({
-      next: () => {
-        this.fetchPersonal();
-      },
-      error: (err) => {
-        console.error('Error deleting personal:', err);
-      }
-    });
   }
 }

@@ -17,7 +17,16 @@
     </button>
   </div>
 
-  <div class="d-flex justify-content-between align-items-center my-4">
+  <div style="height: 600px" id="myGrid" class="ag-theme-quartz">
+    <ag-grid-angular
+      style="width: 100%; height: 100%"
+      [rowData]="personalList"
+      [columnDefs]="colDefs"
+      [pagination]="true"
+    ></ag-grid-angular>
+  </div>
+
+  <!-- <div class="d-flex justify-content-between align-items-center my-4">
     <div class="d-flex flex-column align-items-center position-relative">
       <label for="filter-nombre" class="form-label">Nombre</label>
       <input
@@ -86,5 +95,5 @@
         </td>
       </tr>
     </tbody>
-  </table>
+  </table> -->
 </div>

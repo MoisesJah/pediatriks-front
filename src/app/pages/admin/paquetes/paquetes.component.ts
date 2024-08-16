@@ -11,12 +11,15 @@ import { HeaderComponent } from 'src/app/components/ui/header/header.component';
 import { CrearModalComponent } from './modales/crear-modal/crear-modal.component';
 import { BorrarModalComponent } from './modales/borrar-modal/borrar-modal.component';
 import { EditarModalComponent } from './modales/editar-modal/editar-modal.component';
+import { AgGridAngular } from 'ag-grid-angular';
+import { ColDef, GridReadyEvent } from 'ag-grid-community';
+import { ActionButtonsComponent } from './modales/action-buttons/action-buttons.component';
 
 @UntilDestroy()
 @Component({
   selector: 'app-paquetes',
   standalone: true,
-  imports: [CommonModule, HeaderComponent],
+  imports: [CommonModule, HeaderComponent, AgGridAngular],
   templateUrl: './paquetes.component.html',
   styleUrls: ['./paquetes.component.scss'],
 })
@@ -32,6 +35,29 @@ export class PaquetesComponent implements OnInit, OnDestroy {
   suggestions: string[] = [];
   showSuggestions: boolean = false;
   filterApplied: boolean = false;
+
+
+  colDefs: ColDef[] = [
+    { field: 'nombre', headerName: 'Nombre', filter: true },
+    { field: 'descripcion', headerName: 'Descripcion'},
+    { field: 'cantidadsesiones', headerName: 'Cantidad de Sesiones'},
+    { field: 'precioregular', headerName: 'Precio Regular'},
+    { field: 'descuento', headerName: 'Descuento %'},
+    { field: 'preciopaquete', headerName: 'Precio del Paquete'},
+    { field: 'fechainicio', headerName: 'Fecha de Inicio'},
+    { field: 'fechafin', headerName: 'Fecha de Fin'},
+    { field: 'sesionesrestantes', headerName: 'Sesiones Restantes' },
+    {
+      headerName: 'Acciones',
+      cellRenderer: ActionButtonsComponent,
+      cellRendererParams: {
+        onEdit: (data: any) => this.openEditarModal(data),
+        onDelete: (data: any) => this.openBorrarModal(data),
+      },
+      maxWidth: 100,
+      resizable: false,
+    },
+  ];
 
   ngOnInit(): void {
     this.fetchPaquetes();
