@@ -1,4 +1,13 @@
-import { Component, EventEmitter, inject, Output, AfterViewInit, ViewChild, ElementRef, OnInit } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  inject,
+  Output,
+  AfterViewInit,
+  ViewChild,
+  ElementRef,
+  OnInit,
+} from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { LoadingService } from 'src/app/services/loading.service';
@@ -16,7 +25,7 @@ import { Subject } from 'rxjs';
 @Component({
   selector: 'app-crear-modal',
   templateUrl: './crear-modal.component.html',
-  styleUrls: ['./crear-modal.component.scss']
+  styleUrls: ['./crear-modal.component.scss'],
 })
 export class CrearModalComponent implements AfterViewInit, OnInit {
   modal = inject(NgbModal);
@@ -65,8 +74,8 @@ export class CrearModalComponent implements AfterViewInit, OnInit {
       flatpickr(this.horarioInicioInput.nativeElement, {
         enableTime: true,
         noCalendar: true,
-        dateFormat: "H:i",
-        locale: Spanish
+        dateFormat: 'H:i',
+        locale: Spanish,
       });
     }
 
@@ -74,8 +83,8 @@ export class CrearModalComponent implements AfterViewInit, OnInit {
       flatpickr(this.horarioFinInput.nativeElement, {
         enableTime: true,
         noCalendar: true,
-        dateFormat: "H:i",
-        locale: Spanish
+        dateFormat: 'H:i',
+        locale: Spanish,
       });
     }
   }
@@ -93,19 +102,17 @@ export class CrearModalComponent implements AfterViewInit, OnInit {
         },
         error: (err) => {
           console.error('Error al guardar personal:', err);
-        }
+        },
       });
     }
   }
 
   getTipoPersonalList(): void {
     this.tipoPersonalService.getAll().subscribe({
-      next: (response: TipoPersonal[]) => {
-        console.log('Respuesta del servicio TipoPersonal:', response);
-        this.tiposPersonalList = Array.isArray(response) ? response : [];
-        this.personalForm.patchValue({ id_tipopersonal: this.tiposPersonalList[0]?.id_tipopersonal || '' });
+      next: (response) => {
+        this.tiposPersonalList = response.data;
       },
-      error: (err) => console.error('Error al cargar tipos de personal:', err)
+      error: (err) => console.error('Error al cargar tipos de personal:', err),
     });
   }
 
@@ -114,25 +121,24 @@ export class CrearModalComponent implements AfterViewInit, OnInit {
       next: (response: { data: Terapia[] }) => {
         console.log('Terapias:', response.data);
         this.terapiasList = Array.isArray(response.data) ? response.data : [];
-        this.personalForm.patchValue({ id_terapia: this.terapiasList[0]?.id_terapia || '' });
+        // this.personalForm.patchValue({
+        //   id_terapia: this.terapiasList[0]?.id_terapia || '',
+        // });
       },
-      error: (err) => console.error('Error al cargar terapias:', err)
+      error: (err) => console.error('Error al cargar terapias:', err),
     });
   }
-
 
   getHorariosList(): void {
     this.horarioPersonalService.getAll().subscribe({
-      next: (response: HorarioPersonal[]) => {
+      next: (response) => {
         console.log('Respuesta del servicio HorarioPersonal:', response);
-        this.horariosList = Array.isArray(response) ? response : [];
-        this.personalForm.patchValue({ id_horario: this.horariosList[0]?.id_horariop || '' });
+        this.horariosList = response.data
+        
       },
-      error: (err) => console.error('Error al cargar horarios:', err)
+      error: (err) => console.error('Error al cargar horarios:', err),
     });
   }
-
-
 
   onSearchTermChange(term: string) {
     this.searchTerm$.next(term);

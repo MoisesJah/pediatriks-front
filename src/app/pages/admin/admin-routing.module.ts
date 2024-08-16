@@ -37,6 +37,13 @@ const routes: Routes = [
     loadComponent: () =>
       import('./paquetes/paquetes.component').then((m) => m.PaquetesComponent),
   },
+  {
+    path: 'reservar-cita',
+    loadChildren: () =>
+      import('../reservar-cita/reservar-cita.module').then(
+        (m) => m.ReservarCitaModule
+      ),
+  },
 ];
 
 @NgModule({

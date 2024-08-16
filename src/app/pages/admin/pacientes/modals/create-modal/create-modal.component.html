@@ -18,27 +18,29 @@
       <input type="text" id="" class="form-control" formControlName="nombre" />
     </div>
 
-    <div class="d-flex flex-column gap-3">
-      <label for="lastName" class="required form-label">DNI</label>
-      <input
-        type="text"
-        id="lastName"
-        class="form-control"
-        formControlName="dni"
-      />
-    </div>
+    <div class="d-flex gap-3">
+      <div class="d-flex flex-column gap-3">
+        <label for="lastName" class="required form-label">DNI</label>
+        <input
+          type="text"
+          id="lastName"
+          class="form-control"
+          formControlName="dni"
+        />
+      </div>
 
-    <div class="d-flex flex-column gap-3">
-      <label for="email" class="required form-label">Fecha Nacimiento</label>
-      <input
-        mwlFlatpickr
-        [locale]="'es'"
-        placeholder="Seleccionar fecha"
-        formControlName="fecha_nacimiento"
-        [altInput]="true"
-        [altFormat]="'j/n/Y'"
-        class="form-control"
-      />
+      <div class="d-flex flex-column gap-3">
+        <label for="email" class="required form-label">Fecha Nacimiento</label>
+        <input
+          mwlFlatpickr
+          [locale]="'es'"
+          placeholder="Seleccionar fecha"
+          formControlName="fecha_nacimiento"
+          [altInput]="true"
+          [altFormat]="'j/n/Y'"
+          class="form-control"
+        />
+      </div>
     </div>
 
     <div class="d-flex flex-column gap-3">

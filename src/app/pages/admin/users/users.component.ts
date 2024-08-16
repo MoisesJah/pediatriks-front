@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import {
   AfterViewInit,
   Component,
+  HostListener,
   inject,
   OnDestroy,
   OnInit,
@@ -33,6 +34,8 @@ export class UsersComponent implements OnInit, OnDestroy {
   users = inject(UserService);
   isLoading = inject(LoadingService);
   modal = inject(NgbModal);
+  isDesktop!: boolean;
+
   // params: GridReadyEvent | undefined;
 
   userList: Observable<IUser[]> = new Observable();
@@ -54,8 +57,26 @@ export class UsersComponent implements OnInit, OnDestroy {
     },
   ];
 
+  defaultColDef: ColDef = {
+    flex: this.isDesktop ? 1 : 0,
+  };
+
   ngOnInit(): void {
     this.fetchUsers();
+    this.onResize();
+    console.log('initial value', this.isDesktop);
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event?: any) {
+    console.log(event)
+    this.isDesktop = window.innerWidth >= 768; // Adjust breakpoint as needed
+    console.log('resized', this.isDesktop, window.innerWidth);
+  }
+
+  gridReady(params: GridReadyEvent) {
+    // this.params = params;
+    console.log(params);
   }
 
   private fetchUsers() {

@@ -21,7 +21,9 @@
     <ag-grid-angular
       style="width: 100%; height: 100%"
       [rowData]="userList | async"
+      [defaultColDef]="defaultColDef"
       [columnDefs]="colDefs"
+      (gridReady)="gridReady($event)"
       [pagination]="true"
     ></ag-grid-angular>
   </div>

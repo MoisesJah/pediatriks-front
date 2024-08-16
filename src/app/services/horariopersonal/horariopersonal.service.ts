@@ -14,8 +14,8 @@ export class HorarioPersonalService {
 
   constructor(private http: HttpClient) { }
 
-  getAll(): Observable<HorarioPersonal[]> {
-    return this.http.get<HorarioPersonal[]>(`${this.apiUrl}/list`);
+  getAll(): Observable<{ data: HorarioPersonal[]}> {
+    return this.http.get<{ data: HorarioPersonal[] }>(`${this.apiUrl}/list`);
   }
 
   getById(id: string): Observable<HorarioPersonal> {

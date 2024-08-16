@@ -116,6 +116,7 @@ export class PaquetesComponent implements OnInit, OnDestroy {
 // En el componente que abre el modal
   openEditarModal(paquete: { id_paquetes: string }) {
     const modalRef = this.modal.open(EditarModalComponent);
+    
     modalRef.componentInstance.paqueteId = paquete.id_paquetes;
     modalRef.componentInstance.onSaveComplete.subscribe(() => {
       this.fetchPaquetes();

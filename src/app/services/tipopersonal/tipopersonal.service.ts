@@ -12,8 +12,8 @@ export class TipoPersonalService {
 
   constructor(private http: HttpClient) { }
 
-  getAll(): Observable<TipoPersonal[]> {
-    return this.http.get<TipoPersonal[]>(`${this.apiUrl}/list`);
+  getAll(): Observable<{ data: TipoPersonal[]}> {
+    return this.http.get<{ data: TipoPersonal[] }>(`${this.apiUrl}/list`);
   }
 
   getById(id: string): Observable<TipoPersonal> {
