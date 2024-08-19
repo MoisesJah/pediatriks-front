@@ -23,7 +23,7 @@ import { ActionButtonsComponent } from './modales/action-buttons/action-buttons.
   standalone: true,
   imports: [CommonModule, HeaderComponent, AgGridAngular],
   templateUrl: './personal.component.html',
-  styleUrls: ['./personal.component.scss']
+  styleUrls: ['./personal.component.scss'],
 })
 export class PersonalComponent implements OnInit {
   personalService = inject(PersonalService);
@@ -50,7 +50,11 @@ export class PersonalComponent implements OnInit {
     { field: 'telefono', headerName: 'Teléfono', filter: true },
     { field: 'correo', headerName: 'Correo', filter: true },
     { field: 'genero', headerName: 'Género', filter: true },
-    { field: 'tipopersonal.especialidad',headerName: 'Tipo de Personal', filter: true },
+    {
+      field: 'tipopersonal.especialidad',
+      headerName: 'Tipo de Personal',
+      filter: true,
+    },
     { field: 'terapia.nombre', headerName: 'Especialidad', filter: true },
     { field: 'horario.horario_iniciop', headerName: 'Horario Inicio' },
     { field: 'horario.horario_finalp', headerName: 'Horario Fin' },
@@ -77,22 +81,23 @@ export class PersonalComponent implements OnInit {
       .pipe(
         debounceTime(300),
         distinctUntilChanged(),
-        switchMap(term => {
+        switchMap((term) => {
           const suggestions = this.filterSuggestions(term);
           return [suggestions];
         })
       )
-      .subscribe(suggestions => {
+      .subscribe((suggestions) => {
         this.suggestions = suggestions;
         this.showSuggestions = suggestions.length > 0;
       });
   }
 
   openCrearModal() {
-    const modalRef = this.modal.open(
-      CrearModalComponent,
-      { size: 'lg', animation: true }
-    );
+    const modalRef = this.modal.open(CrearModalComponent, {
+      size: '300px',
+      animation: true,
+      centered: true,
+    });
 
     modalRef.componentInstance.onSaveComplete.subscribe(() => {
       this.fetchPersonal();
@@ -102,7 +107,7 @@ export class PersonalComponent implements OnInit {
   openEditarModal(personal: Personal) {
     const modalRef = this.modal.open(EditarModalComponent, {
       size: 'lg',
-      animation: true
+      animation: true,
     });
     modalRef.componentInstance.editForm.patchValue(personal);
   }
@@ -125,26 +130,37 @@ export class PersonalComponent implements OnInit {
         if (response && Array.isArray(response.data)) {
           this.personalList = response.data.map((personal: any) => {
             // Encuentra el tipo de personal, terapia y horario correspondientes
-            const tipoPersonal = this.tiposPersonalList.find(tp => tp.id_tipopersonal === personal.id_tipopersonal);
-            const terapia = this.terapiasList.find(t => t.id_terapia === personal.id_terapia);
-            const horario = this.horariosList.find(h => h.id_horariop === personal.id_horario);
+            const tipoPersonal = this.tiposPersonalList.find(
+              (tp) => tp.id_tipopersonal === personal.id_tipopersonal
+            );
+            const terapia = this.terapiasList.find(
+              (t) => t.id_terapia === personal.id_terapia
+            );
+            const horario = this.horariosList.find(
+              (h) => h.id_horariop === personal.id_horario
+            );
 
             return {
               ...personal,
-              tipoPersonalName: tipoPersonal ? tipoPersonal.especialidad : 'Sin asignar',
+              tipoPersonalName: tipoPersonal
+                ? tipoPersonal.especialidad
+                : 'Sin asignar',
               terapiaName: terapia ? terapia.nombre : 'Sin asignar',
               horarioIniciop: horario ? horario.horario_iniciop : 'No asignado',
-              horarioFinalp: horario ? horario.horario_finalp : 'No asignado'
+              horarioFinalp: horario ? horario.horario_finalp : 'No asignado',
             };
           });
           this.applyFilter();
         } else {
-          console.error('Expected an array in response.data but received:', response.data);
+          console.error(
+            'Expected an array in response.data but received:',
+            response.data
+          );
         }
       },
       error: (err: any) => {
         console.error('Error fetching personal data:', err);
-      }
+      },
     });
   }
 
@@ -154,12 +170,15 @@ export class PersonalComponent implements OnInit {
         if (response && Array.isArray(response.data)) {
           this.tiposPersonalList = response.data;
         } else {
-          console.error('Expected an array in response.data but received:', response.data);
+          console.error(
+            'Expected an array in response.data but received:',
+            response.data
+          );
         }
       },
       error: (err: any) => {
         console.error('Error fetching tipos personal data:', err);
-      }
+      },
     });
   }
 
@@ -169,12 +188,15 @@ export class PersonalComponent implements OnInit {
         if (response && Array.isArray(response.data)) {
           this.terapiasList = response.data;
         } else {
-          console.error('Expected an array in response.data but received:', response.data);
+          console.error(
+            'Expected an array in response.data but received:',
+            response.data
+          );
         }
       },
       error: (err: any) => {
         console.error('Error fetching terapias data:', err);
-      }
+      },
     });
   }
 
@@ -184,19 +206,26 @@ export class PersonalComponent implements OnInit {
         if (response && Array.isArray(response.data)) {
           this.horariosList = response.data;
         } else {
-          console.error('Expected an array in response.data but received:', response.data);
+          console.error(
+            'Expected an array in response.data but received:',
+            response.data
+          );
         }
       },
       error: (err: any) => {
         console.error('Error fetching horarios data:', err);
-      }
+      },
     });
   }
 
   applyFilter(): void {
-    this.filteredList = this.personalList.filter(personal => {
-      const matchesName = this.searchName.trim() === '' || personal.nombre.toLowerCase().includes(this.searchName.toLowerCase());
-      const matchesCargo = this.selectedCargo === '' || personal.id_tipopersonal === this.selectedCargo;
+    this.filteredList = this.personalList.filter((personal) => {
+      const matchesName =
+        this.searchName.trim() === '' ||
+        personal.nombre.toLowerCase().includes(this.searchName.toLowerCase());
+      const matchesCargo =
+        this.selectedCargo === '' ||
+        personal.id_tipopersonal === this.selectedCargo;
 
       return matchesName && matchesCargo;
     });
@@ -220,8 +249,8 @@ export class PersonalComponent implements OnInit {
     }
 
     return this.personalList
-      .map(personal => personal.nombre)
-      .filter(nombre => nombre.toLowerCase().includes(term.toLowerCase()))
+      .map((personal) => personal.nombre)
+      .filter((nombre) => nombre.toLowerCase().includes(term.toLowerCase()))
       .slice(0, 10);
   }
 
