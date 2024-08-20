@@ -106,7 +106,7 @@ export class PersonalComponent implements OnInit {
 
   openEditarModal(personal: Personal) {
     const modalRef = this.modal.open(EditarModalComponent, {
-      size: 'lg',
+      size: '300px',
       animation: true,
     });
     modalRef.componentInstance.editForm.patchValue(personal);

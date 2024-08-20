@@ -71,3 +71,7 @@ textarea {
   inset-block: 0.5rem;
   right: 0.75rem;
 }
+
+.ng-invalid.ng-touched:not(form) {
+  border: 1.25px solid #a94442;
+}

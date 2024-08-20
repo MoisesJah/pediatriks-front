@@ -15,25 +15,25 @@ import { PersonalService } from 'src/app/services/personal/personal.service';
 import { TipoPersonalService } from 'src/app/services/tipopersonal/tipopersonal.service';
 import { TerapiaService } from 'src/app/services/terapia/terapia.service';
 import { HorarioPersonalService } from 'src/app/services/horariopersonal/horariopersonal.service';
-import flatpickr from 'flatpickr';
-import { Spanish } from 'flatpickr/dist/l10n/es.js';
 import { TipoPersonal } from 'src/app/models/tipopersonal';
 import { HorarioPersonal } from 'src/app/models/horariop';
 import { Terapia } from 'src/app/models/terapia';
 import { Subject } from 'rxjs';
+import { generos } from '../../../pacientes/modals/genero.data';
 
 @Component({
   selector: 'app-crear-modal',
   templateUrl: './crear-modal.component.html',
   styleUrls: ['./crear-modal.component.scss'],
 })
-export class CrearModalComponent implements AfterViewInit, OnInit {
+export class CrearModalComponent implements OnInit {
   modal = inject(NgbModal);
   personalService = inject(PersonalService);
   tipoPersonalService = inject(TipoPersonalService);
   terapiaService = inject(TerapiaService);
   horarioPersonalService = inject(HorarioPersonalService);
   isLoading = inject(LoadingService).isLoading;
+  generos = generos;
 
   personalForm: FormGroup;
   tiposPersonalList: TipoPersonal[] = [];
@@ -44,22 +44,20 @@ export class CrearModalComponent implements AfterViewInit, OnInit {
 
   @Output() onSaveComplete = new EventEmitter<void>();
 
-  @ViewChild('horarioInicio') horarioInicioInput!: ElementRef;
-  @ViewChild('horarioFin') horarioFinInput!: ElementRef;
-
   constructor(private fb: FormBuilder) {
     this.personalForm = this.fb.group({
       nombre: ['', Validators.required],
-      dni: ['', [Validators.required, Validators.pattern('^[0-9]*')]],
+      dni: [
+        '',
+        [Validators.required, Validators.minLength(8),Validators.pattern('^[0-9]*'), ],
+      ],
       telefono: ['', [Validators.required, Validators.pattern('^[0-9]*')]],
       correo: ['', [Validators.required, Validators.email]],
       genero: ['', Validators.required],
       sueldo: [0, [Validators.required, Validators.min(0)]],
       id_tipopersonal: ['', Validators.required],
       id_terapia: ['', Validators.required],
-      id_horario: ['', Validators.required],
-      horario_inicio: ['', Validators.required],
-      horario_fin: ['', Validators.required],
+      id_horariop: ['', Validators.required],
     });
   }
 
@@ -67,26 +65,6 @@ export class CrearModalComponent implements AfterViewInit, OnInit {
     this.getTipoPersonalList();
     this.getTerapiasList();
     this.getHorariosList();
-  }
-
-  ngAfterViewInit(): void {
-    if (this.horarioInicioInput?.nativeElement) {
-      flatpickr(this.horarioInicioInput.nativeElement, {
-        enableTime: true,
-        noCalendar: true,
-        dateFormat: 'H:i',
-        locale: Spanish,
-      });
-    }
-
-    if (this.horarioFinInput?.nativeElement) {
-      flatpickr(this.horarioFinInput.nativeElement, {
-        enableTime: true,
-        noCalendar: true,
-        dateFormat: 'H:i',
-        locale: Spanish,
-      });
-    }
   }
 
   close() {
@@ -133,8 +111,7 @@ export class CrearModalComponent implements AfterViewInit, OnInit {
     this.horarioPersonalService.getAll().subscribe({
       next: (response) => {
         console.log('Respuesta del servicio HorarioPersonal:', response);
-        this.horariosList = response.data
-        
+        this.horariosList = response.data;
       },
       error: (err) => console.error('Error al cargar horarios:', err),
     });
