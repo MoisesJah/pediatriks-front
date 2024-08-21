@@ -12,6 +12,9 @@ import { AgGridAngular } from 'ag-grid-angular';
 import { map, Observable } from 'rxjs';
 import { ActionButtonsComponent } from './modals/action-buttons/action-buttons.component';
 import { ColDef } from 'ag-grid-community';
+import { AG_GRID_LOCALE_ES } from '@ag-grid-community/locale';
+
+import { formatMoney } from 'src/app/utils/formatCurrency';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -26,6 +29,7 @@ export class TerapiasComponent implements OnInit, OnDestroy {
   terapias = inject(TerapiaService);
 
   terapiasList: Observable<Terapia[]> = new Observable();
+  localeText = AG_GRID_LOCALE_ES
 
   colDefs: ColDef[] = [
     { field: 'nombre', headerName: 'Nombre', filter: true },
@@ -36,7 +40,7 @@ export class TerapiasComponent implements OnInit, OnDestroy {
       filter: 'agNumberColumnFilter',
       cellClass: 'fw-bold',
 
-      valueFormatter: (params) => this.formatCurrency(params.value),
+      valueFormatter: (params) => formatMoney(params.value),
       // filterParams: {
       //   numberParser: (num) => num.replace('$', ''),
       // },
@@ -57,12 +61,7 @@ export class TerapiasComponent implements OnInit, OnDestroy {
     this.fetchTerapias();
   }
 
-  formatCurrency(value: number) {
-    return new Intl.NumberFormat('es-PE', {
-      style: 'currency',
-      currency: 'PEN',
-    }).format(value);
-  }
+  
 
   fetchTerapias() {
     this.terapiasList = this.terapias.getAll().pipe(

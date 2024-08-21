@@ -22,36 +22,10 @@
       style="width: 100%; height: 100%"
       [rowData]="terapiasList | async"
       [columnDefs]="colDefs"
+      [localeText]="localeText"
       [ariaHidden]="true"
       [pagination]="true"
     ></ag-grid-angular>
   </div>
 
-  <!-- <table class="table table-row-dashed w-full">
-    <thead class="bg-gray-100 fw-semibold">
-      <tr>
-        <th scope="col">Nombre</th>
-        <th scope="col">Descripción</th>
-        <th scope="col">Precio</th>
-        <th scope="col">Acciones</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let terapia of terapiasList;">
-        <td>{{ terapia.nombre }}</td>
-        <td id="descripcion">{{ terapia.descripcion }}</td>
-        <td>{{ terapia.precio | currency:'S/':'symbol' }}</td>
-        <td>
-          <div class="d-flex align-items-center gap-2">
-            <button class="btn btn-icon btn-sm bg-success" (click)="openEditModal(terapia)">
-              <span class="ki-solid ki-pencil text-white fs-3"></span>
-            </button>
-            <button class="btn btn-icon btn-sm btn-danger" (click)="openDeleteModal(terapia)">
-              <span class="ki-solid ki-trash text-white fs-3"></span>
-            </button>
-          </div>
-        </td>
-      </tr>
-    </tbody>
-  </table> -->
 </div>

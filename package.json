@@ -10,6 +10,7 @@
   },
   "private": true,
   "dependencies": {
+    "@ag-grid-community/locale": "^32.1.0",
     "@angular/animations": "^18.1.0",
     "@angular/cdk": "^18.1.4",
     "@angular/common": "^18.1.0",

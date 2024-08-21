@@ -1,6 +1,5 @@
 import { CommonModule } from '@angular/common';
 import {
-  AfterViewInit,
   Component,
   HostListener,
   inject,
@@ -21,13 +20,14 @@ import { AgGridAngular } from 'ag-grid-angular'; // Angular Data Grid Component
 import { ColDef, GridReadyEvent } from 'ag-grid-community';
 import { ActionButtonsComponent } from './modals/action-buttons/action-buttons.component';
 import { map, Observable } from 'rxjs';
+import { AG_GRID_LOCALE_ES } from '@ag-grid-community/locale';
 
 @UntilDestroy()
 @Component({
   selector: 'app-users',
   standalone: true,
   imports: [CommonModule, HeaderComponent, AgGridAngular],
-  templateUrl: './users.ag.component.html',
+  templateUrl: './users.component.html',
   styleUrl: './users.component.scss',
 })
 export class UsersComponent implements OnInit, OnDestroy {
@@ -35,8 +35,9 @@ export class UsersComponent implements OnInit, OnDestroy {
   isLoading = inject(LoadingService);
   modal = inject(NgbModal);
   isDesktop!: boolean;
+  localeText = AG_GRID_LOCALE_ES;
 
-  // params: GridReadyEvent | undefined;
+  // params: GridReadyEvent | undefined
 
   userList: Observable<IUser[]> = new Observable();
 
@@ -58,25 +59,25 @@ export class UsersComponent implements OnInit, OnDestroy {
   ];
 
   defaultColDef: ColDef = {
-    flex: this.isDesktop ? 1 : 0,
+    flex: 0,
   };
 
   ngOnInit(): void {
     this.fetchUsers();
-    this.onResize();
-    console.log('initial value', this.isDesktop);
   }
 
-  @HostListener('window:resize', ['$event'])
-  onResize(event?: any) {
-    console.log(event)
-    this.isDesktop = window.innerWidth >= 768; // Adjust breakpoint as needed
-    console.log('resized', this.isDesktop, window.innerWidth);
-  }
-
+  //https://stackoverflow.com/questions/72812674/ag-grid-size-to-fit-on-desktop-and-auto-size-on-mobile
   gridReady(params: GridReadyEvent) {
-    // this.params = params;
-    console.log(params);
+    const tableWidth = params.api
+      .getColumns()
+      ?.reduce((i, current) => (i += current.getActualWidth()), 0);
+
+    const { left, right } = params.api.getHorizontalPixelRange();
+    const containerWidth = right - left;
+
+    if (tableWidth! < containerWidth) {
+      params.api.sizeColumnsToFit();
+    }
   }
 
   private fetchUsers() {
