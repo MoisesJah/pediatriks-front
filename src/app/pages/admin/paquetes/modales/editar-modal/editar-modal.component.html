@@ -40,11 +40,11 @@
     </div>
     <div class="form-group">
       <label for="fechainicio" class="required form-label">Fecha de Inicio</label>
-      <input type="date" id="fechainicio" formControlName="fechainicio" class="form-control" />
+      <input type="text" id="kt_calendar_datepicker_date" formControlName="fechainicio" #datePicker placeholder="Seleccionar Fecha" class="form-control" />
     </div>
     <div class="form-group">
       <label for="fechafin" class="required form-label">Fecha de Fin</label>
-      <input type="date" id="fechafin" formControlName="fechafin" class="form-control" />
+      <input type="text" id="kt_calendar_datepicker_end_date" formControlName="fechafin" #endDatePicker placeholder="Seleccionar Fecha" class="form-control" />
     </div>
     <div class="form-group">
       <label for="sesionesrestantes" class="required form-label">Sesiones Restantes</label>

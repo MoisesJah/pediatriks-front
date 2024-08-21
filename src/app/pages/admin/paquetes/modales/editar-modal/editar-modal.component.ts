@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, inject, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, inject, Output,ElementRef, AfterViewInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { LoadingService } from 'src/app/services/loading.service';
@@ -6,6 +6,9 @@ import { PaqueteService } from 'src/app/services/paquetes/paquete.service';
 import { Paquete } from 'src/app/models/paquetes';
 import { HttpErrorResponse } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
+import flatpickr from 'flatpickr';
+import { Spanish } from 'flatpickr/dist/l10n/es.js';
+
 
 @Component({
   selector: 'app-editar-modal',
@@ -14,7 +17,7 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [ReactiveFormsModule, CommonModule]
 })
-export class EditarModalComponent implements OnInit {
+export class EditarModalComponent implements OnInit,AfterViewInit {
   modal = inject(NgbModal);
   paqueteService = inject(PaqueteService);
   isLoading = inject(LoadingService).isLoading;
@@ -23,6 +26,8 @@ export class EditarModalComponent implements OnInit {
   paqueteForm: FormGroup;
 
   @Output() onSaveComplete = new EventEmitter<void>();
+  @ViewChild('datePicker') datePicker!: ElementRef;
+  @ViewChild('endDatePicker') endDatePicker!: ElementRef;
 
   constructor(private fb: FormBuilder) {
     this.paqueteForm = this.fb.group({
@@ -49,6 +54,22 @@ export class EditarModalComponent implements OnInit {
     }
     this.paqueteForm.get('precioregular')?.valueChanges.subscribe(() => this.calculatePreciopaquete());
     this.paqueteForm.get('descuento')?.valueChanges.subscribe(() => this.calculatePreciopaquete());
+  }
+
+  ngAfterViewInit(): void {
+    if (this.datePicker && this.datePicker.nativeElement) {
+      flatpickr(this.datePicker.nativeElement, {
+        locale: Spanish,
+        dateFormat: "Y-m-d",
+      });
+    }
+
+    if (this.endDatePicker && this.endDatePicker.nativeElement) {
+      flatpickr(this.endDatePicker.nativeElement, {
+        locale: Spanish,
+        dateFormat: "Y-m-d",
+      });
+    }
   }
 
   close() {
