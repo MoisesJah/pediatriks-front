@@ -8,11 +8,20 @@
 
 <div class="content d-flex flex-column flex-column-fluid">
   <div class="container-xxl">
-    <div
-      class="card shadow p-2 px-4 bg-white"
-    >
-      <div class="d-flex p-4 justify-content-between align-items-center">
-        <h1>Usuarios @if (isDesktop) { <span class="badge bg-primary">Admin</span> }</h1>
+    <div class="card shadow p-2 px-4 bg-white">
+      <div class="d-flex py-4 gap-3 justify-content-between align-items-center">
+        <form data-kt-search-element="form" class=" position-relative" autocomplete="off">	
+          <!--begin::Hidden input(Added to disable form autocomplete)-->
+          <input type="hidden">
+          <!--end::Hidden input-->
+      
+          <!--begin::Icon-->
+          <i class="ki-duotone ki-magnifier fs-2 search-icon position-absolute top-50 translate-middle-y ms-4"><span class="path1"></span><span class="path2"></span></i>    <!--end::Icon-->
+      
+          <!--begin::Input-->
+          <input type="search" (input)="onFilterTextBoxChanged()" id="user-search" class="form-control custom-form-control ps-13" name="search" value="" placeholder="Búsqueda" data-kt-search-element="input">
+          <!--end::Input-->         
+      </form>
         <button
           type="button"
           class="btn btn-primary"
@@ -25,7 +34,12 @@
         </button>
       </div>
       <!-- https://preview.keenthemes.com/metronic8/demo1/widgets/tables.html# -->
-      <div style="height: calc(100dvh - 235px)" id="myGrid" class="ag-theme-quartz">
+      <div
+        style="height: calc(100dvh - 235px)"
+        id="myGrid"
+        class="ag-theme-quartz"
+      >
+        @defer {
         <ag-grid-angular
           style="width: 100%; height: 100%"
           [rowData]="userList | async"
@@ -35,6 +49,16 @@
           (gridReady)="gridReady($event)"
           [pagination]="true"
         ></ag-grid-angular>
+        }@loading {
+        <div
+          class="d-flex justify-content-center align-items-center"
+          style="height: 100%"
+        >
+          <div class="spinner-border" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+        </div>
+        }
       </div>
     </div>
   </div>
