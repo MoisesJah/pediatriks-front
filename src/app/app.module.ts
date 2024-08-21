@@ -19,11 +19,12 @@ import { PersonalModalsModule } from './pages/admin/personal/modales/modales.mod
 import { NgSelectModule } from '@ng-select/ng-select';
 import { TerapiasModalsModule } from './pages/admin/terapias/modals/modals.module';
 import { PacientesModalsModule } from './pages/admin/pacientes/modals/modals.module';
+import { SedesModalsModule } from './pages/admin/sedes/modales/modales.module';
 
 
 @NgModule({
   declarations: [
-    AppComponent,
+    AppComponent
     // UserBetterComponent,
   ],
   imports: [
@@ -43,7 +44,8 @@ import { PacientesModalsModule } from './pages/admin/pacientes/modals/modals.mod
     PersonalModalsModule,
     NgSelectModule,
     TerapiasModalsModule,
-    PacientesModalsModule
+    PacientesModalsModule,
+    SedesModalsModule
 
 
 ],

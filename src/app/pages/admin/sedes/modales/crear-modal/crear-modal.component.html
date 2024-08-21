@@ -1,0 +1,76 @@
+<div class="modal-header">
+  <h4 class="modal-title" id="modal-basic-title">Añadir Sede</h4>
+  <button
+    type="button"
+    class="btn btn-sm btn-icon btn-active-color-primary btn-color-gray-800"
+    aria-label="Close"
+    (click)="close()"
+  >
+    <i class="ki-duotone ki-cross-square fs-1">
+      <span class="path1"></span>
+      <span class="path2"></span>
+    </i>
+  </button>
+</div>
+<div class="modal-body">
+  <form [formGroup]="sedeForm" class="form d-flex flex-column gap-4">
+    <div class="form-group">
+      <label for="nombre" class="required form-label">Nombre de la Sede</label>
+      <input type="text" id="nombre" formControlName="nombre" class="form-control" />
+    </div>
+    <div class="form-group">
+      <label for="direccion" class="required form-label">Dirección</label>
+      <input type="text" id="direccion" formControlName="direccion" class="form-control" />
+    </div>
+    <div class="form-group">
+      <label for="distrito" class="required form-label">Distrito</label>
+      <input type="text" id="distrito" formControlName="distrito" class="form-control" />
+    </div>
+    <div class="form-group">
+      <label for="provincia" class="required form-label">Provincia</label>
+      <input type="text" id="provincia" formControlName="provincia" class="form-control" />
+    </div>
+    <div class="form-group">
+      <label for="departamento" class="required form-label">Departamento</label>
+      <input type="text" id="departamento" formControlName="departamento" class="form-control" />
+    </div>
+    <div class="form-group">
+      <label for="telefono" class="required form-label">Teléfono</label>
+      <input type="text" id="telefono" formControlName="telefono" class="form-control" />
+    </div>
+    <div class="form-group">
+      <label for="email" class="required form-label">Correo Electrónico</label>
+      <input type="email" id="email" formControlName="email" class="form-control" />
+    </div>
+    <div class="form-group mb-3">
+      <label for="kt_calendar_datepicker_start_time">Hora de Inicio</label>
+      <input type="text" class="form-control" id="kt_calendar_datepicker_start_time" formControlName="horarioapertura" #startTimePicker placeholder="Seleccionar Hora de Inicio"/>
+    </div>
+    <div class="form-group mb-3">
+      <label for="kt_calendar_datepicker_end_time">Hora de Fin</label>
+      <input type="text" class="form-control" id="kt_calendar_datepicker_end_time" formControlName="horariocierre" #endTimePicker placeholder="Seleccionar Hora de Fin"/>
+    </div>
+    <div class="form-group">
+      <label for="capacidadpacientes" class="required form-label">Capacidad de Pacientes</label>
+      <input type="number" id="capacidadpacientes" formControlName="capacidadpacientes" class="form-control" min="1" />
+    </div>
+    <div class="form-group">
+      <label for="numeroconsultorios" class="required form-label">Número de Consultorios</label>
+      <input type="number" id="numeroconsultorios" formControlName="numeroconsultorios" class="form-control" min="1" />
+    </div>
+  </form>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-secondary" (click)="close()">
+    Cancelar
+  </button>
+  <button
+    [disabled]="sedeForm.invalid || (isLoading | async)"
+    type="button"
+    class="btn btn-primary"
+    (click)="save()"
+  >
+    Guardar
+    <span *ngIf="isLoading | async" class="spinner-border spinner-border-sm align-middle ms-2"></span>
+  </button>
+</div>

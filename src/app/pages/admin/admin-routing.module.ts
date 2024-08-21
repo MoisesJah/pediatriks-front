@@ -44,6 +44,11 @@ const routes: Routes = [
         (m) => m.ReservarCitaModule
       ),
   },
+  {
+    path: 'sedes',
+    loadComponent: () =>
+      import('./sedes/sedes.component').then((m) => m.SedesComponent),
+  },
 ];
 
 @NgModule({
