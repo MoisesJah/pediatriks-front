@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap'; // Importa NgbModule si vas a usar ng-bootstrap
 import { NgSelectModule } from '@ng-select/ng-select';
+import { FlatpickrModule } from 'angularx-flatpickr';
 
 
 import { CrearModalComponent } from './crear-modal/crear-modal.component';
@@ -21,7 +22,8 @@ import { BorrarModalComponent } from './borrar-modal/borrar-modal.component';
     ReactiveFormsModule,
     FormsModule,
     NgbModule,
-    NgSelectModule
+    NgSelectModule,
+    FlatpickrModule.forRoot()
   ],
   exports: [
     CrearModalComponent,
