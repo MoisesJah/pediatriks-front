@@ -17,7 +17,7 @@ import { DeleteModalComponent } from './modals/delete-modal/delete-modal.compone
 import { HeaderComponent } from 'src/app/components/ui/header/header.component';
 
 import { AgGridAngular } from 'ag-grid-angular'; // Angular Data Grid Component
-import { ColDef, GridReadyEvent } from 'ag-grid-community';
+import { ColDef, GridReadyEvent,GridApi } from 'ag-grid-community';
 import { ActionButtonsComponent } from './modals/action-buttons/action-buttons.component';
 import { map, Observable } from 'rxjs';
 import { AG_GRID_LOCALE_ES } from '@ag-grid-community/locale';
@@ -36,6 +36,7 @@ export class UsersComponent implements OnInit, OnDestroy {
   modal = inject(NgbModal);
   isDesktop!: boolean;
   localeText = AG_GRID_LOCALE_ES;
+  gridApi!: GridApi;
 
   // params: GridReadyEvent | undefined
 
@@ -68,6 +69,8 @@ export class UsersComponent implements OnInit, OnDestroy {
 
   //https://stackoverflow.com/questions/72812674/ag-grid-size-to-fit-on-desktop-and-auto-size-on-mobile
   gridReady(params: GridReadyEvent) {
+    this.gridApi = params.api;
+
     const tableWidth = params.api
       .getColumns()
       ?.reduce((i, current) => (i += current.getActualWidth()), 0);
@@ -86,6 +89,13 @@ export class UsersComponent implements OnInit, OnDestroy {
         return resp.data;
       }),
       untilDestroyed(this)
+    );
+  }
+
+  onFilterTextBoxChanged() {
+    this.gridApi.setGridOption(
+      "quickFilterText",
+      (document.getElementById("user-search") as HTMLInputElement).value,
     );
   }
 

@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, formatDate } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
@@ -13,6 +13,7 @@ import { map, Observable } from 'rxjs';
 import { AgGridAngular } from 'ag-grid-angular';
 import { ColDef } from 'ag-grid-community';
 import { ActionButtonsComponent } from './modals/action-buttons/action-buttons.component';
+import { AG_GRID_LOCALE_ES } from '@ag-grid-community/locale';
 
 @UntilDestroy()
 @Component({
@@ -25,6 +26,7 @@ import { ActionButtonsComponent } from './modals/action-buttons/action-buttons.c
 export class PacientesComponent implements OnInit {
   modal = inject(NgbModal);
   pacienteService = inject(PacienteService);
+  localeText = AG_GRID_LOCALE_ES
 
   pacientesList: Observable<IPaciente[]> = new Observable();
 
@@ -36,6 +38,7 @@ export class PacientesComponent implements OnInit {
       field: 'fecha_nacimiento',
       headerName: 'Fecha Nacimiento',
       filter: 'agDateColumnFilter',
+      valueFormatter: (params) => formatDate(params.value, 'dd/MM/yyyy', 'en'),
     },
     { field: 'colegio', headerName: 'Colegio', filter: true },
     {
