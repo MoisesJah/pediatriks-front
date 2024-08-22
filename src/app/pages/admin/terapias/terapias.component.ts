@@ -15,6 +15,7 @@ import { ColDef } from 'ag-grid-community';
 import { AG_GRID_LOCALE_ES } from '@ag-grid-community/locale';
 
 import { formatMoney } from 'src/app/utils/formatCurrency';
+import { LoadingService } from 'src/app/services/loading.service';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -27,6 +28,7 @@ import { formatMoney } from 'src/app/utils/formatCurrency';
 export class TerapiasComponent implements OnInit, OnDestroy {
   modal = inject(NgbModal);
   terapias = inject(TerapiaService);
+  isLoading = inject(LoadingService).isLoading;
 
   terapiasList: Observable<Terapia[]> = new Observable();
   localeText = AG_GRID_LOCALE_ES
@@ -61,8 +63,6 @@ export class TerapiasComponent implements OnInit, OnDestroy {
     this.fetchTerapias();
   }
 
-  
-
   fetchTerapias() {
     this.terapiasList = this.terapias.getAll().pipe(
       map((resp) => {
@@ -93,7 +93,6 @@ export class TerapiasComponent implements OnInit, OnDestroy {
       centered: true,
     });
 
-    modalRef.componentInstance.terapiaForm.patchValue(terapia);
     modalRef.componentInstance.terapiaId = terapia.id_terapia;
     modalRef.componentInstance.onSaveComplete.subscribe(() => {
       this.fetchTerapias();

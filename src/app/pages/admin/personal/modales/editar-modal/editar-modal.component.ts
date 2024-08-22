@@ -11,6 +11,8 @@ import { TipoPersonal } from 'src/app/models/tipopersonal';
 import { HorarioPersonal } from 'src/app/models/horariop';
 import { Terapia } from 'src/app/models/terapia';
 import { HttpErrorResponse } from '@angular/common/http';
+import { map, Observable } from 'rxjs';
+import { GeneroService } from 'src/app/services/genero/genero.service';
 
 @Component({
   selector: 'app-editar-modal',
@@ -24,12 +26,14 @@ export class EditarModalComponent implements OnInit {
   terapiaService = inject(TerapiaService);
   horarioPersonalService = inject(HorarioPersonalService);
   isLoading = inject(LoadingService).isLoading;
+  generosService = inject(GeneroService);
 
-  @Input() personalId!: number; // Asegúrate de que el ID sea pasado como Input
+  personalId!: string; // Asegúrate de que el ID sea pasado como Input
   editForm: FormGroup;
-  tiposPersonalList: TipoPersonal[] = [];
-  terapiasList: Terapia[] = [];
-  horariosList: HorarioPersonal[] = [];
+  tiposPersonalList: Observable<TipoPersonal[]> = new Observable();
+  terapiasList: Observable<Terapia[]> = new Observable();
+  horariosList: Observable<HorarioPersonal[]> = new Observable();
+  generosList: Observable<any> = new Observable();
 
   @Output() onSaveComplete = new EventEmitter<void>();
 
@@ -81,8 +85,8 @@ export class EditarModalComponent implements OnInit {
   private loadPersonalData() {
     if (this.personalId) {
       this.personalService.getById(this.personalId).subscribe({
-        next: (personal: Personal) => {
-          this.editForm.patchValue(personal);
+        next: (personal) => {
+          this.editForm.patchValue(personal.data);
           console.log('info',personal);
         },
         error: (err: HttpErrorResponse) => {
@@ -93,20 +97,26 @@ export class EditarModalComponent implements OnInit {
   }
 
   getTipoPersonalList(): void {
-    this.tipoPersonalService.getAll().subscribe(data => {
-      this.tiposPersonalList = Array.isArray(data) ? data : [];
-    });
+    this.tiposPersonalList = this.tipoPersonalService.getAll().pipe(
+      map((response) => response.data),
+    );
+  }
+
+  getGenerosList(): void {
+    this.generosList = this.generosService.getAll().pipe(
+      map((response: any) => response.data),
+    );
   }
 
   getTerapiasList(): void {
-    this.terapiaService.getAll().subscribe(response => {
-      this.terapiasList = Array.isArray(response.data) ? response.data : [];
-    });
+    this.terapiasList = this.terapiaService.getAll().pipe(
+      map((response) => response.data),
+    )
   }
 
   getHorariosList(): void {
-    this.horarioPersonalService.getAll().subscribe(data => {
-      this.horariosList = Array.isArray(data) ? data : [];
-    });
+    this.horariosList = this.horarioPersonalService.getAll().pipe(
+      map((response) => response.data),
+    )
   }
 }

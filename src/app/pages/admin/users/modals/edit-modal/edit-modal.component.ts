@@ -10,7 +10,7 @@ import { UserService } from 'src/app/services/user/user.service';
   templateUrl: './edit-modal.component.html',
   styleUrl: './edit-modal.component.scss'
 })
-export class EditModalComponent {
+export class EditModalComponent implements OnInit {
   modal = inject(NgbModal)
   userService = inject(UserService)
   userForm: FormGroup;
@@ -36,6 +36,12 @@ export class EditModalComponent {
       password: ['', [Validators.required, Validators.minLength(8)]],
     });
 
+  }
+
+  ngOnInit(): void {
+    this.userService.getById(this.userId!).subscribe((user) => {
+      this.userForm.patchValue(user.data);
+    })
   }
 
   generatePassword(): void {

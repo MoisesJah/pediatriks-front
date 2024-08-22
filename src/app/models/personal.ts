@@ -1,5 +1,5 @@
 export interface Personal {
-  id_personal: number;
+  id_personal: string;
   id: number;
   id_tipopersonal: string;
   id_terapia: string;

@@ -32,7 +32,7 @@ import { AG_GRID_LOCALE_ES } from '@ag-grid-community/locale';
 })
 export class UsersComponent implements OnInit, OnDestroy {
   users = inject(UserService);
-  isLoading = inject(LoadingService);
+  isLoading = inject(LoadingService).isLoading;
   modal = inject(NgbModal);
   isDesktop!: boolean;
   localeText = AG_GRID_LOCALE_ES;
@@ -125,7 +125,7 @@ export class UsersComponent implements OnInit, OnDestroy {
       animation: true,
       centered: true,
     });
-    modalRef.componentInstance.userForm.patchValue(user);
+
     modalRef.componentInstance.userId = user.id;
     modalRef.componentInstance.onSaveComplete.subscribe(() => {
       this.fetchUsers();
@@ -138,6 +138,7 @@ export class UsersComponent implements OnInit, OnDestroy {
       animation: true,
       centered: true,
     });
+    
     modalRef.componentInstance.userId = user.id;
     modalRef.componentInstance.onSaveComplete.subscribe(() => {
       this.fetchUsers();

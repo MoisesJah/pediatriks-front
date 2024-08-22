@@ -15,7 +15,7 @@ export class BorrarModalComponent {
 
   @Output() onSaveComplete = new EventEmitter();
 
-  personalId: number | undefined;
+  personalId: string | undefined;
 
   close() {
     this.modal.dismissAll();

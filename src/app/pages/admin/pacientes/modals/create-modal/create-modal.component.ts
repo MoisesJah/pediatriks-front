@@ -1,4 +1,12 @@
-import { AfterViewInit, Component, EventEmitter, inject, OnDestroy, OnInit, Output } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  EventEmitter,
+  inject,
+  OnDestroy,
+  OnInit,
+  Output,
+} from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
@@ -9,6 +17,7 @@ import { LoadingService } from 'src/app/services/loading.service';
 import { PacienteService } from 'src/app/services/paciente/paciente.service';
 import { UserService } from 'src/app/services/user/user.service';
 import { generos } from '../genero.data';
+import { GeneroService } from 'src/app/services/genero/genero.service';
 
 @UntilDestroy()
 @Component({
@@ -22,11 +31,12 @@ export class CreateModalComponent implements AfterViewInit, OnDestroy {
   isLoading = inject(LoadingService).isLoading;
   pacienteService = inject(PacienteService);
   userService = inject(UserService);
+  generoService = inject(GeneroService);
 
   userList: Observable<any> = new Observable();
 
   userId: number | undefined;
-  generos = generos;
+  generos: Observable<any> = new Observable();
 
   @Output() onSaveComplete = new EventEmitter();
 
@@ -35,19 +45,30 @@ export class CreateModalComponent implements AfterViewInit, OnDestroy {
       nombre: ['', Validators.required],
       dni: ['', [Validators.required, Validators.pattern('^[0-9]*')]],
       fecha_nacimiento: ['', Validators.required],
-      id: ['', Validators.required],
-      genero: [''],
+      id: [null, Validators.required],
+      id_genero: [null, Validators.required],
       direccion: ['', Validators.required],
       pos_hijo: [''],
-      colegio: ['']
+      colegio: [''],
     });
   }
 
   ngAfterViewInit(): void {
-    this.userList = this.userService.getAll().pipe(untilDestroyed(this), map((response) => {
-      const usersData = response as { data: IUser[] };
-      return usersData.data
-    }));
+    this.userList = this.userService.getAll().pipe(
+      untilDestroyed(this),
+      map((response) => {
+        const usersData = response as { data: IUser[] };
+        return usersData.data;
+      })
+    );
+
+    this.generos = this.generoService.getAll().pipe(
+      untilDestroyed(this),
+      map((response) => {
+        const generosData = response as { data: any[] };
+        return generosData.data;
+      })
+    )
   }
 
   ngOnDestroy(): void {}
@@ -57,13 +78,13 @@ export class CreateModalComponent implements AfterViewInit, OnDestroy {
   }
 
   save() {
-    const submitData = this.pacienteForm.value
+    const submitData = this.pacienteForm.value;
 
     this.pacienteService.create(submitData).subscribe(() => {
       this.onSaveComplete.emit();
       this.modal.close();
-    })
-    
-    console.log(submitData)
+    });
+
+    console.log(submitData);
   }
 }

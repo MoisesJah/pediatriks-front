@@ -18,8 +18,9 @@ import { HorarioPersonalService } from 'src/app/services/horariopersonal/horario
 import { TipoPersonal } from 'src/app/models/tipopersonal';
 import { HorarioPersonal } from 'src/app/models/horariop';
 import { Terapia } from 'src/app/models/terapia';
-import { Subject } from 'rxjs';
+import { map, Observable, Subject } from 'rxjs';
 import { generos } from '../../../pacientes/modals/genero.data';
+import { GeneroService } from 'src/app/services/genero/genero.service';
 
 @Component({
   selector: 'app-crear-modal',
@@ -33,14 +34,14 @@ export class CrearModalComponent implements OnInit {
   terapiaService = inject(TerapiaService);
   horarioPersonalService = inject(HorarioPersonalService);
   isLoading = inject(LoadingService).isLoading;
-  generos = generos;
+  generosService = inject(GeneroService);
 
   personalForm: FormGroup;
-  tiposPersonalList: TipoPersonal[] = [];
-  terapiasList: Terapia[] = [];
-  horariosList: HorarioPersonal[] = [];
+  tiposPersonalList: Observable<TipoPersonal[]> = new Observable();
+  terapiasList: Observable<Terapia[]> = new Observable();
+  horariosList: Observable<HorarioPersonal[]> = new Observable();
+  generosList: Observable<any> = new Observable();
 
-  searchTerm$ = new Subject<string>();
 
   @Output() onSaveComplete = new EventEmitter<void>();
 
@@ -53,11 +54,11 @@ export class CrearModalComponent implements OnInit {
       ],
       telefono: ['', [Validators.required, Validators.pattern('^[0-9]*')]],
       correo: ['', [Validators.required, Validators.email]],
-      genero: ['', Validators.required],
+      id_genero: [null, Validators.required],
       sueldo: [0, [Validators.required, Validators.min(0)]],
-      id_tipopersonal: ['', Validators.required],
-      id_terapia: ['', Validators.required],
-      id_horariop: ['', Validators.required],
+      id_tipopersonal: [null, Validators.required],
+      id_terapia: [null, Validators.required],
+      id_horariop: [null, Validators.required],
     });
   }
 
@@ -65,6 +66,7 @@ export class CrearModalComponent implements OnInit {
     this.getTipoPersonalList();
     this.getTerapiasList();
     this.getHorariosList();
+    this.getGenerosList();
   }
 
   close() {
@@ -86,38 +88,26 @@ export class CrearModalComponent implements OnInit {
   }
 
   getTipoPersonalList(): void {
-    this.tipoPersonalService.getAll().subscribe({
-      next: (response) => {
-        this.tiposPersonalList = response.data;
-      },
-      error: (err) => console.error('Error al cargar tipos de personal:', err),
-    });
+    this.tiposPersonalList = this.tipoPersonalService.getAll().pipe(
+      map((response) => response.data),
+    );
+  }
+
+  getGenerosList(): void {
+    this.generosList = this.generosService.getAll().pipe(
+      map((response: any) => response.data),
+    );
   }
 
   getTerapiasList(): void {
-    this.terapiaService.getAll().subscribe({
-      next: (response: { data: Terapia[] }) => {
-        console.log('Terapias:', response.data);
-        this.terapiasList = Array.isArray(response.data) ? response.data : [];
-        // this.personalForm.patchValue({
-        //   id_terapia: this.terapiasList[0]?.id_terapia || '',
-        // });
-      },
-      error: (err) => console.error('Error al cargar terapias:', err),
-    });
+    this.terapiasList = this.terapiaService.getAll().pipe(
+      map((response) => response.data),
+    )
   }
 
   getHorariosList(): void {
-    this.horarioPersonalService.getAll().subscribe({
-      next: (response) => {
-        console.log('Respuesta del servicio HorarioPersonal:', response);
-        this.horariosList = response.data;
-      },
-      error: (err) => console.error('Error al cargar horarios:', err),
-    });
-  }
-
-  onSearchTermChange(term: string) {
-    this.searchTerm$.next(term);
+    this.horariosList = this.horarioPersonalService.getAll().pipe(
+      map((response) => response.data),
+    )
   }
 }

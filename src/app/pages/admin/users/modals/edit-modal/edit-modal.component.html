@@ -60,7 +60,7 @@
             <span class="path1"></span>
             <span class="path2"></span>
           </i>
-          regenerar
+          autogenerar
         </button>
       </div>
       <div class="position-relative">
@@ -71,6 +71,7 @@
         />
         <button
           type="button"
+          ngbTooltip="Copiar"
           [cdkCopyToClipboard]="userForm.get('password')?.value"
           class="btn btn-icon btn-sm top-0 copy-icon end-0 btn-active-color-primary btn-color-gray-800 position-absolute"
         >

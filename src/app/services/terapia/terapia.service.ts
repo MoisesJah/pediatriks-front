@@ -16,8 +16,8 @@ export class TerapiaService {
     return this.http.get<{ data: Terapia[] }>(`${this.apiUrl}/terapia/list`);
   }
 
-  getById(id: string): Observable<Terapia> {
-    return this.http.get<Terapia>(`${this.apiUrl}/terapia/list/${id}`);
+  getById(id: string): Observable<{ data: Terapia }> {
+    return this.http.get<{ data: Terapia }>(`${this.apiUrl}/terapia/list/${id}`);
   }
 
   create(terapia: Terapia): Observable<Terapia> {

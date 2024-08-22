@@ -26,6 +26,7 @@ import { AG_GRID_LOCALE_ES } from '@ag-grid-community/locale';
 export class PacientesComponent implements OnInit {
   modal = inject(NgbModal);
   pacienteService = inject(PacienteService);
+  isLoading = inject(LoadingService).isLoading;
   localeText = AG_GRID_LOCALE_ES
 
   pacientesList: Observable<IPaciente[]> = new Observable();
@@ -33,13 +34,15 @@ export class PacientesComponent implements OnInit {
   colDefs: ColDef[] = [
     { field: 'nombre', headerName: 'Nombres', filter: true },
     { field: 'dni', headerName: 'DNI', filter: true },
-    { field: 'genero', headerName: 'Género' },
+    { field: 'genero.nombre', headerName: 'Género' },
     {
       field: 'fecha_nacimiento',
       headerName: 'Fecha Nacimiento',
       filter: 'agDateColumnFilter',
       valueFormatter: (params) => formatDate(params.value, 'dd/MM/yyyy', 'en'),
     },
+    { field: 'user.name', headerName: 'Padre de familia', filter: true },
+    { field: 'direccion', headerName: 'Dirección', filter: true },
     { field: 'colegio', headerName: 'Colegio', filter: true },
     {
       headerName: 'Acciones',
@@ -85,7 +88,6 @@ export class PacientesComponent implements OnInit {
       centered: true,
     });
 
-    modalRef.componentInstance.pacienteForm.patchValue(paciente);
     modalRef.componentInstance.paciente = paciente;
 
     modalRef.componentInstance.onSaveComplete.subscribe(() => {

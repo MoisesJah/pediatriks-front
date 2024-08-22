@@ -15,7 +15,7 @@ export class PacienteService {
   }
 
   getById(id: string) {
-    return this.http.get(`${this.apiUrl}/paciente/list/${id}`);
+    return this.http.get<{ data: IPaciente }>(`${this.apiUrl}/paciente/list/${id}`);
   }
 
   create(paciente: IPaciente) {

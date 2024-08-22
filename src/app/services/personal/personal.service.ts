@@ -12,22 +12,27 @@ export class PersonalService {
   constructor(private http: HttpClient) {}
 
   getAll() {
-    return this.http.get<Personal[]>(`${this.apiUrl}/personal/list`);
+    return this.http.get<{ data: Personal[] }>(`${this.apiUrl}/personal/list`);
   }
 
-  getById(id: number) {
-    return this.http.get<Personal>(`${this.apiUrl}/personal/list/${id}`);
+  getById(id: string) {
+    return this.http.get<{ data: Personal }>(
+      `${this.apiUrl}/personal/list/${id}`
+    );
   }
 
   create(personal: Personal) {
     return this.http.post<Personal>(`${this.apiUrl}/personal/add`, personal);
   }
 
-  update(personal: Personal, id: number) {
-    return this.http.put<Personal>(`${this.apiUrl}/personal/edit/${id}`, personal);
+  update(personal: Personal, id: string) {
+    return this.http.put<Personal>(
+      `${this.apiUrl}/personal/edit/${id}`,
+      personal
+    );
   }
 
-  delete(id: number) {
+  delete(id: string) {
     return this.http.delete(`${this.apiUrl}/personal/delete/${id}`);
   }
 }

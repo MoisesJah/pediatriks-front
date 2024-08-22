@@ -8,9 +8,7 @@
 
 <div class="content d-flex flex-column flex-column-fluid">
   <div class="container-xxl">
-    <div
-      class="card shadow p-2 px-4 bg-white"
-    >
+    <div class="card shadow p-2 px-4 bg-white">
       <div class="d-flex p-4 justify-content-between align-items-center">
         <h1>Terapias</h1>
         <button
@@ -26,6 +24,7 @@
       </div>
 
       <div style="height: 470px" class="ag-theme-quartz">
+        @defer {
         <ag-grid-angular
           style="width: 100%; height: 100%"
           [rowData]="terapiasList | async"
@@ -34,6 +33,7 @@
           [ariaHidden]="true"
           [pagination]="true"
         ></ag-grid-angular>
+        }
       </div>
     </div>
   </div>

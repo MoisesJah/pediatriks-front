@@ -45,6 +45,10 @@ ng-select.ng-invalid.ng-touched .ng-select-container {
   box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 0 3px #fde6e8;
 }
 
+ng-select .ng-select-container {
+  border-radius: 0.95rem;
+}
+
 body {
   font-feature-settings: "calt", "cv02", "cv03", "cv04", "cv06", "cv08", "cv11",
     "tnum";

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject, Output } from '@angular/core';
+import { Component, EventEmitter, inject, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Terapia } from 'src/app/models/terapia';
@@ -8,12 +8,12 @@ import { TerapiaService } from 'src/app/services/terapia/terapia.service';
 @Component({
   selector: 'app-edit-modal',
   templateUrl: './edit-modal.component.html',
-  styleUrl: './edit-modal.component.scss'
+  styleUrl: './edit-modal.component.scss',
 })
-export class EditModalComponent {
+export class EditModalComponent implements OnInit {
   modal = inject(NgbActiveModal);
   terapiaService = inject(TerapiaService);
-  isLoading = inject(LoadingService).isLoading
+  isLoading = inject(LoadingService).isLoading;
 
   terapiaId: string | undefined;
 
@@ -28,11 +28,17 @@ export class EditModalComponent {
     });
   }
 
+  ngOnInit(): void {
+    this.terapiaService.getById(this.terapiaId!).subscribe((terapia) => {
+      this.terapiaForm.patchValue(terapia.data);
+    });
+  }
+
   edit(terapia: Terapia) {
     this.terapiaService.update(terapia, this.terapiaId!).subscribe(() => {
       this.onSaveComplete.emit();
       this.modal.close();
-    })
+    });
   }
 
   close() {

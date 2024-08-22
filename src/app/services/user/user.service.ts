@@ -4,7 +4,7 @@ import { IUser } from 'src/app/models/user';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class UserService {
   apiUrl = environment.apiUrl;
@@ -15,7 +15,7 @@ export class UserService {
   }
 
   getById(id: number) {
-    return this.http.get<IUser>(`${this.apiUrl}/usuario/list/${id}`);
+    return this.http.get<{ data: IUser }>(`${this.apiUrl}/usuario/list/${id}`);
   }
 
   create(user: IUser) {
