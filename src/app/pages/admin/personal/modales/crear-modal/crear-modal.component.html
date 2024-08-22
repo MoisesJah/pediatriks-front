@@ -21,6 +21,7 @@
         id="nombre"
         formControlName="nombre"
         class="form-control"
+        placeholder="Ingresar Nombre"
       />
     </div>
     <div class="d-flex gap-3">
@@ -32,6 +33,7 @@
           pattern="[0-9]*"
           formControlName="dni"
           class="form-control"
+          placeholder="Ingresar DNI"
         />
       </div>
       <div class="form-group">
@@ -42,6 +44,7 @@
           pattern="[0-9]*"
           formControlName="telefono"
           class="form-control"
+          placeholder="Ingresar Telefono"
         />
       </div>
     </div>
@@ -53,6 +56,7 @@
         id="correo"
         formControlName="correo"
         class="form-control"
+        placeholder="Ingresar Correo"
       />
     </div>
     <div class="row">
@@ -64,6 +68,7 @@
           bindValue="value"
           placeholder="Seleccionar"
           formControlName="genero"
+          class="form-control"
         ></ng-select>
       </div>
       <div class="form-group col-6">
@@ -89,6 +94,7 @@
           bindValue="id_tipopersonal"
           bindLabel="especialidad"
           formControlName="id_tipopersonal"
+          class="form-control"
         ></ng-select>
       </div>
 
@@ -100,6 +106,7 @@
           placeholder="Horario"
           bindLabel="horario_iniciop"
           formControlName="id_horariop"
+          class="form-control"
         >
           <ng-template ng-option-tmp let-item="item" let-search="searchTerm">
             {{ item.horario_iniciop }} - {{ item.horario_finalp }}
@@ -120,6 +127,7 @@
         bindValue="id_terapia"
         bindLabel="nombre"
         formControlName="id_terapia"
+        class="form-control"
       ></ng-select>
     </div>
 

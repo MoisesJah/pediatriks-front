@@ -93,8 +93,11 @@ export class EditarModalComponent implements OnInit {
   }
 
   getTipoPersonalList(): void {
-    this.tipoPersonalService.getAll().subscribe(data => {
-      this.tiposPersonalList = Array.isArray(data) ? data : [];
+    this.tipoPersonalService.getAll().subscribe({
+      next: (response) => {
+        this.tiposPersonalList = response.data;
+      },
+      error: (err) => console.error('Error al cargar tipos de personal:', err),
     });
   }
 
@@ -105,8 +108,12 @@ export class EditarModalComponent implements OnInit {
   }
 
   getHorariosList(): void {
-    this.horarioPersonalService.getAll().subscribe(data => {
-      this.horariosList = Array.isArray(data) ? data : [];
+    this.horarioPersonalService.getAll().subscribe({
+      next: (response) => {
+        console.log('Respuesta del servicio HorarioPersonal:', response);
+        this.horariosList = response.data;
+      },
+      error: (err) => console.error('Error al cargar horarios:', err),
     });
   }
 }
