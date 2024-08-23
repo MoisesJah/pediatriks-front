@@ -24,6 +24,16 @@
         placeholder="Ingresar Nombre"
       />
     </div>
+    <div class="form-group">
+      <label for="">CV</label>
+      <input
+        type="file"
+        id="cv"
+        formControlName="cv"
+        accept="application/pdf"
+        class="form-control"
+      />
+    </div>
     <div class="d-flex gap-3">
       <div class="form-group">
         <label for="dni" class="required form-label">DNI</label>
@@ -65,7 +75,7 @@
         <ng-select
           [items]="generosList | async"
           bindLabel="nombre"
-          bindValue="id"
+          bindValue="id_genero"
           placeholder="Seleccionar"
           formControlName="id_genero"
         ></ng-select>
@@ -82,6 +92,32 @@
         />
       </div>
     </div>
+
+    <div class="row">
+      <div class="form-group col-6">
+        <label for="id_terapia" class="required form-label">Especialidad</label>
+
+        <ng-select
+          [items]="terapiasList | async"
+          bindValue="id_terapia"
+          placeholder="Seleccionar"
+          bindLabel="nombre"
+          formControlName="id_terapia"
+        ></ng-select>
+      </div>
+      <div class="form-group col-6">
+        <label for="id_sede" class="required form-label">Sede</label>
+
+        <ng-select
+          [items]="sedesList | async"
+          bindValue="id_sede"
+          placeholder="Seleccionar"
+          bindLabel="nombre"
+          formControlName="id_sede"
+        ></ng-select>
+      </div>
+    </div>
+
     <!-- Selector de Tipo de Personal -->
     <div class="row">
       <div class="form-group col-6">
@@ -94,7 +130,6 @@
           placeholder="Seleccionar"
           bindLabel="especialidad"
           formControlName="id_tipopersonal"
-          class="form-control"
         ></ng-select>
       </div>
 
@@ -106,7 +141,6 @@
           placeholder="Seleccionar"
           bindLabel="horario_iniciop"
           formControlName="id_horariop"
-          class="form-control"
         >
           <ng-template ng-option-tmp let-item="item" let-search="searchTerm">
             {{ item.horario_iniciop }} - {{ item.horario_finalp }}
@@ -117,21 +151,6 @@
         </ng-select>
       </div>
     </div>
-
-    <!-- Selector de Terapia -->
-    <div class="form-group">
-      <label for="id_terapia" class="required form-label">Especialidad</label>
-
-      <ng-select
-        [items]="terapiasList | async"
-        bindValue="id_terapia"
-        placeholder="Seleccionar"
-        bindLabel="nombre"
-        formControlName="id_terapia"
-        class="form-control"
-      ></ng-select>
-    </div>
-
   </form>
 </div>
 <div class="modal-footer">

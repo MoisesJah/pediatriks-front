@@ -59,10 +59,10 @@
         <label for="genero" class="required form-label">Género</label>
         <ng-select
           [items]="generosList | async"
-          bindLabel="name"
-          bindValue="value"
+          bindLabel="nombre"
+          bindValue="id_genero"
           placeholder="Seleccionar"
-          formControlName="genero"
+          formControlName="id_genero"
         ></ng-select>
       </div>
       <div class="form-group col-6">
@@ -78,76 +78,64 @@
       </div>
     </div>
 
+    <div class="row">
+      <div class="form-group col-6">
+        <label for="id_terapia" class="required form-label">Especialidad</label>
+
+        <ng-select
+          [items]="terapiasList | async"
+          bindValue="id_terapia"
+          placeholder="Seleccionar"
+          bindLabel="nombre"
+          formControlName="id_terapia"
+        ></ng-select>
+      </div>
+      <div class="form-group col-6">
+        <label for="id_sede" class="required form-label">Sede</label>
+
+        <ng-select
+          [items]="sedesList | async"
+          bindValue="id_sede"
+          placeholder="Seleccionar"
+          bindLabel="nombre"
+          formControlName="id_sede"
+        ></ng-select>
+      </div>
+    </div>
+
     <!-- Selector de Tipo de Personal -->
-    <div class="form-group">
-      <label for="id_tipopersonal" class="required form-label"
-        >Tipo de Personal</label
-      >
-      <select
-        id="id_tipopersonal"
-        formControlName="id_tipopersonal"
-        class="form-control"
-      >
-        <option
-          *ngFor="let tipo of tiposPersonalList"
-          [value]="tipo.id_tipopersonal"
+    <div class="row">
+      <div class="form-group col-6">
+        <label for="id_tipopersonal" class="required form-label"
+          >Tipo de Personal</label
         >
-          {{ tipo.especialidad }}
-        </option>
-      </select>
-    </div>
+        <ng-select
+          [items]="tiposPersonalList | async"
+          bindValue="id_tipopersonal"
+          placeholder="Seleccionar"
+          bindLabel="especialidad"
+          formControlName="id_tipopersonal"
+        ></ng-select>
+      </div>
 
-    <!-- Selector de Terapia -->
-    <div class="form-group">
-      <label for="id_terapia" class="required form-label">Terapia</label>
-      <select id="id_terapia" formControlName="id_terapia" class="form-control">
-        <option
-          *ngFor="let terapia of terapiasList"
-          [value]="terapia.id_terapia"
+      <div class="form-group col-6">
+        <label for="id_horario" class="required form-label">Horario</label>
+        <ng-select
+          [items]="horariosList | async"
+          bindValue="id_horariop"
+          placeholder="Seleccionar"
+          bindLabel="horario_iniciop"
+          formControlName="id_horariop"
         >
-          {{ terapia.nombre }}
-        </option>
-      </select>
+          <ng-template ng-option-tmp let-item="item" let-search="searchTerm">
+            {{ item.horario_iniciop }} - {{ item.horario_finalp }}
+          </ng-template>
+          <ng-template ng-label-tmp let-item="item" let-search="searchTerm">
+            {{ item.horario_iniciop }} - {{ item.horario_finalp }}
+          </ng-template>
+        </ng-select>
+      </div>
     </div>
-
-    <!-- Selector de Horario -->
-    <div class="form-group">
-      <label for="id_horario" class="required form-label">Horario</label>
-      <select id="id_horario" formControlName="id_horario" class="form-control">
-        <option
-          *ngFor="let horario of horariosList"
-          [value]="horario.id_horariop"
-        >
-          {{ horario.horario_iniciop }} - {{ horario.horario_finalp }}
-        </option>
-      </select>
-    </div>
-
-    <!-- Campos de texto para horario de inicio y fin -->
-    <div class="form-group">
-      <label for="horarioInicio" class="required form-label"
-        >Inicio del Horario</label
-      >
-      <input
-        type="text"
-        id="horarioInicio"
-        formControlName="horario_inicio"
-        class="form-control"
-        placeholder="Seleccionar Hora de Inicio"
-      />
-    </div>
-    <div class="form-group">
-      <label for="horarioFin" class="required form-label"
-        >Fin del Horario</label
-      >
-      <input
-        type="text"
-        id="horarioFin"
-        formControlName="horario_fin"
-        class="form-control"
-        placeholder="Seleccionar Hora de Fin"
-      />
-    </div> -->
   </form>
 </div>
 <div class="modal-footer">

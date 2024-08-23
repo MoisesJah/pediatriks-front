@@ -12,6 +12,8 @@ import { AgGridAngular } from 'ag-grid-angular';
 import { ColDef, GridReadyEvent } from 'ag-grid-community';
 import { ActionButtonsComponent } from './modales/action-buttons/action-buttons.component';
 import { map, Observable } from 'rxjs';
+import { formatMoney } from 'src/app/utils/formatCurrency';
+import { AG_GRID_LOCALE_ES } from '@ag-grid-community/locale';
 
 @Component({
   selector: 'app-personal',
@@ -25,22 +27,30 @@ export class PersonalComponent implements OnInit {
   personalList: Observable<Personal[]> = new Observable();
   modal = inject(NgbModal);
   isLoading = inject(LoadingService).isLoading;
+  localeText = AG_GRID_LOCALE_ES
 
   colDefs: ColDef[] = [
     { field: 'nombre', headerName: 'Nombre', filter: true },
     { field: 'dni', headerName: 'DNI', filter: true },
     { field: 'telefono', headerName: 'Teléfono', filter: true },
     { field: 'correo', headerName: 'Correo', filter: true },
-    { field: 'genero', headerName: 'Género', filter: true },
+    { field: 'genero.nombre', headerName: 'Género', filter: true },
+    { field: 'sede.nombre', headerName: 'Sede', filter: true },
     {
       field: 'tipopersonal.especialidad',
       headerName: 'Tipo de Personal',
       filter: true,
     },
+    {
+      field: 'sueldo',
+      headerName: 'Sueldo',
+      filter: 'agNumberColumnFilter',
+      valueFormatter: (params) => formatMoney(params.value),
+    },
     { field: 'terapia.nombre', headerName: 'Especialidad', filter: true },
     { field: 'horario.horario_iniciop', headerName: 'Horario Inicio' },
     { field: 'horario.horario_finalp', headerName: 'Horario Fin' },
-    { field: 'sueldo', headerName: 'Sueldo' },
+    
     {
       headerName: 'Acciones',
       cellRenderer: ActionButtonsComponent,
@@ -81,7 +91,9 @@ export class PersonalComponent implements OnInit {
       animation: true,
     });
     modalRef.componentInstance.personalId = personal.id_personal;
-    // modalRef.componentInstance.editForm.patchValue(personal);
+    modalRef.componentInstance.onSaveComplete.subscribe(() => {
+      this.fetchPersonal();
+    })
   }
 
   openBorrarModal(personal: Personal) {

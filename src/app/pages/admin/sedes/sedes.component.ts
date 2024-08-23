@@ -4,8 +4,8 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { SedesService } from 'src/app/services/sedes/sedes.service';
 import { LoadingService } from 'src/app/services/loading.service';
 import { Sede } from 'src/app/models/sede';
-import { Subject } from 'rxjs';
-import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { HeaderComponent } from 'src/app/components/ui/header/header.component';
 import { CrearModalComponent } from './modales/crear-modal/crear-modal.component';
@@ -14,6 +14,7 @@ import { EditarModalComponent } from './modales/editar-modal/editar-modal.compon
 import { AgGridAngular } from 'ag-grid-angular';
 import { ColDef } from 'ag-grid-community';
 import { ActionButtonsComponent } from './modales/action-buttons/action-buttons.component';
+import { AG_GRID_LOCALE_ES } from '@ag-grid-community/locale';
 
 @UntilDestroy()
 @Component({
@@ -27,27 +28,30 @@ export class SedesComponent implements OnInit, OnDestroy {
   sedesService = inject(SedesService);
   isLoading = inject(LoadingService).isLoading;
   modal = inject(NgbModal);
+  localeText = AG_GRID_LOCALE_ES;
 
-  sedesList: Sede[] = [];
-  filteredList: Sede[] = [];
-  searchName: string = '';
-  searchTerm$ = new Subject<string>();
-  suggestions: string[] = [];
-  showSuggestions: boolean = false;
-  filterApplied: boolean = false;
+  sedesList: Observable<Sede[]> = new Observable();
 
   colDefs: ColDef[] = [
     { field: 'nombre', headerName: 'Nombre', filter: true },
-    { field: 'direccion', headerName: 'Dirección' },
-    { field: 'distrito', headerName: 'Distrito' },
-    { field: 'provincia', headerName: 'Provincia' },
-    { field: 'departamento', headerName: 'Departamento' },
-    { field: 'telefono', headerName: 'Telefono' },
-    { field: 'email', headerName: 'Correo' },
+    { field: 'direccion', headerName: 'Dirección', filter: true },
+    { field: 'distrito', headerName: 'Distrito', filter: true },
+    { field: 'provincia', headerName: 'Provincia', filter: true },
+    { field: 'departamento', headerName: 'Departamento', filter: true },
+    { field: 'telefono', headerName: 'Telefono', filter: true },
+    { field: 'email', headerName: 'Correo', filter: true },
     { field: 'horarioapertura', headerName: 'Hora de Apertura' },
     { field: 'horariocierre', headerName: 'Hora de Cierre' },
-    { field: 'capacidadpacientes', headerName: 'Capacidad de Pacientes' },
-    { field: 'numeroconsultorios', headerName: 'Número de Consultorios' },
+    {
+      field: 'capacidadpacientes',
+      headerName: 'Capacidad de Pacientes',
+      filter: 'agNumberColumnFilter',
+    },
+    {
+      field: 'numeroconsultorios',
+      headerName: 'Número de Consultorios',
+      filter: 'agNumberColumnFilter',
+    },
     {
       headerName: 'Acciones',
       cellRenderer: ActionButtonsComponent,
@@ -62,46 +66,19 @@ export class SedesComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.fetchSedes();
-
-    this.searchTerm$
-      .pipe(
-        debounceTime(300),
-        distinctUntilChanged(),
-        switchMap(term => {
-          const suggestions = this.filterSuggestions(term);
-          return [suggestions];
-        })
-      )
-      .subscribe(suggestions => {
-        this.suggestions = suggestions;
-        this.showSuggestions = suggestions.length > 0;
-      });
   }
 
-  constructor() {
-    console.log('SedesComponent instanciado');
-  }
+  ngOnDestroy(): void {}
 
   private fetchSedes(): void {
-    this.sedesService.getAll()
-      .pipe(untilDestroyed(this))
-      .subscribe({
-        next: (response: any) => {
-          console.log('Sedes recibidas:', response);
-          this.sedesList = response.data;
-          this.applyFilter();
-        },
-        error: (err) => {
-          console.error('Error fetching sedes:', err);
-          this.sedesList = [];
-        }
-      });
+    this.sedesList = this.sedesService
+      .getAll()
+      .pipe(map((response) => response.data));
   }
 
   openCrearModal() {
-    console.log('Intentando abrir el modal...');
     const modalRef = this.modal.open(CrearModalComponent, {
-      size: 'lg',
+      size: '300px',
       animation: true,
       centered: true,
     });
@@ -135,76 +112,5 @@ export class SedesComponent implements OnInit, OnDestroy {
     modalRef.componentInstance.onSaveComplete.subscribe(() => {
       this.fetchSedes();
     });
-  }
-
-  private applyFilter(): void {
-    if (this.searchName.trim() === '') {
-      this.filteredList = [...this.sedesList];
-    } else if (this.filterApplied) {
-      this.filteredList = this.sedesList.filter(sede =>
-        sede.nombre.toLowerCase().includes(this.searchName.toLowerCase())
-      );
-    }
-  }
-
-  onNameInput(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    this.searchName = input.value;
-
-    if (this.searchName.trim() === '') {
-      this.filteredList = [...this.sedesList];
-    } else {
-      this.searchTerm$.next(this.searchName);
-    }
-  }
-
-  filterSuggestions(term: string): string[] {
-    if (typeof term !== 'string') {
-      return [];
-    }
-
-    return this.sedesList
-      .map(sede => sede.nombre)
-      .filter(nombre => nombre.toLowerCase().includes(term.toLowerCase()))
-      .slice(0, 10);
-  }
-
-  selectSuggestion(suggestion: string): void {
-    this.searchName = suggestion;
-    this.showSuggestions = false;
-  }
-
-  hideSuggestions(): void {
-    setTimeout(() => {
-      this.showSuggestions = false;
-    }, 100);
-  }
-
-  applyFilterClick(): void {
-    this.filterApplied = true;
-    this.applyFilter();
-  }
-
-  trackById(index: number, item: Sede): number {
-    return item.id_sede;
-  }
-
-
-  delete(id: number): void {
-    this.sedesService.delete(id)
-      .pipe(untilDestroyed(this))
-      .subscribe({
-        next: () => {
-          this.fetchSedes();
-        },
-        error: (err) => {
-          console.error('Error deleting sede:', err);
-        }
-      });
-  }
-
-
-  ngOnDestroy(): void {
-    // Limpiar recursos si es necesario
   }
 }

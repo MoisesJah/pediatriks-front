@@ -9,7 +9,7 @@ type ActionButtonProps = {
 }
 
 @Component({
-  selector: 'app-action-buttons',
+  selector: 'app-sedes-action-buttons',
   template: `
     <div class="d-flex align-items-center gap-2" style="padding-block: 0.15rem">
       <button type="button" (click)="openEdit()" class="btn btn-icon btn-sm bg-success">

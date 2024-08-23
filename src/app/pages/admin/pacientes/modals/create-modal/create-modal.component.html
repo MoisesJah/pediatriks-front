@@ -15,7 +15,13 @@
   <form [formGroup]="pacienteForm" class="form d-flex flex-column gap-4">
     <div class="d-flex flex-column gap-3">
       <label for="name" class="required form-label">Nombres</label>
-      <input type="text" id="" class="form-control" formControlName="nombre" placeholder="Ingresar Nombre del Paciente"/>
+      <input
+        type="text"
+        id=""
+        class="form-control"
+        formControlName="nombre"
+        placeholder="Ingresar Nombre del Paciente"
+      />
     </div>
 
     <div class="d-flex gap-3">
@@ -40,7 +46,6 @@
           [altInput]="true"
           [altFormat]="'j/n/Y'"
           class="form-control"
-
         />
       </div>
     </div>
@@ -62,7 +67,8 @@
         <ng-select
           [items]="generos | async"
           bindLabel="nombre"
-          bindValue="id"
+          [loadingText]="'Cargando..'"
+          bindValue="id_genero"
           placeholder="Seleccionar"
           formControlName="id_genero"
         ></ng-select>

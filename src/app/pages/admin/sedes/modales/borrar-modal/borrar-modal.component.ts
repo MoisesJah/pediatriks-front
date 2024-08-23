@@ -28,7 +28,7 @@ export class BorrarModalComponent {
     // Convertir el ID a número
     const id = typeof this.sedeId === 'string' ? parseInt(this.sedeId, 10) : parseInt(this.sedeId.id_sedes, 10);
     if (!isNaN(id)) {
-      this.sedeService.delete(id).subscribe({
+      this.sedeService.delete(id as  unknown as string).subscribe({
         next: () => {
           this.onSaveComplete.emit();
           this.modal.dismissAll();

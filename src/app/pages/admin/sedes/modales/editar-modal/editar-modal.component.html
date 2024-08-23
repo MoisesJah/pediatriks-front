@@ -15,49 +15,124 @@
 
 <div class="modal-body">
   <form [formGroup]="sedeForm" class="form d-flex flex-column gap-4">
-    <div class="form-group">
-      <label for="nombre" class="required form-label">Nombre de la Sede</label>
-      <input type="text" id="nombre" formControlName="nombre" class="form-control" />
+    <div class="row">
+      <div class="form-group col-6">
+        <label for="nombre" class="required form-label">Nombre</label>
+        <input
+          type="text"
+          id="nombre"
+          formControlName="nombre"
+          class="form-control"
+        />
+      </div>
+      <div class="form-group col-6">
+        <label for="direccion" class="required form-label">Dirección</label>
+        <input
+          type="text"
+          id="direccion"
+          formControlName="direccion"
+          class="form-control"
+        />
+      </div>
     </div>
-    <div class="form-group">
-      <label for="direccion" class="required form-label">Dirección</label>
-      <input type="text" id="direccion" formControlName="direccion" class="form-control" />
+    <div class="row">
+      <div class="form-group col-6">
+        <label for="distrito" class="required form-label">Distrito</label>
+        <input
+          type="text"
+          id="distrito"
+          formControlName="distrito"
+          class="form-control"
+        />
+      </div>
+      <div class="form-group col-6">
+        <label for="provincia" class="required form-label">Provincia</label>
+        <input
+          type="text"
+          id="provincia"
+          formControlName="provincia"
+          class="form-control"
+        />
+      </div>
     </div>
-    <div class="form-group">
-      <label for="distrito" class="required form-label">Distrito</label>
-      <input type="text" id="distrito" formControlName="distrito" class="form-control" />
-    </div>
-    <div class="form-group">
-      <label for="provincia" class="required form-label">Provincia</label>
-      <input type="text" id="provincia" formControlName="provincia" class="form-control" />
-    </div>
-    <div class="form-group">
-      <label for="departamento" class="required form-label">Departamento</label>
-      <input type="text" id="departamento" formControlName="departamento" class="form-control" />
-    </div>
-    <div class="form-group">
-      <label for="telefono" class="required form-label">Teléfono</label>
-      <input type="text" id="telefono" formControlName="telefono" class="form-control" />
+    <div class="row">
+      <div class="form-group col-6">
+        <label for="departamento" class="required form-label">Departamento</label>
+        <input
+          type="text"
+          id="departamento"
+          formControlName="departamento"
+          class="form-control"
+        />
+      </div>
+      <div class="form-group col-6">
+        <label for="telefono" class="required form-label">Teléfono</label>
+        <input
+          type="text"
+          id="telefono"
+          formControlName="telefono"
+          class="form-control"
+        />
+      </div>
     </div>
     <div class="form-group">
       <label for="email" class="required form-label">Correo Electrónico</label>
-      <input type="email" id="email" formControlName="email" class="form-control" />
+      <input
+        type="email"
+        id="email"
+        formControlName="email"
+        class="form-control"
+      />
     </div>
-    <div class="form-group mb-3">
-      <label for="kt_calendar_datepicker_start_time">Hora de Apertura</label>
-      <input type="text" class="form-control" id="kt_calendar_datepicker_start_time" formControlName="horarioapertura" #startTimePicker placeholder="Seleccionar Hora de Apertura"/>
+    <div class="row">
+      <div class="form-group col-6 mb-3">
+        <label for="kt_calendar_datepicker_start_time">Hora de Apertura</label>
+        <input
+          type="text"
+          class="form-control"
+          id="kt_calendar_datepicker_start_time"
+          formControlName="horarioapertura"
+          #startTimePicker
+          placeholder="Seleccionar Hora de Apertura"
+        />
+      </div>
+      <div class="form-group col-6 mb-3">
+        <label for="kt_calendar_datepicker_end_time">Hora de Cierre</label>
+        <input
+          type="text"
+          class="form-control"
+          id="kt_calendar_datepicker_end_time"
+          formControlName="horariocierre"
+          #endTimePicker
+          placeholder="Seleccionar Hora de Cierre"
+        />
+      </div>
     </div>
-    <div class="form-group mb-3">
-      <label for="kt_calendar_datepicker_end_time">Hora de Cierre</label>
-      <input type="text" class="form-control" id="kt_calendar_datepicker_end_time" formControlName="horariocierre" #endTimePicker placeholder="Seleccionar Hora de Cierre"/>
-    </div>
-    <div class="form-group">
-      <label for="capacidadpacientes" class="required form-label">Capacidad de Pacientes</label>
-      <input type="number" id="capacidadpacientes" formControlName="capacidadpacientes" class="form-control" min="1" />
-    </div>
-    <div class="form-group">
-      <label for="numeroconsultorios" class="required form-label">Número de Consultorios</label>
-      <input type="number" id="numeroconsultorios" formControlName="numeroconsultorios" class="form-control" min="1" />
+    <div class="row">
+      <div class="form-group col-6">
+        <label for="capacidadpacientes" class="required form-label"
+          >Capacidad de Pacientes</label
+        >
+        <input
+          type="number"
+          id="capacidadpacientes"
+          formControlName="capacidadpacientes"
+          class="form-control"
+          min="1"
+        />
+      </div>
+      <div class="form-group col-6">
+        <label for="numeroconsultorios" class="required form-label"
+          >Número de Consultorios</label
+        >
+        <input
+          type="number"
+          id="numeroconsultorios"
+          formControlName="numeroconsultorios"
+          class="form-control"
+          min="1"
+        />
+      </div>
     </div>
   </form>
 </div>
@@ -73,6 +148,9 @@
     (click)="save()"
   >
     Guardar
-    <span *ngIf="isLoading" class="spinner-border spinner-border-sm align-middle ms-2"></span>
+    <span
+      *ngIf="isLoading"
+      class="spinner-border spinner-border-sm align-middle ms-2"
+    ></span>
   </button>
 </div>

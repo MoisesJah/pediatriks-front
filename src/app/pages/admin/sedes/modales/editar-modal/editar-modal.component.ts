@@ -16,7 +16,7 @@ export class EditarModalComponent implements OnInit, OnDestroy, AfterViewInit {
   isLoading = false;
   private subscriptions: Subscription = new Subscription();
 
-  @Input() sedeId!: number;
+  @Input() sedeId!: string;
   @Output() onSaveComplete = new EventEmitter<void>();
 
   @ViewChild('startTimePicker') startTimePicker!: ElementRef;

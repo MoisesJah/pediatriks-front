@@ -53,7 +53,7 @@ export class CrearModalComponent implements AfterViewInit {
       flatpickr(this.endTimePicker.nativeElement, {
         enableTime: true,
         noCalendar: true,
-        dateFormat: "H:i"
+        dateFormat: "H:i",
       });
     }
   }
@@ -78,5 +78,19 @@ export class CrearModalComponent implements AfterViewInit {
         }
       });
     }
+  }
+
+  /**
+   * Called when the start time input changes.
+   * Sets the minimum end time to 1 minute after the start time.
+   */
+  onStartTimeChange(event: any): void {
+    const [hours, minutes] = event.target.value.split(':').map(Number);
+    const minEndDate = new Date();
+    // Set the minimum end time to 1 minute after the start time
+    minEndDate.setHours(hours, minutes + 1);
+
+    // Update the end time input with the new minimum date
+    this.endTimePicker.nativeElement._flatpickr.set('minDate', minEndDate);
   }
 }

@@ -21,6 +21,7 @@ import { Terapia } from 'src/app/models/terapia';
 import { map, Observable, Subject } from 'rxjs';
 import { generos } from '../../../pacientes/modals/genero.data';
 import { GeneroService } from 'src/app/services/genero/genero.service';
+import { SedesService } from 'src/app/services/sedes/sedes.service';
 
 @Component({
   selector: 'app-crear-modal',
@@ -29,18 +30,20 @@ import { GeneroService } from 'src/app/services/genero/genero.service';
 })
 export class CrearModalComponent implements OnInit {
   modal = inject(NgbModal);
+  isLoading = inject(LoadingService).isLoading;
   personalService = inject(PersonalService);
   tipoPersonalService = inject(TipoPersonalService);
   terapiaService = inject(TerapiaService);
   horarioPersonalService = inject(HorarioPersonalService);
-  isLoading = inject(LoadingService).isLoading;
   generosService = inject(GeneroService);
+  sedesService = inject(SedesService);
 
   personalForm: FormGroup;
   tiposPersonalList: Observable<TipoPersonal[]> = new Observable();
   terapiasList: Observable<Terapia[]> = new Observable();
   horariosList: Observable<HorarioPersonal[]> = new Observable();
   generosList: Observable<any> = new Observable();
+  sedesList: Observable<any> = new Observable();
 
 
   @Output() onSaveComplete = new EventEmitter<void>();
@@ -55,10 +58,12 @@ export class CrearModalComponent implements OnInit {
       telefono: ['', [Validators.required, Validators.pattern('^[0-9]*')]],
       correo: ['', [Validators.required, Validators.email]],
       id_genero: [null, Validators.required],
+      id_sede: [null, Validators.required],
       sueldo: [0, [Validators.required, Validators.min(0)]],
       id_tipopersonal: [null, Validators.required],
       id_terapia: [null, Validators.required],
       id_horariop: [null, Validators.required],
+      cv: [''],
     });
   }
 
@@ -67,6 +72,7 @@ export class CrearModalComponent implements OnInit {
     this.getTerapiasList();
     this.getHorariosList();
     this.getGenerosList();
+    this.getSedesList();
   }
 
   close() {
@@ -96,6 +102,12 @@ export class CrearModalComponent implements OnInit {
   getGenerosList(): void {
     this.generosList = this.generosService.getAll().pipe(
       map((response: any) => response.data),
+    );
+  }
+
+  getSedesList(): void {
+    this.sedesList = this.sedesService.getAll().pipe(
+      map((response) => response.data),
     );
   }
 

@@ -1,4 +1,4 @@
-import { LOCALE_ID, NgModule } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -25,7 +25,6 @@ import { SedesModalsModule } from './pages/admin/sedes/modales/modales.module';
 @NgModule({
   declarations: [
     AppComponent
-    // UserBetterComponent,
   ],
   imports: [
     BrowserModule,
