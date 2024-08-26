@@ -76,6 +76,10 @@ export class SedesComponent implements OnInit, OnDestroy {
       .pipe(map((response) => response.data));
   }
 
+  loadTabla(){
+    this.fetchSedes();
+  }
+
   openCrearModal() {
     const modalRef = this.modal.open(CrearModalComponent, {
       size: '300px',

@@ -11,6 +11,12 @@
     <div class="card shadow p-2 px-4 bg-white">
       <div class="d-flex p-4 justify-content-between align-items-center">
         <h1>Terapias</h1>
+        <button type="button" class="btn btn-primary" (click)="loadTabla()">
+          <span class="d-flex align-items-center">
+            <span class="fa-solid fa-rotate-right"></span>
+            <span class="text-white ms-2">Actualizar</span>
+          </span>
+        </button>
         <button
           type="button"
           class="btn btn-primary"
@@ -32,6 +38,8 @@
           [localeText]="localeText"
           [ariaHidden]="true"
           [pagination]="true"
+          [loading]="isLoading | async" loadingMessage="Cargando..."
+          (gridReady)="onGridReady($event)"
         ></ag-grid-angular>
         }
       </div>

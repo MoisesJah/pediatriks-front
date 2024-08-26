@@ -38,11 +38,23 @@ export class EditarModalComponent implements OnInit {
   generosList: Observable<any> = new Observable();
   sedesList: Observable<any> = new Observable();
 
+  loadingGenero : boolean;
+  loadingSedes : boolean;
+  loadingTerapia : boolean;
+  loadingTPersonal : boolean;
+  loadingHorario : boolean;
   @Output() onSaveComplete = new EventEmitter<void>();
 
   constructor(
     private fb: FormBuilder,
   ) {
+    this.loadingGenero = false;
+    this.loadingSedes = false;
+    this.loadingTerapia = false;
+    this.loadingTPersonal = false;
+    this.loadingHorario = false;
+
+
     this.editForm = this.fb.group({
       nombre: ['', Validators.required],
       dni: ['', [Validators.required, Validators.pattern('^[0-9]*')]],
@@ -100,32 +112,52 @@ export class EditarModalComponent implements OnInit {
   }
 
   getTipoPersonalList(): void {
+    this.loadingTPersonal = true;
     this.tiposPersonalList = this.tipoPersonalService.getAll().pipe(
-      map((response) => response.data),
+      map((response: any) =>{
+        this.loadingTPersonal = false;
+        return response.data;
+      }),
     );
   }
 
   getGenerosList(): void {
+    this.loadingGenero = true;
     this.generosList = this.generosService.getAll().pipe(
-      map((response: any) => response.data),
+      map((response: any) =>{
+        this.loadingGenero = false;
+        return response.data;
+      }),
     );
   }
 
   getTerapiasList(): void {
+    this.loadingTerapia = true;
     this.terapiasList = this.terapiaService.getAll().pipe(
-      map((response) => response.data),
+      map((response: any) =>{
+        this.loadingTerapia = false;
+        return response.data;
+      }),
     )
   }
 
   getSedesList(): void {
+    this.loadingSedes = true;
     this.sedesList = this.sedesService.getAll().pipe(
-      map((response) => response.data),
+      map((response: any) =>{
+        this.loadingSedes = false;
+        return response.data;
+      }),
     );
   }
 
   getHorariosList(): void {
+    this.loadingHorario = true;
     this.horariosList = this.horarioPersonalService.getAll().pipe(
-      map((response) => response.data),
+      map((response: any) =>{
+        this.loadingHorario = false;
+        return response.data;
+      }),
     )
   }
 }

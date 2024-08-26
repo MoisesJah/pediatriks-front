@@ -48,10 +48,27 @@ export class CrearModalComponent implements AfterViewInit {
   }
 
   ngAfterViewInit(): void {
+    const today = new Date(); // La fecha de hoy
+
     if (this.datePicker && this.datePicker.nativeElement) {
       flatpickr(this.datePicker.nativeElement, {
         locale: Spanish,
         dateFormat: "Y-m-d",
+        minDate: today, // Solo permite fechas actuales o futuras
+        onChange: (selectedDates) => {
+          const startDate = selectedDates[0];
+          if (this.endDatePicker && this.endDatePicker.nativeElement) {
+            const endPickerInstance = flatpickr(this.endDatePicker.nativeElement, {
+              locale: Spanish,
+              dateFormat: "Y-m-d",
+              minDate: startDate, // Establece la fecha mínima para la fecha de fin
+            });
+            if (this.paqueteForm.get('fechafin')?.value < startDate) {
+              this.paqueteForm.get('fechafin')?.setValue(startDate);
+              endPickerInstance.setDate(startDate);
+            }
+          }
+        }
       });
     }
 
@@ -59,6 +76,7 @@ export class CrearModalComponent implements AfterViewInit {
       flatpickr(this.endDatePicker.nativeElement, {
         locale: Spanish,
         dateFormat: "Y-m-d",
+        minDate: today, // Inicialmente permite fechas actuales o futuras
       });
     }
   }

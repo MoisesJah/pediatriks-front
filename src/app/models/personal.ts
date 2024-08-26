@@ -3,6 +3,8 @@ export interface Personal {
   id: number;
   id_tipopersonal: string;
   id_terapia: string;
+  id_genero: string;
+  id_sede: string;
   id_horariop: string;
   nombre: string;
   dni: string;
@@ -13,5 +15,6 @@ export interface Personal {
   created_at: Date;
   updated_at: Date;
   deleted_at: Date | null;
+  cv: File | null;
 }
 

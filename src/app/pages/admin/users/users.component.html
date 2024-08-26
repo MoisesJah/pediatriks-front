@@ -10,18 +10,24 @@
   <div class="container-xxl">
     <div class="card shadow p-2 px-4 bg-white">
       <div class="d-flex py-4 gap-3 justify-content-between align-items-center">
-        <form data-kt-search-element="form" class=" position-relative" autocomplete="off">	
+        <form data-kt-search-element="form" class=" position-relative" autocomplete="off">
           <!--begin::Hidden input(Added to disable form autocomplete)-->
           <input type="hidden">
           <!--end::Hidden input-->
-      
+
           <!--begin::Icon-->
           <i class="ki-duotone ki-magnifier fs-2 search-icon position-absolute top-50 translate-middle-y ms-4"><span class="path1"></span><span class="path2"></span></i>    <!--end::Icon-->
-      
+
           <!--begin::Input-->
           <input type="search" (input)="onFilterTextBoxChanged()" id="user-search" class="form-control custom-form-control ps-13" name="search" value="" placeholder="Búsqueda" data-kt-search-element="input">
-          <!--end::Input-->         
+          <!--end::Input-->
       </form>
+      <button type="button" class="btn btn-primary" (click)="loadTabla()">
+        <span class="d-flex align-items-center">
+          <span class="fa-solid fa-rotate-right"></span>
+          <span class="text-white ms-2">Actualizar</span>
+        </span>
+      </button>
         <button
           type="button"
           class="btn btn-primary"

@@ -22,7 +22,20 @@ export class PersonalService {
   }
 
   create(personal: Personal) {
-    return this.http.post<Personal>(`${this.apiUrl}/personal/add`, personal);
+    const data = new FormData();
+      data.append('nombre', personal.nombre);
+      data.append('dni', personal.dni);
+      data.append('telefono', personal.telefono);
+      data.append('correo', personal.correo);
+      data.append('id_genero', personal.id_genero);
+      data.append('id_sede', personal.id_sede);
+      data.append('sueldo', personal.sueldo.toString());
+      data.append('id_tipopersonal', personal.id_tipopersonal);
+      data.append('id_terapia', personal.id_terapia);
+      data.append('id_horariop', personal.id_horariop);
+      data.append('cv', personal.cv ? personal.cv : 'null');
+
+    return this.http.post<Personal>(`${this.apiUrl}/personal/add`, data);
   }
 
   update(personal: Personal, id: string) {

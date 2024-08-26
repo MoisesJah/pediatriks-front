@@ -69,6 +69,10 @@ export class PacientesComponent implements OnInit {
     );
   }
 
+  loadTabla(){
+    this.fetchPacientes();
+  }
+
   openCreateModal() {
     const modalRef = this.modal.open(CreateModalComponent, {
       size: '300px',

@@ -107,6 +107,11 @@ export class UsersComponent implements OnInit, OnDestroy {
    * Opens the create modal and subscribes to
    * the onSaveComplete event to refresh the user list.
    */
+
+  loadTabla(){
+    this.fetchUsers();
+  }
+
   openCreateModal() {
     const modalRef = this.modal.open(CreateModalComponent, {
       size: '300px',
@@ -138,7 +143,7 @@ export class UsersComponent implements OnInit, OnDestroy {
       animation: true,
       centered: true,
     });
-    
+
     modalRef.componentInstance.userId = user.id;
     modalRef.componentInstance.onSaveComplete.subscribe(() => {
       this.fetchUsers();

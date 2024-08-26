@@ -14,6 +14,7 @@ import { EditarModalComponent } from './modales/editar-modal/editar-modal.compon
 import { AgGridAngular } from 'ag-grid-angular';
 import { ColDef, GridReadyEvent } from 'ag-grid-community';
 import { ActionButtonsComponent } from './modales/action-buttons/action-buttons.component';
+import { AG_GRID_LOCALE_ES } from '@ag-grid-community/locale';
 
 @UntilDestroy()
 @Component({
@@ -35,6 +36,7 @@ export class PaquetesComponent implements OnInit, OnDestroy {
   suggestions: string[] = [];
   showSuggestions: boolean = false;
   filterApplied: boolean = false;
+  localeText = AG_GRID_LOCALE_ES;
 
 
   colDefs: ColDef[] = [
@@ -97,6 +99,9 @@ export class PaquetesComponent implements OnInit, OnDestroy {
       });
   }
 
+  loadTabla() {
+    this.fetchPaquetes();
+  }
 
 
   openCrearModal() {
@@ -116,7 +121,7 @@ export class PaquetesComponent implements OnInit, OnDestroy {
 // En el componente que abre el modal
   openEditarModal(paquete: { id_paquetes: string }) {
     const modalRef = this.modal.open(EditarModalComponent);
-    
+
     modalRef.componentInstance.paqueteId = paquete.id_paquetes;
     modalRef.componentInstance.onSaveComplete.subscribe(() => {
       this.fetchPaquetes();

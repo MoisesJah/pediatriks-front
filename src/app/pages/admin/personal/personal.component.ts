@@ -30,6 +30,7 @@ export class PersonalComponent implements OnInit {
   localeText = AG_GRID_LOCALE_ES
 
   colDefs: ColDef[] = [
+    { field: 'cv', headerName: 'CV' },
     { field: 'nombre', headerName: 'Nombre', filter: true },
     { field: 'dni', headerName: 'DNI', filter: true },
     { field: 'telefono', headerName: 'Teléfono', filter: true },
@@ -50,7 +51,7 @@ export class PersonalComponent implements OnInit {
     { field: 'terapia.nombre', headerName: 'Especialidad', filter: true },
     { field: 'horario.horario_iniciop', headerName: 'Horario Inicio' },
     { field: 'horario.horario_finalp', headerName: 'Horario Fin' },
-    
+
     {
       headerName: 'Acciones',
       cellRenderer: ActionButtonsComponent,
@@ -71,6 +72,10 @@ export class PersonalComponent implements OnInit {
     this.personalList = this.personalService
       .getAll()
       .pipe(map((resp) => resp.data));
+  }
+
+  loadTabla(){
+    this.fetchPersonal();
   }
 
   openCrearModal() {

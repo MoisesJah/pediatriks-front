@@ -46,9 +46,25 @@ export class CrearModalComponent implements OnInit {
   sedesList: Observable<any> = new Observable();
 
 
+  archivo: File | null = null;
+
+  loadingGenero : boolean;
+  loadingSedes : boolean;
+  loadingTerapia : boolean;
+  loadingTPersonal : boolean;
+  loadingHorario : boolean;
+
+
   @Output() onSaveComplete = new EventEmitter<void>();
 
   constructor(private fb: FormBuilder) {
+    this.loadingGenero = false;
+    this.loadingSedes = false;
+    this.loadingTerapia = false;
+    this.loadingTPersonal = false;
+    this.loadingHorario = false;
+
+
     this.personalForm = this.fb.group({
       nombre: ['', Validators.required],
       dni: [
@@ -63,9 +79,11 @@ export class CrearModalComponent implements OnInit {
       id_tipopersonal: [null, Validators.required],
       id_terapia: [null, Validators.required],
       id_horariop: [null, Validators.required],
-      cv: [''],
+      cv: [null],
     });
   }
+
+
 
   ngOnInit(): void {
     this.getTipoPersonalList();
@@ -81,6 +99,7 @@ export class CrearModalComponent implements OnInit {
 
   save() {
     if (this.personalForm.valid) {
+      console.log(this.personalForm.value);
       this.personalService.create(this.personalForm.value).subscribe({
         next: () => {
           this.onSaveComplete.emit();
@@ -94,32 +113,66 @@ export class CrearModalComponent implements OnInit {
   }
 
   getTipoPersonalList(): void {
+    this.loadingTPersonal = true;
     this.tiposPersonalList = this.tipoPersonalService.getAll().pipe(
-      map((response) => response.data),
+      map((response: any) =>{
+        this.loadingTPersonal = false;
+        return response.data;
+      }),
     );
   }
 
   getGenerosList(): void {
+    this.loadingGenero = true;
     this.generosList = this.generosService.getAll().pipe(
-      map((response: any) => response.data),
+      map((response: any) =>{
+        this.loadingGenero = false;
+        return response.data;
+      }),
     );
   }
 
   getSedesList(): void {
+    this.loadingSedes = true;
     this.sedesList = this.sedesService.getAll().pipe(
-      map((response) => response.data),
+      map((response: any) =>{
+        this.loadingSedes = false;
+        return response.data;
+      }),
+
     );
   }
 
   getTerapiasList(): void {
+    this.loadingTerapia = true;
     this.terapiasList = this.terapiaService.getAll().pipe(
-      map((response) => response.data),
+      map((response: any) =>{
+        this.loadingTerapia = false;
+        return response.data;
+      }),
     )
   }
 
   getHorariosList(): void {
+    this.loadingHorario = true;
     this.horariosList = this.horarioPersonalService.getAll().pipe(
-      map((response) => response.data),
+      map((response: any) =>{
+        this.loadingHorario = false;
+        return response.data;
+      }),
     )
   }
+
+
+  evtSelectFile(event: Event): void{
+    const files = (event.target as HTMLInputElement).files;
+    const file: File | null = files ? files[0] : null;
+    this.archivo = file;
+    this.personalForm.patchValue({
+      cv: this.archivo
+    })
+
+    console.log(this.personalForm.value);
+  }
+
 }

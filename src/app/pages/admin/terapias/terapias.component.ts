@@ -11,7 +11,7 @@ import { DeleteModalComponent } from './modals/delete-modal/delete-modal.compone
 import { AgGridAngular } from 'ag-grid-angular';
 import { map, Observable } from 'rxjs';
 import { ActionButtonsComponent } from './modals/action-buttons/action-buttons.component';
-import { ColDef } from 'ag-grid-community';
+import { ColDef, GridApi } from 'ag-grid-community';
 import { AG_GRID_LOCALE_ES } from '@ag-grid-community/locale';
 
 import { formatMoney } from 'src/app/utils/formatCurrency';
@@ -30,12 +30,16 @@ export class TerapiasComponent implements OnInit, OnDestroy {
   terapias = inject(TerapiaService);
   isLoading = inject(LoadingService).isLoading;
 
+
+  private gridApi: GridApi | undefined;
+
+
   terapiasList: Observable<Terapia[]> = new Observable();
   localeText = AG_GRID_LOCALE_ES
 
   colDefs: ColDef[] = [
-    { field: 'nombre', headerName: 'Nombre', filter: true },
-    { field: 'descripcion', headerName: 'Descripción', filter: true },
+    { field: 'nombre', headerName: 'Nombre', filter: true, resizable: true, },
+    { field: 'descripcion', headerName: 'Descripción', filter: true, resizable: true, },
     {
       field: 'precio',
       headerName: 'Precio',
@@ -46,6 +50,7 @@ export class TerapiasComponent implements OnInit, OnDestroy {
       // filterParams: {
       //   numberParser: (num) => num.replace('$', ''),
       // },
+      resizable: true,
     },
     {
       headerName: 'Acciones',
@@ -54,8 +59,7 @@ export class TerapiasComponent implements OnInit, OnDestroy {
         onEdit: (data: any) => this.openEditModal(data),
         onDelete: (data: any) => this.openDeleteModal(data),
       },
-      maxWidth: 100,
-      resizable: false,
+      resizable: true,
     },
   ];
 
@@ -73,6 +77,10 @@ export class TerapiasComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {}
+
+  loadTabla(){
+    this.fetchTerapias();
+  }
 
   openCreateModal() {
     const modalRef = this.modal.open(CreateModalComponent, {
@@ -109,5 +117,11 @@ export class TerapiasComponent implements OnInit, OnDestroy {
     modalRef.componentInstance.onSaveComplete.subscribe(() => {
       this.fetchTerapias();
     });
+  }
+
+  onGridReady(params: any) {
+    // bunch of code
+    this.gridApi = params.api;
+    this.gridApi?.sizeColumnsToFit();
   }
 }
