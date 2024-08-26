@@ -35,6 +35,8 @@
           style="width: 100%; height: 100%"
           [rowData]="terapiasList | async"
           [columnDefs]="colDefs"
+          (gridReady)="gridReady($event)"
+          [loading]="isLoading | async"
           [localeText]="localeText"
           [ariaHidden]="true"
           [pagination]="true"

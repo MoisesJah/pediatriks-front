@@ -42,13 +42,18 @@
           style="border-right: 1px solid #ccc"
         >
           <!--begin::Aside menu-->
-          <div id="kt_aside_menu_wrapper" class="">
-            <div id="" class="menu-column">
+          <div
+            id="kt_aside_menu_wrapper"
+            class="w-100 hover-scroll-y scroll-lg-ms d-flex"
+          >
+            <div
+              id=""
+              class="menu menu-column menu-title-gray-600 menu-state-primary menu-state-icon-primary menu-state-bullet-primary menu-icon-gray-500 menu-arrow-gray-500 fw-semibold fs-6 my-auto"
+            >
               <div
                 data-kt-menu-trigger="{default: 'click', lg: 'hover'}"
                 data-kt-menu-placement="right-start"
                 class="menu-item py-2"
-                style="border-radius: 15px; background: rgb(245, 248, 250, 0.8)"
               >
                 <!--begin:Menu link-->
                 <span class="menu-link menu-center">
@@ -66,7 +71,6 @@
                 data-kt-menu-placement="right-start"
                 class="menu-item py-2"
                 style="transition: background-color 0.3s; border-radius: 15px"
-                onmouseover="this.style.backgroundColor='rgb(245,248,250,0.8)';"
                 onmouseout="this.style.backgroundColor='';"
                 (click)="navigateToSedes($event)"
               >
@@ -88,7 +92,6 @@
                 data-kt-menu-placement="right-start"
                 class="menu-item py-2"
                 style="transition: background-color 0.3s; border-radius: 15px"
-                onmouseover="this.style.backgroundColor='rgb(245,248,250,0.8)';"
                 onmouseout="this.style.backgroundColor='';"
                 (click)="navigateToReservarCita($event)"
               >
@@ -113,7 +116,6 @@
                 data-kt-menu-placement="right-start"
                 class="menu-item py-2"
                 style="transition: background-color 0.3s; border-radius: 15px"
-                onmouseover="this.style.backgroundColor='rgb(245,248,250,0.8)';"
                 onmouseout="this.style.backgroundColor='';"
               >
                 <!--begin:Menu link-->
@@ -127,67 +129,31 @@
                 </span>
                 <!--end:Menu link-->
                 <!--begin:Menu sub-->
-                <div
-                  class="menu-sub menu-sub-dropdown menu-sub-indention px-2 py-4 w-250px mh-75 overflow-auto"
-                >
-                  <!--begin:Menu item-->
-                  <div class="menu-item">
-                    <!--begin:Menu content-->
-                    <div class="menu-content">
-                      <span class="menu-section fs-5 fw-bolder ps-1 py-1"
-                        >Utilities</span
-                      >
-                    </div>
-                    <!--end:Menu content-->
-                  </div>
-                  <!--end:Menu item-->
 
-                  <!--begin:Menu item-->
-                  <div
-                    data-kt-menu-trigger="click"
-                    class="menu-item menu-accordion"
-                  >
-                    <div class="menu-item">
-                      <!--begin:Menu link-->
-                      <a
-                        class="menu-link"
-                        href="utilities/wizards/create-account.html"
-                      >
-                        <span class="menu-bullet">
-                          <span class="bullet bullet-dot"></span>
-                        </span>
-                        <span class="menu-title">Create Account</span>
-                      </a>
-                      <!--end:Menu link-->
-                    </div>
-                  </div>
-                  <!--end:Menu sub-->
-                </div>
                 <!--end:Menu item-->
+              </div>
+              <div
+                data-kt-menu-trigger="{default: 'click', lg: 'hover'}"
+                data-kt-menu-placement="right-start"
+                class="menu-item py-2"
+                style="transition: background-color 0.3s; border-radius: 15px"
+                onmouseout="this.style.backgroundColor='';"
+              >
+                <!--begin:Menu link-->
+                <span class="menu-link menu-center">
+                  <span class="menu-icon me-0">
+                    <i class="ki-duotone ki-briefcase fs-2x">
+                      <span class="path1"></span>
+                      <span class="path2"></span>
+                    </i>
+                  </span>
+                </span>
+                <!--end:Menu link-->
               </div>
               <!--end:Menu sub-->
             </div>
             <!--end:Menu item-->
             <!--begin:Menu item-->
-            <div
-              data-kt-menu-trigger="{default: 'click', lg: 'hover'}"
-              data-kt-menu-placement="right-start"
-              class="menu-item py-2"
-              style="transition: background-color 0.3s; border-radius: 15px"
-              onmouseover="this.style.backgroundColor='rgb(245,248,250,0.8)';"
-              onmouseout="this.style.backgroundColor='';"
-            >
-              <!--begin:Menu link-->
-              <span class="menu-link menu-center">
-                <span class="menu-icon me-0">
-                  <i class="ki-duotone ki-briefcase fs-2x">
-                    <span class="path1"></span>
-                    <span class="path2"></span>
-                  </i>
-                </span>
-              </span>
-              <!--end:Menu link-->
-            </div>
 
             <!--end:Menu item-->
           </div>
@@ -216,7 +182,10 @@
           <!--end::Mobile logo-->
           <!--begin::Aside toggle-->
           <button
-            class="btn btn-icon btn-active-color-primary me-n4"
+            type="button"
+            (click)="openOffcanvas()"
+            [ngClass]="{ 'btn-active-color-primary active': open }"
+            class="btn btn-icon me-n4"
             id="kt_aside_toggle"
           >
             <i class="ki-duotone ki-abstract-14 fs-2x">
@@ -241,7 +210,7 @@
         </app-header> -->
 
       <!--begin::Content-->
-        <ng-content></ng-content>
+      <ng-content></ng-content>
       <!--end::Content-->
     </div>
     <!--end::Wrapper-->

@@ -52,6 +52,7 @@
           [defaultColDef]="defaultColDef"
           [loading]="isLoading | async"
           [columnDefs]="colDefs"
+          [enableCellTextSelection]="true"
           [localeText]="localeText"
           (gridReady)="gridReady($event)"
           [pagination]="true"

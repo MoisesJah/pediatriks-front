@@ -1,0 +1,186 @@
+<div
+  #drawer
+  id="kt_aside"
+  class="aside drawer drawer-on drawer-start"
+  data-kt-drawer="true"
+  data-kt-drawer-name="aside"
+  data-kt-drawer-activate="{default: true, lg: false}"
+  data-kt-drawer-overlay="true"
+  data-kt-drawer-width="auto"
+  data-kt-drawer-direction="start"
+  data-kt-drawer-toggle="#kt_aside_toggle"
+>
+  <!--begin::Logo-->
+  <div
+    class="aside-logo flex-column-auto pt-10"
+    id=""
+    style="border-right: 1px solid #ccc"
+  >
+    <a routerLink="/dashboard">
+      <img
+        alt="Logo"
+        src="assets/media/logos/usuario.svg"
+        class="h-70px"
+        title="Paciente"
+      />
+    </a>
+  </div>
+  <!--end::Logo-->
+  <!--begin::Nav-->
+  <div
+    class="aside-menu flex-column-fluid pt-0 pb-7 py-lg-10"
+    id="kt_aside_menu"
+    style="border-right: 1px solid #ccc"
+  >
+    <!--begin::Aside menu-->
+    <div
+      id="kt_aside_menu_wrapper"
+      class="w-100 hover-scroll-y scroll-lg-ms d-flex"
+    >
+      <div
+        id=""
+        class="menu menu-column menu-title-gray-600 menu-state-primary menu-state-icon-primary menu-state-bullet-primary menu-icon-gray-500 menu-arrow-gray-500 fw-semibold fs-6 my-auto"
+      >
+        <div
+          data-kt-menu-trigger="{default: 'click', lg: 'hover'}"
+          data-kt-menu-placement="right-start"
+          class="menu-item py-2"
+          style="border-radius: 15px; background: rgb(245, 248, 250, 0.8)"
+        >
+          <!--begin:Menu link-->
+          <span class="menu-link menu-center">
+            <span class="menu-icon me-0">
+              <i class="ki-duotone ki-home-2 fs-2x">
+                <span class="path1"></span>
+                <span class="path2"></span>
+              </i>
+            </span>
+          </span>
+        </div>
+        <!--begin:Menu item-->
+        <div
+          data-kt-menu-trigger="{default: 'click', lg: 'hover'}"
+          data-kt-menu-placement="right-start"
+          class="menu-item py-2"
+          style="transition: background-color 0.3s; border-radius: 15px"
+          onmouseout="this.style.backgroundColor='';"
+          (click)="navigateToSedes($event)"
+        >
+          <span class="menu-link menu-center">
+            <span class="menu-icon me-0">
+              <i class="ki-duotone ki-notification-status fs-2x">
+                <span class="path1"></span>
+                <span class="path2"></span>
+                <span class="path3"></span>
+                <span class="path4"></span>
+              </i>
+            </span>
+          </span>
+        </div>
+        <!--end:Menu item-->
+        <!--begin:Menu item-->
+        <div
+          data-kt-menu-trigger="{default: 'click', lg: 'hover'}"
+          data-kt-menu-placement="right-start"
+          class="menu-item py-2"
+          style="transition: background-color 0.3s; border-radius: 15px"
+          onmouseout="this.style.backgroundColor='';"
+          (click)="navigateToReservarCita($event)"
+        >
+          <!--begin:Menu link-->
+          <span class="menu-link menu-center">
+            <span class="menu-icon me-0">
+              <i class="ki-duotone ki-abstract-35 fs-2x">
+                <span class="path1"></span>
+                <span class="path2"></span>
+              </i>
+            </span>
+          </span>
+          <!--end:Menu link-->
+          <!--begin:Menu sub-->
+
+          <!--end:Menu sub-->
+        </div>
+        <!--end:Menu item-->
+        <!--begin:Menu item-->
+        <div
+          data-kt-menu-trigger="{default: 'click', lg: 'hover'}"
+          data-kt-menu-placement="right-start"
+          class="menu-item py-2"
+          style="transition: background-color 0.3s; border-radius: 15px"
+          onmouseout="this.style.backgroundColor='';"
+        >
+          <!--begin:Menu link-->
+          <span class="menu-link menu-center">
+            <span class="menu-icon me-0">
+              <i class="ki-duotone ki-abstract-26 fs-2x">
+                <span class="path1"></span>
+                <span class="path2"></span>
+              </i>
+            </span>
+          </span>
+          <!--end:Menu link-->
+          <!--begin:Menu sub-->
+          <div
+            class="menu-sub menu-sub-dropdown menu-sub-indention px-2 py-4 w-250px mh-75 overflow-auto"
+          >
+            <!--begin:Menu item-->
+            <div class="menu-item">
+              <!--begin:Menu content-->
+              <div class="menu-content">
+                <span class="menu-section fs-5 fw-bolder ps-1 py-1"
+                  >Utilities</span
+                >
+              </div>
+              <!--end:Menu content-->
+            </div>
+            <!--end:Menu item-->
+
+            <!--begin:Menu item-->
+            <div data-kt-menu-trigger="click" class="menu-item menu-accordion">
+              <div class="menu-item">
+                <!--begin:Menu link-->
+                <a
+                  class="menu-link"
+                  href="utilities/wizards/create-account.html"
+                >
+                  <span class="menu-bullet">
+                    <span class="bullet bullet-dot"></span>
+                  </span>
+                  <span class="menu-title">Create Account</span>
+                </a>
+                <!--end:Menu link-->
+              </div>
+            </div>
+            <!--end:Menu sub-->
+          </div>
+          <!--end:Menu item-->
+        </div>
+        <div
+          data-kt-menu-trigger="{default: 'click', lg: 'hover'}"
+          data-kt-menu-placement="right-start"
+          class="menu-item py-2"
+          style="transition: background-color 0.3s; border-radius: 15px"
+          onmouseout="this.style.backgroundColor='';"
+        >
+          <!--begin:Menu link-->
+          <span class="menu-link menu-center">
+            <span class="menu-icon me-0">
+              <i class="ki-duotone ki-briefcase fs-2x">
+                <span class="path1"></span>
+                <span class="path2"></span>
+              </i>
+            </span>
+          </span>
+          <!--end:Menu link-->
+        </div>
+        <!--end:Menu sub-->
+      </div>
+      <!--end:Menu item-->
+      <!--begin:Menu item-->
+
+      <!--end:Menu item-->
+    </div>
+  </div>
+  <!--end::Aside menu-->
+</div>
