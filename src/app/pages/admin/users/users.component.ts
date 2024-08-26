@@ -17,7 +17,7 @@ import { DeleteModalComponent } from './modals/delete-modal/delete-modal.compone
 import { HeaderComponent } from 'src/app/components/ui/header/header.component';
 
 import { AgGridAngular } from 'ag-grid-angular'; // Angular Data Grid Component
-import { ColDef, GridReadyEvent,GridApi } from 'ag-grid-community';
+import { ColDef, GridReadyEvent, GridApi } from 'ag-grid-community';
 import { ActionButtonsComponent } from './modals/action-buttons/action-buttons.component';
 import { map, Observable } from 'rxjs';
 import { AG_GRID_LOCALE_ES } from '@ag-grid-community/locale';
@@ -69,18 +69,26 @@ export class UsersComponent implements OnInit, OnDestroy {
 
   //https://stackoverflow.com/questions/72812674/ag-grid-size-to-fit-on-desktop-and-auto-size-on-mobile
   gridReady(params: GridReadyEvent) {
-    this.gridApi = params.api;
+    const colIds = params.api.getAllDisplayedColumns().map(c => c.getId());
+        params.api.autoSizeColumns(colIds,false)
+    window.onresize = () => {
+      setTimeout(() => {
 
-    const tableWidth = params.api
-      .getColumns()
-      ?.reduce((i, current) => (i += current.getActualWidth()), 0);
+        this.gridApi = params.api;
 
-    const { left, right } = params.api.getHorizontalPixelRange();
-    const containerWidth = right - left;
+        const tableWidth = params.api
+          .getColumns()
+          ?.reduce((i, current) => (i += current.getActualWidth()), 0);
 
-    if (tableWidth! < containerWidth) {
-      params.api.sizeColumnsToFit();
-    }
+        const { left, right } = params.api.getHorizontalPixelRange();
+        const containerWidth = right - left;
+
+        if (tableWidth! < containerWidth) {
+          params.api.sizeColumnsToFit();
+        }
+        console.log(tableWidth, containerWidth);
+      }, 200);
+    };
   }
 
   private fetchUsers() {
@@ -94,8 +102,8 @@ export class UsersComponent implements OnInit, OnDestroy {
 
   onFilterTextBoxChanged() {
     this.gridApi.setGridOption(
-      "quickFilterText",
-      (document.getElementById("user-search") as HTMLInputElement).value,
+      'quickFilterText',
+      (document.getElementById('user-search') as HTMLInputElement).value
     );
   }
 
@@ -138,7 +146,7 @@ export class UsersComponent implements OnInit, OnDestroy {
       animation: true,
       centered: true,
     });
-    
+
     modalRef.componentInstance.userId = user.id;
     modalRef.componentInstance.onSaveComplete.subscribe(() => {
       this.fetchUsers();

@@ -11,7 +11,7 @@ import { DeleteModalComponent } from './modals/delete-modal/delete-modal.compone
 import { AgGridAngular } from 'ag-grid-angular';
 import { map, Observable } from 'rxjs';
 import { ActionButtonsComponent } from './modals/action-buttons/action-buttons.component';
-import { ColDef } from 'ag-grid-community';
+import { ColDef, GridReadyEvent, GridApi } from 'ag-grid-community';
 import { AG_GRID_LOCALE_ES } from '@ag-grid-community/locale';
 
 import { formatMoney } from 'src/app/utils/formatCurrency';
@@ -31,7 +31,7 @@ export class TerapiasComponent implements OnInit, OnDestroy {
   isLoading = inject(LoadingService).isLoading;
 
   terapiasList: Observable<Terapia[]> = new Observable();
-  localeText = AG_GRID_LOCALE_ES
+  localeText = AG_GRID_LOCALE_ES;
 
   colDefs: ColDef[] = [
     { field: 'nombre', headerName: 'Nombre', filter: true },
@@ -70,6 +70,23 @@ export class TerapiasComponent implements OnInit, OnDestroy {
       }),
       untilDestroyed(this)
     );
+  }
+
+  gridReady(params: GridReadyEvent) {
+    window.onresize = () => {
+      setTimeout(() => {
+        const tableWidth = params.api
+          .getColumns()
+          ?.reduce((i, current) => (i += current.getActualWidth()), 0);
+  
+        const { left, right } = params.api.getHorizontalPixelRange();
+        const containerWidth = right - left;
+  
+        if (tableWidth! < containerWidth) {
+          params.api.sizeColumnsToFit();
+        }
+        console.log(tableWidth, containerWidth);
+      }, 200);}
   }
 
   ngOnDestroy(): void {}

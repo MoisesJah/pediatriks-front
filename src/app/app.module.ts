@@ -20,11 +20,12 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { TerapiasModalsModule } from './pages/admin/terapias/modals/modals.module';
 import { PacientesModalsModule } from './pages/admin/pacientes/modals/modals.module';
 import { SedesModalsModule } from './pages/admin/sedes/modales/modales.module';
+import { DrawerComponent } from './components/ui/drawer/drawer.component';
 
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
   ],
   imports: [
     BrowserModule,
