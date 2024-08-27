@@ -1,5 +1,12 @@
 <div class="modal-header">
-  <h4 class="modal-title" id="modal-basic-title">Añadir Usuario</h4>
+  <h4 class="modal-title d-flex align-items-center gap-1" id="modal-basic-title">
+    <span class="text-primary">
+      <i style="vertical-align: middle;" class="ki-duotone ki-add-files text-gray-900 fs-1">
+        <span class="path1"></span><span class="path2"></span>
+        <span class="path3"></span></i>
+      </span>
+    Añadir Usuario
+  </h4>
   <button
     type="button"
     class="btn btn-sm btn-icon btn-active-color-primary btn-color-gray-800"
@@ -17,7 +24,12 @@
       <label for="exampleFormControlInput1" class="required form-label"
         >Nombres</label
       >
-      <input type="text" formControlName="name" class="form-control" placeholder="Ingresa tu Nombre"/>
+      <input
+        type="text"
+        formControlName="name"
+        class="form-control"
+        placeholder="Ingresa tu Nombre"
+      />
     </div>
     <div class="form-group">
       <label for="exampleFormControlInput1" class="required form-label"
@@ -35,24 +47,40 @@
       <label for="exampleFormControlInput1" class="required form-label">
         Correo
       </label>
-      <input type="email" formControlName="email" class="form-control" placeholder="Ingresa tu Correo" />
+      <input
+        type="email"
+        formControlName="email"
+        class="form-control"
+        placeholder="Ingresa tu Correo"
+      />
     </div>
 
     <div class="form-group">
       <label for="exampleFormControlInput1" class="required form-label">
         Teléfono
       </label>
-      <input type="email" formControlName="telefono" class="form-control" placeholder="Ingresa tu Teléfono"/>
+      <input
+        type="email"
+        formControlName="telefono"
+        class="form-control"
+        placeholder="Ingresa tu Teléfono"
+      />
     </div>
 
-    <div class="form-group" >
-      <div class="d-flex align-items-center justify-content-between" style="margin-bottom: 0.75rem;">
+    <div class="form-group">
+      <div
+        class="d-flex align-items-center justify-content-between"
+        style="margin-bottom: 0.75rem"
+      >
         <label
           for="password"
           class="required form-label d-flex align-items-center justify-content-between"
         >
           Contraseña
-          <span style="margin-left: 0.15rem;" ngbTooltip="Guarde la contraseña en un lugar seguro para no perderla">
+          <span
+            style="margin-left: 0.15rem"
+            ngbTooltip="Guarde la contraseña en un lugar seguro para no perderla"
+          >
             <i class="ki-solid ki-information-2"></i>
           </span>
         </label>
@@ -96,6 +124,9 @@
     (click)="save()"
   >
     Guardar
-    <span *ngIf="isLoading | async" class="spinner-border spinner-border-sm align-middle ms-2"></span>
+    <span
+      *ngIf="isLoading | async"
+      class="spinner-border spinner-border-sm align-middle ms-2"
+    ></span>
   </button>
 </div>

@@ -69,11 +69,9 @@ export class UsersComponent implements OnInit, OnDestroy {
 
   //https://stackoverflow.com/questions/72812674/ag-grid-size-to-fit-on-desktop-and-auto-size-on-mobile
   gridReady(params: GridReadyEvent) {
-    const colIds = params.api.getAllDisplayedColumns().map(c => c.getId());
-        params.api.autoSizeColumns(colIds,false)
+    params.api.sizeColumnsToFit();
     window.onresize = () => {
       setTimeout(() => {
-
         this.gridApi = params.api;
 
         const tableWidth = params.api
@@ -116,7 +114,7 @@ export class UsersComponent implements OnInit, OnDestroy {
    * the onSaveComplete event to refresh the user list.
    */
 
-  loadTabla(){
+  loadTabla() {
     this.fetchUsers();
   }
 
