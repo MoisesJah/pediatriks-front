@@ -1,0 +1,38 @@
+<div>
+    <button
+        type="button"
+        class="btn btn-sm btn-icon btn-active-color-primary btn-color-gray-800"
+        data-bs-toggle="modal"
+        data-bs-target="#pdfViewer"
+        (click)="openPdf(pdfViewer)"
+    >
+        <i class="ki-duotone ki-document fs-1">
+            <span class="path1"></span>
+            <span class="path2"></span>
+        </i>
+    </button>
+</div>
+
+<ng-template #pdfViewer>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Cv Viewer</h4>
+    <button
+      type="button"
+      class="btn btn-sm btn-icon btn-active-color-primary btn-color-gray-800"
+      aria-label="Close"
+      (click)="closePdf()"
+    >
+      <i class="ki-duotone ki-cross-square fs-1">
+        <span class="path1"></span>
+        <span class="path2"></span>
+      </i>
+    </button>
+  </div>
+
+  <div class="modal-body">
+    @defer () {
+        <pdf-viewer [src]="pdfFile"  [render-text]="true" [original-size]="false"
+            style="height: 500px"></pdf-viewer>
+        }
+  </div>
+</ng-template>

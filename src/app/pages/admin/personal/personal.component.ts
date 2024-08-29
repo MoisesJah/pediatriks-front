@@ -14,6 +14,7 @@ import { ActionButtonsComponent } from './modales/action-buttons/action-buttons.
 import { map, Observable } from 'rxjs';
 import { formatMoney } from 'src/app/utils/formatCurrency';
 import { AG_GRID_LOCALE_ES } from '@ag-grid-community/locale';
+import { CvViewerComponent } from './modales/cv-viewer/cv-viewer.component';
 
 @Component({
   selector: 'app-personal',
@@ -27,10 +28,18 @@ export class PersonalComponent implements OnInit {
   personalList: Observable<Personal[]> = new Observable();
   modal = inject(NgbModal);
   isLoading = inject(LoadingService).isLoading;
-  localeText = AG_GRID_LOCALE_ES
+  localeText = AG_GRID_LOCALE_ES;
 
   colDefs: ColDef[] = [
-    { field: 'cv', headerName: 'CV' },
+    {
+      field: 'cv_url',
+      headerName: 'CV',
+      cellRendererSelector: (params) => {
+        return params.value
+          ? { component: CvViewerComponent, params: params.data.id_personal }
+          : undefined;
+      },
+    },
     { field: 'nombre', headerName: 'Nombre', filter: true },
     { field: 'dni', headerName: 'DNI', filter: true },
     { field: 'telefono', headerName: 'Teléfono', filter: true },
@@ -74,7 +83,7 @@ export class PersonalComponent implements OnInit {
       .pipe(map((resp) => resp.data));
   }
 
-  loadTabla(){
+  loadTabla() {
     this.fetchPersonal();
   }
 
@@ -98,7 +107,7 @@ export class PersonalComponent implements OnInit {
     modalRef.componentInstance.personalId = personal.id_personal;
     modalRef.componentInstance.onSaveComplete.subscribe(() => {
       this.fetchPersonal();
-    })
+    });
   }
 
   openBorrarModal(personal: Personal) {
