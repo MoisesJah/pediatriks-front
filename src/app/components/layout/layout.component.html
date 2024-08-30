@@ -48,13 +48,16 @@
               id=""
               class="menu menu-column menu-title-gray-600 menu-state-primary menu-state-icon-primary menu-state-bullet-primary menu-icon-gray-500 menu-arrow-gray-500 fw-semibold fs-6 my-auto"
             >
-              <div
-                data-kt-menu-trigger="{default: 'click', lg: 'hover'}"
-                data-kt-menu-placement="right-start"
-                class="menu-item py-2"
-              >
+            <div
+            data-kt-menu-trigger="{default: 'click', lg: 'hover'}"
+            data-kt-menu-placement="right-start"
+            class="menu-item py-2"
+            style="transition: background-color 0.3s; border-radius: 15px"
+            onmouseout="this.style.backgroundColor='';"
+            (click)="navigateToInicio($event)"
+          >
                 <!--begin:Menu link-->
-                <span class="menu-link menu-center">
+                <span class="menu-link menu-center ">
                   <span class="menu-icon me-0">
                     <i class="ki-duotone ki-home-2 fs-2x">
                       <span class="path1"></span>
@@ -131,12 +134,14 @@
                 <!--end:Menu item-->
               </div>
               <div
-                data-kt-menu-trigger="{default: 'click', lg: 'hover'}"
-                data-kt-menu-placement="right-start"
-                class="menu-item py-2"
-                style="transition: background-color 0.3s; border-radius: 15px"
-                onmouseout="this.style.backgroundColor='';"
-              >
+              *ngIf="isAdmin()"
+            data-kt-menu-trigger="{default: 'click', lg: 'hover'}"
+            data-kt-menu-placement="right-start"
+            class="menu-item py-2"
+            style="transition: background-color 0.3s; border-radius: 15px"
+            onmouseout="this.style.backgroundColor='';"
+            (click)="navigateToPaquetes($event)"
+          >
                 <!--begin:Menu link-->
                 <span class="menu-link menu-center">
                   <span class="menu-icon me-0">
