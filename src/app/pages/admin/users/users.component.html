@@ -22,10 +22,11 @@
           <input type="search" (input)="onFilterTextBoxChanged()" id="user-search" class="form-control custom-form-control ps-13" name="search" value="" placeholder="Búsqueda" data-kt-search-element="input">
           <!--end::Input-->
       </form>
-      <button type="button" class="btn btn-primary" (click)="loadTabla()">
+     <div class="d-flex align-items-center gap-3">
+      <button type="button" class="btn btn-light-dark" (click)="loadTabla()">
         <span class="d-flex align-items-center">
           <span class="fa-solid fa-rotate-right"></span>
-          <span class="text-white ms-2">Actualizar</span>
+          <span class="ms-2">Actualizar</span>
         </span>
       </button>
         <button
@@ -38,6 +39,7 @@
             <span class="text-white ms-2">Añadir</span>
           </span>
         </button>
+     </div>
       </div>
       <!-- https://preview.keenthemes.com/metronic8/demo1/widgets/tables.html# -->
       <div
@@ -49,7 +51,6 @@
         <ag-grid-angular
           style="width: 100%; height: 100%"
           [rowData]="userList | async"
-          [defaultColDef]="defaultColDef"
           [loading]="isLoading | async"
           [columnDefs]="colDefs"
           [enableCellTextSelection]="true"

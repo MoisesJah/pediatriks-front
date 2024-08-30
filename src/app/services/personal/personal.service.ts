@@ -45,6 +45,10 @@ export class PersonalService {
     );
   }
 
+  getCV(id: string) {
+    return this.http.get(`${this.apiUrl}/personal/cv/${id}`);
+  }
+
   delete(id: string) {
     return this.http.delete(`${this.apiUrl}/personal/delete/${id}`);
   }
