@@ -12,9 +12,10 @@ import { CrearModalComponent } from './modales/crear-modal/crear-modal.component
 import { BorrarModalComponent } from './modales/borrar-modal/borrar-modal.component';
 import { EditarModalComponent } from './modales/editar-modal/editar-modal.component';
 import { AgGridAngular } from 'ag-grid-angular';
-import { ColDef } from 'ag-grid-community';
+import { ColDef, GridReadyEvent, GridApi } from 'ag-grid-community';
 import { ActionButtonsComponent } from './modales/action-buttons/action-buttons.component';
 import { AG_GRID_LOCALE_ES } from '@ag-grid-community/locale';
+import { ThemeService } from 'src/app/services/theme.service';
 
 @UntilDestroy()
 @Component({
@@ -27,8 +28,10 @@ import { AG_GRID_LOCALE_ES } from '@ag-grid-community/locale';
 export class SedesComponent implements OnInit, OnDestroy {
   sedesService = inject(SedesService);
   isLoading = inject(LoadingService).isLoading;
+  theme = inject(ThemeService);
   modal = inject(NgbModal);
   localeText = AG_GRID_LOCALE_ES;
+  gridApi!: GridApi;
 
   sedesList: Observable<Sede[]> = new Observable();
 
@@ -78,6 +81,18 @@ export class SedesComponent implements OnInit, OnDestroy {
 
   loadTabla(){
     this.fetchSedes();
+  }
+
+  gridReady(params: GridReadyEvent) {
+    this.gridApi = params.api;
+    // this.sizeColumnsToFit();
+  }
+
+  onFilterTextBoxChanged() {
+    this.gridApi.setGridOption(
+      'quickFilterText',
+      (document.getElementById('sede-search') as HTMLInputElement).value
+    );
   }
 
   openCrearModal() {

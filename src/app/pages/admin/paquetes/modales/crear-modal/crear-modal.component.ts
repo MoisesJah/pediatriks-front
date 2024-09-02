@@ -36,7 +36,7 @@ export class CrearModalComponent implements AfterViewInit {
       descuento: ['', [Validators.required, Validators.min(0), Validators.max(100), Validators.pattern('^[0-9]+(\\.[0-9]{1,2})?$')]],
       preciopaquete: ['', [Validators.required, Validators.min(0), Validators.pattern('^[0-9]+(\\.[0-9]{1,2})?$')]],
       fechainicio: ['', Validators.required],
-      fechafin: ['', Validators.required],
+      fechafin: ['', Validators.required,],
       sesionesrestantes: ['', [Validators.required, Validators.min(0)]],
     });
   }
@@ -45,6 +45,12 @@ export class CrearModalComponent implements AfterViewInit {
     // Suscribirse a los cambios en precioregular y descuento
     this.paqueteForm.get('precioregular')?.valueChanges.subscribe(() => this.calculatePreciopaquete());
     this.paqueteForm.get('descuento')?.valueChanges.subscribe(() => this.calculatePreciopaquete());
+
+    this.paqueteForm.get('fechainicio')?.valueChanges.subscribe(() => {
+      if (this.paqueteForm.get('fechafin')?.value < this.paqueteForm.get('fechainicio')?.value) {
+        this.paqueteForm.get('fechafin')?.setValue(this.paqueteForm.get('fechainicio')?.value);
+      }
+    });
   }
 
   ngAfterViewInit(): void {
@@ -53,14 +59,16 @@ export class CrearModalComponent implements AfterViewInit {
     if (this.datePicker && this.datePicker.nativeElement) {
       flatpickr(this.datePicker.nativeElement, {
         locale: Spanish,
-        dateFormat: "Y-m-d",
+        altFormat: "d/m/Y",
+        altInput: true,
         minDate: today, // Solo permite fechas actuales o futuras
         onChange: (selectedDates) => {
           const startDate = selectedDates[0];
           if (this.endDatePicker && this.endDatePicker.nativeElement) {
             const endPickerInstance = flatpickr(this.endDatePicker.nativeElement, {
               locale: Spanish,
-              dateFormat: "Y-m-d",
+              altFormat: "d/m/Y",
+              altInput: true,
               minDate: startDate, // Establece la fecha mínima para la fecha de fin
             });
             if (this.paqueteForm.get('fechafin')?.value < startDate) {
@@ -75,8 +83,10 @@ export class CrearModalComponent implements AfterViewInit {
     if (this.endDatePicker && this.endDatePicker.nativeElement) {
       flatpickr(this.endDatePicker.nativeElement, {
         locale: Spanish,
-        dateFormat: "Y-m-d",
-        minDate: today, // Inicialmente permite fechas actuales o futuras
+        altInput: true,
+        altFormat: "d/m/Y",
+        // dateFormat: "d/m/Y",
+        minDate: today,
       });
     }
   }
@@ -110,7 +120,7 @@ export class CrearModalComponent implements AfterViewInit {
     if (precioregular && descuento != null) {
       const descuentoDecimal = descuento / 100;
       const preciopaquete = precioregular - (precioregular * descuentoDecimal);
-      this.paqueteForm.get('preciopaquete')?.setValue(preciopaquete, { emitEvent: false });
+      this.paqueteForm.get('preciopaquete')?.setValue(preciopaquete.toFixed(2), { emitEvent: false });
     }
   }
 }

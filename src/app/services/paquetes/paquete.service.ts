@@ -5,20 +5,19 @@ import { environment } from 'src/environments/environment';
 import { Paquete } from 'src/app/models/paquetes';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
-
 export class PaqueteService {
   private apiUrl = `${environment.apiUrl}/paquete`;
 
   constructor(private http: HttpClient) {}
 
-  getAll(): Observable<Paquete[]> {
-    return this.http.get<Paquete[]>(`${this.apiUrl}/list`); // Ruta para obtener todos los paquetes
+  getAll(): Observable<{ data: Paquete[] }> {
+    return this.http.get<{ data: Paquete[] }>(`${this.apiUrl}/list`); // Ruta para obtener todos los paquetes
   }
 
-  getById(id: string): Observable<Paquete> {
-    return this.http.get<Paquete>(`${this.apiUrl}/show/${id}`);
+  getById(id: string): Observable<{ data: Paquete }> {
+    return this.http.get<{ data: Paquete }>(`${this.apiUrl}/show/${id}`);
   }
 
   create(paquete: Paquete): Observable<Paquete> {
@@ -33,4 +32,3 @@ export class PaqueteService {
     return this.http.delete<void>(`${this.apiUrl}/delete/${id}`); // Ruta para eliminar un paquete
   }
 }
-

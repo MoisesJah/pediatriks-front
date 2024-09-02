@@ -1,47 +1,92 @@
-import { Component, EventEmitter, Input, OnInit, Output, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  ViewChild,
+  ElementRef,
+  AfterViewInit,
+  inject,
+} from '@angular/core';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CalendarEvent } from 'src/app/models/calendar-event';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import flatpickr from 'flatpickr';
 import { Spanish } from 'flatpickr/dist/l10n/es.js';
 import { ModalEditComponent } from './modal-edit/modal-edit.component'; // Asegúrate de importar el componente de edición
+import { map, Observable } from 'rxjs';
+import { Terapia } from 'src/app/models/terapia';
+import { Sede } from 'src/app/models/sede';
+import { IPaciente } from 'src/app/models/paciente';
+import { TerapiaService } from 'src/app/services/terapia/terapia.service';
+import { SedesService } from 'src/app/services/sedes/sedes.service';
+import { LoadingService } from 'src/app/services/loading.service';
+import { PacienteService } from 'src/app/services/paciente/paciente.service';
+import { PersonalService } from 'src/app/services/personal/personal.service';
+import { Personal } from 'src/app/models/personal';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
+@UntilDestroy({ checkProperties: true })
 @Component({
   selector: 'app-modal-event',
   templateUrl: './modal-event.component.html',
-  styleUrls: ['./modal-event.component.scss']
+  styleUrls: ['./modal-event.component.scss'],
 })
 export class ModalEventComponent implements OnInit, AfterViewInit {
   @Input() event: CalendarEvent | null = null;
   @Output() eventSubmitted = new EventEmitter<CalendarEvent>();
   @Output() eventDeleted = new EventEmitter<string>();
 
+  terapiaService = inject(TerapiaService);
+  sedesService = inject(SedesService);
+  personalService = inject(PersonalService);
+  pacienteService = inject(PacienteService);
+  isLoading = inject(LoadingService).isLoading;
+
   @ViewChild('startTimePicker') startTimePicker!: ElementRef;
   @ViewChild('endTimePicker') endTimePicker!: ElementRef;
   @ViewChild('datePicker') datePicker!: ElementRef;
 
+  terapiasList: Observable<Terapia[]> = new Observable();
+  sedesList: Observable<Sede[]> = new Observable();
+  pacientesList: Observable<IPaciente[]> = new Observable();
+  personalList: Observable<Personal[]> = new Observable();
+
   eventForm: FormGroup;
   editEventForm: FormGroup;
-  therapyOptions: string[] = ['Psicología', 'Lenguaje', 'Ocupacional', 'Física', 'Neuro', 'Pediasuit'];
+  therapyOptions: string[] = [
+    'Psicología',
+    'Lenguaje',
+    'Ocupacional',
+    'Física',
+    'Neuro',
+    'Pediasuit',
+  ];
   patientOptions: string[] = ['Juan', 'Pedro', 'Maria'];
   doctorOptions: string[] = ['Dr. A', 'Dr. B', 'Dr. C']; // Opciones para los doctores
   minDate: string;
   isEditMode: boolean = false;
 
-  constructor(public activeModal: NgbActiveModal, private modalService: NgbModal, private fb: FormBuilder) {
+  constructor(
+    public activeModal: NgbActiveModal,
+    private modalService: NgbModal,
+    private fb: FormBuilder
+  ) {
     const today = new Date();
     this.minDate = this.formatDate(today);
 
     this.eventForm = this.fb.group({
-      therapyType: ['', Validators.required],
-      eventDescription: [''],
-      doctor: ['', Validators.required], // Campo de selección de doctor
-      selectedPatient: ['', Validators.required],
-      eventLocation: [''],
-      startDate: ['', Validators.required],
-      startTime: ['', Validators.required],
-      endDate: [''],
-      endTime: ['']
+      id_paciente: [null, Validators.required],
+      // id_terapias: [null, Validators.required],
+      // id_personal: [null, Validators.required],
+      id_sede: [null, Validators.required],
+      terapias: this.fb.array([
+        {
+          id_terapia: [null, Validators.required],
+          id_personal: [null, Validators.required],
+        },
+      ]),
     });
 
     this.editEventForm = this.fb.group({
@@ -53,38 +98,81 @@ export class ModalEventComponent implements OnInit, AfterViewInit {
       startDate: ['', Validators.required],
       startTime: ['', Validators.required],
       endDate: [''],
-      endTime: ['']
+      endTime: [''],
     });
   }
 
   ngOnInit() {
     if (this.event) {
+      console.log(this.event);
       this.initializeForms();
     }
+
+    this.loadTerapias();
+    this.loadSedes();
+    this.loadPacientes();
+    this.loadPersonal();
+  }
+
+  loadTerapias() {
+    this.terapiasList = this.terapiaService.getAll().pipe(
+      map((resp) => resp.data),
+      untilDestroyed(this)
+    );
+  }
+
+  addInfoTerapia() {
+    (this.eventForm.get('terapias') as FormArray).push(
+      this.fb.group({
+        id_terapia: [null, Validators.required],
+        id_personal: [null, Validators.required],
+      })
+    );
+  }
+
+
+  loadSedes() {
+    this.sedesList = this.sedesService.getAll().pipe(
+      map((resp) => resp.data),
+      untilDestroyed(this)
+    );
+  }
+
+  loadPacientes() {
+    this.pacientesList = this.pacienteService.getAll().pipe(
+      map((resp) => resp.data),
+      untilDestroyed(this)
+    );
+  }
+
+  loadPersonal() {
+    this.personalList = this.personalService.getAll().pipe(
+      map((resp) => resp.data),
+      untilDestroyed(this)
+    );
   }
 
   ngAfterViewInit() {
     if (this.datePicker && this.datePicker.nativeElement) {
       flatpickr(this.datePicker.nativeElement, {
         locale: Spanish,
-        weekNumbers: true,
         mode: 'multiple',
-        dateFormat: "Y-m-d",
-        minDate: this.minDate
+        dateFormat: 'Y-m-d',
+        minDate: this.minDate,
       });
     }
     if (this.startTimePicker && this.startTimePicker.nativeElement) {
       flatpickr(this.startTimePicker.nativeElement, {
         enableTime: true,
         noCalendar: true,
-        dateFormat: "H:i"
+        dateFormat: 'H:i',
       });
     }
     if (this.endTimePicker && this.endTimePicker.nativeElement) {
       flatpickr(this.endTimePicker.nativeElement, {
         enableTime: true,
         noCalendar: true,
-        dateFormat: "H:i"
+        dateFormat: 'H:i',
       });
     }
   }
@@ -93,26 +181,28 @@ export class ModalEventComponent implements OnInit, AfterViewInit {
     if (this.event) {
       this.eventForm.patchValue({
         therapyType: this.event.therapyType || '',
-        eventDescription: this.event.description || '',
         doctor: this.event.doctor || '', // Valor del doctor
         eventLocation: this.event.location || '',
         startDate: this.formatDate(new Date(this.event.start)),
-        endDate: this.event.end ? this.formatDate(new Date(this.event.end)) : '',
+        endDate: this.event.end
+          ? this.formatDate(new Date(this.event.end))
+          : '',
         startTime: this.extractTime(this.event.start),
         endTime: this.event.end ? this.extractTime(this.event.end) : '',
-        selectedPatient: this.event.selectedPatient || ''
+        selectedPatient: this.event.selectedPatient || '',
       });
 
       this.editEventForm.patchValue({
         therapyType: this.event.therapyType || '',
-        eventDescription: this.event.description || '',
         doctor: this.event.doctor || '', // Valor del doctor
         eventLocation: this.event.location || '',
         startDate: this.formatDate(new Date(this.event.start)),
-        endDate: this.event.end ? this.formatDate(new Date(this.event.end)) : '',
+        endDate: this.event.end
+          ? this.formatDate(new Date(this.event.end))
+          : '',
         startTime: this.extractTime(this.event.start),
         endTime: this.event.end ? this.extractTime(this.event.end) : '',
-        selectedPatient: this.event.selectedPatient || ''
+        selectedPatient: this.event.selectedPatient || '',
       });
     }
   }
@@ -123,16 +213,20 @@ export class ModalEventComponent implements OnInit, AfterViewInit {
 
     // Abre el modal de edición
     setTimeout(() => {
-      const modalRef = this.modalService.open(ModalEditComponent, { size: 'lg' });
+      const modalRef = this.modalService.open(ModalEditComponent, {
+        size: 'lg',
+      });
       modalRef.componentInstance.event = this.event;
       modalRef.componentInstance.isEditMode = true;
 
       // Suscríbete al evento de actualización del evento
-      modalRef.componentInstance.eventUpdated.subscribe((updatedEvent: CalendarEvent) => {
-        // Aquí puedes manejar la lógica de actualización, como emitir eventos o actualizar datos
-        this.eventSubmitted.emit(updatedEvent);
-        console.log('Event updated:', updatedEvent);
-      });
+      modalRef.componentInstance.eventUpdated.subscribe(
+        (updatedEvent: CalendarEvent) => {
+          // Aquí puedes manejar la lógica de actualización, como emitir eventos o actualizar datos
+          this.eventSubmitted.emit(updatedEvent);
+          console.log('Event updated:', updatedEvent);
+        }
+      );
     }, 300); // Ajusta el tiempo si es necesario
   }
 
@@ -148,9 +242,15 @@ export class ModalEventComponent implements OnInit, AfterViewInit {
 
     const selectedDates: string[] = this.eventForm.value.startDate.split(',');
 
-    selectedDates.forEach(date => {
-      const startDateTime = this.combineDateTime(date.trim(), this.eventForm.value.startTime);
-      const endDateTime = this.combineDateTime(date.trim(), this.eventForm.value.endTime || this.eventForm.value.startTime);
+    selectedDates.forEach((date) => {
+      const startDateTime = this.combineDateTime(
+        date.trim(),
+        this.eventForm.value.startTime
+      );
+      const endDateTime = this.combineDateTime(
+        date.trim(),
+        this.eventForm.value.endTime || this.eventForm.value.startTime
+      );
 
       const eventToSubmit: CalendarEvent = {
         id: this.event ? this.event.id : this.generateId(),
@@ -161,7 +261,7 @@ export class ModalEventComponent implements OnInit, AfterViewInit {
         location: this.eventForm.value.eventLocation,
         therapyType: this.eventForm.value.therapyType,
         doctor: this.eventForm.value.doctor, // Añadir el doctor
-        selectedPatient: this.eventForm.value.selectedPatient
+        selectedPatient: this.eventForm.value.selectedPatient,
       };
 
       this.eventSubmitted.emit(eventToSubmit);
@@ -195,7 +295,7 @@ export class ModalEventComponent implements OnInit, AfterViewInit {
       location: this.editEventForm.value.eventLocation,
       therapyType: this.editEventForm.value.therapyType,
       doctor: this.editEventForm.value.doctor, // Añadir el doctor
-      selectedPatient: this.editEventForm.value.selectedPatient
+      selectedPatient: this.editEventForm.value.selectedPatient,
     };
 
     console.log('Event to update:', eventToUpdate);

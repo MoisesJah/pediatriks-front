@@ -9,12 +9,13 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { LoadingService } from 'src/app/services/loading.service';
 import { HeaderComponent } from 'src/app/components/ui/header/header.component';
 import { AgGridAngular } from 'ag-grid-angular';
-import { ColDef, GridReadyEvent } from 'ag-grid-community';
+import { ColDef, GridApi, GridReadyEvent } from 'ag-grid-community';
 import { ActionButtonsComponent } from './modales/action-buttons/action-buttons.component';
 import { map, Observable } from 'rxjs';
 import { formatMoney } from 'src/app/utils/formatCurrency';
 import { AG_GRID_LOCALE_ES } from '@ag-grid-community/locale';
 import { CvViewerComponent } from './modales/cv-viewer/cv-viewer.component';
+import { ThemeService } from 'src/app/services/theme.service';
 
 @Component({
   selector: 'app-personal',
@@ -28,7 +29,9 @@ export class PersonalComponent implements OnInit {
   personalList: Observable<Personal[]> = new Observable();
   modal = inject(NgbModal);
   isLoading = inject(LoadingService).isLoading;
+  theme = inject(ThemeService);
   localeText = AG_GRID_LOCALE_ES;
+  gridApi!: GridApi;
 
   colDefs: ColDef[] = [
     {
@@ -85,6 +88,18 @@ export class PersonalComponent implements OnInit {
 
   loadTabla() {
     this.fetchPersonal();
+  }
+
+  gridReady(params: GridReadyEvent) {
+    this.gridApi = params.api;
+    // this.sizeColumnsToFit();
+  }
+
+  onFilterTextBoxChanged() {
+    this.gridApi.setGridOption(
+      'quickFilterText',
+      (document.getElementById('personal-search') as HTMLInputElement).value
+    );
   }
 
   openCrearModal() {

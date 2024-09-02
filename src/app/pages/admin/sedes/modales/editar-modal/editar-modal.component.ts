@@ -78,7 +78,6 @@ export class EditarModalComponent implements OnInit, OnDestroy, AfterViewInit {
     const subscription = this.sedeService.getById(this.sedeId).subscribe({
       next: (response: any) => {
         if (response.status === 'success' && response.data) {
-          console.log('Datos recibidos:', response.data);
           this.sedeForm.patchValue(response.data);
           this.isLoading = false;
           this.ngAfterViewInit(); // Reinitialize Flatpickr after loading data

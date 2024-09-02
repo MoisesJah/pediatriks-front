@@ -16,6 +16,7 @@ import { AG_GRID_LOCALE_ES } from '@ag-grid-community/locale';
 
 import { formatMoney } from 'src/app/utils/formatCurrency';
 import { LoadingService } from 'src/app/services/loading.service';
+import { ThemeService } from 'src/app/services/theme.service';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -28,11 +29,10 @@ import { LoadingService } from 'src/app/services/loading.service';
 export class TerapiasComponent implements OnInit, OnDestroy {
   modal = inject(NgbModal);
   terapias = inject(TerapiaService);
+  theme = inject(ThemeService)
   isLoading = inject(LoadingService).isLoading;
 
-
-  private gridApi: GridApi | undefined;
-
+  private gridApi!: GridApi;
 
   terapiasList: Observable<Terapia[]> = new Observable();
   localeText = AG_GRID_LOCALE_ES;
@@ -47,9 +47,6 @@ export class TerapiasComponent implements OnInit, OnDestroy {
       cellClass: 'fw-bold',
 
       valueFormatter: (params) => formatMoney(params.value),
-      // filterParams: {
-      //   numberParser: (num) => num.replace('$', ''),
-      // },
       resizable: true,
     },
     {
@@ -59,7 +56,9 @@ export class TerapiasComponent implements OnInit, OnDestroy {
         onEdit: (data: any) => this.openEditModal(data),
         onDelete: (data: any) => this.openDeleteModal(data),
       },
-      resizable: true,
+
+      maxWidth: 100,
+      resizable: false,
     },
   ];
 
@@ -77,20 +76,27 @@ export class TerapiasComponent implements OnInit, OnDestroy {
   }
 
   gridReady(params: GridReadyEvent) {
-    window.onresize = () => {
-      setTimeout(() => {
-        const tableWidth = params.api
-          .getColumns()
-          ?.reduce((i, current) => (i += current.getActualWidth()), 0);
+    this.gridApi = params.api;
+    this.sizeColumnsToFit();
+  }
 
-        const { left, right } = params.api.getHorizontalPixelRange();
-        const containerWidth = right - left;
+  sizeColumnsToFit(): void {
+    const handleResize = () => this.gridApi.sizeColumnsToFit();
+    const resizeObserver = new ResizeObserver(() => {
+      if (window.innerWidth >= 768) {
+        handleResize();
+      }
+    });
 
-        if (tableWidth! < containerWidth) {
-          params.api.sizeColumnsToFit();
-        }
-        console.log(tableWidth, containerWidth);
-      }, 200);}
+    resizeObserver.observe(document.body);
+    handleResize(); // Call it initially too
+  }
+
+  onFilterTextBoxChanged() {
+    this.gridApi.setGridOption(
+      'quickFilterText',
+      (document.getElementById('terapia-search') as HTMLInputElement).value
+    );
   }
 
   ngOnDestroy(): void {}
@@ -134,11 +140,5 @@ export class TerapiasComponent implements OnInit, OnDestroy {
     modalRef.componentInstance.onSaveComplete.subscribe(() => {
       this.fetchTerapias();
     });
-  }
-
-  onGridReady(params: any) {
-    // bunch of code
-    this.gridApi = params.api;
-    this.gridApi?.sizeColumnsToFit();
   }
 }

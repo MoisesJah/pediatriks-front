@@ -11,7 +11,7 @@ import { EditModalComponent } from './modals/edit-modal/edit-modal.component';
 import { DeleteModalComponent } from './modals/delete-modal/delete-modal.component';
 import { map, Observable } from 'rxjs';
 import { AgGridAngular } from 'ag-grid-angular';
-import { ColDef } from 'ag-grid-community';
+import { ColDef, GridReadyEvent, GridApi } from 'ag-grid-community';
 import { ActionButtonsComponent } from './modals/action-buttons/action-buttons.component';
 import { AG_GRID_LOCALE_ES } from '@ag-grid-community/locale';
 
@@ -30,6 +30,7 @@ export class PacientesComponent implements OnInit {
   localeText = AG_GRID_LOCALE_ES
 
   pacientesList: Observable<IPaciente[]> = new Observable();
+  private gridApi!: GridApi;
 
   colDefs: ColDef[] = [
     { field: 'nombre', headerName: 'Nombres', filter: true },
@@ -83,6 +84,17 @@ export class PacientesComponent implements OnInit {
     modalRef.componentInstance.onSaveComplete.subscribe(() => {
       this.fetchPacientes();
     });
+  }
+
+  gridReady(params: GridReadyEvent) {
+    this.gridApi = params.api;
+  }
+
+  onFilterTextBoxChanged() {
+    this.gridApi.setGridOption(
+      'quickFilterText',
+      (document.getElementById('paciente-search') as HTMLInputElement).value
+    );
   }
 
   openEditModal(paciente: IPaciente) {

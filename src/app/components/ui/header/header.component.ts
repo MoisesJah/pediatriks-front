@@ -4,6 +4,7 @@ import { AuthService } from 'src/app/services/auth.service';
 import { DropdownComponent } from '../dropdown/dropdown.component';
 import { CommonModule } from '@angular/common';
 import { PopoverComponent } from '../popover/popover.component';
+import { ThemeService } from 'src/app/services/theme.service';
 
 @Component({
   selector: 'app-header',
@@ -15,12 +16,21 @@ import { PopoverComponent } from '../popover/popover.component';
 export class HeaderComponent {
   authService = inject(AuthService);
   router = inject(Router);
+  theme = inject(ThemeService);
 
   user = this.authService.user();
 
   removeCredentials() {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
+  }
+
+  setDarkTheme() {
+    this.theme.setThemeMode('dark')
+  }
+
+  setLightTheme() {
+    this.theme.setThemeMode('light')  
   }
 
   logout() {

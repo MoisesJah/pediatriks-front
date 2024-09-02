@@ -17,8 +17,6 @@ import { Cronograma } from 'src/app/models/cronograma';
 import { ActivatedRoute, Params } from '@angular/router';
 import { map, Subscription } from 'rxjs';
 
-
-
 @Component({
   selector: 'app-reservar-cita',
   templateUrl: './reservar-cita.component.html',

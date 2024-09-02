@@ -6,8 +6,7 @@ import { PaqueteService } from 'src/app/services/paquetes/paquete.service';
 import { Paquete } from 'src/app/models/paquetes';
 import { HttpErrorResponse } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
-import flatpickr from 'flatpickr';
-import { Spanish } from 'flatpickr/dist/l10n/es.js';
+import { FlatpickrModule } from 'angularx-flatpickr';
 
 
 @Component({
@@ -15,9 +14,9 @@ import { Spanish } from 'flatpickr/dist/l10n/es.js';
   templateUrl: './editar-modal.component.html',
   styleUrls: ['./editar-modal.component.scss'],
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule]
+  imports: [ReactiveFormsModule, CommonModule,FlatpickrModule]
 })
-export class EditarModalComponent implements OnInit,AfterViewInit {
+export class EditarModalComponent implements OnInit {
   modal = inject(NgbModal);
   paqueteService = inject(PaqueteService);
   isLoading = inject(LoadingService).isLoading;
@@ -54,22 +53,12 @@ export class EditarModalComponent implements OnInit,AfterViewInit {
     }
     this.paqueteForm.get('precioregular')?.valueChanges.subscribe(() => this.calculatePreciopaquete());
     this.paqueteForm.get('descuento')?.valueChanges.subscribe(() => this.calculatePreciopaquete());
-  }
 
-  ngAfterViewInit(): void {
-    if (this.datePicker && this.datePicker.nativeElement) {
-      flatpickr(this.datePicker.nativeElement, {
-        locale: Spanish,
-        dateFormat: "Y-m-d",
-      });
-    }
-
-    if (this.endDatePicker && this.endDatePicker.nativeElement) {
-      flatpickr(this.endDatePicker.nativeElement, {
-        locale: Spanish,
-        dateFormat: "Y-m-d",
-      });
-    }
+    this.paqueteForm.get('fechainicio')?.valueChanges.subscribe(() => {
+      if (this.paqueteForm.get('fechafin')?.value < this.paqueteForm.get('fechainicio')?.value) {
+        this.paqueteForm.get('fechafin')?.setValue(this.paqueteForm.get('fechainicio')?.value);
+      }
+    });
   }
 
   close() {
@@ -116,19 +105,20 @@ export class EditarModalComponent implements OnInit,AfterViewInit {
       this.paqueteService.getById(id)
         .subscribe({
           next: (paquete : any) => {
-            this.paqueteForm.patchValue(paquete);
-            console.log('info',paquete);
-            this.paqueteForm.patchValue({
-              nombre: paquete.data.nombre,
-               descripcion: paquete.data.descripcion,
-              cantidadsesiones: paquete.data.cantidadsesiones,
-              precioregular: paquete.data.precioregular,
-              descuento: paquete.data.descuento,
-              preciopaquete: paquete.data.preciopaquete,
-              fechainicio: paquete.data.fechainicio,
-              fechafin: paquete.data.fechafin,
-              sesionesrestantes: paquete.data.sesionesrestantes
-            });
+            this.paqueteForm.patchValue(paquete.data);
+            console.log('info',paquete.data);
+            // console.log('info',paquete);
+            // this.paqueteForm.patchValue({
+            //   nombre: paquete.data.nombre,
+            //    descripcion: paquete.data.descripcion,
+            //   cantidadsesiones: paquete.data.cantidadsesiones,
+            //   precioregular: paquete.data.precioregular,
+            //   descuento: paquete.data.descuento,
+            //   preciopaquete: paquete.data.preciopaquete,
+            //   fechainicio: paquete.data.fechainicio,
+            //   fechafin: paquete.data.fechafin,
+            //   sesionesrestantes: paquete.data.sesionesrestantes
+            // });
           },
           error: (err) => {
             console.error('Error al cargar datos del paquete:', err);

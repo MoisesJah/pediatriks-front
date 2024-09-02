@@ -22,6 +22,7 @@ import { ColDef, GridReadyEvent, GridApi } from 'ag-grid-community';
 import { ActionButtonsComponent } from './modals/action-buttons/action-buttons.component';
 import { map, Observable } from 'rxjs';
 import { AG_GRID_LOCALE_ES } from '@ag-grid-community/locale';
+import { ThemeService } from 'src/app/services/theme.service';
 
 @UntilDestroy()
 @Component({
@@ -34,6 +35,7 @@ import { AG_GRID_LOCALE_ES } from '@ag-grid-community/locale';
 export class UsersComponent implements OnInit, OnDestroy {
   users = inject(UserService);
   isLoading = inject(LoadingService).isLoading;
+  theme = inject(ThemeService);
   modal = inject(NgbModal);
   isDesktop!: boolean;
   localeText = AG_GRID_LOCALE_ES;

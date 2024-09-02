@@ -7,31 +7,53 @@
 </div>
 
 <div *ngIf="!event" class="modal-body">
-  <form [formGroup]="eventForm">
-    <div class="form-group mb-3">
-      <label for="therapy_type">Seleccionar Tipo de Terapia</label>
-      <select class="form-control" id="therapy_type" formControlName="therapyType">
-        <option value="" disabled>Seleccionar Tipo de Terapia</option>
-        <option *ngFor="let option of therapyOptions" [value]="option">{{ option }}</option>
-      </select>
-    </div>
+  <form [formGroup]="eventForm" class="form d-flex flex-column gap-4">
+      <div class="form-group mb-3">
+        <label for="patient_selection">Seleccionar Paciente</label>
+        <ng-select
+          formControlName="id_paciente"
+          [items]="pacientesList | async"
+          bindValue="id_paciente"
+          [loadingText]="'Cargando..'"
+          placeholder="Seleccionar"
+          bindLabel="nombre"
+        ></ng-select>
+      </div>
+      <div formArrayName="terapias">
+        <label for="">Terapia Informacion</label>
+        {{this.eventForm.value | json}}
+        <button class="btn btn-primary" (click)="addInfoTerapia()">+</button>
+        <div *ngFor="let terapia of eventForm.get('terapias').controls; let i = index">
+          <div class="row" [formGroupName]="i">
+            {{i+1}}
+            <div class="col-6">
+              <label for="">Terapia</label>
+              <ng-select
+                [items]="terapiasList | async"
+                bindValue="id_terapia"
+                [loadingText]="'Cargando..'"
+                placeholder="Seleccionar"
+                bindLabel="nombre"
+                formControlName="id_terapia"
+              ></ng-select>
+            </div>
+            <div class="col-6">
+              <label for="">Especialista</label>
+              <ng-select
+                [items]="personalList | async"
+                bindValue="id_personal"
+                [loadingText]="'Cargando..'"
+                placeholder="Seleccionar"
+                bindLabel="nombre"
+                formControlName="id_personal"
+              ></ng-select>
+            </div>
+          </div>
+        </div>
+      </div>
     <div class="form-group mb-3">
       <label for="calendar_event_description">Descripción de la Cita</label>
       <input type="text" class="form-control" id="calendar_event_description" formControlName="eventDescription"/>
-    </div>
-    <div class="form-group mb-3">
-      <label for="doctor_selection">Seleccionar Especialista</label>
-      <select class="form-control" id="doctor_selection" formControlName="doctor">
-        <option value="" disabled>Seleccionar Especialista</option>
-        <option *ngFor="let option of doctorOptions" [value]="option">{{ option }}</option>
-      </select>
-    </div>
-    <div class="form-group mb-3">
-      <label for="patient_selection">Seleccionar Paciente</label>
-      <select class="form-control" id="patient_selection" formControlName="selectedPatient">
-        <option value="" disabled>Seleccionar Paciente</option>
-        <option *ngFor="let option of patientOptions" [value]="option">{{ option }}</option>
-      </select>
     </div>
     <div class="form-group mb-3">
       <label for="calendar_event_location">Ubicación de la Cita</label>

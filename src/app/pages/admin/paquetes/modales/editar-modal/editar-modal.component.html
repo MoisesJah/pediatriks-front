@@ -1,16 +1,13 @@
 <div class="modal-header">
   <h4 class="modal-title d-flex align-items-center gap-1" id="modal-basic-title">
     <span>
-      <i style="vertical-align: middle;" class="ki-duotone ki-notepad-edit text-gray-900 fs-1"><span class="path1"></span><span class="path2"></span></i>
+      <i style="vertical-align: top;" class="ki-duotone ki-notepad-edit text-gray-900 fs-1"><span
+          class="path1"></span><span class="path2"></span></i>
     </span>
     Editar Paquete
   </h4>
-  <button
-    type="button"
-    class="btn btn-sm btn-icon btn-active-color-primary btn-color-gray-800"
-    aria-label="Close"
-    (click)="close()"
-  >
+  <button type="button" class="btn btn-sm btn-icon btn-active-color-primary btn-color-gray-800" aria-label="Close"
+    (click)="close()">
     <i class="ki-duotone ki-cross-square fs-1">
       <span class="path1"></span>
       <span class="path2"></span>
@@ -25,32 +22,60 @@
     </div>
     <div class="form-group">
       <label for="descripcion" class="required form-label">Descripción</label>
-      <textarea id="descripcion" formControlName="descripcion" class="form-control"></textarea>
+      <textarea rows="2" id="descripcion" formControlName="descripcion" class="form-control"></textarea>
     </div>
-    <div class="form-group">
-      <label for="cantidadsesiones" class="required form-label">Cantidad de Sesiones</label>
-      <input type="number" id="cantidadsesiones" formControlName="cantidadsesiones" class="form-control" min="1" />
+    <div class="row">
+      <div class="form-group col-6">
+        <label for="cantidadsesiones" class="required form-label">Cantidad de Sesiones</label>
+        <input type="number" id="cantidadsesiones" formControlName="cantidadsesiones" class="form-control" min="1" />
+      </div>
+      <div class="form-group col-6">
+        <label for="precioregular" class="required form-label">Precio Regular</label>
+        <input type="number" id="precioregular" formControlName="precioregular" class="form-control" min="0"
+          step="0.01" />
+      </div>
     </div>
-    <div class="form-group">
-      <label for="precioregular" class="required form-label">Precio Regular</label>
-      <input type="number" id="precioregular" formControlName="precioregular" class="form-control" min="0" step="0.01" />
+    <div class="row">
+      <div class="form-group col-6">
+        <label for="descuento" class="required form-label">Descuento %</label>
+        <input type="number" id="descuento" formControlName="descuento" class="form-control" min="0" step="0.01" />
+      </div>
+      <div class="form-group col-6">
+        <label for="preciopaquete" class="required form-label">Precio del Paquete</label>
+        <input type="number" id="preciopaquete" formControlName="preciopaquete" class="form-control" min="0"
+          step="0.01" />
+      </div>
     </div>
-    <div class="form-group">
-      <label for="descuento" class="required form-label">Descuento %</label>
-      <input type="number" id="descuento" formControlName="descuento" class="form-control" min="0" step="0.01" />
-    </div>
-    <div class="form-group">
-      <label for="preciopaquete" class="required form-label">Precio del Paquete</label>
-      <input type="number" id="preciopaquete" formControlName="preciopaquete" class="form-control" min="0" step="0.01" />
-    </div>
-    <div class="form-group">
+   <div class="row">
+    <div class="form-group col-6">
       <label for="fechainicio" class="required form-label">Fecha de Inicio</label>
-      <input type="text" id="kt_calendar_datepicker_date" formControlName="fechainicio" #datePicker placeholder="Seleccionar Fecha" class="form-control" />
+      <input id="kt_calendar_datepicker_date"
+        mwlFlatpickr
+        [locale]="'es'"
+        [altInput]="true"
+        [altFormat]="'d/m/Y'"
+        [monthSelectorType]="'dropdown'"
+        formControlName="fechainicio"
+        #datePicker 
+        placeholder="Seleccionar Fecha" 
+        class="form-control"
+      />
     </div>
-    <div class="form-group">
+    <div class="form-group col-6">
       <label for="fechafin" class="required form-label">Fecha de Fin</label>
-      <input type="text" id="kt_calendar_datepicker_end_date" formControlName="fechafin" #endDatePicker placeholder="Seleccionar Fecha" class="form-control" />
+      <input 
+        id="kt_calendar_datepicker_end_date"
+        formControlName="fechafin" 
+        #endDatePicker 
+        mwlFlatpickr [locale]="'es'" 
+        [altInput]="true" 
+        [altFormat]="'d/m/Y'" 
+        [monthSelectorType]="'dropdown'"
+        placeholder="Seleccionar Fecha"
+         class="form-control" 
+      />
     </div>
+   </div>
     <div class="form-group">
       <label for="sesionesrestantes" class="required form-label">Sesiones Restantes</label>
       <input type="number" id="sesionesrestantes" formControlName="sesionesrestantes" class="form-control" min="0" />
@@ -61,12 +86,8 @@
   <button type="button" class="btn btn-secondary" (click)="close()">
     Cancelar
   </button>
-  <button
-    [disabled]="paqueteForm.invalid || (isLoading | async)"
-    type="button"
-    class="btn btn-primary"
-    (click)="save()"
-  >
+  <button [disabled]="paqueteForm.invalid || (isLoading | async)" type="button" class="btn btn-primary"
+    (click)="save()">
     Guardar
     <span *ngIf="isLoading | async" class="spinner-border spinner-border-sm align-middle ms-2"></span>
   </button>

@@ -23,7 +23,7 @@
           <!--end::Input-->
       </form>
      <div class="d-flex align-items-center gap-3">
-      <button type="button" class="btn btn-light-dark" (click)="loadTabla()">
+      <button type="button" class="btn btn-light-primary" (click)="loadTabla()">
         <span class="d-flex align-items-center">
           <span class="fa-solid fa-rotate-right"></span>
           <span class="ms-2">Actualizar</span>
@@ -45,7 +45,7 @@
       <div
         style="height: calc(100dvh - 235px)"
         id="myGrid"
-        class="ag-theme-quartz"
+        [ngClass]="[theme.getThemeMode() === 'light' ? 'ag-theme-quartz' : 'ag-theme-quartz-dark']"
       >
         @defer {
         <ag-grid-angular
