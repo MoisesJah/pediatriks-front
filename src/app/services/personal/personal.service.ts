@@ -46,7 +46,7 @@ export class PersonalService {
   }
 
   getCV(id: string) {
-    return this.http.get(`${this.apiUrl}/personal/cv/${id}`);
+    return this.http.get(`${this.apiUrl}/personal/cv/${id}`,{responseType: 'blob'});
   }
 
   delete(id: string) {

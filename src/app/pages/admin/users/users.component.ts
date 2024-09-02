@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import {
+  AfterViewInit,
   Component,
   HostListener,
   inject,
@@ -38,14 +39,12 @@ export class UsersComponent implements OnInit, OnDestroy {
   localeText = AG_GRID_LOCALE_ES;
   gridApi!: GridApi;
 
-  // params: GridReadyEvent | undefined
-
   userList: Observable<IUser[]> = new Observable();
 
   colDefs: ColDef[] = [
     { field: 'name', headerName: 'Nombre', filter: true },
     { field: 'dni', headerName: 'DNI', filter: true },
-    { field: 'telefono', headerName: 'Teléfono' },
+    { field: 'telefono', headerName: 'Teléfono', filter: true },
     { field: 'email', headerName: 'Correo', filter: true },
     {
       headerName: 'Acciones',
@@ -59,41 +58,31 @@ export class UsersComponent implements OnInit, OnDestroy {
     },
   ];
 
-  defaultColDef: ColDef = {
-    flex: 0,
-  };
-
   ngOnInit(): void {
     this.fetchUsers();
   }
 
   //https://stackoverflow.com/questions/72812674/ag-grid-size-to-fit-on-desktop-and-auto-size-on-mobile
   gridReady(params: GridReadyEvent) {
-    params.api.sizeColumnsToFit();
-    window.onresize = () => {
-      setTimeout(() => {
-        this.gridApi = params.api;
+    this.gridApi = params.api;
+    this.sizeColumnsToFit();
+  }
 
-        const tableWidth = params.api
-          .getColumns()
-          ?.reduce((i, current) => (i += current.getActualWidth()), 0);
+  sizeColumnsToFit(): void {
+    const handleResize = () => this.gridApi.sizeColumnsToFit();
+    const resizeObserver = new ResizeObserver(() => {
+      if (window.innerWidth >= 768) {
+        handleResize();
+      }
+    });
 
-        const { left, right } = params.api.getHorizontalPixelRange();
-        const containerWidth = right - left;
-
-        if (tableWidth! < containerWidth) {
-          params.api.sizeColumnsToFit();
-        }
-        console.log(tableWidth, containerWidth);
-      }, 200);
-    };
+    resizeObserver.observe(document.body);
+    handleResize(); // Call it initially too
   }
 
   private fetchUsers() {
     this.userList = this.users.getAll().pipe(
-      map((resp) => {
-        return resp.data;
-      }),
+      map((resp) => resp.data),
       untilDestroyed(this)
     );
   }
@@ -108,11 +97,6 @@ export class UsersComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     // this.fetchUsers().unsubscribe();
   }
-
-  /**
-   * Opens the create modal and subscribes to
-   * the onSaveComplete event to refresh the user list.
-   */
 
   loadTabla() {
     this.fetchUsers();
