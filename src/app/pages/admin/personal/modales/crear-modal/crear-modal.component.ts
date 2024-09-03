@@ -19,7 +19,6 @@ import { TipoPersonal } from 'src/app/models/tipopersonal';
 import { HorarioPersonal } from 'src/app/models/horariop';
 import { Terapia } from 'src/app/models/terapia';
 import { map, Observable, Subject } from 'rxjs';
-import { generos } from '../../../pacientes/modals/genero.data';
 import { GeneroService } from 'src/app/services/genero/genero.service';
 import { SedesService } from 'src/app/services/sedes/sedes.service';
 

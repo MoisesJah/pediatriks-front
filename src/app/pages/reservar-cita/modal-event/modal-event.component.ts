@@ -26,6 +26,8 @@ import { PacienteService } from 'src/app/services/paciente/paciente.service';
 import { PersonalService } from 'src/app/services/personal/personal.service';
 import { Personal } from 'src/app/models/personal';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { TipoCita } from 'src/app/models/tipocita';
+import { TipocitaService } from 'src/app/services/tipocita/tipocita.service';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -33,7 +35,7 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
   templateUrl: './modal-event.component.html',
   styleUrls: ['./modal-event.component.scss'],
 })
-export class ModalEventComponent implements OnInit, AfterViewInit {
+export class ModalCreateEventComponent implements OnInit, AfterViewInit {
   @Input() event: CalendarEvent | null = null;
   @Output() eventSubmitted = new EventEmitter<CalendarEvent>();
   @Output() eventDeleted = new EventEmitter<string>();
@@ -42,6 +44,7 @@ export class ModalEventComponent implements OnInit, AfterViewInit {
   sedesService = inject(SedesService);
   personalService = inject(PersonalService);
   pacienteService = inject(PacienteService);
+  tipoCitaService = inject(TipocitaService);
   isLoading = inject(LoadingService).isLoading;
 
   @ViewChild('startTimePicker') startTimePicker!: ElementRef;
@@ -52,6 +55,7 @@ export class ModalEventComponent implements OnInit, AfterViewInit {
   sedesList: Observable<Sede[]> = new Observable();
   pacientesList: Observable<IPaciente[]> = new Observable();
   personalList: Observable<Personal[]> = new Observable();
+  tipoCitasList: Observable<TipoCita[]> = new Observable();
 
   eventForm: FormGroup;
   editEventForm: FormGroup;
@@ -81,20 +85,18 @@ export class ModalEventComponent implements OnInit, AfterViewInit {
       // id_terapias: [null, Validators.required],
       // id_personal: [null, Validators.required],
       id_sede: [null, Validators.required],
-      terapias: this.fb.array([
-        {
-          id_terapia: [null, Validators.required],
-          id_personal: [null, Validators.required],
-        },
-      ]),
+      id_tipocita: [null, Validators.required],
+      terapias: this.fb.array([this.createTerapia()]),
+      startDate: ['', Validators.required],
+      startTime: ['', Validators.required],
+      endDate: [''],
+      endTime: [''],
     });
 
     this.editEventForm = this.fb.group({
       therapyType: ['', Validators.required],
-      eventDescription: [''],
       doctor: ['', Validators.required], // Campo de selección de doctor
       selectedPatient: ['', Validators.required],
-      eventLocation: [''],
       startDate: ['', Validators.required],
       startTime: ['', Validators.required],
       endDate: [''],
@@ -102,16 +104,36 @@ export class ModalEventComponent implements OnInit, AfterViewInit {
     });
   }
 
+  createTerapia() {
+    return this.fb.group({
+      id_terapia: [null, Validators.required],
+      id_personal: [null, Validators.required],
+    });
+  }
+
+  get terapias() {
+    return this.eventForm.get('terapias') as FormArray;
+  }
+
+  addInfoTerapia() {
+    this.terapias.push(this.createTerapia());
+  }
+
+  removeInfoTerapia(i: number) {
+    this.terapias.removeAt(i);
+  }
+
   ngOnInit() {
     if (this.event) {
       console.log(this.event);
-      this.initializeForms();
+      // this.initializeForms();
     }
 
     this.loadTerapias();
     this.loadSedes();
     this.loadPacientes();
     this.loadPersonal();
+    this.loadTipoCitas();
   }
 
   loadTerapias() {
@@ -121,18 +143,15 @@ export class ModalEventComponent implements OnInit, AfterViewInit {
     );
   }
 
-  addInfoTerapia() {
-    (this.eventForm.get('terapias') as FormArray).push(
-      this.fb.group({
-        id_terapia: [null, Validators.required],
-        id_personal: [null, Validators.required],
-      })
+  loadSedes() {
+    this.sedesList = this.sedesService.getAll().pipe(
+      map((resp) => resp.data),
+      untilDestroyed(this)
     );
   }
 
-
-  loadSedes() {
-    this.sedesList = this.sedesService.getAll().pipe(
+  loadTipoCitas() {
+    this.tipoCitasList = this.tipoCitaService.getAll().pipe(
       map((resp) => resp.data),
       untilDestroyed(this)
     );
@@ -179,23 +198,21 @@ export class ModalEventComponent implements OnInit, AfterViewInit {
 
   initializeForms() {
     if (this.event) {
-      this.eventForm.patchValue({
-        therapyType: this.event.therapyType || '',
-        doctor: this.event.doctor || '', // Valor del doctor
-        eventLocation: this.event.location || '',
-        startDate: this.formatDate(new Date(this.event.start)),
-        endDate: this.event.end
-          ? this.formatDate(new Date(this.event.end))
-          : '',
-        startTime: this.extractTime(this.event.start),
-        endTime: this.event.end ? this.extractTime(this.event.end) : '',
-        selectedPatient: this.event.selectedPatient || '',
-      });
+      // this.eventForm.patchValue({
+      //   therapyType: this.event.therapyType || '',
+      //   doctor: this.event.doctor || '', // Valor del doctor
+      //   startDate: this.formatDate(new Date(this.event.start)),
+      //   endDate: this.event.end
+      //     ? this.formatDate(new Date(this.event.end))
+      //     : '',
+      //   startTime: this.extractTime(this.event.start),
+      //   endTime: this.event.end ? this.extractTime(this.event.end) : '',
+      //   selectedPatient: this.event.selectedPatient || '',
+      // });
 
       this.editEventForm.patchValue({
         therapyType: this.event.therapyType || '',
         doctor: this.event.doctor || '', // Valor del doctor
-        eventLocation: this.event.location || '',
         startDate: this.formatDate(new Date(this.event.start)),
         endDate: this.event.end
           ? this.formatDate(new Date(this.event.end))
@@ -258,7 +275,6 @@ export class ModalEventComponent implements OnInit, AfterViewInit {
         start: startDateTime,
         end: endDateTime,
         description: this.eventForm.value.eventDescription,
-        location: this.eventForm.value.eventLocation,
         therapyType: this.eventForm.value.therapyType,
         doctor: this.eventForm.value.doctor, // Añadir el doctor
         selectedPatient: this.eventForm.value.selectedPatient,
@@ -292,7 +308,6 @@ export class ModalEventComponent implements OnInit, AfterViewInit {
       start: startDateTime,
       end: endDateTime,
       description: this.editEventForm.value.eventDescription,
-      location: this.editEventForm.value.eventLocation,
       therapyType: this.editEventForm.value.therapyType,
       doctor: this.editEventForm.value.doctor, // Añadir el doctor
       selectedPatient: this.editEventForm.value.selectedPatient,

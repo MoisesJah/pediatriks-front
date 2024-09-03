@@ -14,6 +14,10 @@ export class UserService {
     return this.http.get<{ data: IUser[] }>(`${this.apiUrl}/usuario/list`);
   }
 
+  getPacientes() {
+    return this.http.get<{ data: IUser[] }>(`${this.apiUrl}/usuario/list/paciente`);
+  }
+
   getById(id: number) {
     return this.http.get<{ data: IUser }>(`${this.apiUrl}/usuario/list/${id}`);
   }

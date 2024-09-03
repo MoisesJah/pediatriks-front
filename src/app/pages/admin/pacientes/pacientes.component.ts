@@ -14,6 +14,7 @@ import { AgGridAngular } from 'ag-grid-angular';
 import { ColDef, GridReadyEvent, GridApi } from 'ag-grid-community';
 import { ActionButtonsComponent } from './modals/action-buttons/action-buttons.component';
 import { AG_GRID_LOCALE_ES } from '@ag-grid-community/locale';
+import { ThemeService } from 'src/app/services/theme.service';
 
 @UntilDestroy()
 @Component({
@@ -26,6 +27,7 @@ import { AG_GRID_LOCALE_ES } from '@ag-grid-community/locale';
 export class PacientesComponent implements OnInit {
   modal = inject(NgbModal);
   pacienteService = inject(PacienteService);
+  theme = inject(ThemeService);
   isLoading = inject(LoadingService).isLoading;
   localeText = AG_GRID_LOCALE_ES
 

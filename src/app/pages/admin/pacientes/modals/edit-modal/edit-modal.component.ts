@@ -59,7 +59,7 @@ export class EditModalComponent implements AfterViewInit, OnDestroy, OnInit {
   }
 
   ngAfterViewInit(): void {
-    this.userList = this.userService.getAll().pipe(
+    this.userList = this.userService.getPacientes().pipe(
       untilDestroyed(this),
       map((response) => {
         const usersData = response as { data: IUser[] };

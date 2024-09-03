@@ -6,71 +6,66 @@
   </button>
 </div>
 
-<div *ngIf="!event" class="modal-body">
+<div class="modal-body">
   <form [formGroup]="eventForm" class="form d-flex flex-column gap-4">
-      <div class="form-group mb-3">
+    <div class="row">
+      <div class="form-group col-6 mb-3">
         <label for="patient_selection">Seleccionar Paciente</label>
-        <ng-select
-          formControlName="id_paciente"
-          [items]="pacientesList | async"
-          bindValue="id_paciente"
-          [loadingText]="'Cargando..'"
-          placeholder="Seleccionar"
-          bindLabel="nombre"
-        ></ng-select>
+        <ng-select formControlName="id_paciente" [items]="pacientesList | async" bindValue="id_paciente"
+          [loadingText]="'Cargando..'" placeholder="Seleccionar" bindLabel="nombre"></ng-select>
       </div>
-      <div formArrayName="terapias">
-        <label for="">Terapia Informacion</label>
-        {{this.eventForm.value | json}}
-        <button class="btn btn-primary" (click)="addInfoTerapia()">+</button>
-        <div *ngFor="let terapia of eventForm.get('terapias').controls; let i = index">
-          <div class="row" [formGroupName]="i">
-            {{i+1}}
-            <div class="col-6">
-              <label for="">Terapia</label>
-              <ng-select
-                [items]="terapiasList | async"
-                bindValue="id_terapia"
-                [loadingText]="'Cargando..'"
-                placeholder="Seleccionar"
-                bindLabel="nombre"
-                formControlName="id_terapia"
-              ></ng-select>
-            </div>
-            <div class="col-6">
-              <label for="">Especialista</label>
-              <ng-select
-                [items]="personalList | async"
-                bindValue="id_personal"
-                [loadingText]="'Cargando..'"
-                placeholder="Seleccionar"
-                bindLabel="nombre"
-                formControlName="id_personal"
-              ></ng-select>
-            </div>
-          </div>
-        </div>
+      <div class="form-group col-6 mb-3">
+        <label for="patient_selection">Tipo de Cita</label>
+        <ng-select formControlName="id_tipocita" [items]="tipoCitasList | async" bindValue="id_tipocita"
+          [loadingText]="'Cargando..'" placeholder="Seleccionar" bindLabel="nombre"></ng-select>
       </div>
-    <div class="form-group mb-3">
-      <label for="calendar_event_description">Descripción de la Cita</label>
-      <input type="text" class="form-control" id="calendar_event_description" formControlName="eventDescription"/>
     </div>
     <div class="form-group mb-3">
-      <label for="calendar_event_location">Ubicación de la Cita</label>
-      <input type="text" class="form-control" id="calendar_event_location" formControlName="eventLocation"/>
+      <label for="calendar_event_description">Descripción de la Cita</label>
+      <textarea rows="2" name="" class="form-control" id=""></textarea>
     </div>
     <div class="form-group mb-3">
       <label for="kt_calendar_datepicker_date">Fecha de Inicio</label>
-      <input type="text" class="form-control" id="kt_calendar_datepicker_date" formControlName="startDate" #datePicker placeholder="Seleccionar Fecha(s)"/>
+      <input type="text" class="form-control" id="kt_calendar_datepicker_date" formControlName="startDate" #datePicker
+        placeholder="Seleccionar Fecha(s)" />
     </div>
-    <div class="form-group mb-3">
+   <div class="row">
+    <div class="form-group col-6 mb-3">
       <label for="kt_calendar_datepicker_start_time">Hora de Inicio</label>
-      <input type="text" class="form-control" id="kt_calendar_datepicker_start_time" formControlName="startTime" #startTimePicker placeholder="Seleccionar Hora de Inicio"/>
+      <input type="text" class="form-control" id="kt_calendar_datepicker_start_time" formControlName="startTime"
+        #startTimePicker placeholder="Seleccionar Hora de Inicio" />
     </div>
-    <div class="form-group mb-3">
+    <div class="form-group col-6 mb-3">
       <label for="kt_calendar_datepicker_end_time">Hora de Fin</label>
-      <input type="text" class="form-control" id="kt_calendar_datepicker_end_time" formControlName="endTime" #endTimePicker placeholder="Seleccionar Hora de Fin"/>
+      <input type="text" class="form-control" id="kt_calendar_datepicker_end_time" formControlName="endTime"
+        #endTimePicker placeholder="Seleccionar Hora de Fin" />
     </div>
+   </div>
+    <div formArrayName="terapias">
+      <div class="d-flex justify-content-between align-items-center">
+        <label for="">Terapia Informacion</label>
+        <button class="btn btn-primary btn-sm btn-icon" (click)="addInfoTerapia()">
+          <span><i class="ki-duotone ki-plus">
+              <span class="path1"></span><span class="path2"></span>
+            </i></span>
+        </button>
+      </div>
+      <ng-container *ngFor="let terapia of terapias.controls; let i = index">
+        <div class="row form-group" [formGroupName]="i">
+          <div class="col-6">
+            <label for="">Terapia</label>
+            <ng-select [items]="terapiasList | async" bindValue="id_terapia" [loadingText]="'Cargando..'"
+              placeholder="Seleccionar" bindLabel="nombre" formControlName="id_terapia"></ng-select>
+          </div>
+          <div class="col-6">
+            <label for="">Especialista</label>
+            <ng-select [items]="personalList | async" bindValue="id_personal" [loadingText]="'Cargando..'"
+              placeholder="Seleccionar" bindLabel="nombre" formControlName="id_personal"></ng-select>
+          </div>
+        </div>
+      </ng-container>
+    </div>
+   
   </form>
 </div>
 
@@ -82,106 +77,3 @@
 
 
 <!-- Modal para ver evento -->
-<div *ngIf="event" class="modal-content">
-  <!--begin::Modal header-->
-  <div class="modal-header border-0 justify-content-end">
-    <!--begin::Edit-->
-    <div class="btn btn-icon btn-sm btn-color-gray-500 btn-active-icon-primary me-2" data-bs-toggle="tooltip" title="Edit Event" id="kt_modal_view_event_edit" (click)="openEditModal()">
-      <i class="fas fa-pencil-alt fs-2"></i>
-    </div>
-    <!--end::Edit-->
-    <!--begin::Delete-->
-    <div class="btn btn-icon btn-sm btn-color-gray-500 btn-active-icon-danger me-2" data-bs-toggle="tooltip" title="Delete Event" id="kt_modal_view_event_delete" (click)="deleteEvent()">
-      <i class="fas fa-trash-alt fs-2"></i>
-    </div>
-    <!--end::Delete-->
-    <!--begin::Close-->
-    <div class="btn btn-icon btn-sm btn-color-gray-500 btn-active-icon-primary" data-bs-toggle="tooltip" title="Hide Event" (click)="closeModal()">
-      <i class="fas fa-times fs-2x"></i>
-    </div>
-    <!--end::Close-->
-  </div>
-  <!--end::Modal header-->
-  <!--begin::Modal body-->
-  <div class="modal-body pt-0 pb-20 px-lg-17">
-    <!--begin::Row-->
-    <div class="d-flex">
-      <!--begin::Icon-->
-      <i class="fas fa-calendar-alt fs-1 text-muted me-5"></i>
-      <!--end::Icon-->
-      <div class="mb-9">
-        <!--begin::Event name-->
-        <div class="d-flex align-items-center mb-2">
-          <span class="fs-3 fw-bold" data-kt-calendar="event_name">{{event?.title}}</span>
-          <span *ngIf="event?.allDay" class="badge badge-light-success" data-kt-calendar="all_day">Todo el día</span>
-        </div>
-        <!--end::Event name-->
-        <!--begin::Event description-->
-        <div class="fs-6" data-kt-calendar="event_description">{{event?.description}}</div>
-        <!--end::Event description-->
-      </div>
-    </div>
-    <!--end::Row-->
-    <!--begin::Row-->
-    <div class="d-flex align-items-center mb-2">
-      <!--begin::Bullet-->
-      <span class="bullet bullet-dot h-10px w-10px bg-success ms-2 me-7"></span>
-      <!--end::Bullet-->
-      <!--begin::Event start date/time-->
-      <div class="fs-6">
-        <span class="fw-bold me-2">Inicia:</span>
-        <span data-kt-calendar="event_start_date">{{event?.start | date:'short'}}</span>
-      </div>
-      <!--end::Event start date/time-->
-    </div>
-    <!--end::Row-->
-    <!--begin::Row-->
-    <div class="d-flex align-items-center mb-9">
-      <!--begin::Bullet-->
-      <span class="bullet bullet-dot h-10px w-10px bg-danger ms-2 me-7"></span>
-      <!--end::Bullet-->
-      <!--begin::Event end date/time-->
-      <div class="fs-6">
-        <span class="fw-bold me-2">Termina:</span>
-        <span data-kt-calendar="event_end_date">{{event?.end ? (event.end | date:'short') : 'No especificado'}}</span>
-      </div>
-      <!--end::Event end date/time-->
-    </div>
-    <!--end::Row-->
-    <!--begin::Row-->
-    <div class="d-flex align-items-center mb-2">
-      <!--begin::Icon-->
-      <i class="fas fa-user-md fs-1 text-muted me-5"></i>
-      <!--end::Icon-->
-      <!--begin::Event doctor-->
-      <div class="fs-6" data-kt-calendar="event_doctor">{{event?.doctor}}</div>
-      <!--end::Event doctor-->
-    </div>
-    <!--end::Row-->
-    <!--begin::Row-->
-    <div class="d-flex align-items-center mb-2">
-      <!--begin::Icon-->
-      <i class="fas fa-user fs-1 text-muted me-5"></i>
-      <!--end::Icon-->
-      <!--begin::Event patient-->
-      <div class="fs-6" data-kt-calendar="event_patient">{{event?.selectedPatient}}</div>
-      <!--end::Event patient-->
-    </div>
-    <!--end::Row-->
-    <!--begin::Row-->
-    <div class="d-flex align-items-center">
-      <!--begin::Icon-->
-      <i class="fas fa-map-marker-alt fs-1 text-muted me-5"></i>
-      <!--end::Icon-->
-      <!--begin::Event location-->
-      <div class="fs-6" data-kt-calendar="event_location">{{event?.location}}</div>
-      <!--end::Event location-->
-    </div>
-    <!--end::Row-->
-  </div>
-  <!--end::Modal body-->
-</div>
-
-
-
-

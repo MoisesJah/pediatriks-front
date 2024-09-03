@@ -61,10 +61,7 @@
         <div class="demo-app-main">
          @defer () {
           <full-calendar *ngIf="calendarVisible" [options]="calendarOptions">
-            <ng-template #eventContent let-arg>
-              <b>{{ arg.timeText }}</b>
-              <i>{{ arg.event.title }}</i>
-            </ng-template>
+            
           </full-calendar>
          }@loading {
           <div class="loader"></div>

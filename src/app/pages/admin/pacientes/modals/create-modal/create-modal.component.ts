@@ -16,7 +16,6 @@ import { IUser } from 'src/app/models/user';
 import { LoadingService } from 'src/app/services/loading.service';
 import { PacienteService } from 'src/app/services/paciente/paciente.service';
 import { UserService } from 'src/app/services/user/user.service';
-import { generos } from '../genero.data';
 import { GeneroService } from 'src/app/services/genero/genero.service';
 
 @UntilDestroy()
@@ -54,7 +53,7 @@ export class CreateModalComponent implements AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit(): void {
-    this.userList = this.userService.getAll().pipe(
+    this.userList = this.userService.getPacientes().pipe(
       untilDestroyed(this),
       map((response) => {
         const usersData = response as { data: IUser[] };

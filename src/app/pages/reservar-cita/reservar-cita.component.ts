@@ -9,20 +9,21 @@ import { INITIAL_EVENTS } from './event-utils';
 import esLocale from '@fullcalendar/core/locales/es';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { FullCalendarComponent } from '@fullcalendar/angular';
-import { ModalEventComponent } from 'src/app/pages/reservar-cita/modal-event/modal-event.component';
+import { ModalCreateEventComponent } from 'src/app/pages/reservar-cita/modal-event/modal-event.component';
 import { ModalEditComponent } from 'src/app/pages/reservar-cita/modal-event/modal-edit/modal-edit.component';
 import { CalendarEvent } from 'src/app/models/calendar-event';
 import { Cronogramas } from 'src/app/fake/cronograma';
 import { Cronograma } from 'src/app/models/cronograma';
 import { ActivatedRoute, Params } from '@angular/router';
 import { map, Subscription } from 'rxjs';
+import { ModalViewEventComponent } from './modal-event/modal-view-event/modal-view-event.component';
 
 @Component({
   selector: 'app-reservar-cita',
   templateUrl: './reservar-cita.component.html',
   styleUrls: ['./reservar-cita.component.scss']
 })
-export class ReservarCitaComponent implements  OnInit,AfterViewInit,OnDestroy {
+export class ReservarCitaComponent implements  OnInit,OnDestroy {
   @ViewChild(FullCalendarComponent)
   fullCalendarComponent!: FullCalendarComponent;
 
@@ -45,7 +46,7 @@ export class ReservarCitaComponent implements  OnInit,AfterViewInit,OnDestroy {
       right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
     },
     initialView: 'dayGridMonth',
-    initialEvents: INITIAL_EVENTS,
+    // initialEvents: INITIAL_EVENTS,
     weekends: true,
     editable: true,
     selectable: true,
@@ -74,12 +75,6 @@ export class ReservarCitaComponent implements  OnInit,AfterViewInit,OnDestroy {
     this.subscriptions.push( termSub );
   }
 
-  ngAfterViewInit() {
-    if (!this.fullCalendarComponent) {
-      console.error('FullCalendarComponent no está disponible');
-    }
-  }
-
   ngOnDestroy(){
     this.subscriptions.forEach( subscription => subscription.unsubscribe() );
   }
@@ -95,7 +90,7 @@ export class ReservarCitaComponent implements  OnInit,AfterViewInit,OnDestroy {
   }
 
   handleDateSelect(selectInfo: DateSelectArg) {
-    const modalRef = this.modalService.open(ModalEventComponent, {
+    const modalRef = this.modalService.open(ModalCreateEventComponent, {
       centered: true,
       size: 'lg',
       backdrop: 'static'
@@ -138,7 +133,7 @@ export class ReservarCitaComponent implements  OnInit,AfterViewInit,OnDestroy {
       doctor: event.extendedProps.doctor // Asegúrate de mostrar el campo doctor aquí
     });
 
-    const modalRef = this.modalService.open(ModalEventComponent, {
+    const modalRef = this.modalService.open(ModalViewEventComponent, {
       centered: true,
       size: 'lg',
       scrollable: true,
@@ -259,7 +254,7 @@ export class ReservarCitaComponent implements  OnInit,AfterViewInit,OnDestroy {
   }
 
   openModal() {
-    const modalRef = this.modalService.open(ModalEventComponent, {
+    const modalRef = this.modalService.open(ModalCreateEventComponent, {
       centered: true,
       size: 'lg',
       backdrop: 'static'

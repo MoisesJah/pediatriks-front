@@ -1,0 +1,99 @@
+<div class="modal-content">
+    <!--begin::Modal header-->
+    <div class="modal-header border-0 justify-content-end">
+      <!--begin::Edit-->
+      <div class="btn btn-icon btn-sm btn-color-gray-500 btn-active-icon-primary me-2" data-bs-toggle="tooltip" title="Edit Event" id="kt_modal_view_event_edit" (click)="openEditModal()">
+        <i class="fas fa-pencil-alt fs-2"></i>
+      </div>
+      <!--end::Edit-->
+      <!--begin::Delete-->
+      <div class="btn btn-icon btn-sm btn-color-gray-500 btn-active-icon-danger me-2" data-bs-toggle="tooltip" title="Delete Event" id="kt_modal_view_event_delete" (click)="deleteEvent()">
+        <i class="fas fa-trash-alt fs-2"></i>
+      </div>
+      <!--end::Delete-->
+      <!--begin::Close-->
+      <div class="btn btn-icon btn-sm btn-color-gray-500 btn-active-icon-primary" data-bs-toggle="tooltip" title="Hide Event" (click)="closeModal()">
+        <i class="fas fa-times fs-2x"></i>
+      </div>
+      <!--end::Close-->
+    </div>
+    <!--end::Modal header-->
+    <!--begin::Modal body-->
+    <div class="modal-body pt-0 pb-20 px-lg-17">
+      <!--begin::Row-->
+      <div class="d-flex">
+        <!--begin::Icon-->
+        <i class="fas fa-calendar-alt fs-1 text-muted me-5"></i>
+        <!--end::Icon-->
+        <div class="mb-9">
+          <!--begin::Event name-->
+          <div class="d-flex align-items-center mb-2">
+            <span class="fs-3 fw-bold" data-kt-calendar="event_name">{{event?.title}}</span>
+            
+          </div>
+          <!--end::Event name-->
+          <!--begin::Event description-->
+          <div class="fs-6" data-kt-calendar="event_description">{{event?.description}}</div>
+          <!--end::Event description-->
+        </div>
+      </div>
+      <!--end::Row-->
+      <!--begin::Row-->
+      <div class="d-flex align-items-center mb-2">
+        <!--begin::Bullet-->
+        <span class="bullet bullet-dot h-10px w-10px bg-success ms-2 me-7"></span>
+        <!--end::Bullet-->
+        <!--begin::Event start date/time-->
+        <div class="fs-6">
+          <span class="fw-bold me-2">Inicia:</span>
+          <span data-kt-calendar="event_start_date">{{event?.start | date:'short'}}</span>
+        </div>
+        <!--end::Event start date/time-->
+      </div>
+      <!--end::Row-->
+      <!--begin::Row-->
+      <div class="d-flex align-items-center mb-9">
+        <!--begin::Bullet-->
+        <span class="bullet bullet-dot h-10px w-10px bg-danger ms-2 me-7"></span>
+        <!--end::Bullet-->
+        <!--begin::Event end date/time-->
+        <div class="fs-6">
+          <span class="fw-bold me-2">Termina:</span>
+          <span data-kt-calendar="event_end_date">{{event?.end ? (event?.end | date:'short') : 'No especificado'}}</span>
+        </div>
+        <!--end::Event end date/time-->
+      </div>
+      <!--end::Row-->
+      <!--begin::Row-->
+      <div class="d-flex align-items-center mb-2">
+        <!--begin::Icon-->
+        <i class="fas fa-user-md fs-1 text-muted me-5"></i>
+        <!--end::Icon-->
+        <!--begin::Event doctor-->
+        <div class="fs-6" data-kt-calendar="event_doctor">{{event?.doctor}}</div>
+        <!--end::Event doctor-->
+      </div>
+      <!--end::Row-->
+      <!--begin::Row-->
+      <div class="d-flex align-items-center mb-2">
+        <!--begin::Icon-->
+        <i class="fas fa-user fs-1 text-muted me-5"></i>
+        <!--end::Icon-->
+        <!--begin::Event patient-->
+        <div class="fs-6" data-kt-calendar="event_patient">{{event?.selectedPatient}}</div>
+        <!--end::Event patient-->
+      </div>
+      <!--end::Row-->
+      <!--begin::Row-->
+      <div class="d-flex align-items-center">
+        <!--begin::Icon-->
+        <i class="fas fa-map-marker-alt fs-1 text-muted me-5"></i>
+        <!--end::Icon-->
+        <!--begin::Event location-->
+        <div class="fs-6" data-kt-calendar="event_location">{{event?.location}}</div>
+        <!--end::Event location-->
+      </div>
+      <!--end::Row-->
+    </div>
+    <!--end::Modal body-->
+  </div>

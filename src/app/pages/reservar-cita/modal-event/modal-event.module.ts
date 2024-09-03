@@ -2,13 +2,15 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { ModalEventComponent } from './modal-event.component';
+import { ModalCreateEventComponent } from './modal-event.component';
 import { FlatpickrModule } from 'angularx-flatpickr'; // Importa FlatpickrModule
 import { NgSelectModule } from '@ng-select/ng-select';
+import { ModalViewEventComponent } from './modal-view-event/modal-view-event.component';
 
 @NgModule({
   declarations: [
-    ModalEventComponent
+    ModalCreateEventComponent,
+    ModalViewEventComponent
   ],
   imports: [
     CommonModule,
@@ -19,7 +21,7 @@ import { NgSelectModule } from '@ng-select/ng-select';
     FlatpickrModule.forRoot() // Agrega FlatpickrModule a los imports
   ],
   exports: [
-    ModalEventComponent
+    ModalCreateEventComponent
   ]
 })
 export class ModalEventModule { }
