@@ -123,3 +123,16 @@ textarea {
 .ng-invalid.ng-touched:not(form, .ng-select) {
   border: 1.25px solid var(--bs-danger);
 }
+
+.menu-icon-text-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.menu-text {
+  margin-top: 4px; /* Ajusta el margen según sea necesario */
+  font-size: 12px; /* Ajusta el tamaño de la fuente */
+  color: #6c757d; /* Cambia el color del texto si es necesario */
+}
