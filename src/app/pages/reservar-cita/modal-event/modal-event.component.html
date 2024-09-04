@@ -21,13 +21,27 @@
       </div>
     </div>
     <div class="form-group mb-3">
+      <label for="calendar_event_title">Paquete de la Cita</label>
+      <ng-select [items]="paquetesList | async" bindValue="id_paquete" [loadingText]="'Cargando..'" placeholder="Seleccionar" bindLabel="nombre"></ng-select>
+    </div>
+    <div class="form-group mb-3">
       <label for="calendar_event_description">Descripción de la Cita</label>
       <textarea rows="2" name="" class="form-control" id=""></textarea>
     </div>
-    <div class="form-group mb-3">
-      <label for="kt_calendar_datepicker_date">Fecha de Inicio</label>
-      <input type="text" class="form-control" id="kt_calendar_datepicker_date" formControlName="startDate" #datePicker
-        placeholder="Seleccionar Fecha(s)" />
+    <div class="row">
+      <div class="form-group col-5 mb-3">
+        <label for="kt_calendar_datepicker_date">Fecha de Inicio</label>
+        <input type="text" class="form-control" id="kt_calendar_datepicker_date" formControlName="startDate" #datePicker
+          placeholder="Seleccionar Fecha(s)" />
+      </div>
+      <div class="form-group col-7 mb-3">
+        <label for="kt_calendar_datepicker_end_date">Dias de Recurrencia</label>
+        <div class="btn-group">
+          <button *ngFor="let option of options" class="btn btn-outline" [ngClass]="{ 'btn-active-primary active': isOptionSelected(option) }" (click)="toggleOption(option)">
+            {{ option.label }}
+          </button>
+        </div>
+      </div>
     </div>
    <div class="row">
     <div class="form-group col-6 mb-3">

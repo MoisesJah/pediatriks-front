@@ -28,6 +28,7 @@ import { Personal } from 'src/app/models/personal';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TipoCita } from 'src/app/models/tipocita';
 import { TipocitaService } from 'src/app/services/tipocita/tipocita.service';
+import { PaqueteService } from 'src/app/services/paquetes/paquete.service';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -45,6 +46,7 @@ export class ModalCreateEventComponent implements OnInit, AfterViewInit {
   personalService = inject(PersonalService);
   pacienteService = inject(PacienteService);
   tipoCitaService = inject(TipocitaService);
+  paquetesService = inject(PaqueteService);
   isLoading = inject(LoadingService).isLoading;
 
   @ViewChild('startTimePicker') startTimePicker!: ElementRef;
@@ -56,6 +58,7 @@ export class ModalCreateEventComponent implements OnInit, AfterViewInit {
   pacientesList: Observable<IPaciente[]> = new Observable();
   personalList: Observable<Personal[]> = new Observable();
   tipoCitasList: Observable<TipoCita[]> = new Observable();
+  paquetesList: Observable<any> = new Observable();
 
   eventForm: FormGroup;
   editEventForm: FormGroup;
@@ -87,6 +90,7 @@ export class ModalCreateEventComponent implements OnInit, AfterViewInit {
       id_sede: [null, Validators.required],
       id_tipocita: [null, Validators.required],
       terapias: this.fb.array([this.createTerapia()]),
+      selectedOptions: this.fb.array([]),
       startDate: ['', Validators.required],
       startTime: ['', Validators.required],
       endDate: [''],
@@ -103,6 +107,36 @@ export class ModalCreateEventComponent implements OnInit, AfterViewInit {
       endTime: [''],
     });
   }
+
+  options = [
+    { label: 'L', value: '1' },
+    { label: 'M', value: '2' },
+    { label: 'MI', value: '3' },
+    { label: 'J', value: '4' },
+    { label: 'V', value: '5' },
+  ];
+
+  get selectedOptions(): FormArray {
+    return this.eventForm.get('selectedOptions') as FormArray;
+  }
+
+  toggleOption(option: { label: string; value: string }) {
+    const selectedButtons = this.eventForm.get('selectedOptions') as FormArray;
+    const index = selectedButtons.value.findIndex((selectedButton:any) => selectedButton === option.value);
+  
+    if (index === -1) {
+      selectedButtons.push(this.fb.control(option.value));
+    } else {
+      selectedButtons.removeAt(index);
+    }
+
+    console.log(selectedButtons.value);
+  }
+
+  isOptionSelected = (option: { label: string; value: string }) => {
+    const selectedValues = (this.eventForm.get('selectedOptions') as FormArray).value;
+    return selectedValues.includes(option.value);
+  };
 
   createTerapia() {
     return this.fb.group({
@@ -124,16 +158,20 @@ export class ModalCreateEventComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
-    if (this.event) {
-      console.log(this.event);
-      // this.initializeForms();
-    }
-
+    
     this.loadTerapias();
     this.loadSedes();
     this.loadPacientes();
     this.loadPersonal();
     this.loadTipoCitas();
+    this.loadPaquetes();
+  }
+
+  loadPaquetes() {
+    this.paquetesList = this.paquetesService.getAll().pipe(
+      map((resp) => resp.data),
+      untilDestroyed(this)
+    );
   }
 
   loadTerapias() {

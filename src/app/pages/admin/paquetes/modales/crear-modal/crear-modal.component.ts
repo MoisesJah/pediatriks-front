@@ -6,21 +6,30 @@ import { LoadingService } from 'src/app/services/loading.service';
 import { PaqueteService } from 'src/app/services/paquetes/paquete.service';
 import flatpickr from 'flatpickr';
 import { Spanish } from 'flatpickr/dist/l10n/es.js';
+import { TerapiaService } from 'src/app/services/terapia/terapia.service';
+import { map, Observable } from 'rxjs';
+import { Terapia } from 'src/app/models/terapia';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { NgSelectModule } from '@ng-select/ng-select';
 
+@UntilDestroy({ checkProperties: true })
 @Component({
   selector: 'app-crear-modal',
   templateUrl: './crear-modal.component.html',
   styleUrls: ['./crear-modal.component.scss'],
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule] // Asegúrate de importar CommonModule aquí
+  imports: [ReactiveFormsModule, CommonModule,NgSelectModule] // Asegúrate de importar CommonModule aquí
 })
 export class CrearModalComponent implements AfterViewInit {
   modal = inject(NgbModal);
   paqueteService = inject(PaqueteService);
   loadingService = inject(LoadingService);
+  terapiaService = inject(TerapiaService);
   paqueteForm: FormGroup;
   isLoading = this.loadingService.isLoading; // Usa el observable de carga
   @Input() terapiaid: string = '';
+
+  terapiasList: Observable<Terapia[]> = new Observable();
 
   @Output() onSaveComplete = new EventEmitter<void>();
 
@@ -37,11 +46,13 @@ export class CrearModalComponent implements AfterViewInit {
       preciopaquete: ['', [Validators.required, Validators.min(0), Validators.pattern('^[0-9]+(\\.[0-9]{1,2})?$')]],
       fechainicio: ['', Validators.required],
       fechafin: ['', Validators.required,],
+      terapias: [null, Validators.required],
       sesionesrestantes: ['', [Validators.required, Validators.min(0)]],
     });
   }
 
   ngOnInit(): void {
+    this.loadTerapias();
     // Suscribirse a los cambios en precioregular y descuento
     this.paqueteForm.get('precioregular')?.valueChanges.subscribe(() => this.calculatePreciopaquete());
     this.paqueteForm.get('descuento')?.valueChanges.subscribe(() => this.calculatePreciopaquete());
@@ -51,6 +62,13 @@ export class CrearModalComponent implements AfterViewInit {
         this.paqueteForm.get('fechafin')?.setValue(this.paqueteForm.get('fechainicio')?.value);
       }
     });
+  }
+
+  loadTerapias(): void {
+    this.terapiasList = this.terapiaService.getAll().pipe(
+      map((resp) => resp.data),
+      untilDestroyed(this)
+    )
   }
 
   ngAfterViewInit(): void {
@@ -97,7 +115,8 @@ export class CrearModalComponent implements AfterViewInit {
 
   save() {
     if (this.paqueteForm.valid) {
-      this.loadingService.setLoading(true, 'paquete/create'); // Asigna una URL única
+      this.loadingService.setLoading(true, 'paquete/create'); 
+      console.log(this.paqueteForm.value);
       this.paqueteService.create(this.paqueteForm.value).subscribe({
         next: (response) => {
           console.log('Paquete creado con éxito:', response);
