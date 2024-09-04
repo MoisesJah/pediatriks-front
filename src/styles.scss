@@ -136,3 +136,10 @@ textarea {
   font-size: 12px; /* Ajusta el tamaño de la fuente */
   color: #6c757d; /* Cambia el color del texto si es necesario */
 }
+
+.scaled-container {
+  transform: scale(0.9); /* Reduce el tamaño al 90% */
+  transform-origin: center; /* Escala desde el centro */
+
+}
+
