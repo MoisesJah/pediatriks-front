@@ -215,26 +215,6 @@ export class ReservarCitaComponent implements  OnInit,OnDestroy {
     this.changeDetector.detectChanges();
   }
 
-  navigateToDashboard(event: Event): void {
-    event.preventDefault();
-    this.router.navigate(['']);
-  }
-
-  navigateToSedes(event: Event): void {
-    event.preventDefault();
-    this.router.navigate(['/sedes']);
-  }
-
-  navigateToReservarCita(event: Event): void {
-    event.preventDefault();
-    this.router.navigate(['/reservar-cita/general']);
-  }
-
-  navigateToPsico1(event: Event, route: string): void {
-    event.preventDefault();
-    this.router.navigate([`/${route}`]);
-  }
-
   handleSelectChange(event: Event) {
     const selectElement = event.target as HTMLSelectElement;
     const selectedValue = selectElement.value;

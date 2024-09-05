@@ -75,6 +75,8 @@ export class ModalCreateEventComponent implements OnInit, AfterViewInit {
   minDate: string;
   isEditMode: boolean = false;
 
+  tipocita = null
+
   constructor(
     public activeModal: NgbActiveModal,
     private modalService: NgbModal,
@@ -118,6 +120,11 @@ export class ModalCreateEventComponent implements OnInit, AfterViewInit {
 
   get selectedOptions(): FormArray {
     return this.eventForm.get('selectedOptions') as FormArray;
+  }
+
+  changeTipoCita(event: any) {
+    this.tipocita = event?.nombre
+    console.log(this.tipocita)
   }
 
   toggleOption(option: { label: string; value: string }) {

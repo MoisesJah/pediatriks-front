@@ -1,8 +1,15 @@
 <!-- Modal para agregar nuevo evento -->
 <div *ngIf="!event" class="modal-header">
-  <h4 class="modal-title">Agregar Cita</h4>
-  <button type="button" class="close" aria-label="Close" (click)="closeModal()">
-    <span aria-hidden="true">&times;</span>
+  <h4 class="modal-title">Registrar Nueva Cita</h4>
+  <button
+    type="button"
+    class="btn btn-sm btn-icon btn-active-color-primary btn-color-gray-800"
+    aria-label="Close"
+    (click)="closeModal()"
+  >
+    <i class="ki-duotone ki-cross-square fs-1"
+      ><span class="path1"></span><span class="path2"></span
+    ></i>
   </button>
 </div>
 
@@ -15,14 +22,10 @@
           [loadingText]="'Cargando..'" placeholder="Seleccionar" bindLabel="nombre"></ng-select>
       </div>
       <div class="form-group col-6 mb-3">
-        <label for="patient_selection">Tipo de Cita</label>
-        <ng-select formControlName="id_tipocita" [items]="tipoCitasList | async" bindValue="id_tipocita"
+        <label for="id_paquete">Tipo de Cita</label>
+        <ng-select (change)="changeTipoCita($event)" formControlName="id_tipocita" [items]="tipoCitasList | async" bindValue="id_tipocita"
           [loadingText]="'Cargando..'" placeholder="Seleccionar" bindLabel="nombre"></ng-select>
       </div>
-    </div>
-    <div class="form-group mb-3">
-      <label for="calendar_event_title">Paquete de la Cita</label>
-      <ng-select [items]="paquetesList | async" bindValue="id_paquete" [loadingText]="'Cargando..'" placeholder="Seleccionar" bindLabel="nombre"></ng-select>
     </div>
     <div class="form-group mb-3">
       <label for="calendar_event_description">Descripción de la Cita</label>
@@ -42,6 +45,10 @@
           </button>
         </div>
       </div>
+    </div>
+    <div *ngIf="tipocita === 'continua' " class="form-group mb-3">
+      <label for="calendar_event_title">Paquete de la Cita</label>
+      <ng-select [items]="paquetesList | async" bindValue="id_paquete" [loadingText]="'Cargando..'" placeholder="Seleccionar" bindLabel="nombre"></ng-select>
     </div>
    <div class="row">
     <div class="form-group col-6 mb-3">
