@@ -11,7 +11,7 @@ import {
 } from '@angular/core';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CalendarEvent } from 'src/app/models/calendar-event';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import flatpickr from 'flatpickr';
 import { Spanish } from 'flatpickr/dist/l10n/es.js';
 import { ModalEditComponent } from './modal-edit/modal-edit.component'; // Asegúrate de importar el componente de edición
@@ -61,7 +61,6 @@ export class ModalCreateEventComponent implements OnInit, AfterViewInit {
   paquetesList: Observable<any> = new Observable();
 
   eventForm: FormGroup;
-  editEventForm: FormGroup;
   therapyOptions: string[] = [
     'Psicología',
     'Lenguaje',
@@ -75,7 +74,7 @@ export class ModalCreateEventComponent implements OnInit, AfterViewInit {
   minDate: string;
   isEditMode: boolean = false;
 
-  tipocita = null
+  isCitaContinua = false;
 
   constructor(
     public activeModal: NgbActiveModal,
@@ -87,85 +86,68 @@ export class ModalCreateEventComponent implements OnInit, AfterViewInit {
 
     this.eventForm = this.fb.group({
       id_paciente: [null, Validators.required],
-      // id_terapias: [null, Validators.required],
-      // id_personal: [null, Validators.required],
       id_sede: [null, Validators.required],
       id_tipocita: [null, Validators.required],
-      terapias: this.fb.array([this.createTerapia()]),
-      selectedOptions: this.fb.array([]),
-      startDate: ['', Validators.required],
-      startTime: ['', Validators.required],
-      endDate: [''],
-      endTime: [''],
-    });
-
-    this.editEventForm = this.fb.group({
-      therapyType: ['', Validators.required],
-      doctor: ['', Validators.required], // Campo de selección de doctor
-      selectedPatient: ['', Validators.required],
-      startDate: ['', Validators.required],
-      startTime: ['', Validators.required],
-      endDate: [''],
-      endTime: [''],
+      detalle: this.fb.array([this.createDetalle()]),
     });
   }
 
   options = [
-    { label: 'L', value: '1' },
-    { label: 'M', value: '2' },
-    { label: 'MI', value: '3' },
-    { label: 'J', value: '4' },
-    { label: 'V', value: '5' },
+    { label: 'L', value: 1 },
+    { label: 'M', value: 2 },
+    { label: 'MI', value: 3 },
+    { label: 'J', value: 4 },
+    { label: 'V', value: 5 },
   ];
 
-  get selectedOptions(): FormArray {
-    return this.eventForm.get('selectedOptions') as FormArray;
-  }
-
   changeTipoCita(event: any) {
-    this.tipocita = event?.nombre
-    console.log(this.tipocita)
+    this.isCitaContinua = event?.nombre === 'Continua';
   }
 
-  toggleOption(option: { label: string; value: string }) {
-    const selectedButtons = this.eventForm.get('selectedOptions') as FormArray;
-    const index = selectedButtons.value.findIndex((selectedButton:any) => selectedButton === option.value);
-  
-    if (index === -1) {
-      selectedButtons.push(this.fb.control(option.value));
+  toggleOption(option: { label: string; value: string }, index: number) {
+    const detalleArray = this.eventForm.get('detalle') as FormArray;
+    const recurrenciaControl = detalleArray.at(index)?.get('recurrencia') as FormControl;
+    const recurrenciaValue = recurrenciaControl.value as string[];
+
+    const indexValue = recurrenciaValue.indexOf(option.value);
+    if (indexValue === -1) {
+      recurrenciaControl.setValue([...recurrenciaValue, option.value]);
     } else {
-      selectedButtons.removeAt(index);
+      recurrenciaControl.setValue(recurrenciaValue.filter((value) => value !== option.value));
     }
-
-    console.log(selectedButtons.value);
   }
 
-  isOptionSelected = (option: { label: string; value: string }) => {
-    const selectedValues = (this.eventForm.get('selectedOptions') as FormArray).value;
-    return selectedValues.includes(option.value);
+  isOptionSelected = (option: { label: string; value: string } , index: number) => {
+    const detalleArray = this.eventForm.get('detalle') as FormArray;
+    const recurrenciaValue = detalleArray.at(index)?.get('recurrencia')?.value as string[] ;
+    return recurrenciaValue?.includes(option.value);
   };
 
-  createTerapia() {
+  createDetalle() {
     return this.fb.group({
       id_terapia: [null, Validators.required],
+      id_paquete: [null, Validators.required],
+      fecha_inicio: ['', Validators.required],
+      hora_inicio: ['', Validators.required],
+      hora_fin: ['', Validators.required],
       id_personal: [null, Validators.required],
+      recurrencia: this.fb.control([]),
     });
   }
 
-  get terapias() {
-    return this.eventForm.get('terapias') as FormArray;
+  get detalle() {
+    return this.eventForm.get('detalle') as FormArray;
   }
 
   addInfoTerapia() {
-    this.terapias.push(this.createTerapia());
+    this.detalle.push(this.createDetalle());
   }
 
   removeInfoTerapia(i: number) {
-    this.terapias.removeAt(i);
+    this.detalle.removeAt(i);
   }
 
   ngOnInit() {
-    
     this.loadTerapias();
     this.loadSedes();
     this.loadPacientes();
@@ -241,33 +223,33 @@ export class ModalCreateEventComponent implements OnInit, AfterViewInit {
     }
   }
 
-  initializeForms() {
-    if (this.event) {
-      // this.eventForm.patchValue({
-      //   therapyType: this.event.therapyType || '',
-      //   doctor: this.event.doctor || '', // Valor del doctor
-      //   startDate: this.formatDate(new Date(this.event.start)),
-      //   endDate: this.event.end
-      //     ? this.formatDate(new Date(this.event.end))
-      //     : '',
-      //   startTime: this.extractTime(this.event.start),
-      //   endTime: this.event.end ? this.extractTime(this.event.end) : '',
-      //   selectedPatient: this.event.selectedPatient || '',
-      // });
+  // initializeForms() {
+  //   if (this.event) {
+  //     // this.eventForm.patchValue({
+  //     //   therapyType: this.event.therapyType || '',
+  //     //   doctor: this.event.doctor || '', // Valor del doctor
+  //     //   startDate: this.formatDate(new Date(this.event.start)),
+  //     //   endDate: this.event.end
+  //     //     ? this.formatDate(new Date(this.event.end))
+  //     //     : '',
+  //     //   startTime: this.extractTime(this.event.start),
+  //     //   endTime: this.event.end ? this.extractTime(this.event.end) : '',
+  //     //   selectedPatient: this.event.selectedPatient || '',
+  //     // });
 
-      this.editEventForm.patchValue({
-        therapyType: this.event.therapyType || '',
-        doctor: this.event.doctor || '', // Valor del doctor
-        startDate: this.formatDate(new Date(this.event.start)),
-        endDate: this.event.end
-          ? this.formatDate(new Date(this.event.end))
-          : '',
-        startTime: this.extractTime(this.event.start),
-        endTime: this.event.end ? this.extractTime(this.event.end) : '',
-        selectedPatient: this.event.selectedPatient || '',
-      });
-    }
-  }
+  //     this.editEventForm.patchValue({
+  //       therapyType: this.event.therapyType || '',
+  //       doctor: this.event.doctor || '', // Valor del doctor
+  //       startDate: this.formatDate(new Date(this.event.start)),
+  //       endDate: this.event.end
+  //         ? this.formatDate(new Date(this.event.end))
+  //         : '',
+  //       startTime: this.extractTime(this.event.start),
+  //       endTime: this.event.end ? this.extractTime(this.event.end) : '',
+  //       selectedPatient: this.event.selectedPatient || '',
+  //     });
+  //   }
+  // }
 
   openEditModal() {
     // Cierra el modal actual
@@ -297,72 +279,41 @@ export class ModalCreateEventComponent implements OnInit, AfterViewInit {
   }
 
   submitEvent() {
-    if (this.eventForm.invalid) {
-      alert('Por favor, complete todos los campos requeridos.');
-      return;
-    }
-
-    const selectedDates: string[] = this.eventForm.value.startDate.split(',');
-
-    selectedDates.forEach((date) => {
-      const startDateTime = this.combineDateTime(
-        date.trim(),
-        this.eventForm.value.startTime
-      );
-      const endDateTime = this.combineDateTime(
-        date.trim(),
-        this.eventForm.value.endTime || this.eventForm.value.startTime
-      );
-
-      const eventToSubmit: CalendarEvent = {
-        id: this.event ? this.event.id : this.generateId(),
-        title: this.eventForm.value.therapyType,
-        start: startDateTime,
-        end: endDateTime,
-        description: this.eventForm.value.eventDescription,
-        therapyType: this.eventForm.value.therapyType,
-        doctor: this.eventForm.value.doctor, // Añadir el doctor
-        selectedPatient: this.eventForm.value.selectedPatient,
-      };
-
-      this.eventSubmitted.emit(eventToSubmit);
-    });
-
-    this.activeModal.close();
+    console.log(this.eventForm.value);
   }
 
-  updateEvent() {
-    if (this.editEventForm.invalid) {
-      alert('Por favor, complete todos los campos requeridos.');
-      return;
-    }
+  // updateEvent() {
+  //   if (this.editEventForm.invalid) {
+  //     alert('Por favor, complete todos los campos requeridos.');
+  //     return;
+  //   }
 
-    const startDateTime = this.combineDateTime(
-      this.editEventForm.value.startDate,
-      this.editEventForm.value.startTime
-    );
+  //   const startDateTime = this.combineDateTime(
+  //     this.editEventForm.value.startDate,
+  //     this.editEventForm.value.startTime
+  //   );
 
-    const endDateTime = this.combineDateTime(
-      this.editEventForm.value.endDate || this.editEventForm.value.startDate,
-      this.editEventForm.value.endTime || this.editEventForm.value.startTime
-    );
+  //   const endDateTime = this.combineDateTime(
+  //     this.editEventForm.value.endDate || this.editEventForm.value.startDate,
+  //     this.editEventForm.value.endTime || this.editEventForm.value.startTime
+  //   );
 
-    const eventToUpdate: CalendarEvent = {
-      id: this.event!.id,
-      title: this.editEventForm.value.therapyType,
-      start: startDateTime,
-      end: endDateTime,
-      description: this.editEventForm.value.eventDescription,
-      therapyType: this.editEventForm.value.therapyType,
-      doctor: this.editEventForm.value.doctor, // Añadir el doctor
-      selectedPatient: this.editEventForm.value.selectedPatient,
-    };
+  //   const eventToUpdate: CalendarEvent = {
+  //     id: this.event!.id,
+  //     title: this.editEventForm.value.therapyType,
+  //     start: startDateTime,
+  //     end: endDateTime,
+  //     description: this.editEventForm.value.eventDescription,
+  //     therapyType: this.editEventForm.value.therapyType,
+  //     doctor: this.editEventForm.value.doctor, // Añadir el doctor
+  //     selectedPatient: this.editEventForm.value.selectedPatient,
+  //   };
 
-    console.log('Event to update:', eventToUpdate);
+  //   console.log('Event to update:', eventToUpdate);
 
-    this.eventSubmitted.emit(eventToUpdate);
-    this.activeModal.close();
-  }
+  //   this.eventSubmitted.emit(eventToUpdate);
+  //   this.activeModal.close();
+  // }
 
   deleteEvent() {
     if (this.event) {
