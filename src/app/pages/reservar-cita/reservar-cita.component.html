@@ -60,11 +60,11 @@
       >
         <div class="demo-app-main">
          @defer () {
-          <full-calendar *ngIf="calendarVisible" [options]="calendarOptions">
+          <full-calendar *ngIf="calendarVisible" [events]="citasEvent | async" [options]="calendarOptions">
             
           </full-calendar>
-         }@loading {
-          <div class="loader"></div>
+         }@placeholder() {
+          <div  class="loader "></div>
          }
         </div>
       </div>

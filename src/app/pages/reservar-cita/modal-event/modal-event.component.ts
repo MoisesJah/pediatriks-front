@@ -29,6 +29,7 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TipoCita } from 'src/app/models/tipocita';
 import { TipocitaService } from 'src/app/services/tipocita/tipocita.service';
 import { PaqueteService } from 'src/app/services/paquetes/paquete.service';
+import { CitaService } from 'src/app/services/citas/cita.service';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -48,6 +49,7 @@ export class ModalCreateEventComponent implements OnInit, AfterViewInit {
   tipoCitaService = inject(TipocitaService);
   paquetesService = inject(PaqueteService);
   isLoading = inject(LoadingService).isLoading;
+  citaService = inject(CitaService);
 
   @ViewChild('startTimePicker') startTimePicker!: ElementRef;
   @ViewChild('endTimePicker') endTimePicker!: ElementRef;
@@ -104,6 +106,12 @@ export class ModalCreateEventComponent implements OnInit, AfterViewInit {
     this.isCitaContinua = event?.nombre === 'Continua';
   }
 
+  changePaquete(event: any, index: number) {
+    const detalleArray = this.eventForm.get('detalle') as FormArray;
+    const sesionesControl = detalleArray.at(index)?.get('num_sesiones') as FormControl;
+    sesionesControl.setValue(event?.cantidadsesiones);
+  }
+
   toggleOption(option: { label: string; value: string }, index: number) {
     const detalleArray = this.eventForm.get('detalle') as FormArray;
     const recurrenciaControl = detalleArray.at(index)?.get('recurrencia') as FormControl;
@@ -130,6 +138,7 @@ export class ModalCreateEventComponent implements OnInit, AfterViewInit {
       fecha_inicio: ['', Validators.required],
       hora_inicio: ['', Validators.required],
       hora_fin: ['', Validators.required],
+      num_sesiones: [null],
       id_personal: [null, Validators.required],
       recurrencia: this.fb.control([]),
     });
@@ -279,6 +288,10 @@ export class ModalCreateEventComponent implements OnInit, AfterViewInit {
   }
 
   submitEvent() {
+    this.citaService.create(this.eventForm.value).subscribe((resp) => {
+      console.log(resp);
+      this.eventSubmitted.emit(this.eventForm.value);
+    })
     console.log(this.eventForm.value);
   }
 

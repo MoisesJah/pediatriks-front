@@ -78,7 +78,7 @@
             </div>
             <div  class="form-group mb-3 col">
               <label class="form-label" for="calendar_event_title">Paquete de la Cita</label>
-              <ng-select [items]="paquetesList | async" bindValue="id_paquetes" formControlName="id_paquete" [loadingText]="'Cargando..'"
+              <ng-select (change)="changePaquete($event,i)" [items]="paquetesList | async" bindValue="id_paquetes" formControlName="id_paquete" [loadingText]="'Cargando..'"
                 placeholder="Seleccionar" bindLabel="nombre"></ng-select>
             </div>
           </div>

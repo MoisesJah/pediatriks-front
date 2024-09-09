@@ -1,6 +1,20 @@
-import { Component, ViewChild, AfterViewInit, ChangeDetectorRef, OnInit, OnDestroy } from '@angular/core';
+import {
+  Component,
+  ViewChild,
+  AfterViewInit,
+  ChangeDetectorRef,
+  OnInit,
+  OnDestroy,
+  inject,
+} from '@angular/core';
 import { Router } from '@angular/router';
-import { CalendarOptions, DateSelectArg, EventClickArg, EventApi } from '@fullcalendar/core';
+import {
+  CalendarOptions,
+  DateSelectArg,
+  EventClickArg,
+  EventApi,
+  EventInput,
+} from '@fullcalendar/core';
 import interactionPlugin from '@fullcalendar/interaction';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
@@ -15,35 +29,39 @@ import { CalendarEvent } from 'src/app/models/calendar-event';
 import { Cronogramas } from 'src/app/fake/cronograma';
 import { Cronograma } from 'src/app/models/cronograma';
 import { ActivatedRoute, Params } from '@angular/router';
-import { map, Subscription } from 'rxjs';
+import { map, Observable, Subscription } from 'rxjs';
 import { ModalViewEventComponent } from './modal-event/modal-view-event/modal-view-event.component';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { Cita } from 'src/app/models/cita';
+import { CitaService } from 'src/app/services/citas/cita.service';
 
+@UntilDestroy({ checkProperties: true })
 @Component({
   selector: 'app-reservar-cita',
   templateUrl: './reservar-cita.component.html',
-  styleUrls: ['./reservar-cita.component.scss']
+  styleUrls: ['./reservar-cita.component.scss'],
 })
-export class ReservarCitaComponent implements  OnInit,OnDestroy {
+export class ReservarCitaComponent implements OnInit, OnDestroy {
   @ViewChild(FullCalendarComponent)
   fullCalendarComponent!: FullCalendarComponent;
 
+  citasService = inject(CitaService);
   cronogramas: Cronograma[] = Cronogramas;
   cronogramaActual: Cronograma | undefined;
+
+  // citas: Cita[] = [];
+
+  citasEvent: Observable<EventInput[]> = new Observable();
 
   subscriptions: Subscription[] = [];
 
   calendarVisible = true;
   calendarOptions: CalendarOptions = {
-    plugins: [
-      interactionPlugin,
-      dayGridPlugin,
-      timeGridPlugin,
-      listPlugin,
-    ],
+    plugins: [interactionPlugin, dayGridPlugin, timeGridPlugin, listPlugin],
     headerToolbar: {
       left: 'prev,next today',
       center: 'title',
-      right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
+      right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek',
     },
     initialView: 'dayGridMonth',
     // initialEvents: INITIAL_EVENTS,
@@ -55,8 +73,9 @@ export class ReservarCitaComponent implements  OnInit,OnDestroy {
     select: this.handleDateSelect.bind(this),
     eventClick: this.handleEventClick.bind(this),
     eventsSet: this.handleEvents.bind(this),
-    locale: esLocale
+    locale: esLocale,
   };
+
   currentEvents: EventApi[] = [];
 
   constructor(
@@ -66,19 +85,29 @@ export class ReservarCitaComponent implements  OnInit,OnDestroy {
     private rutaActiva: ActivatedRoute
   ) {}
 
-  ngOnInit(){
-    const tag = this.rutaActiva.snapshot.params.tag;
-    this.cronogramaActual = this.cronogramas.find(c => c.tag === tag);
-    const termSub = this.rutaActiva.params.pipe ( map ( ( p ) => p[ 'tag' ])).subscribe ( p => {
-    this.cronogramaActual = this.cronogramas.find(c => c.tag === p);
-    });
-    this.subscriptions.push( termSub );
+  ngOnInit() {
+    // const tag = this.rutaActiva.snapshot.params.tag;
+    // this.cronogramaActual = this.cronogramas.find(c => c.tag === tag);
+    // const termSub = this.rutaActiva.params.pipe ( map ( ( p ) => p[ 'tag' ])).subscribe ( p => {
+    // this.cronogramaActual = this.cronogramas.find(c => c.tag === p);
+    // });
+    // this.subscriptions.push( termSub );
+    this.loadCitas();
   }
 
-  ngOnDestroy(){
-    this.subscriptions.forEach( subscription => subscription.unsubscribe() );
+  ngOnDestroy() {
+    this.subscriptions.forEach((subscription) => subscription.unsubscribe());
   }
 
+  loadCitas() {
+    // this.citasService.getAll().subscribe((resp) => {
+    //   this.citasEvent = resp.data
+    // });
+    this.citasEvent = this.citasService.getAll().pipe(
+      map((resp) => resp.data),
+      untilDestroyed(this)
+    );
+  }
 
   handleCalendarToggle() {
     this.calendarVisible = !this.calendarVisible;
@@ -93,30 +122,31 @@ export class ReservarCitaComponent implements  OnInit,OnDestroy {
     const modalRef = this.modalService.open(ModalCreateEventComponent, {
       centered: true,
       size: 'lg',
-      backdrop: 'static'
+      backdrop: 'static',
     });
 
     modalRef.componentInstance.startDate = selectInfo.startStr;
     modalRef.componentInstance.endDate = selectInfo.endStr;
 
-    modalRef.componentInstance.eventSubmitted.subscribe((newEvent: CalendarEvent) => {
-      if (this.fullCalendarComponent) {
-        const calendarApi = this.fullCalendarComponent.getApi();
-        calendarApi.addEvent({
-          id: newEvent.id,
-          title: newEvent.title,
-          start: newEvent.start,
-          end: newEvent.end,
-          description: newEvent.description,
-          location: newEvent.location,
-          therapyType: newEvent.therapyType,
-          selectedPatient: newEvent.selectedPatient,
-          doctor: newEvent.doctor // Asegúrate de agregar el campo doctor aquí
-        });
+    modalRef.componentInstance.eventSubmitted.subscribe(
+      (newEvent: CalendarEvent) => {
+        if (this.fullCalendarComponent) {
+          const calendarApi = this.fullCalendarComponent.getApi();
+          calendarApi.addEvent({
+            id: newEvent.id,
+            title: newEvent.title,
+            start: newEvent.start,
+            end: newEvent.end,
+            description: newEvent.description,
+            location: newEvent.location,
+            therapyType: newEvent.therapyType,
+            selectedPatient: newEvent.selectedPatient,
+            doctor: newEvent.doctor, // Asegúrate de agregar el campo doctor aquí
+          });
+        }
       }
-    });
+    );
   }
-
 
   handleEventClick(clickInfo: EventClickArg) {
     const event = clickInfo.event;
@@ -130,14 +160,14 @@ export class ReservarCitaComponent implements  OnInit,OnDestroy {
       location: event.extendedProps.location,
       therapyType: event.extendedProps.therapyType,
       selectedPatient: event.extendedProps.selectedPatient,
-      doctor: event.extendedProps.doctor // Asegúrate de mostrar el campo doctor aquí
+      doctor: event.extendedProps.doctor, // Asegúrate de mostrar el campo doctor aquí
     });
 
     const modalRef = this.modalService.open(ModalViewEventComponent, {
       centered: true,
       size: 'lg',
       scrollable: true,
-      backdrop: 'static'
+      backdrop: 'static',
     });
 
     modalRef.componentInstance.event = {
@@ -149,34 +179,36 @@ export class ReservarCitaComponent implements  OnInit,OnDestroy {
       location: event.extendedProps.location || '',
       therapyType: event.extendedProps.therapyType || '',
       selectedPatient: event.extendedProps.selectedPatient || '',
-      doctor: event.extendedProps.doctor || '' // Asegúrate de agregar el campo doctor aquí
+      doctor: event.extendedProps.doctor || '', // Asegúrate de agregar el campo doctor aquí
     };
 
-    modalRef.componentInstance.eventSubmitted.subscribe((updatedEvent: CalendarEvent) => {
-      console.log('Evento actualizado recibido del modal:', updatedEvent);
+    modalRef.componentInstance.eventSubmitted.subscribe(
+      (updatedEvent: CalendarEvent) => {
+        console.log('Evento actualizado recibido del modal:', updatedEvent);
 
-      if (this.fullCalendarComponent) {
-        const calendarApi = this.fullCalendarComponent.getApi();
-        const existingEvent = calendarApi.getEventById(updatedEvent.id);
-        if (existingEvent) {
-          existingEvent.remove();
-          calendarApi.addEvent({
-            id: updatedEvent.id,
-            title: updatedEvent.title,
-            start: updatedEvent.start,
-            end: updatedEvent.end,
-            description: updatedEvent.description,
-            location: updatedEvent.location,
-            therapyType: updatedEvent.therapyType,
-            selectedPatient: updatedEvent.selectedPatient,
-            doctor: updatedEvent.doctor // Asegúrate de agregar el campo doctor aquí
-          });
+        if (this.fullCalendarComponent) {
+          const calendarApi = this.fullCalendarComponent.getApi();
+          const existingEvent = calendarApi.getEventById(updatedEvent.id);
+          if (existingEvent) {
+            existingEvent.remove();
+            calendarApi.addEvent({
+              id: updatedEvent.id,
+              title: updatedEvent.title,
+              start: updatedEvent.start,
+              end: updatedEvent.end,
+              description: updatedEvent.description,
+              location: updatedEvent.location,
+              therapyType: updatedEvent.therapyType,
+              selectedPatient: updatedEvent.selectedPatient,
+              doctor: updatedEvent.doctor, // Asegúrate de agregar el campo doctor aquí
+            });
 
-          // Forzar la detección de cambios para actualizar el componente
-          this.forceUpdateEvent(updatedEvent);
+            // Forzar la detección de cambios para actualizar el componente
+            this.forceUpdateEvent(updatedEvent);
+          }
         }
       }
-    });
+    );
 
     modalRef.componentInstance.eventDeleted.subscribe((eventId: string) => {
       if (this.fullCalendarComponent) {
@@ -204,15 +236,15 @@ export class ReservarCitaComponent implements  OnInit,OnDestroy {
           location: event.extendedProps.location,
           therapyType: event.extendedProps.therapyType,
           selectedPatient: event.extendedProps.selectedPatient,
-          doctor: event.extendedProps.doctor // Asegúrate de agregar el campo doctor aquí
+          doctor: event.extendedProps.doctor, // Asegúrate de agregar el campo doctor aquí
         });
       }
     }
   }
 
   handleEvents(events: EventApi[]) {
-    this.currentEvents = events;
-    this.changeDetector.detectChanges();
+    // this.currentEvents = events;
+    // this.changeDetector.detectChanges();
   }
 
   handleSelectChange(event: Event) {
@@ -221,11 +253,19 @@ export class ReservarCitaComponent implements  OnInit,OnDestroy {
 
     const validRoutes = [
       'reservar-cita',
-      'psicologia-1', 'psicologia-2',
-      'lenguaje-1', 'lenguaje-2', 'lenguaje-3',
-      'ocupacional-1', 'ocupacional-2', 'ocupacional-3',
-      'fisica-1', 'fisica-2', 'fisica-3',
-      'neuro', 'pediasuit'
+      'psicologia-1',
+      'psicologia-2',
+      'lenguaje-1',
+      'lenguaje-2',
+      'lenguaje-3',
+      'ocupacional-1',
+      'ocupacional-2',
+      'ocupacional-3',
+      'fisica-1',
+      'fisica-2',
+      'fisica-3',
+      'neuro',
+      'pediasuit',
     ];
 
     if (validRoutes.includes(selectedValue)) {
@@ -237,28 +277,30 @@ export class ReservarCitaComponent implements  OnInit,OnDestroy {
     const modalRef = this.modalService.open(ModalCreateEventComponent, {
       centered: true,
       size: 'lg',
-      backdrop: 'static'
+      backdrop: 'static',
     });
 
     modalRef.componentInstance.startDate = this.getStartOfDay();
     modalRef.componentInstance.endDate = this.getEndOfDay();
 
-    modalRef.componentInstance.eventSubmitted.subscribe((newEvent: CalendarEvent) => {
-      if (this.fullCalendarComponent) {
-        const calendarApi = this.fullCalendarComponent.getApi();
-        calendarApi.addEvent({
-          id: newEvent.id,
-          title: newEvent.title,
-          start: newEvent.start,
-          end: newEvent.end,
-          description: newEvent.description,
-          location: newEvent.location,
-          therapyType: newEvent.therapyType,
-          selectedPatient: newEvent.selectedPatient,
-          doctor: newEvent.doctor // Asegúrate de agregar el campo doctor aquí
-        });
+    modalRef.componentInstance.eventSubmitted.subscribe(
+      (newEvent: CalendarEvent) => {
+        if (this.fullCalendarComponent) {
+          const calendarApi = this.fullCalendarComponent.getApi();
+          calendarApi.addEvent({
+            id: newEvent.id,
+            title: newEvent.title,
+            start: newEvent.start,
+            end: newEvent.end,
+            description: newEvent.description,
+            location: newEvent.location,
+            therapyType: newEvent.therapyType,
+            selectedPatient: newEvent.selectedPatient,
+            doctor: newEvent.doctor, // Asegúrate de agregar el campo doctor aquí
+          });
+        }
       }
-    });
+    );
   }
 
   private getStartOfDay(): string {
