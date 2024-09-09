@@ -11,9 +11,13 @@ import {
 } from '@angular/core';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CalendarEvent } from 'src/app/models/calendar-event';
-import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import flatpickr from 'flatpickr';
-import { Spanish } from 'flatpickr/dist/l10n/es.js';
+import {
+  FormArray,
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 import { ModalEditComponent } from './modal-edit/modal-edit.component'; // Asegúrate de importar el componente de edición
 import { map, Observable } from 'rxjs';
 import { Terapia } from 'src/app/models/terapia';
@@ -30,6 +34,7 @@ import { TipoCita } from 'src/app/models/tipocita';
 import { TipocitaService } from 'src/app/services/tipocita/tipocita.service';
 import { PaqueteService } from 'src/app/services/paquetes/paquete.service';
 import { CitaService } from 'src/app/services/citas/cita.service';
+import { FlatpickrDefaultsInterface } from 'angularx-flatpickr';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -37,7 +42,7 @@ import { CitaService } from 'src/app/services/citas/cita.service';
   templateUrl: './modal-event.component.html',
   styleUrls: ['./modal-event.component.scss'],
 })
-export class ModalCreateEventComponent implements OnInit, AfterViewInit {
+export class ModalCreateEventComponent implements OnInit {
   @Input() event: CalendarEvent | null = null;
   @Output() eventSubmitted = new EventEmitter<CalendarEvent>();
   @Output() eventDeleted = new EventEmitter<string>();
@@ -78,6 +83,13 @@ export class ModalCreateEventComponent implements OnInit, AfterViewInit {
 
   isCitaContinua = false;
 
+  timeOptions: FlatpickrDefaultsInterface = {
+    enableTime: true,
+    noCalendar: true,
+    dateFormat: 'H:i',
+    // will be used since specific attribute is not provided
+  };
+
   constructor(
     public activeModal: NgbActiveModal,
     private modalService: NgbModal,
@@ -102,39 +114,68 @@ export class ModalCreateEventComponent implements OnInit, AfterViewInit {
     { label: 'V', value: 5 },
   ];
 
+  get detalle() {
+    return this.eventForm.get('detalle') as FormArray;
+  }
+
   changeTipoCita(event: any) {
     this.isCitaContinua = event?.nombre === 'Continua';
+    if (this.isCitaContinua) {
+      this.detalle.controls.forEach((control) => {
+        control.get('id_paquete')?.setValidators(Validators.required);
+      })
+    }
   }
 
   changePaquete(event: any, index: number) {
     const detalleArray = this.eventForm.get('detalle') as FormArray;
-    const sesionesControl = detalleArray.at(index)?.get('num_sesiones') as FormControl;
+    const sesionesControl = detalleArray
+      .at(index)
+      ?.get('num_sesiones') as FormControl;
     sesionesControl.setValue(event?.cantidadsesiones);
   }
 
   toggleOption(option: { label: string; value: string }, index: number) {
     const detalleArray = this.eventForm.get('detalle') as FormArray;
-    const recurrenciaControl = detalleArray.at(index)?.get('recurrencia') as FormControl;
+    const recurrenciaControl = detalleArray
+      .at(index)
+      ?.get('recurrencia') as FormControl;
     const recurrenciaValue = recurrenciaControl.value as string[];
 
     const indexValue = recurrenciaValue.indexOf(option.value);
     if (indexValue === -1) {
       recurrenciaControl.setValue([...recurrenciaValue, option.value]);
     } else {
-      recurrenciaControl.setValue(recurrenciaValue.filter((value) => value !== option.value));
+      recurrenciaControl.setValue(
+        recurrenciaValue.filter((value) => value !== option.value)
+      );
     }
   }
 
-  isOptionSelected = (option: { label: string; value: string } , index: number) => {
+  isOptionSelected = (
+    option: { label: string; value: string },
+    index: number
+  ) => {
     const detalleArray = this.eventForm.get('detalle') as FormArray;
-    const recurrenciaValue = detalleArray.at(index)?.get('recurrencia')?.value as string[] ;
+    const recurrenciaValue = detalleArray.at(index)?.get('recurrencia')
+      ?.value as string[];
     return recurrenciaValue?.includes(option.value);
   };
+
+  onStartTimeChange(event: any, index: number): void {
+    const [hours, minutes] = event.dateString.split(':').map(Number);
+    const minEndDate = new Date();
+    minEndDate.setHours(hours, minutes + 45);
+    const horaFinControl = this.detalle
+      .at(index)
+      ?.get('hora_fin') as FormControl;
+    horaFinControl.setValue(minEndDate.toTimeString().slice(0, 5));
+  }
 
   createDetalle() {
     return this.fb.group({
       id_terapia: [null, Validators.required],
-      id_paquete: [null, Validators.required],
+      id_paquete: [null],
       fecha_inicio: ['', Validators.required],
       hora_inicio: ['', Validators.required],
       hora_fin: ['', Validators.required],
@@ -142,10 +183,6 @@ export class ModalCreateEventComponent implements OnInit, AfterViewInit {
       id_personal: [null, Validators.required],
       recurrencia: this.fb.control([]),
     });
-  }
-
-  get detalle() {
-    return this.eventForm.get('detalle') as FormArray;
   }
 
   addInfoTerapia() {
@@ -207,31 +244,6 @@ export class ModalCreateEventComponent implements OnInit, AfterViewInit {
     );
   }
 
-  ngAfterViewInit() {
-    if (this.datePicker && this.datePicker.nativeElement) {
-      flatpickr(this.datePicker.nativeElement, {
-        locale: Spanish,
-        mode: 'multiple',
-        dateFormat: 'Y-m-d',
-        minDate: this.minDate,
-      });
-    }
-    if (this.startTimePicker && this.startTimePicker.nativeElement) {
-      flatpickr(this.startTimePicker.nativeElement, {
-        enableTime: true,
-        noCalendar: true,
-        dateFormat: 'H:i',
-      });
-    }
-    if (this.endTimePicker && this.endTimePicker.nativeElement) {
-      flatpickr(this.endTimePicker.nativeElement, {
-        enableTime: true,
-        noCalendar: true,
-        dateFormat: 'H:i',
-      });
-    }
-  }
-
   // initializeForms() {
   //   if (this.event) {
   //     // this.eventForm.patchValue({
@@ -291,7 +303,7 @@ export class ModalCreateEventComponent implements OnInit, AfterViewInit {
     this.citaService.create(this.eventForm.value).subscribe((resp) => {
       console.log(resp);
       this.eventSubmitted.emit(this.eventForm.value);
-    })
+    });
     console.log(this.eventForm.value);
   }
 

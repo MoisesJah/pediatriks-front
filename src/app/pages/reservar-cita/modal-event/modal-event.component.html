@@ -44,7 +44,7 @@
         <div class="form-group position-relative p-4 border-2 mt-2 border-dashed border-gray-300 rounded"
           [formGroupName]="i">
           <div *ngIf="i > 0" class="position-absolute end-0" style="transform: translateY(-18px) translateX(-12px);"><button
-              class="btn btn-sm fs-10 btn-icon btn-active-color-primary btn-danger" (click)="removeInfoTerapia(i)">
+              class="btn btn-sm fs-10 btn-icon btn-active-color-danger btn-danger" (click)="removeInfoTerapia(i)">
               <i class="ki-solid ki-cross"></i>
             </button>
           </div>
@@ -52,17 +52,17 @@
             <div class="form-group col mb-3">
               <label class="form-label" for="kt_calendar_datepicker_date">Fecha de Inicio</label>
               <input type="text" class="form-control" id="kt_calendar_datepicker_date" formControlName="fecha_inicio"
-                #datePicker placeholder="Seleccionar Fecha(s)" />
+              mwlFlatpickr [locale]="'es'" [altInput]="true" [minDate]="minDate" [altFormat]="'d/m/Y'" [monthSelectorType]="'dropdown'" placeholder="Seleccionar Fecha(s)" />
             </div>
             <div class="form-group col mb-3">
               <label class="form-label" for="kt_calendar_datepicker_start_time">Hora de Inicio</label>
               <input type="text" class="form-control" id="kt_calendar_datepicker_start_time"
-                formControlName="hora_inicio" #startTimePicker placeholder="Seleccionar Hora de Inicio" />
+                formControlName="hora_inicio" mwlFlatpickr [options]="timeOptions" (flatpickrChange)="onStartTimeChange($event,i)" placeholder="Seleccionar Hora de Inicio" />
             </div>
             <div class="form-group col mb-3">
               <label class="form-label" for="kt_calendar_datepicker_end_time">Hora de Fin</label>
               <input type="text" class="form-control" id="kt_calendar_datepicker_end_time" formControlName="hora_fin"
-                #endTimePicker placeholder="Seleccionar Hora de Fin" />
+              mwlFlatpickr [options]="timeOptions" placeholder="Seleccionar Hora de Fin" />
             </div>
           </div>
           <div *ngIf="isCitaContinua" class="row">

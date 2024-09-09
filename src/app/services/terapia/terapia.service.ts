@@ -12,7 +12,10 @@ export class TerapiaService {
 
   constructor(private http: HttpClient) { }
 
-  getAll(): Observable<{ data: Terapia[] }> {
+  getAll(month?: number, year?: number): Observable<{ data: Terapia[] }> {
+    if (month && year) {
+      return this.http.get<{ data: Terapia[] }>(`${this.apiUrl}/terapia/list/${month}/${year}`);
+    }
     return this.http.get<{ data: Terapia[] }>(`${this.apiUrl}/terapia/list`);
   }
 

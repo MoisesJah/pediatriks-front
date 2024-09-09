@@ -34,6 +34,9 @@ import { ModalViewEventComponent } from './modal-event/modal-view-event/modal-vi
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Cita } from 'src/app/models/cita';
 import { CitaService } from 'src/app/services/citas/cita.service';
+import { TerapiaService } from 'src/app/services/terapia/terapia.service';
+import { Terapia } from 'src/app/models/terapia';
+import { LoadingService } from 'src/app/services/loading.service';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -46,12 +49,13 @@ export class ReservarCitaComponent implements OnInit, OnDestroy {
   fullCalendarComponent!: FullCalendarComponent;
 
   citasService = inject(CitaService);
+  terapiasService = inject(TerapiaService);
+  isLoading = inject(LoadingService).isLoading;
   cronogramas: Cronograma[] = Cronogramas;
   cronogramaActual: Cronograma | undefined;
 
-  // citas: Cita[] = [];
-
-  citasEvent: Observable<EventInput[]> = new Observable();
+  citasEvent: Observable<EventApi[]> = new Observable();
+  terapiasList: { id_terapia: string; nombre: string }[] = [];
 
   subscriptions: Subscription[] = [];
 
@@ -64,7 +68,6 @@ export class ReservarCitaComponent implements OnInit, OnDestroy {
       right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek',
     },
     initialView: 'dayGridMonth',
-    // initialEvents: INITIAL_EVENTS,
     weekends: true,
     editable: true,
     selectable: true,
@@ -74,6 +77,11 @@ export class ReservarCitaComponent implements OnInit, OnDestroy {
     eventClick: this.handleEventClick.bind(this),
     eventsSet: this.handleEvents.bind(this),
     locale: esLocale,
+    datesSet: (arg) => {
+      const gridMonth = arg.view.currentStart.getMonth() + 1;
+      const gridYear = arg.view.currentStart.getFullYear();
+      this.loadCitas(gridMonth, gridYear);
+    },
   };
 
   currentEvents: EventApi[] = [];
@@ -82,31 +90,31 @@ export class ReservarCitaComponent implements OnInit, OnDestroy {
     private changeDetector: ChangeDetectorRef,
     private router: Router,
     private modalService: NgbModal,
-    private rutaActiva: ActivatedRoute
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit() {
-    // const tag = this.rutaActiva.snapshot.params.tag;
-    // this.cronogramaActual = this.cronogramas.find(c => c.tag === tag);
-    // const termSub = this.rutaActiva.params.pipe ( map ( ( p ) => p[ 'tag' ])).subscribe ( p => {
-    // this.cronogramaActual = this.cronogramas.find(c => c.tag === p);
-    // });
-    // this.subscriptions.push( termSub );
-    this.loadCitas();
+    this.loadTerapias();
   }
 
   ngOnDestroy() {
     this.subscriptions.forEach((subscription) => subscription.unsubscribe());
   }
 
-  loadCitas() {
-    // this.citasService.getAll().subscribe((resp) => {
-    //   this.citasEvent = resp.data
-    // });
-    this.citasEvent = this.citasService.getAll().pipe(
+  loadCitas(month?: number, year?: number) {
+    this.citasEvent = this.citasService.getAll(month, year).pipe(
       map((resp) => resp.data),
       untilDestroyed(this)
     );
+  }
+
+  loadTerapias() {
+    this.terapiasService.getAll().subscribe((resp) => {
+      this.terapiasList = resp.data.map((t: Terapia) => ({
+        id_terapia: t.id_terapia,
+        nombre: t.nombre,
+      }));
+    });
   }
 
   handleCalendarToggle() {
@@ -151,17 +159,7 @@ export class ReservarCitaComponent implements OnInit, OnDestroy {
   handleEventClick(clickInfo: EventClickArg) {
     const event = clickInfo.event;
 
-    console.log('Evento clickeado:', {
-      id: event.id,
-      title: event.title,
-      start: event.startStr,
-      end: event.endStr,
-      description: event.extendedProps.description,
-      location: event.extendedProps.location,
-      therapyType: event.extendedProps.therapyType,
-      selectedPatient: event.extendedProps.selectedPatient,
-      doctor: event.extendedProps.doctor, // Asegúrate de mostrar el campo doctor aquí
-    });
+    console.log('Evento clickeado:', clickInfo);
 
     const modalRef = this.modalService.open(ModalViewEventComponent, {
       centered: true,
@@ -251,25 +249,12 @@ export class ReservarCitaComponent implements OnInit, OnDestroy {
     const selectElement = event.target as HTMLSelectElement;
     const selectedValue = selectElement.value;
 
-    const validRoutes = [
-      'reservar-cita',
-      'psicologia-1',
-      'psicologia-2',
-      'lenguaje-1',
-      'lenguaje-2',
-      'lenguaje-3',
-      'ocupacional-1',
-      'ocupacional-2',
-      'ocupacional-3',
-      'fisica-1',
-      'fisica-2',
-      'fisica-3',
-      'neuro',
-      'pediasuit',
-    ];
-
-    if (validRoutes.includes(selectedValue)) {
-      this.router.navigate([`/reservar-cita/${selectedValue}`]);
+    const terapia = this.terapiasList.some(
+      (terapia) => terapia.id_terapia === selectedValue
+    );
+    if (terapia) {
+      // this.router.navigate(['admin/reservar-cita', selectedValue],{relativeTo: this.route});
+      this.router.navigate([selectedValue], { relativeTo: this.route });
     }
   }
 
