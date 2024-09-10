@@ -14,7 +14,7 @@ const routes: Routes = [
   },
   { path: 'reservar-cita/:tag', loadChildren: () => import('../reservar-cita/reservar-cita.module').then(m => m.ReservarCitaModule) },
 
-  { path: 'sedes', loadChildren: () => import('../sedes/sedes.module').then(m => m.SedesModule) },
+
 ];
 
 @NgModule({

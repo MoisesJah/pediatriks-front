@@ -25,6 +25,7 @@ export class LayoutComponent {
   offcanvas = inject(NgbOffcanvas);
   open: boolean = false;
   authService = inject(AuthService);
+  showSubMenu: boolean = false;
 
   constructor(private router: Router) {}
 
@@ -67,18 +68,6 @@ export class LayoutComponent {
   }
 
 
-  navigateToSedes(event: Event): void {
-    // Detener el comportamiento por defecto del click, si lo hubiera
-    event.preventDefault();
-    // Agregar clase seleccionada
-    const target = event.currentTarget as HTMLElement;
-    this.removeSelectedClass();
-    target.classList.add('selected');
-    // Navegar al componente sedes
-    this.router.navigate(['/dashboard/sedes']);
-    console.log('Sedes');
-  }
-
   navigateToReservarCita(event: Event): void {
     // Detener el comportamiento por defecto del click, si lo hubiera
     event.preventDefault();
@@ -90,73 +79,52 @@ export class LayoutComponent {
     this.router.navigate(['/admin/reservar-cita']);
   }
 
-  navigateToPaquetes(event: Event): void {
-    // Detener el comportamiento por defecto del click, si lo hubiera
-    event.preventDefault();
-    // Agregar clase seleccionada
-    const target = event.currentTarget as HTMLElement;
-    this.removeSelectedClass();
-    target.classList.add('selected');
-    // Navegar al componente reservar-cita
-    this.router.navigate(['/admin/paquetes']);
-  }
-
   navigateToSede(event: Event): void {
-    // Detener el comportamiento por defecto del click, si lo hubiera
     event.preventDefault();
-    // Agregar clase seleccionada
+    event.stopPropagation(); // Esto detiene la propagación del evento hacia otros manejadores
     const target = event.currentTarget as HTMLElement;
     this.removeSelectedClass();
     target.classList.add('selected');
-    // Navegar al componente sedes
     this.router.navigate(['/admin/sedes']);
     console.log('Sedes');
   }
 
-  navigateToPersonal(event: Event): void {
-    // Detener el comportamiento por defecto del click, si lo hubiera
+  navigateToPaquetes(event: Event): void {
     event.preventDefault();
-    // Agregar clase seleccionada
-    const target = event.currentTarget as HTMLElement;
+    event.stopPropagation();
     this.removeSelectedClass();
-    target.classList.add('selected');
-    // Navegar al componente sedes
+    this.router.navigate(['/admin/paquetes']);
+    console.log('Paquetes');
+  }
+
+  navigateToPersonal(event: Event): void {
+    event.preventDefault();
+    event.stopPropagation();
+    this.removeSelectedClass();
     this.router.navigate(['/admin/personal']);
     console.log('Personal');
   }
 
   navigateToUsuarios(event: Event): void {
-    // Detener el comportamiento por defecto del click, si lo hubiera
     event.preventDefault();
-    // Agregar clase seleccionada
-    const target = event.currentTarget as HTMLElement;
+    event.stopPropagation();
     this.removeSelectedClass();
-    target.classList.add('selected');
-    // Navegar al componente sedes
     this.router.navigate(['/admin/usuarios']);
     console.log('Usuarios');
   }
 
   navigateToTerapias(event: Event): void {
-    // Detener el comportamiento por defecto del click, si lo hubiera
     event.preventDefault();
-    // Agregar clase seleccionada
-    const target = event.currentTarget as HTMLElement;
+    event.stopPropagation();
     this.removeSelectedClass();
-    target.classList.add('selected');
-    // Navegar al componente sedes
     this.router.navigate(['/admin/terapias']);
     console.log('Terapias');
   }
 
   navigateToPacientes(event: Event): void {
-    // Detener el comportamiento por defecto del click, si lo hubiera
     event.preventDefault();
-    // Agregar clase seleccionada
-    const target = event.currentTarget as HTMLElement;
+    event.stopPropagation();
     this.removeSelectedClass();
-    target.classList.add('selected');
-    // Navegar al componente sedes
     this.router.navigate(['/admin/pacientes']);
     console.log('Pacientes');
   }
@@ -168,4 +136,5 @@ export class LayoutComponent {
       (el as HTMLElement).style.backgroundColor = '';
     });
   }
+
 }

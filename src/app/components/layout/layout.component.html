@@ -69,30 +69,7 @@
             </span>
           </div>
 
-              <!--begin:Menu item-->
-              <div
-                data-kt-menu-trigger="{default: 'click', lg: 'hover'}"
-                data-kt-menu-placement="right-start"
-                class="menu-item py-2"
-                style="transition: background-color 0.3s; border-radius: 15px"
-                onmouseout="this.style.backgroundColor='';"
-                (click)="navigateToSedes($event)"
-              >
-                <span class="menu-link menu-center">
-                  <div class="menu-icon-text-container">
-                  <span class="menu-icon me-0">
-                    <i class="ki-duotone ki-notification-status fs-2x">
-                      <span class="path1"></span>
-                      <span class="path2"></span>
-                      <span class="path3"></span>
-                      <span class="path4"></span>
-                    </i>
-                  </span>
-                  <span class="menu-text">Sedes</span>
-              </div>
-                </span>
-              </div>
-              <!--end:Menu item-->
+
               <!--begin:Menu item-->
               <div
                 data-kt-menu-trigger="{default: 'click', lg: 'hover'}"
@@ -173,96 +150,41 @@
 
               <div
               *ngIf="isAdmin()"
-                data-kt-menu-trigger="{default: 'click', lg: 'hover'}"
-                data-kt-menu-placement="right-start"
-                class="menu-item py-2"
-                style="transition: background-color 0.3s; border-radius: 15px"
-                onmouseout="this.style.backgroundColor='';"
-                (click)="navigateToSede($event)"
-              >
-                <span class="menu-link menu-center">
-                  <div class="menu-icon-text-container">
+              class="menu-item py-2"
+              style="transition: background-color 0.3s; border-radius: 15px"
+              (mouseenter)="showSubMenu = true"
+              (mouseleave)="showSubMenu = false"
+            >
+              <span class="menu-link menu-center">
+                <div class="menu-icon-text-container">
                   <span class="menu-icon me-0">
-                          <i class="ki-duotone ki-map" style="font-size: 2em;">
-                  <span class="path1"></span>
-                  <span class="path2"></span>
-                  <span class="path3"></span>
-                  </i>
+                    <i class="ki-duotone ki-user-tick" style="font-size: 2em;">
+                      <span class="path1"></span>
+                      <span class="path2"></span>
+                      <span class="path3"></span>
+                      </i>
                   </span>
-                  <span class="menu-text">Sedes</span>
+                  <span class="menu-text">Administración</span>
                 </div>
-                </span>
-              </div>
+              </span>
 
+              <!-- Submenú -->
               <div
-              *ngIf="isAdmin()"
-                data-kt-menu-trigger="{default: 'click', lg: 'hover'}"
-                data-kt-menu-placement="right-start"
-                class="menu-item py-2"
-                style="transition: background-color 0.3s; border-radius: 15px"
-                onmouseout="this.style.backgroundColor='';"
-                (click)="navigateToPersonal($event)"
+                class="submenu"
+                *ngIf="showSubMenu"
+                [ngStyle]="{ display: showSubMenu ? 'block' : 'none' }"
               >
-                <span class="menu-link menu-center">
-                  <div class="menu-icon-text-container">
-                  <span class="menu-icon me-0">
-                    <i class="ki-duotone ki-people" style="font-size: 2em;">
-                        <span class="path1"></span>
-                        <span class="path2"></span>
-                        <span class="path3"></span>
-                        <span class="path4"></span>
-                        <span class="path5"></span>
-                </i>
-                  </span>
-                  <span class="menu-text">Personal</span>
-                </div>
-                </span>
-              </div>
+                <ul>
+                  <li (click)="navigateToPersonal($event)">Personal</li>
+                  <li (click)="navigateToUsuarios($event)">Usuarios</li>
+                  <li (click)="navigateToTerapias($event)">Terapias</li>
+                  <li (click)="navigateToPacientes($event)">Pacientes</li>
+                  <li (click)="navigateToSede($event)">Sedes</li>
+                  <li (click)="navigateToPaquetes($event)">Paquetes</li>
+                </ul>
+        </div>
+</div>
 
-              <div
-              *ngIf="isAdmin()"
-                data-kt-menu-trigger="{default: 'click', lg: 'hover'}"
-                data-kt-menu-placement="right-start"
-                class="menu-item py-2"
-                style="transition: background-color 0.3s; border-radius: 15px"
-                onmouseout="this.style.backgroundColor='';"
-                (click)="navigateToUsuarios($event)"
-              >
-                <span class="menu-link menu-center">
-                  <div class="menu-icon-text-container">
-                  <span class="menu-icon me-0">
-                    <i class="ki-duotone ki-address-book" style="font-size: 2em;">
-                    <span class="path1"></span>
-                    <span class="path2"></span>
-                    <span class="path3"></span>
-                    </i>
-                  </span>
-                  <span class="menu-text">Usuarios</span>
-                </div>
-                </span>
-              </div>
-
-              <div
-              *ngIf="isAdmin()"
-                data-kt-menu-trigger="{default: 'click', lg: 'hover'}"
-                data-kt-menu-placement="right-start"
-                class="menu-item py-2"
-                style="transition: background-color 0.3s; border-radius: 15px"
-                onmouseout="this.style.backgroundColor='';"
-                (click)="navigateToTerapias($event)"
-              >
-                <span class="menu-link menu-center">
-                  <div class="menu-icon-text-container">
-                  <span class="menu-icon me-0">
-                    <i class="ki-duotone ki-pulse" style="font-size: 2em;">
-                    <span class="path1"></span>
-                    <span class="path2"></span>
-                    </i>
-                  </span>
-                  <span class="menu-text">Terapias</span>
-                </div>
-                </span>
-              </div>
 
             </div>
 
