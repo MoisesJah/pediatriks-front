@@ -168,55 +168,43 @@ export class ReservarCitaComponent implements OnInit, OnDestroy {
       backdrop: 'static',
     });
 
-    modalRef.componentInstance.event = {
-      id: event.id,
-      title: event.title,
-      start: event.startStr,
-      end: event.endStr,
-      description: event.extendedProps.description || '',
-      location: event.extendedProps.location || '',
-      therapyType: event.extendedProps.therapyType || '',
-      selectedPatient: event.extendedProps.selectedPatient || '',
-      doctor: event.extendedProps.doctor || '', // Asegúrate de agregar el campo doctor aquí
-    };
+    modalRef.componentInstance.eventId = event.id;
 
-    modalRef.componentInstance.eventSubmitted.subscribe(
-      (updatedEvent: CalendarEvent) => {
-        console.log('Evento actualizado recibido del modal:', updatedEvent);
+    //     console.log('Evento actualizado recibido del modal:', updatedEvent);
 
-        if (this.fullCalendarComponent) {
-          const calendarApi = this.fullCalendarComponent.getApi();
-          const existingEvent = calendarApi.getEventById(updatedEvent.id);
-          if (existingEvent) {
-            existingEvent.remove();
-            calendarApi.addEvent({
-              id: updatedEvent.id,
-              title: updatedEvent.title,
-              start: updatedEvent.start,
-              end: updatedEvent.end,
-              description: updatedEvent.description,
-              location: updatedEvent.location,
-              therapyType: updatedEvent.therapyType,
-              selectedPatient: updatedEvent.selectedPatient,
-              doctor: updatedEvent.doctor, // Asegúrate de agregar el campo doctor aquí
-            });
+    //     if (this.fullCalendarComponent) {
+    //       const calendarApi = this.fullCalendarComponent.getApi();
+    //       const existingEvent = calendarApi.getEventById(updatedEvent.id);
+    //       if (existingEvent) {
+    //         existingEvent.remove();
+    //         calendarApi.addEvent({
+    //           id: updatedEvent.id,
+    //           title: updatedEvent.title,
+    //           start: updatedEvent.start,
+    //           end: updatedEvent.end,
+    //           description: updatedEvent.description,
+    //           location: updatedEvent.location,
+    //           therapyType: updatedEvent.therapyType,
+    //           selectedPatient: updatedEvent.selectedPatient,
+    //           doctor: updatedEvent.doctor, // Asegúrate de agregar el campo doctor aquí
+    //         });
 
-            // Forzar la detección de cambios para actualizar el componente
-            this.forceUpdateEvent(updatedEvent);
-          }
-        }
-      }
-    );
+    //         // Forzar la detección de cambios para actualizar el componente
+    //         this.forceUpdateEvent(updatedEvent);
+    //       }
+    //     }
+    //   }
+    // );
 
-    modalRef.componentInstance.eventDeleted.subscribe((eventId: string) => {
-      if (this.fullCalendarComponent) {
-        const calendarApi = this.fullCalendarComponent.getApi();
-        const existingEvent = calendarApi.getEventById(eventId);
-        if (existingEvent) {
-          existingEvent.remove();
-        }
-      }
-    });
+    // modalRef.componentInstance.eventDeleted.subscribe((eventId: string) => {
+    //   if (this.fullCalendarComponent) {
+    //     const calendarApi = this.fullCalendarComponent.getApi();
+    //     const existingEvent = calendarApi.getEventById(eventId);
+    //     if (existingEvent) {
+    //       existingEvent.remove();
+    //     }
+    //   }
+    // });
   }
 
   forceUpdateEvent(updatedEvent: CalendarEvent) {

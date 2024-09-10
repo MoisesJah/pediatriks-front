@@ -1,54 +1,53 @@
 <!-- Modal para editar evento -->
-<div *ngIf="event && isEditMode" class="modal-edit">
+<div class="modal-edit">
   <div class="modal-header">
-    <h4 class="modal-title">Editar Cita</h4>
-    <button type="button" class="close" aria-label="Close" (click)="closeModal()">
-      <span aria-hidden="true">&times;</span>
+    <h4 class="modal-title">
+      <span>
+        <i style="vertical-align: top;" class="ki-duotone ki-notepad-edit text-gray-900 fs-1"><span class="path1"></span><span class="path2"></span></i>
+      </span>
+      Editar Cita
+    </h4>
+      <button
+        type="button"
+        class="btn btn-sm btn-icon btn-active-color-primary btn-color-gray-800"
+        aria-label="Close"
+        (click)="closeModal()"
+    >
+      <i class="ki-duotone ki-cross-square fs-1"
+        ><span class="path1"></span><span class="path2"></span
+      ></i>
     </button>
   </div>
   <div class="modal-body">
-    <form [formGroup]="editEventForm">
-      <div class="form-group mb-3">
-        <label for="edit_therapy_type">Seleccionar Tipo de Terapia</label>
-        <select class="form-control" id="edit_therapy_type" formControlName="therapyType">
-          <option value="" disabled>Seleccionar Tipo de Terapia</option>
-          <option *ngFor="let option of therapyOptions" [value]="option">{{ option }}</option>
-        </select>
-      </div>
-      <div class="form-group mb-3">
-        <label for="edit_event_description">Descripción de la Cita</label>
+    <form class="form d-flex flex-column gap-4" [formGroup]="editEventForm">
+      <section class="row">
+        <div class="form-group col">
+          <label class="form-label" for="edit_kt_calendar_datepicker_date">Fecha de Inicio</label>
+          <input type="text" mwlFlatpickr [options]="fechaOptions" class="form-control" id="edit_kt_calendar_datepicker_date" formControlName="fecha_inicio" placeholder="Seleccionar Fecha de Inicio"/>
+        </div>
+        <div class="form-group col">
+          <label class="form-label" for="edit_kt_calendar_datepicker_start_time">Hora de Inicio</label>
+          <input type="text" class="form-control" id="edit_kt_calendar_datepicker_start_time" formControlName="hora_inicio" placeholder="Seleccionar Hora de Inicio"/>
+        </div>
+        <div class="form-group col">
+          <label class="form-label" for="edit_kt_calendar_datepicker_end_time">Hora de Fin</label>
+          <input type="text" class="form-control" id="edit_kt_calendar_datepicker_end_time" formControlName="hora_fin" placeholder="Seleccionar Hora de Fin"/>
+        </div>
+      </section>
+      <div class="form-group">
+        <label class="form-label" for="edit_event_description">Descripción de la Cita</label>
         <input type="text" class="form-control" id="edit_event_description" formControlName="eventDescription"/>
       </div>
-      <div class="form-group mb-3">
-        <label for="edit_doctor_selection">Seleccionar Especialista</label>
-        <select class="form-control" id="edit_doctor_selection" formControlName="doctor">
-          <option value="" disabled>Seleccionar Especialista</option>
-          <option *ngFor="let option of doctorOptions" [value]="option">{{ option }}</option>
-        </select>
+      <div class="form-group">
+        <label class="form-label" for="edit_doctor_selection">Seleccionar Especialista</label>
+        <ng-select [items]="personalList | async" [loading]="isLoading | async" [loadingText]="'Cargando...'" bindValue="id_personal" placeholder="Seleccionar Especialista"  bindLabel="nombre" formControlName="id_personal"></ng-select>
+        <div>
+          <input type="checkbox" class="form-check-input" formControlName>
+          <label for="">Actualizar en las sesiones restantes</label>
+        </div>
       </div>
-      <div class="form-group mb-3">
-        <label for="edit_patient_selection">Seleccionar Paciente</label>
-        <select class="form-control" id="edit_patient_selection" formControlName="selectedPatient">
-          <option value="" disabled>Seleccionar Paciente</option>
-          <option *ngFor="let option of patientOptions" [value]="option">{{ option }}</option>
-        </select>
-      </div>
-      <div class="form-group mb-3">
-        <label for="edit_event_location">Ubicación de la Cita</label>
-        <input type="text" class="form-control" id="edit_event_location" formControlName="eventLocation"/>
-      </div>
-      <div class="form-group mb-3">
-        <label for="edit_kt_calendar_datepicker_date">Fecha de Inicio</label>
-        <input type="text" class="form-control" id="edit_kt_calendar_datepicker_date" formControlName="startDate" #editDatePicker placeholder="Seleccionar Fecha de Inicio"/>
-      </div>
-      <div class="form-group mb-3">
-        <label for="edit_kt_calendar_datepicker_start_time">Hora de Inicio</label>
-        <input type="text" class="form-control" id="edit_kt_calendar_datepicker_start_time" formControlName="startTime" #editStartTimePicker placeholder="Seleccionar Hora de Inicio"/>
-      </div>
-      <div class="form-group mb-3">
-        <label for="edit_kt_calendar_datepicker_end_time">Hora de Fin</label>
-        <input type="text" class="form-control" id="edit_kt_calendar_datepicker_end_time" formControlName="endTime" #editEndTimePicker placeholder="Seleccionar Hora de Fin"/>
-      </div>
+      
+      
     </form>
   </div>
   <div class="modal-footer">

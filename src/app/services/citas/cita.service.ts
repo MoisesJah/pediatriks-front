@@ -28,7 +28,7 @@ export class CitaService {
   }
 
   getById(id: string) {
-    return this.http.get<{ data: Cita }>(`${this.apiUrl}/cita-test/list/${id}`);
+    return this.http.get<{ data: Cita }>(`${this.apiUrl}/cita-test/sesion/${id}`);
   }
 
   create(cita: any) {

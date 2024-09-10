@@ -1,102 +1,78 @@
-import { Component, Input, OnInit, EventEmitter, Output, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+import { Component, Input, OnInit, EventEmitter, Output, ViewChild, ElementRef, AfterViewInit, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CalendarEvent } from 'src/app/models/calendar-event';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import flatpickr from 'flatpickr';
 import { Spanish } from 'flatpickr/dist/l10n/es.js';
+import { PersonalService } from 'src/app/services/personal/personal.service';
+import { map, Observable } from 'rxjs';
+import { Personal } from 'src/app/models/personal';
+import { untilDestroyed } from '@ngneat/until-destroy';
+import { LoadingService } from 'src/app/services/loading.service';
+import { FlatpickrDefaultsInterface } from 'angularx-flatpickr';
 
 @Component({
   selector: 'app-modal-edit',
   templateUrl: './modal-edit.component.html',
   styleUrls: ['./modal-edit.component.scss']
 })
-export class ModalEditComponent implements OnInit, AfterViewInit {
+export class ModalEditComponent implements OnInit {
   @Input() event: CalendarEvent | null = null;
-  @Input() isEditMode: boolean = false;
   @Output() eventUpdated = new EventEmitter<CalendarEvent>();
 
-  editEventForm: FormGroup;
-  therapyOptions: string[] = ['Psicología', 'Lenguaje', 'Ocupacional', 'Física', 'Neuro', 'Pediasuit'];
-  patientOptions: string[] = ['Juan', 'Pedro', 'Maria'];
-  doctorOptions: string[] = ['Dr. A', 'Dr. B', 'Dr. C'];
+  personalService = inject(PersonalService);
+  isLoading = inject(LoadingService).isLoading;
 
-  @ViewChild('editDatePicker') editDatePicker!: ElementRef;
-  @ViewChild('editStartTimePicker') editStartTimePicker!: ElementRef;
-  @ViewChild('editEndTimePicker') editEndTimePicker!: ElementRef;
+  editEventForm: FormGroup;
+
+  fechaOptions: FlatpickrDefaultsInterface = {
+    locale: Spanish,
+    altInput: true,
+    altFormat: 'F j, Y',
+  }
+  
+  horaInicioOptions: FlatpickrDefaultsInterface = {
+    enableTime: true,
+    noCalendar: true,
+    dateFormat: 'H:i',
+    time24hr: true,
+    altInput: true,
+    altFormat: 'h:i K',
+  }
+
+  horaFinOptions: FlatpickrDefaultsInterface = {
+    enableTime: true,
+    noCalendar: true,
+    dateFormat: 'H:i',
+    time24hr: true,
+    altInput: true,
+    altFormat: 'h:i K',
+    minDate: this.event?.start
+  }
+
+  personalList: Observable<Personal[]> = new Observable();
 
   constructor(private fb: FormBuilder, public activeModal: NgbActiveModal) {
     this.editEventForm = this.fb.group({
-      therapyType: ['', Validators.required],
-      eventDescription: [''],
-      selectedPatient: ['', Validators.required],
-      eventLocation: [''],
-      doctor: ['', Validators.required], // Añadir campo doctor aquí
-      startDate: ['', Validators.required],
-      startTime: ['', Validators.required],
-      endDate: [''],
-      endTime: ['']
+      descripcion: [null],
+      id_personal: [null],
+      fecha_inicio: [null],
+      fecha_fin: [null],
+      hora_inicio: [null],
+      hora_fin: [null],
+      status: [null],
     });
   }
 
   ngOnInit() {
-    if (this.event) {
-      this.initializeForm();
-    }
+    this.loadPersonal();
   }
 
-  ngAfterViewInit() {
-    // Initialize Flatpickr after the view has initialized
-    flatpickr(this.editDatePicker.nativeElement, {
-      dateFormat: 'Y-m-d',
-      locale: Spanish
-    });
-
-    flatpickr(this.editStartTimePicker.nativeElement, {
-      enableTime: true,
-      noCalendar: true,
-      dateFormat: 'H:i',
-      onChange: (selectedDates: Date[], dateStr: string) => {
-        this.editEventForm.controls.startTime.setValue(dateStr);
-      }
-    });
-
-    flatpickr(this.editEndTimePicker.nativeElement, {
-      enableTime: true,
-      noCalendar: true,
-      dateFormat: 'H:i',
-      onChange: (selectedDates: Date[], dateStr: string) => {
-        this.editEventForm.controls.endTime.setValue(dateStr);
-      }
-    });
-  }
-
-  initializeForm() {
-    if (this.event) {
-      this.editEventForm.patchValue({
-        therapyType: this.event.therapyType || '',
-        eventDescription: this.event.description || '',
-        eventLocation: this.event.location || '',
-        doctor: this.event.doctor || '', // Añadir valor del campo doctor aquí
-        startDate: this.formatDate(new Date(this.event.start)),
-        startTime: this.extractTime(this.event.start),
-        endTime: this.event.end ? this.extractTime(this.event.end) : '',
-        selectedPatient: this.event.selectedPatient || ''
-      });
-    }
-  }
-
-  private formatDate(date: Date): string {
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    return `${year}-${month}-${day}`;
-  }
-
-  private extractTime(dateStr: string): string {
-    const date = new Date(dateStr);
-    const hours = String(date.getHours()).padStart(2, '0');
-    const minutes = String(date.getMinutes()).padStart(2, '0');
-    return `${hours}:${minutes}`;
+  loadPersonal() {
+    this.personalList = this.personalService.getAll().pipe(
+      map((resp) => resp.data),
+      untilDestroyed(this)
+    );
   }
 
   closeModal() {
@@ -104,43 +80,6 @@ export class ModalEditComponent implements OnInit, AfterViewInit {
   }
 
   updateEvent() {
-    if (this.editEventForm.invalid) {
-      alert('Por favor, complete todos los campos requeridos.');
-      return;
-    }
-
-    const startDateTime = this.combineDateTime(
-      this.editEventForm.value.startDate,
-      this.editEventForm.value.startTime
-    );
-
-    const endDateTime = this.editEventForm.value.endDate
-      ? this.combineDateTime(this.editEventForm.value.endDate, this.editEventForm.value.endTime)
-      : startDateTime;
-
-    const updatedEvent: CalendarEvent = {
-      id: this.event ? this.event.id : this.generateId(),
-      title: this.editEventForm.value.therapyType,
-      start: startDateTime,
-      end: endDateTime,
-      description: this.editEventForm.value.eventDescription,
-      location: this.editEventForm.value.eventLocation,
-      therapyType: this.editEventForm.value.therapyType,
-      selectedPatient: this.editEventForm.value.selectedPatient,
-      doctor: this.editEventForm.value.doctor // Añadir campo doctor aquí
-    };
-
-    console.log('Updated event:', updatedEvent); // Añade este log para verificar el evento actualizado
-
-    this.eventUpdated.emit(updatedEvent); // Emite el evento actualizado
     this.activeModal.close(); // Cierra el modal después de actualizar el evento
-  }
-
-  private combineDateTime(date: string, time: string): string {
-    return `${date}T${time}:00`; // Combina fecha y hora
-  }
-
-  private generateId(): string {
-    return `${Math.random().toString(36).substr(2, 9)}`;
   }
 }
