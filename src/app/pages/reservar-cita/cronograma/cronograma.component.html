@@ -1,0 +1,36 @@
+<app-header>
+    <ng-container header-title>
+        <h1 class="d-flex flex-column text-gray-900 fw-bold my-1">
+            Test
+        </h1>
+
+    </ng-container>
+</app-header>
+
+<div class="content d-flex flex-column flex-column-fluid">
+    <div class="container-xxl" id="kt_content_container">
+        <!--begin::Card-->
+        <div class="card">
+            <!--begin::Card header-->
+            <div class="card-header"></div>
+            <div
+        class="card-body"
+        style="
+          border: none;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+          border-radius: 0 0 15px 15px;
+        "
+      >
+        <div class="demo-app-main">
+         @defer () {
+          <full-calendar [events]="citasEvent | async" [options]="calendarOptions">
+            
+          </full-calendar>
+         }@placeholder() {
+          <div  class="loader "></div>
+         }
+        </div>
+      </div>
+        </div>
+    </div>
+</div>

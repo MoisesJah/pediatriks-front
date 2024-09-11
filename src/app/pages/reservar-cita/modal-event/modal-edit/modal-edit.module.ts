@@ -6,6 +6,7 @@ import { FlatpickrModule } from 'angularx-flatpickr';
 
 import { ModalEditComponent } from './modal-edit.component'; // Ajusta la ruta si es necesario
 import { ModalEditRoutingModule } from './modal-edit-routing.module'; // Ajusta la ruta si es necesario
+import { NgSelectModule } from '@ng-select/ng-select';
 
 @NgModule({
   declarations: [
@@ -17,6 +18,7 @@ import { ModalEditRoutingModule } from './modal-edit-routing.module'; // Ajusta 
     ReactiveFormsModule,
     NgbModule,
     ModalEditRoutingModule,
+    NgSelectModule,
     FlatpickrModule.forRoot()
   ],
   exports: [

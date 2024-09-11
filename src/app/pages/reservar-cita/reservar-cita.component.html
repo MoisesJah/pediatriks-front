@@ -42,7 +42,7 @@
               (change)="handleSelectChange($event)"
             >
               <option value="" disabled selected>Opciones</option>
-              <option *ngFor="let item of cronogramas" [value]="item.tag">
+              <option *ngFor="let item of terapiasList" [value]="item.id_terapia">
                 {{ item.nombre }}
               </option>
             </select>
@@ -60,11 +60,17 @@
       >
         <div class="demo-app-main">
          @defer () {
-          <full-calendar *ngIf="calendarVisible" [options]="calendarOptions">
-            
+          <full-calendar *ngIf="calendarVisible" [loading]=" isLoading | async" [events]="citasEvent | async" [options]="calendarOptions">
           </full-calendar>
-         }@loading {
-          <div class="loader"></div>
+         }@placeholder() {
+          <div
+          class="d-flex justify-content-center align-items-center"
+          style="height: 100%"
+        >
+          <div class="spinner-border" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+        </div>
          }
         </div>
       </div>

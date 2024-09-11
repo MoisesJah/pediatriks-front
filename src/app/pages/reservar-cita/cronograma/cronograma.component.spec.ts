@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ModalCreateEventComponent } from './modal-event.component';
+import { CronogramaComponent } from './cronograma.component';
 
-describe('ModalEventComponent', () => {
-  let component: ModalCreateEventComponent;
-  let fixture: ComponentFixture<ModalCreateEventComponent>;
+describe('CronogramaComponent', () => {
+  let component: CronogramaComponent;
+  let fixture: ComponentFixture<CronogramaComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ModalCreateEventComponent]
+      declarations: [CronogramaComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(ModalCreateEventComponent);
+    fixture = TestBed.createComponent(CronogramaComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

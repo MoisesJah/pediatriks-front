@@ -1,3 +1,5 @@
+import { Terapia } from "./terapia";
+
 export interface Paquete {
   id_paquetes: string;
   nombre: string;
@@ -9,4 +11,5 @@ export interface Paquete {
   fechainicio: string;
   fechafin: string;
   sesionesrestantes: number;
+  terapias: Terapia[];
 }

@@ -5,6 +5,7 @@ import { ReservarCitaComponent } from './reservar-cita.component';
 import { ReservarCitaRoutingModule } from './reservar-cita-routing.module';
 import { FullCalendarModule } from '@fullcalendar/angular';
 import { HeaderComponent } from 'src/app/components/ui/header/header.component';
+import { CronogramaComponent } from './cronograma/cronograma.component';
 
 @NgModule({
   declarations: [ReservarCitaComponent],

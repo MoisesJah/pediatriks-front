@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, formatDate } from '@angular/common';
 import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { PaqueteService } from 'src/app/services/paquetes/paquete.service';
@@ -15,6 +15,8 @@ import { ColDef, GridReadyEvent, GridApi } from 'ag-grid-community';
 import { ActionButtonsComponent } from './modales/action-buttons/action-buttons.component';
 import { AG_GRID_LOCALE_ES } from '@ag-grid-community/locale';
 import { ThemeService } from 'src/app/services/theme.service';
+import { Terapia } from 'src/app/models/terapia';
+import { formatMoney } from 'src/app/utils/formatCurrency';
 
 @UntilDestroy()
 @Component({
@@ -27,7 +29,7 @@ import { ThemeService } from 'src/app/services/theme.service';
 export class PaquetesComponent implements OnInit, OnDestroy {
   paquetesService = inject(PaqueteService);
   isLoading = inject(LoadingService).isLoading;
-  theme = inject(ThemeService)
+  theme = inject(ThemeService);
   modal = inject(NgbModal);
 
   paquetesList: Observable<Paquete[]> = new Observable();
@@ -37,12 +39,57 @@ export class PaquetesComponent implements OnInit, OnDestroy {
   colDefs: ColDef[] = [
     { field: 'nombre', headerName: 'Nombre', filter: true },
     { field: 'descripcion', headerName: 'Descripcion' },
-    { field: 'cantidadsesiones', headerName: 'Cantidad de Sesiones' },
-    { field: 'precioregular', headerName: 'Precio Regular' },
-    { field: 'descuento', headerName: 'Descuento %' },
-    { field: 'preciopaquete', headerName: 'Precio del Paquete' },
-    { field: 'fechainicio', headerName: 'Fecha de Inicio' },
-    { field: 'fechafin', headerName: 'Fecha de Fin' },
+    {
+      field: 'terapias',
+      headerName: 'Terapias Incluidas',
+      filter: true,
+      filterValueGetter: (params: any) => {
+        const therapies = params.data.terapias as Terapia[];
+        return therapies.map((therapy) => therapy.nombre).join(', ');
+      },
+      valueFormatter: (params: any) => {
+        const therapies = params.data.terapias as Terapia[];
+        return therapies.map((therapy) => therapy.nombre).join(', ');
+      },
+      cellRenderer: (params: any) => {
+        const therapies = params.data.terapias as Terapia[];
+        return `<ul>${therapies
+          .map((therapy) => `<li>${therapy.nombre}</li>`)
+          .join('')}</ul>`;
+      },
+      autoHeight: true,
+    },
+    {
+      field: 'cantidadsesiones',
+      headerName: 'Cantidad de Sesiones',
+    },
+    {
+      field: 'precioregular',
+      headerName: 'Precio Regular',
+      valueFormatter: (params) => formatMoney(params.value),
+    },
+    {
+      field: 'descuento',
+      headerName: 'Descuento',
+      valueFormatter: (params) => `${params.value}%`,
+    },
+    {
+      field: 'preciopaquete',
+      headerName: 'Precio del Paquete',
+      valueFormatter: (params) => formatMoney(params.value),
+    },
+    {
+      field: 'fechainicio',
+      headerName: 'Fecha de Inicio',
+      filter: 'agDateColumnFilter',
+      valueFormatter: (params) => formatDate(params.value, 'dd/MM/yyyy', 'en'),
+    },
+    {
+      field: 'fechafin',
+      headerName: 'Fecha de Fin',
+      filter: 'agDateColumnFilter',
+      valueFormatter: (params) => formatDate(params.value, 'dd/MM/yyyy', 'en'),
+    },
     { field: 'sesionesrestantes', headerName: 'Sesiones Restantes' },
     {
       headerName: 'Acciones',
@@ -121,8 +168,6 @@ export class PaquetesComponent implements OnInit, OnDestroy {
       this.fetchPaquetes();
     });
   }
-
-
 
   ngOnDestroy(): void {
     // Llamar a un método en el caso de que necesite limpiar recursos
