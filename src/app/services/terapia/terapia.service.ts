@@ -40,6 +40,10 @@ export class TerapiaService {
     return this.http.get<any>(`${this.apiUrl}/terapia/getpersonal/terapia/${id}`);
   }
 
+  getPaquetesByTerapia(id: string) {
+    return this.http.get<any>(`${this.apiUrl}/terapia/getpaquetes/${id}`);
+  }
+
   getAllPersonal(): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/terapia/getpersonal`);
   }

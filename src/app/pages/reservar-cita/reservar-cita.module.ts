@@ -6,6 +6,7 @@ import { ReservarCitaRoutingModule } from './reservar-cita-routing.module';
 import { FullCalendarModule } from '@fullcalendar/angular';
 import { HeaderComponent } from 'src/app/components/ui/header/header.component';
 import { CronogramaComponent } from './cronograma/cronograma.component';
+import { NgSelectModule } from '@ng-select/ng-select';
 
 @NgModule({
   declarations: [ReservarCitaComponent],
@@ -13,7 +14,8 @@ import { CronogramaComponent } from './cronograma/cronograma.component';
     CommonModule,
     ReservarCitaRoutingModule,
     FullCalendarModule,
-    HeaderComponent
+    HeaderComponent,
+    NgSelectModule
   ],
   exports: [ReservarCitaComponent],
 })

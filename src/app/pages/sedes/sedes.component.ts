@@ -22,7 +22,6 @@ export class SedesComponent {
         // Obtiene el texto de la dirección desde el elemento <b>
         const address = addressElement.textContent?.trim() || 'Dirección no disponible';
         this.selectedAddress = address;
-        console.log(`Agregando sede: (${address})`);
       }
     }
   }
@@ -31,7 +30,6 @@ export class SedesComponent {
     event.preventDefault(); // Evita que el enlace haga una redirección
 
     if (this.selectedAddress) {
-      console.log(`Reserva registrada en: (${this.selectedAddress})`);
       this.router.navigate(['/dashboard']);
     } else {
       console.log('No se ha seleccionado ninguna sede.');

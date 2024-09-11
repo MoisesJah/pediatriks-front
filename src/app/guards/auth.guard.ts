@@ -10,10 +10,6 @@ export const authGuard: CanActivateFn = (route, state) => {
 
   //redirect to login if not authenticated
   if (!authService.isAuthenticated() && state.url !== '/' && !authRoutes.includes(state.url)) {
-    console.log(state.url);
-    console.log(authRoutes.includes(state.url));
-    console.log(!authRoutes.includes(state.url));
-    console.log(authService.isAuthenticated());
     router.navigate(['/login']);
     return false;
   }

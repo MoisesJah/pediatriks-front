@@ -76,10 +76,7 @@ export class ModalCreateEventComponent implements OnInit {
     'Neuro',
     'Pediasuit',
   ];
-  patientOptions: string[] = ['Juan', 'Pedro', 'Maria'];
-  doctorOptions: string[] = ['Dr. A', 'Dr. B', 'Dr. C']; // Opciones para los doctores
   minDate: string;
-  isEditMode: boolean = false;
 
   isCitaContinua = false;
 
@@ -119,7 +116,7 @@ export class ModalCreateEventComponent implements OnInit {
   }
 
   changeTipoCita(event: any) {
-    this.isCitaContinua = event?.nombre === 'Continua';
+    this.isCitaContinua = event?.nombre !== 'Evaluación';
     if (this.isCitaContinua) {
       this.detalle.controls.forEach((control) => {
         control.get('id_paquete')?.setValidators(Validators.required);
@@ -165,7 +162,7 @@ export class ModalCreateEventComponent implements OnInit {
   onStartTimeChange(event: any, index: number): void {
     const [hours, minutes] = event.dateString.split(':').map(Number);
     const minEndDate = new Date();
-    minEndDate.setHours(hours, minutes + 45);
+    minEndDate.setHours(hours, minutes + 5);
     const horaFinControl = this.detalle
       .at(index)
       ?.get('hora_fin') as FormControl;
@@ -243,34 +240,6 @@ export class ModalCreateEventComponent implements OnInit {
       untilDestroyed(this)
     );
   }
-
-  // initializeForms() {
-  //   if (this.event) {
-  //     // this.eventForm.patchValue({
-  //     //   therapyType: this.event.therapyType || '',
-  //     //   doctor: this.event.doctor || '', // Valor del doctor
-  //     //   startDate: this.formatDate(new Date(this.event.start)),
-  //     //   endDate: this.event.end
-  //     //     ? this.formatDate(new Date(this.event.end))
-  //     //     : '',
-  //     //   startTime: this.extractTime(this.event.start),
-  //     //   endTime: this.event.end ? this.extractTime(this.event.end) : '',
-  //     //   selectedPatient: this.event.selectedPatient || '',
-  //     // });
-
-  //     this.editEventForm.patchValue({
-  //       therapyType: this.event.therapyType || '',
-  //       doctor: this.event.doctor || '', // Valor del doctor
-  //       startDate: this.formatDate(new Date(this.event.start)),
-  //       endDate: this.event.end
-  //         ? this.formatDate(new Date(this.event.end))
-  //         : '',
-  //       startTime: this.extractTime(this.event.start),
-  //       endTime: this.event.end ? this.extractTime(this.event.end) : '',
-  //       selectedPatient: this.event.selectedPatient || '',
-  //     });
-  //   }
-  // }
 
   openEditModal() {
     // Cierra el modal actual

@@ -47,7 +47,6 @@ export class RegistrateComponent {
       .pipe(tap(() => (this.isLoading = false)))
       .subscribe({
         next: (value) => {
-          console.log(value);
           this.router.navigate(['/login']);
         },
         error: (err) => {
@@ -56,7 +55,5 @@ export class RegistrateComponent {
           console.log(this.errors);
         },
       });
-
-    console.log(this.registerForm.errors);
   }
 }

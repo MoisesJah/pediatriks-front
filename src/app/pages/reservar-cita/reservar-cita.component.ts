@@ -159,7 +159,6 @@ export class ReservarCitaComponent implements OnInit, OnDestroy {
   handleEventClick(clickInfo: EventClickArg) {
     const event = clickInfo.event;
 
-    console.log('Evento clickeado:', clickInfo);
 
     const modalRef = this.modalService.open(ModalViewEventComponent, {
       centered: true,
@@ -207,43 +206,15 @@ export class ReservarCitaComponent implements OnInit, OnDestroy {
     // });
   }
 
-  forceUpdateEvent(updatedEvent: CalendarEvent) {
-    if (this.fullCalendarComponent) {
-      const calendarApi = this.fullCalendarComponent.getApi();
-      const event = calendarApi.getEventById(updatedEvent.id);
-      if (event) {
-        event.setProp('end', updatedEvent.end);
-        console.log('Evento forzado a actualizar:', {
-          id: event.id,
-          title: event.title,
-          start: event.startStr,
-          end: event.endStr,
-          description: event.extendedProps.description,
-          location: event.extendedProps.location,
-          therapyType: event.extendedProps.therapyType,
-          selectedPatient: event.extendedProps.selectedPatient,
-          doctor: event.extendedProps.doctor, // Asegúrate de agregar el campo doctor aquí
-        });
-      }
-    }
-  }
-
   handleEvents(events: EventApi[]) {
     // this.currentEvents = events;
     // this.changeDetector.detectChanges();
   }
 
-  handleSelectChange(event: Event) {
-    const selectElement = event.target as HTMLSelectElement;
-    const selectedValue = selectElement.value;
-
-    const terapia = this.terapiasList.some(
-      (terapia) => terapia.id_terapia === selectedValue
-    );
-    if (terapia) {
-      // this.router.navigate(['admin/reservar-cita', selectedValue],{relativeTo: this.route});
-      this.router.navigate([selectedValue], { relativeTo: this.route });
-    }
+  handleSelectChange(event: any) {
+    const selectedValue = event.id_terapia;
+    // this.router.navigate(['admin/reservar-cita', selectedValue],{relativeTo: this.route});
+    this.router.navigate([selectedValue], { relativeTo: this.route });
   }
 
   openModal() {
@@ -252,9 +223,6 @@ export class ReservarCitaComponent implements OnInit, OnDestroy {
       size: 'lg',
       backdrop: 'static',
     });
-
-    modalRef.componentInstance.startDate = this.getStartOfDay();
-    modalRef.componentInstance.endDate = this.getEndOfDay();
 
     modalRef.componentInstance.eventSubmitted.subscribe(
       (newEvent: CalendarEvent) => {
@@ -276,16 +244,4 @@ export class ReservarCitaComponent implements OnInit, OnDestroy {
     );
   }
 
-  private getStartOfDay(): string {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    return today.toISOString();
-  }
-
-  private getEndOfDay(): string {
-    const tomorrow = new Date();
-    tomorrow.setDate(tomorrow.getDate() + 1);
-    tomorrow.setHours(0, 0, 0, 0);
-    return tomorrow.toISOString();
-  }
 }

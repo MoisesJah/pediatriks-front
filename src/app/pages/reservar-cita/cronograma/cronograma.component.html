@@ -1,36 +1,41 @@
 <app-header>
-    <ng-container header-title>
-        <h1 class="d-flex flex-column text-gray-900 fw-bold my-1">
-            Test
-        </h1>
+  <ng-container header-title>
+    <h1 class="d-flex flex-column text-gray-900 fw-bold my-1">
+      {{ currentTerapia?.nombre }}
+    </h1>
 
-    </ng-container>
+  </ng-container>
 </app-header>
 
 <div class="content d-flex flex-column flex-column-fluid">
-    <div class="container-xxl" id="kt_content_container">
-        <!--begin::Card-->
-        <div class="card">
-            <!--begin::Card header-->
-            <div class="card-header"></div>
-            <div
-        class="card-body"
-        style="
+  <div class="container-xxl" id="kt_content_container">
+    <!--begin::Card-->
+    <div class="card">
+      <!--begin::Card header-->
+      <div class="card-header">
+        <!-- <h2 class="card-title fw-bold">{{ currentTerapia?.nombre }}</h2> -->
+        <div class="card-toolbar d-flex ms-auto justify-content-end">
+          <button [disabled]="isLoading | async" class="btn btn-flex btn-primary me-2" (click)="openModal()">
+            <i class="ki-duotone ki-plus fs-2"></i> Agregar Citas
+          </button>
+          <ng-select [items]="terapiasList" bindLabel="nombre" (change)="handleSelectChange($event)" placeholder="Seleccionar Terapia" bindValue="id_terapia"></ng-select>
+        </div>
+      </div>
+      <div class="card-body" style="
           border: none;
           box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
           border-radius: 0 0 15px 15px;
-        "
-      >
+        ">
         <div class="demo-app-main">
-         @defer () {
+          @defer () {
           <full-calendar [events]="citasEvent | async" [options]="calendarOptions">
-            
+
           </full-calendar>
-         }@placeholder() {
-          <div  class="loader "></div>
-         }
+          }@placeholder() {
+          <div class="loader "></div>
+          }
         </div>
       </div>
-        </div>
     </div>
+  </div>
 </div>

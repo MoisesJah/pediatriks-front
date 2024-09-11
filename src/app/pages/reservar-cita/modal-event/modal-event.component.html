@@ -1,5 +1,5 @@
 <!-- Modal para agregar nuevo evento -->
-<div *ngIf="!event" class="modal-header">
+<div class="modal-header">
   <h4 class="modal-title">Registrar Nueva Cita</h4>
   <button type="button" class="btn btn-sm btn-icon btn-active-color-primary btn-color-gray-800" aria-label="Close"
     (click)="closeModal()">
@@ -43,7 +43,7 @@
       <ng-container *ngFor="let terapia of detalle.controls; let i = index">
         <div class="form-group position-relative p-4 border-2 mt-2 border-dashed border-gray-300 rounded"
           [formGroupName]="i">
-          <div *ngIf="i > 0" class="position-absolute end-0" style="transform: translateY(-18px) translateX(-12px);"><button
+          <div *ngIf="i > 0" class="position-absolute end-0" style="transform: translateY(-18px) translateX(12px);"><button
               class="btn btn-sm fs-10 btn-icon btn-active-color-danger btn-danger" (click)="removeInfoTerapia(i)">
               <i class="ki-solid ki-cross"></i>
             </button>

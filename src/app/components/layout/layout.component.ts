@@ -146,7 +146,6 @@ export class LayoutComponent {
     target.classList.add('selected');
     // Navegar al componente sedes
     this.router.navigate(['/admin/terapias']);
-    console.log('Terapias');
   }
 
   navigateToPacientes(event: Event): void {
@@ -158,7 +157,6 @@ export class LayoutComponent {
     target.classList.add('selected');
     // Navegar al componente sedes
     this.router.navigate(['/admin/pacientes']);
-    console.log('Pacientes');
   }
 
   private removeSelectedClass(): void {

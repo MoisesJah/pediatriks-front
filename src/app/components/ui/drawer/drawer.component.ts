@@ -19,7 +19,6 @@ export class DrawerComponent {
     target.classList.add('selected');
     // Navegar al componente sedes
     this.router.navigate(['/dashboard/sedes']);
-    console.log('Sedes');
   }
 
   navigateToReservarCita(event: Event): void {
