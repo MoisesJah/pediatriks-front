@@ -65,7 +65,7 @@
       <label for="fechainicio" class="required form-label">Fecha de Inicio</label>
       <input id="kt_calendar_datepicker_date"
         mwlFlatpickr
-        [locale]="'es'"
+        [locale]="es"
         [altInput]="true"
         [altFormat]="'d/m/Y'"
         [monthSelectorType]="'dropdown'"
@@ -81,7 +81,8 @@
         id="kt_calendar_datepicker_end_date"
         formControlName="fechafin" 
         #endDatePicker 
-        mwlFlatpickr [locale]="'es'" 
+        mwlFlatpickr 
+        [locale]="es" 
         [altInput]="true" 
         [altFormat]="'d/m/Y'" 
         [monthSelectorType]="'dropdown'"

@@ -17,6 +17,7 @@ import { LoadingService } from 'src/app/services/loading.service';
 import { PacienteService } from 'src/app/services/paciente/paciente.service';
 import { UserService } from 'src/app/services/user/user.service';
 import { GeneroService } from 'src/app/services/genero/genero.service';
+import Spanish from 'flatpickr/dist/l10n/es.js';
 
 @UntilDestroy()
 @Component({
@@ -35,6 +36,7 @@ export class CreateModalComponent implements AfterViewInit, OnDestroy {
   userList: Observable<any> = new Observable();
 
   userId: number | undefined;
+  es = Spanish.es;
   generos: Observable<any> = new Observable();
 
   @Output() onSaveComplete = new EventEmitter();
@@ -84,6 +86,5 @@ export class CreateModalComponent implements AfterViewInit, OnDestroy {
       this.modal.close();
     });
 
-    console.log(submitData);
   }
 }

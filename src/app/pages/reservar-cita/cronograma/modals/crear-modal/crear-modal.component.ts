@@ -29,6 +29,7 @@ import { PersonalService } from 'src/app/services/personal/personal.service';
 import { SedesService } from 'src/app/services/sedes/sedes.service';
 import { TerapiaService } from 'src/app/services/terapia/terapia.service';
 import { TipocitaService } from 'src/app/services/tipocita/tipocita.service';
+import Spanish from 'flatpickr/dist/l10n/es.js';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -51,7 +52,7 @@ export class CrearModalComponent implements OnInit {
 
   id_terapia!: string;
   terapia!: Terapia;
-
+  es = Spanish.es;
   isCitaContinua = false;
 
   sedesList: Observable<Sede[]> = new Observable();

@@ -35,6 +35,7 @@ import { TipocitaService } from 'src/app/services/tipocita/tipocita.service';
 import { PaqueteService } from 'src/app/services/paquetes/paquete.service';
 import { CitaService } from 'src/app/services/citas/cita.service';
 import { FlatpickrDefaultsInterface } from 'angularx-flatpickr';
+import Spanish from 'flatpickr/dist/l10n/es.js';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -68,15 +69,8 @@ export class ModalCreateEventComponent implements OnInit {
   paquetesList: Observable<any> = new Observable();
 
   eventForm: FormGroup;
-  therapyOptions: string[] = [
-    'Psicología',
-    'Lenguaje',
-    'Ocupacional',
-    'Física',
-    'Neuro',
-    'Pediasuit',
-  ];
   minDate: string;
+  es = Spanish.es;
 
   isCitaContinua = false;
 

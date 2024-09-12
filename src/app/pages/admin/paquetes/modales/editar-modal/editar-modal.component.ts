@@ -27,6 +27,7 @@ import { map, Observable } from 'rxjs';
 import { Terapia } from 'src/app/models/terapia';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { NgSelectModule } from '@ng-select/ng-select';
+import Spanish from 'flatpickr/dist/l10n/es.js';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -44,6 +45,7 @@ export class EditarModalComponent implements OnInit {
 
   @Input() paqueteId: string | { id_paquetes: string } = '';
   paqueteForm: FormGroup;
+  es = Spanish.es;
   terapiasList: Observable<Terapia[]> = new Observable();
 
   @Output() onSaveComplete = new EventEmitter<void>();

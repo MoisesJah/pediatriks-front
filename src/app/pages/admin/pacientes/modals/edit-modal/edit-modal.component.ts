@@ -17,6 +17,7 @@ import { map, Observable } from 'rxjs';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { IUser } from 'src/app/models/user';
 import { GeneroService } from 'src/app/services/genero/genero.service';
+import Spanish from 'flatpickr/dist/l10n/es.js';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -33,7 +34,7 @@ export class EditModalComponent implements AfterViewInit, OnDestroy, OnInit {
   generoService = inject(GeneroService);
 
   userList: Observable<IUser[]> = new Observable();
-
+  es = Spanish.es;
   paciente?: IPaciente;
   generos: Observable<any> = new Observable();
 

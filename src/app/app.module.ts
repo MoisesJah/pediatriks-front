@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { LOCALE_ID, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -8,12 +8,12 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { FlatpickrModule } from 'angularx-flatpickr';
 import { ModalEventModule } from './pages/reservar-cita/modal-event/modal-event.module';
 import { ModalEditModule } from './pages/reservar-cita/modal-event/modal-edit/modal-edit.module';
-import {provideHttpClient,withInterceptors,} from '@angular/common/http';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { tokenInterceptor } from './interceptors/token.interceptor';
 import { AdminDashboardComponent } from './pages/admin/dashboard/dashboard.component';
 import { DropdownComponent } from './components/ui/dropdown/dropdown.component';
 import { loadingInterceptor } from './interceptors/loading.interceptor';
-import { LayoutComponent } from "./components/layout/layout.component";
+import { LayoutComponent } from './components/layout/layout.component';
 import { UserModalsModule } from './pages/admin/users/modals/modals.module';
 import { PersonalModalsModule } from './pages/admin/personal/modales/modales.module';
 import { NgSelectModule } from '@ng-select/ng-select';
@@ -21,12 +21,12 @@ import { TerapiasModalsModule } from './pages/admin/terapias/modals/modals.modul
 import { PacientesModalsModule } from './pages/admin/pacientes/modals/modals.module';
 import { SedesModalsModule } from './pages/admin/sedes/modales/modales.module';
 import { DrawerComponent } from './components/ui/drawer/drawer.component';
+import localeEs from '@angular/common/locales/es';
+import { registerLocaleData } from '@angular/common';
 
-
+registerLocaleData(localeEs);
 @NgModule({
-  declarations: [
-    AppComponent,
-  ],
+  declarations: [AppComponent],
   imports: [
     BrowserModule,
     AppRoutingModule,
@@ -45,12 +45,12 @@ import { DrawerComponent } from './components/ui/drawer/drawer.component';
     NgSelectModule,
     TerapiasModalsModule,
     PacientesModalsModule,
-    SedesModalsModule
-
-
-],
+    SedesModalsModule,
+  ],
   providers: [
     provideHttpClient(withInterceptors([tokenInterceptor, loadingInterceptor])),
+    { provide: LOCALE_ID, useValue: 'es' },
+    { provide: 'localeData', useValue: localeEs },
   ],
   bootstrap: [AppComponent],
 })

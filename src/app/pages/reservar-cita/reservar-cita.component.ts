@@ -162,7 +162,7 @@ export class ReservarCitaComponent implements OnInit, OnDestroy {
 
     const modalRef = this.modalService.open(ModalViewEventComponent, {
       centered: true,
-      size: 'lg',
+      size: '100',
       scrollable: true,
       backdrop: 'static',
     });
