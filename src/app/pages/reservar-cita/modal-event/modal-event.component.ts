@@ -19,7 +19,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { ModalEditComponent } from './modal-edit/modal-edit.component'; // Asegúrate de importar el componente de edición
-import { map, Observable } from 'rxjs';
+import { map, Observable, take } from 'rxjs';
 import { Terapia } from 'src/app/models/terapia';
 import { Sede } from 'src/app/models/sede';
 import { IPaciente } from 'src/app/models/paciente';
@@ -73,6 +73,8 @@ export class ModalCreateEventComponent implements OnInit {
   es = Spanish.es;
 
   isCitaContinua = false;
+  terapiasId: string[] = [];
+  paquetesId: any[] = [];
 
   timeOptions: FlatpickrDefaultsInterface = {
     enableTime: true,
@@ -80,6 +82,8 @@ export class ModalCreateEventComponent implements OnInit {
     dateFormat: 'H:i',
     // will be used since specific attribute is not provided
   };
+
+  avaiblePersonal: any[] = [];
 
   constructor(
     public activeModal: NgbActiveModal,
@@ -190,14 +194,44 @@ export class ModalCreateEventComponent implements OnInit {
     this.loadPacientes();
     this.loadPersonal();
     this.loadTipoCitas();
-    this.loadPaquetes();
+    this.help();
   }
 
-  loadPaquetes() {
-    this.paquetesList = this.paquetesService.getAll().pipe(
-      map((resp) => resp.data),
-      untilDestroyed(this)
-    );
+  getTerapiaId(event: any, index: number) {
+    if (this.isCitaContinua && event) {
+      this.terapiasId[index] = event.id_terapia;
+      this.terapiaService.getPaquetesByTerapia(event.id_terapia)
+        .pipe(take(1))
+        .subscribe((resp) => this.paquetesId[index] = resp.data);
+    }else{
+      this.paquetesId[index] = []
+      this.detalle.at(index).get('id_paquete')?.setValue(null)
+    }
+  }
+
+  help() {
+    this.eventForm.valueChanges.subscribe((value) => {
+      const id_sede = value.id_sede
+      const detalle = value.detalle 
+
+    detalle.forEach((control: any, index: number, array: any) => {
+      const body = {
+        id_terapia : array[index].id_terapia,
+       fecha_inicio : array[index].fecha_inicio,
+       hora_inicio : array[index].hora_inicio,
+       hora_fin : array[index].hora_fin
+      }
+
+      if (body.id_terapia && body.fecha_inicio && body.hora_inicio && body.hora_fin && id_sede) {
+        this.citaService.getPersonal(body).pipe(take(1)).subscribe((resp: any) => {
+          this.avaiblePersonal[index] = resp.data
+        })
+      }
+      // console.log('yoooo',control.get('id_terapia'))      
+    })
+     console.log(value)
+     console.log(id_sede)
+    })
   }
 
   loadTerapias() {
@@ -315,20 +349,5 @@ export class ModalCreateEventComponent implements OnInit {
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');
     return `${year}-${month}-${day}`;
-  }
-
-  private extractTime(dateStr: string): string {
-    const date = new Date(dateStr);
-    const hours = String(date.getHours()).padStart(2, '0');
-    const minutes = String(date.getMinutes()).padStart(2, '0');
-    return `${hours}:${minutes}`;
-  }
-
-  private combineDateTime(date: string, time: string): string {
-    return `${date}T${time}:00`;
-  }
-
-  private generateId(): string {
-    return `${Math.random().toString(36).substr(2, 9)}`;
   }
 }

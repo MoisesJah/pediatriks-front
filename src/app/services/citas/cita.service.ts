@@ -34,4 +34,8 @@ export class CitaService {
   create(cita: any) {
     return this.http.post<{ data: Cita }>(`${this.apiUrl}/cita-test/add`, cita);
   }
+
+  getPersonal(body: any) {
+    return this.http.post<{ data: any }>(`${this.apiUrl}/cita-test/terapist`, body);
+  }
 }
