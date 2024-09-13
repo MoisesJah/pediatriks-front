@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, inject, OnInit, Output } from '@angular/core';
 import {
   FormArray,
   FormBuilder,
@@ -15,7 +15,7 @@ import {
   FlatpickrDefaultsInterface,
   FlatpickrModule,
 } from 'angularx-flatpickr';
-import { map, Observable } from 'rxjs';
+import { distinctUntilChanged, map, Observable } from 'rxjs';
 import { IPaciente } from 'src/app/models/paciente';
 import { Personal } from 'src/app/models/personal';
 import { Sede } from 'src/app/models/sede';
@@ -39,7 +39,7 @@ import Spanish from 'flatpickr/dist/l10n/es.js';
   templateUrl: './crear-modal.component.html',
   styleUrl: './crear-modal.component.scss',
 })
-export class CrearModalComponent implements OnInit {
+export class CrearModalComponent implements OnInit, AfterViewInit {
   modal = inject(NgbModal);
   sedesService = inject(SedesService);
   personalService = inject(PersonalService);
@@ -50,6 +50,9 @@ export class CrearModalComponent implements OnInit {
   isLoading = inject(LoadingService).isLoading;
   citaService = inject(CitaService);
 
+  @Output() eventSubmitted = new EventEmitter();
+  @Output() eventDeleted = new EventEmitter<string>();
+
   id_terapia!: string;
   terapia!: Terapia;
   es = Spanish.es;
@@ -57,7 +60,7 @@ export class CrearModalComponent implements OnInit {
 
   sedesList: Observable<Sede[]> = new Observable();
   pacientesList: Observable<IPaciente[]> = new Observable();
-  personalList: Observable<Personal[]> = new Observable();
+  personalList = [];
   tipoCitasList: Observable<TipoCita[]> = new Observable();
   paquetesList: Observable<any> = new Observable();
 
@@ -130,16 +133,44 @@ export class CrearModalComponent implements OnInit {
   }
 
   changeTipoCita(event: any) {
-    console.log(event);
+    // console.log(event);
     this.isCitaContinua = event?.nombre !== 'Evaluación';
   }
 
   ngOnInit(): void {
     this.loadSedes();
     this.loadPacientes();
-    this.loadPersonal();
     this.loadTipoCitas();
     this.loadPaquetes();
+  }
+
+  ngAfterViewInit(): void {
+    this.createForm.valueChanges
+      .pipe(
+        distinctUntilChanged((prev, curr) => JSON.stringify(prev) === JSON.stringify(curr)),
+        untilDestroyed(this))
+      .subscribe((value) => {
+        const { id_sede, fecha_inicio, hora_inicio, hora_fin } = value;
+
+        const requiredFields = [id_sede, fecha_inicio, hora_inicio, hora_fin];
+
+        const body = {
+          id_sede,
+          fecha_inicio,
+          hora_inicio,
+          hora_fin,
+          id_terapia: this.terapia.id_terapia,
+        };
+
+        if (requiredFields.every(Boolean)) {
+          this.citaService.getPersonal(body).subscribe((resp: any) => {
+            this.personalList = resp.data;
+          });
+        } else {
+          this.personalList = [];
+          this.createForm.get('id_personal')?.setValue(null);
+        }
+      });
   }
 
   loadSedes() {
@@ -172,12 +203,13 @@ export class CrearModalComponent implements OnInit {
     );
   }
 
-  loadPersonal() {
-    this.personalList = this.personalService.getAll().pipe(
-      map((resp) => resp.data),
-      untilDestroyed(this)
-    );
+  createCita() {
+    this.citaService.createForTherapy({
+      ...this.createForm.value,
+      id_terapia: this.terapia.id_terapia
+    }).subscribe((resp) => {
+      this.eventSubmitted.emit(resp.data);
+      this.modal.dismissAll();
+    })
   }
-
-  createCita() {}
 }

@@ -27,12 +27,16 @@ export class CitaService {
       );
   }
 
-  getById(id: string) {
-    return this.http.get<{ data: Cita }>(`${this.apiUrl}/cita-test/sesion/${id}`);
+  getById(id_cita: string, id_sesion: string) {
+    return this.http.get<{ data: Cita }>(`${this.apiUrl}/cita-test/sesion/${id_cita}/${id_sesion}`);
   }
 
   create(cita: any) {
     return this.http.post<{ data: Cita }>(`${this.apiUrl}/cita-test/add`, cita);
+  }
+
+  createForTherapy(cita: any) {
+    return this.http.post<{ data: Cita }>(`${this.apiUrl}/cita-test/add/therapy`, cita);
   }
 
   getPersonal(body: any) {

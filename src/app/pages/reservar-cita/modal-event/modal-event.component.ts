@@ -19,7 +19,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { ModalEditComponent } from './modal-edit/modal-edit.component'; // Asegúrate de importar el componente de edición
-import { map, Observable, take } from 'rxjs';
+import { distinctUntilChanged, map, Observable, take } from 'rxjs';
 import { Terapia } from 'src/app/models/terapia';
 import { Sede } from 'src/app/models/sede';
 import { IPaciente } from 'src/app/models/paciente';
@@ -43,7 +43,7 @@ import Spanish from 'flatpickr/dist/l10n/es.js';
   templateUrl: './modal-event.component.html',
   styleUrls: ['./modal-event.component.scss'],
 })
-export class ModalCreateEventComponent implements OnInit {
+export class ModalCreateEventComponent implements OnInit, AfterViewInit {
   @Input() event: CalendarEvent | null = null;
   @Output() eventSubmitted = new EventEmitter<CalendarEvent>();
   @Output() eventDeleted = new EventEmitter<string>();
@@ -118,7 +118,7 @@ export class ModalCreateEventComponent implements OnInit {
     if (this.isCitaContinua) {
       this.detalle.controls.forEach((control) => {
         control.get('id_paquete')?.setValidators(Validators.required);
-      })
+      });
     }
   }
 
@@ -194,44 +194,61 @@ export class ModalCreateEventComponent implements OnInit {
     this.loadPacientes();
     this.loadPersonal();
     this.loadTipoCitas();
-    this.help();
   }
 
   getTerapiaId(event: any, index: number) {
     if (this.isCitaContinua && event) {
       this.terapiasId[index] = event.id_terapia;
-      this.terapiaService.getPaquetesByTerapia(event.id_terapia)
+      this.terapiaService
+        .getPaquetesByTerapia(event.id_terapia)
         .pipe(take(1))
-        .subscribe((resp) => this.paquetesId[index] = resp.data);
-    }else{
-      this.paquetesId[index] = []
-      this.detalle.at(index).get('id_paquete')?.setValue(null)
+        .subscribe((resp) => (this.paquetesId[index] = resp.data));
+    } else {
+      this.paquetesId[index] = [];
+      this.detalle.at(index).get('id_paquete')?.setValue(null);
     }
   }
 
-  help() {
-    this.eventForm.valueChanges.subscribe((value) => {
-      const id_sede = value.id_sede
-      const detalle = value.detalle 
+  ngAfterViewInit() {
+    this.eventForm.valueChanges
+      .pipe(
+        distinctUntilChanged(
+          (prev, curr) => JSON.stringify(prev) === JSON.stringify(curr)
+        )
+      )
+      .subscribe((value) => {
+        const id_sede = value.id_sede;
+        const detalle = value.detalle;
 
-    detalle.forEach((control: any, index: number, array: any) => {
-      const body = {
-        id_terapia : array[index].id_terapia,
-       fecha_inicio : array[index].fecha_inicio,
-       hora_inicio : array[index].hora_inicio,
-       hora_fin : array[index].hora_fin
-      }
+        detalle.forEach((control: any, index: number, array: any) => {
+          const body = {
+            id_terapia: array[index].id_terapia,
+            fecha_inicio: array[index].fecha_inicio,
+            hora_inicio: array[index].hora_inicio,
+            hora_fin: array[index].hora_fin,
+            id_sede,
+          };
 
-      if (body.id_terapia && body.fecha_inicio && body.hora_inicio && body.hora_fin && id_sede) {
-        this.citaService.getPersonal(body).pipe(take(1)).subscribe((resp: any) => {
-          this.avaiblePersonal[index] = resp.data
-        })
-      }
-      // console.log('yoooo',control.get('id_terapia'))      
-    })
-     console.log(value)
-     console.log(id_sede)
-    })
+          const requiredFields = [
+            body.id_terapia,
+            body.fecha_inicio,
+            body.hora_inicio,
+            body.hora_fin,
+          ];
+
+          if (requiredFields.every(Boolean) && id_sede) {
+            this.citaService
+              .getPersonal(body)
+              .pipe(take(1))
+              .subscribe((resp: any) => {
+                this.avaiblePersonal[index] = resp.data;
+              });
+          }
+          // console.log('yoooo',control.get('id_terapia'))
+        });
+        console.log(value);
+        console.log(id_sede);
+      });
   }
 
   loadTerapias() {
@@ -299,7 +316,8 @@ export class ModalCreateEventComponent implements OnInit {
   submitEvent() {
     this.citaService.create(this.eventForm.value).subscribe((resp) => {
       console.log(resp);
-      this.eventSubmitted.emit(this.eventForm.value);
+      this.eventSubmitted.emit();
+      this.closeModal();
     });
     console.log(this.eventForm.value);
   }

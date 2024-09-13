@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { Component, inject, TemplateRef, ViewChild } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
@@ -10,7 +11,7 @@ import { PersonalService } from 'src/app/services/personal/personal.service';
 @Component({
   selector: 'app-cv-viewer',
   standalone: true,
-  imports: [PdfViewerModule],
+  imports: [PdfViewerModule,CommonModule],
   templateUrl: './cv-viewer.component.html',
   styleUrl: './cv-viewer.component.scss',
 })
@@ -19,6 +20,7 @@ export class CvViewerComponent implements ICellRendererAngularComp {
   personalService = inject(PersonalService);
   params?: ICellRendererParams;
   pdfFile!: any;
+  error: any;
 
   agInit(params: ICellRendererParams<any, any, any>): void {
     this.params = params;
@@ -42,8 +44,7 @@ export class CvViewerComponent implements ICellRendererAngularComp {
           this.pdfFile = URL.createObjectURL(res);
         },
         error: (err) => {
-          console.log(err);
-          console.error('Error al cargar el CV:', this.pdfFile);
+          this.error = err;
         },
       });
 
@@ -59,7 +60,6 @@ export class CvViewerComponent implements ICellRendererAngularComp {
   }
 
   onProgress(progressData: PDFProgressData) {
-    console.log(progressData);
     // do anything with progress data. For example progress indicator
   }
 }

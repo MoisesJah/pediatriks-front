@@ -15,7 +15,15 @@
 
 <ng-template #pdfViewer>
   <div class="modal-header">
-    <h4 class="modal-title" id="modal-basic-title">Cv Viewer</h4>
+    <h4 class="modal-title" id="modal-basic-title">
+      <span class="text-primary">
+        <i style="vertical-align: middle;" class="ki-duotone ki-book text-gray-900 fs-1">
+          <span class="path1"></span>
+          <span class="path2"></span>
+          <span class="path3"></span></i>
+        </span>
+      Curriculum &bull; {{ params.data?.nombre }}
+    </h4>
     <button
       type="button"
       class="btn btn-sm btn-icon btn-active-color-primary btn-color-gray-800"
@@ -30,6 +38,11 @@
   </div>
 
   <div class="modal-body">
+    <div *ngIf="error" style="height: 300px;" class="d-flex justify-content-center align-items-center">
+      <div class="text-danger">
+        <h1 class="text-center fs-5 text-danger">Ocurrió un error al cargar el archivo</h1>
+      </div>
+    </div>
     @defer (when pdfFile) {
     <pdf-viewer
       [src]="pdfFile"
@@ -43,6 +56,7 @@
     <div
       class="d-flex justify-content-center align-items-center"
       style="height: 500px"
+      [ngClass]="{'d-none': error}"
     >
       <div class="spinner-border" role="status">
         <span class="visually-hidden">Loading...</span>

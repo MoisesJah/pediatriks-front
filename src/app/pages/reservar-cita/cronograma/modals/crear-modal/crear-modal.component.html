@@ -67,7 +67,7 @@
             </div>
             <div class="form-group col-6">
                 <label class="form-label" for="">Seleccionar Terapista</label>
-                <ng-select [items]="personalList | async" [loading]="isLoading | async" [loadingText]="'Cargando...'"
+                <ng-select [items]="personalList" [loading]="isLoading | async" [loadingText]="'Cargando...'"
                     bindValue="id_personal" placeholder="Seleccionar" bindLabel="nombre" formControlName="id_personal">
                 </ng-select>
             </div>

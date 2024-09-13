@@ -15,6 +15,7 @@ import { ModalEditComponent } from '../modal-edit/modal-edit.component';
 })
 export class ModalViewEventComponent implements OnInit {
   eventId!: string;
+  citaId!: string;
   activeModal = inject(NgbActiveModal);
   modal = inject(NgbModal);
   citaService = inject(CitaService);
@@ -25,17 +26,18 @@ export class ModalViewEventComponent implements OnInit {
   constructor() {}
 
   ngOnInit(): void {
-    this.citaService.getById(this.eventId).subscribe((resp) => {
+    this.citaService.getById(this.citaId, this.eventId).subscribe((resp) => {
       this.event = resp.data;
       console.log(this.event);
+      console.log(this.citaId, this.eventId);
     });
   }
 
   sessionInfo() {
-    const tipocita = this.event?.tipocita;
+    const tipocita = this.event?.tipo_cita;
     const sesion = this.event?.sesion.num_sesion!;
 
-    if (tipocita === 'Evaluacion' && sesion <= 1) {
+    if (tipocita === 'Evaluación' && sesion <= 1) {
       return `Evaluación`;
     }
     return `Sesión ${sesion}`;
