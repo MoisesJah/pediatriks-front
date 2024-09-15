@@ -33,6 +33,7 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TipoCita } from 'src/app/models/tipocita';
 import { TipocitaService } from 'src/app/services/tipocita/tipocita.service';
 import { PaqueteService } from 'src/app/services/paquetes/paquete.service';
+import { Paquete } from 'src/app/models/paquetes';
 import { CitaService } from 'src/app/services/citas/cita.service';
 import { FlatpickrDefaultsInterface } from 'angularx-flatpickr';
 import Spanish from 'flatpickr/dist/l10n/es.js';
@@ -198,6 +199,7 @@ export class ModalCreateEventComponent implements OnInit {
   }
 
   getTerapiaId(event: any, index: number) {
+    console.log("ddd");
     if (this.isCitaContinua && event) {
       this.terapiasId[index] = event.id_terapia;
       this.terapiaService.getPaquetesByTerapia(event.id_terapia)
@@ -212,7 +214,7 @@ export class ModalCreateEventComponent implements OnInit {
   help() {
     this.eventForm.valueChanges.subscribe((value) => {
       const id_sede = value.id_sede
-      const detalle = value.detalle 
+      const detalle = value.detalle
 
     detalle.forEach((control: any, index: number, array: any) => {
       const body = {
@@ -227,7 +229,7 @@ export class ModalCreateEventComponent implements OnInit {
           this.avaiblePersonal[index] = resp.data
         })
       }
-      // console.log('yoooo',control.get('id_terapia'))      
+      // console.log('yoooo',control.get('id_terapia'))
     })
      console.log(value)
      console.log(id_sede)
