@@ -37,6 +37,7 @@ import { CitaService } from 'src/app/services/citas/cita.service';
 import { TerapiaService } from 'src/app/services/terapia/terapia.service';
 import { Terapia } from 'src/app/models/terapia';
 import { LoadingService } from 'src/app/services/loading.service';
+import { EventImpl } from '@fullcalendar/core/internal';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -158,7 +159,7 @@ export class ReservarCitaComponent implements OnInit, OnDestroy {
 
   handleEventClick(clickInfo: EventClickArg) {
     const event = clickInfo.event;
-
+    console.log(clickInfo);
 
     const modalRef = this.modalService.open(ModalViewEventComponent, {
       centered: true,
@@ -168,42 +169,8 @@ export class ReservarCitaComponent implements OnInit, OnDestroy {
     });
 
     modalRef.componentInstance.eventId = event.id;
+    modalRef.componentInstance.citaId = event.extendedProps.id_cita;
 
-    //     console.log('Evento actualizado recibido del modal:', updatedEvent);
-
-    //     if (this.fullCalendarComponent) {
-    //       const calendarApi = this.fullCalendarComponent.getApi();
-    //       const existingEvent = calendarApi.getEventById(updatedEvent.id);
-    //       if (existingEvent) {
-    //         existingEvent.remove();
-    //         calendarApi.addEvent({
-    //           id: updatedEvent.id,
-    //           title: updatedEvent.title,
-    //           start: updatedEvent.start,
-    //           end: updatedEvent.end,
-    //           description: updatedEvent.description,
-    //           location: updatedEvent.location,
-    //           therapyType: updatedEvent.therapyType,
-    //           selectedPatient: updatedEvent.selectedPatient,
-    //           doctor: updatedEvent.doctor, // Asegúrate de agregar el campo doctor aquí
-    //         });
-
-    //         // Forzar la detección de cambios para actualizar el componente
-    //         this.forceUpdateEvent(updatedEvent);
-    //       }
-    //     }
-    //   }
-    // );
-
-    // modalRef.componentInstance.eventDeleted.subscribe((eventId: string) => {
-    //   if (this.fullCalendarComponent) {
-    //     const calendarApi = this.fullCalendarComponent.getApi();
-    //     const existingEvent = calendarApi.getEventById(eventId);
-    //     if (existingEvent) {
-    //       existingEvent.remove();
-    //     }
-    //   }
-    // });
   }
 
   handleEvents(events: EventApi[]) {
@@ -213,8 +180,9 @@ export class ReservarCitaComponent implements OnInit, OnDestroy {
 
   handleSelectChange(event: any) {
     const selectedValue = event.id_terapia;
-    // this.router.navigate(['admin/reservar-cita', selectedValue],{relativeTo: this.route});
-    this.router.navigate([selectedValue], { relativeTo: this.route });
+    
+    // this.router.navigate([selectedValue], { relativeTo: this.route });
+    this.router.navigateByUrl(`/admin/reservar-cita/${selectedValue}`);
   }
 
   openModal() {
@@ -224,24 +192,9 @@ export class ReservarCitaComponent implements OnInit, OnDestroy {
       backdrop: 'static',
     });
 
-    modalRef.componentInstance.eventSubmitted.subscribe(
-      (newEvent: CalendarEvent) => {
-        if (this.fullCalendarComponent) {
-          const calendarApi = this.fullCalendarComponent.getApi();
-          calendarApi.addEvent({
-            id: newEvent.id,
-            title: newEvent.title,
-            start: newEvent.start,
-            end: newEvent.end,
-            description: newEvent.description,
-            location: newEvent.location,
-            therapyType: newEvent.therapyType,
-            selectedPatient: newEvent.selectedPatient,
-            doctor: newEvent.doctor, // Asegúrate de agregar el campo doctor aquí
-          });
-        }
-      }
-    );
+    modalRef.componentInstance.eventSubmitted.subscribe(()=>{
+      this.loadCitas();
+    })
   }
 
 }

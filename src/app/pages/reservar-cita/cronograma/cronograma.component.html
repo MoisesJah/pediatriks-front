@@ -27,12 +27,12 @@
           border-radius: 0 0 15px 15px;
         ">
         <div class="demo-app-main">
-          @defer () {
+          @defer (on viewport) {
           <full-calendar [events]="citasEvent | async" [options]="calendarOptions">
 
           </full-calendar>
           }@placeholder() {
-          <div class="loader "></div>
+          <h1>Loading...</h1>
           }
         </div>
       </div>

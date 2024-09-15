@@ -8,7 +8,7 @@ export interface Cita {
   paciente: IPaciente;
   personal: string;
   sede: Sede;
-  tipocita: string
+  tipo_cita: string
   terapia: Terapia;
   sesion: {
     id_sesion: string;

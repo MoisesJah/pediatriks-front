@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { AfterViewInit, Component, inject, OnInit } from '@angular/core';
 import {
   CalendarOptions,
   DateSelectArg,
@@ -14,7 +14,7 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { CitaService } from 'src/app/services/citas/cita.service';
 import esLocale from '@fullcalendar/core/locales/es';
 import { ActivatedRoute, Router } from '@angular/router';
-import { map, Observable } from 'rxjs';
+import { distinctUntilChanged, map, Observable } from 'rxjs';
 import { FullCalendarModule } from '@fullcalendar/angular';
 import { CommonModule } from '@angular/common';
 import { HeaderComponent } from 'src/app/components/ui/header/header.component';
@@ -24,6 +24,7 @@ import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { LoadingService } from 'src/app/services/loading.service';
 import { CrearModalComponent } from './modals/crear-modal/crear-modal.component';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { ModalViewEventComponent } from '../modal-event/modal-view-event/modal-view-event.component';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -45,6 +46,9 @@ export class CronogramaComponent implements OnInit {
 
   currentTerapia: Terapia | undefined;
 
+  gridMonth = new Date().getMonth() + 1;
+  gridYear = new Date().getFullYear();
+
   constructor(private route: ActivatedRoute) {}
 
   citasEvent: Observable<EventApi[]> = new Observable();
@@ -64,25 +68,24 @@ export class CronogramaComponent implements OnInit {
     selectMirror: true,
     dayMaxEvents: true,
     // select: this.handleDateSelect.bind(this),
-    // eventClick: this.handleEventClick.bind(this),
+    eventClick: this.handleEventClick.bind(this),
     // eventsSet: this.handleEvents.bind(this),
     locale: esLocale,
     datesSet: (arg) => {
-      const gridMonth = arg.view.currentStart.getMonth() + 1;
-      const gridYear = arg.view.currentStart.getFullYear();
-      this.loadCitas(gridMonth, gridYear);
+      this.gridMonth = arg.view.currentStart.getMonth() + 1;
+      this.gridYear = arg.view.currentStart.getFullYear();
+      this.loadCitas(this.gridMonth, this.gridYear);
     },
   };
 
   ngOnInit(): void {
     this.route.params.subscribe((params) => {
       this.terapiaId = params['tag'];
-      this.loadTerapia();
+      this.loadCurrentTerapia();
       this.loadTerapias();
+      this.loadCitas(this.gridMonth, this.gridYear);
     });
   }
-
-  
 
   openModal() {
     const modalRef = this.modalService.open(CrearModalComponent, {
@@ -93,9 +96,28 @@ export class CronogramaComponent implements OnInit {
     modalRef.componentInstance.terapia = this.currentTerapia;
   }
 
+  handleEventClick(clickInfo: EventClickArg) {
+    const event = clickInfo.event;
+
+    const modalRef = this.modalService.open(ModalViewEventComponent, {
+      centered: true,
+      size: '100',
+      scrollable: true,
+      backdrop: 'static',
+    });
+
+    modalRef.componentInstance.eventId = event.id;
+    modalRef.componentInstance.citaId = event.extendedProps.id_cita;
+
+    modalRef.componentInstance.eventSubmitted.subscribe(() => {
+      this.loadCitas(this.gridMonth, this.gridYear);
+    })
+  }
+
   handleSelectChange(event: any) {
     const terapia = event as { id_terapia: string; nombre: string };
     const selectedValue = terapia.id_terapia;
+    
     this.router.navigateByUrl(`/admin/reservar-cita/${selectedValue}`);
   }
 
@@ -103,7 +125,7 @@ export class CronogramaComponent implements OnInit {
     if (this.terapiaId) {
       this.citasEvent = this.citasService
         .getByTerapia(this.terapiaId, month, year)
-        .pipe(map((data) => data.data));
+        .pipe(distinctUntilChanged(), map((data) => data.data));
     }
   }
 
@@ -119,7 +141,7 @@ export class CronogramaComponent implements OnInit {
     });
   }
 
-  loadTerapia(): void {
+  loadCurrentTerapia(): void {
     this.terapiasService.getById(this.terapiaId!).subscribe((resp) => {
       this.currentTerapia = resp.data;
     });

@@ -94,7 +94,7 @@
             </div>
             <div class="col-6">
               <label class="form-label" for="">Especialista</label>
-              <ng-select [items]="personalList | async" bindValue="id_personal" [loadingText]="'Cargando..'"
+              <ng-select [items]="avaiblePersonal[i]" bindValue="id_personal" [loadingText]="'Cargando..'"
                 placeholder="Seleccionar" bindLabel="nombre" formControlName="id_personal"></ng-select>
             </div>
           </div>
