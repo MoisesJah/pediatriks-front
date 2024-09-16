@@ -92,6 +92,22 @@
                 placeholder="Seleccionar" bindLabel="nombre"></ng-select>
             </div>
           </div>
+          <div class="row">
+
+          </div>
+
+          <div class="row">
+            <div class="col-6">
+              <label class="form-label" for="">Terapia</label>
+              <ng-select [items]="terapiasList | async" bindValue="id_terapia" [loadingText]="'Cargando..'"
+                placeholder="Seleccionar" bindLabel="nombre" (change)="getTerapiaId($event,i)" formControlName="id_terapia"></ng-select>
+            </div>
+            <div class="col-6">
+              <label class="form-label" for="">Especialista</label>
+              <ng-select [items]="avaiblePersonal[i]" bindValue="id_personal" [loadingText]="'Cargando..'"
+                placeholder="Seleccionar" bindLabel="nombre" formControlName="id_personal"></ng-select>
+            </div>
+          </div>
         </div>
       </ng-container>
     </div>

@@ -31,6 +31,11 @@ export class CitaService {
     return this.http.get<{ data: Cita }>(`${this.apiUrl}/cita-test/sesion/${id_cita}/${id_sesion}`);
   }
 
+  getCitasByPaciente(idPaciente: string) {
+    return this.http.get<{ data: Cita[] }>(`${this.apiUrl}/cita-test/paciente/${idPaciente}`);
+  }
+
+
   create(cita: any) {
     return this.http.post<{ data: Cita }>(`${this.apiUrl}/cita-test/add`, cita);
   }

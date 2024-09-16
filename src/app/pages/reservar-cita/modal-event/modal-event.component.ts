@@ -33,6 +33,7 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TipoCita } from 'src/app/models/tipocita';
 import { TipocitaService } from 'src/app/services/tipocita/tipocita.service';
 import { PaqueteService } from 'src/app/services/paquetes/paquete.service';
+import { Paquete } from 'src/app/models/paquetes';
 import { CitaService } from 'src/app/services/citas/cita.service';
 import { FlatpickrDefaultsInterface } from 'angularx-flatpickr';
 import Spanish from 'flatpickr/dist/l10n/es.js';
@@ -197,6 +198,7 @@ export class ModalCreateEventComponent implements OnInit, AfterViewInit {
   }
 
   getTerapiaId(event: any, index: number) {
+    console.log("ddd");
     if (this.isCitaContinua && event) {
       this.terapiasId[index] = event.id_terapia;
       this.terapiaService
@@ -207,6 +209,32 @@ export class ModalCreateEventComponent implements OnInit, AfterViewInit {
       this.paquetesId[index] = [];
       this.detalle.at(index).get('id_paquete')?.setValue(null);
     }
+  }
+
+  help() {
+    this.eventForm.valueChanges.subscribe((value) => {
+      const id_sede = value.id_sede
+      const detalle = value.detalle
+
+        detalle.forEach((control: any, index: number, array: any) => {
+          const body = {
+            id_terapia: array[index].id_terapia,
+            fecha_inicio: array[index].fecha_inicio,
+            hora_inicio: array[index].hora_inicio,
+            hora_fin: array[index].hora_fin,
+            id_sede,
+          };
+
+      if (body.id_terapia && body.fecha_inicio && body.hora_inicio && body.hora_fin && id_sede) {
+        this.citaService.getPersonal(body).pipe(take(1)).subscribe((resp: any) => {
+          this.avaiblePersonal[index] = resp.data
+        })
+      }
+      // console.log('yoooo',control.get('id_terapia'))
+    })
+     console.log(value)
+     console.log(id_sede)
+    })
   }
 
   ngAfterViewInit() {
@@ -246,7 +274,7 @@ export class ModalCreateEventComponent implements OnInit, AfterViewInit {
           }
         });
       });
-  }
+    }
 
   loadTerapias() {
     this.terapiasList = this.terapiaService.getAll().pipe(

@@ -3,6 +3,7 @@ import { Personal } from './personal';
 import { Sede } from './sede';
 import { Terapia } from './terapia';
 
+
 export interface Cita {
   id_cita: string;
   paciente: IPaciente;

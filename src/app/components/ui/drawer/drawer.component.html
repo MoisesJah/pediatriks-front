@@ -39,138 +39,171 @@
         id=""
         class="menu menu-column menu-title-gray-600 menu-state-primary menu-state-icon-primary menu-state-bullet-primary menu-icon-gray-500 menu-arrow-gray-500 fw-semibold fs-6 my-auto"
       >
-        <div
-          data-kt-menu-trigger="{default: 'click', lg: 'hover'}"
-          data-kt-menu-placement="right-start"
-          class="menu-item py-2"
-        >
-          <!--begin:Menu link-->
-          <span class="menu-link menu-center">
-            <span class="menu-icon me-0">
-              <i class="ki-duotone ki-home-2 fs-2x">
-                <span class="path1"></span>
-                <span class="path2"></span>
-              </i>
-            </span>
+      <div
+      data-kt-menu-trigger="{default: 'click', lg: 'hover'}"
+      data-kt-menu-placement="right-start"
+      class="menu-item py-2"
+      style="transition: background-color 0.3s; border-radius: 15px"
+      onmouseout="this.style.backgroundColor='';"
+      (click)="navigateToInicio($event)"
+    >
+      <span class="menu-link menu-center">
+        <div class="menu-icon-text-container">
+          <span class="menu-icon me-0">
+            <i class="ki-duotone ki-home-2 fs-2x">
+              <span class="path1"></span>
+              <span class="path2"></span>
+            </i>
           </span>
+          <span class="menu-text">Inicio</span>
         </div>
+      </span>
+    </div>
         <!--begin:Menu item-->
         <div
-          data-kt-menu-trigger="{default: 'click', lg: 'hover'}"
-          data-kt-menu-placement="right-start"
-          class="menu-item py-2"
-          style="transition: background-color 0.3s; border-radius: 15px"
-          onmouseout="this.style.backgroundColor='';"
-          (click)="navigateToSedes($event)"
-        >
-          <span class="menu-link menu-center">
-            <span class="menu-icon me-0">
-              <i class="ki-duotone ki-notification-status fs-2x">
-                <span class="path1"></span>
-                <span class="path2"></span>
-                <span class="path3"></span>
-                <span class="path4"></span>
-              </i>
-            </span>
+        data-kt-menu-trigger="{default: 'click', lg: 'hover'}"
+        data-kt-menu-placement="right-start"
+        class="menu-item py-2"
+        style="transition: background-color 0.3s; border-radius: 15px"
+        onmouseout="this.style.backgroundColor='';"
+        (click)="navigateToReservarCita($event)"
+      >
+        <!--begin:Menu link-->
+        <span class="menu-link menu-center">
+          <div class="menu-icon-text-container">
+          <span class="menu-icon me-0">
+            <i class="ki-duotone ki-calendar-add" style="font-size: 2em;">
+          <span class="path1"></span>
+          <span class="path2"></span>
+          <span class="path3"></span>
+          <span class="path4"></span>
+          <span class="path5"></span>
+          <span class="path6"></span>
+          </i>
           </span>
-        </div>
-        <!--end:Menu item-->
-        <!--begin:Menu item-->
-        <div
-          data-kt-menu-trigger="{default: 'click', lg: 'hover'}"
-          data-kt-menu-placement="right-start"
-          class="menu-item py-2"
-          style="transition: background-color 0.3s; border-radius: 15px"
-          onmouseout="this.style.backgroundColor='';"
-          (click)="navigateToReservarCita($event)"
-        >
-          <!--begin:Menu link-->
-          <span class="menu-link menu-center">
-            <span class="menu-icon me-0">
-              <i class="ki-duotone ki-abstract-35 fs-2x">
-                <span class="path1"></span>
-                <span class="path2"></span>
-              </i>
-            </span>
-          </span>
-          <!--end:Menu link-->
-          <!--begin:Menu sub-->
+          <span class="menu-text">Citas</span>
+      </div>
+        </span>
+        <!--end:Menu link-->
+        <!--begin:Menu sub-->
 
-          <!--end:Menu sub-->
-        </div>
+        <!--end:Menu sub-->
+      </div>
         <!--end:Menu item-->
         <!--begin:Menu item-->
         <div
-          data-kt-menu-trigger="{default: 'click', lg: 'hover'}"
-          data-kt-menu-placement="right-start"
-          class="menu-item py-2"
-          style="transition: background-color 0.3s; border-radius: 15px"
-          onmouseout="this.style.backgroundColor='';"
-        >
-          <!--begin:Menu link-->
-          <span class="menu-link menu-center">
-            <span class="menu-icon me-0">
-              <i class="ki-duotone ki-abstract-26 fs-2x">
-                <span class="path1"></span>
-                <span class="path2"></span>
-              </i>
-            </span>
-          </span>
-          <!--end:Menu link-->
-          <!--begin:Menu sub-->
-          <div
-            class="menu-sub menu-sub-dropdown menu-sub-indention px-2 py-4 w-250px mh-75 overflow-auto"
+            data-kt-menu-trigger="{default: 'click', lg: 'hover'}"
+            data-kt-menu-placement="right-start"
+            class="menu-item py-2"
+            style="transition: background-color 0.3s; border-radius: 15px"
+            onmouseout="this.style.backgroundColor='';"
+            (click)="navigateToPaquetes($event)"
           >
-            <!--begin:Menu item-->
-            <div class="menu-item">
-              <!--begin:Menu content-->
-              <div class="menu-content">
-                <span class="menu-section fs-5 fw-bolder ps-1 py-1"
-                  >Utilities</span
-                >
-              </div>
-              <!--end:Menu content-->
-            </div>
-            <!--end:Menu item-->
-
-            <!--begin:Menu item-->
-            <div data-kt-menu-trigger="click" class="menu-item menu-accordion">
-              <div class="menu-item">
                 <!--begin:Menu link-->
-                <a
-                  class="menu-link"
-                  href="utilities/wizards/create-account.html"
-                >
-                  <span class="menu-bullet">
-                    <span class="bullet bullet-dot"></span>
+                <span class="menu-link menu-center">
+                  <div class="menu-icon-text-container">
+                  <span class="menu-icon me-0">
+                    <i class="ki-duotone ki-briefcase fs-2x">
+                      <span class="path1"></span>
+                      <span class="path2"></span>
+                    </i>
                   </span>
-                  <span class="menu-title">Create Account</span>
-                </a>
+                  <span class="menu-text">Paquetes</span>
+                </div>
+                </span>
                 <!--end:Menu link-->
               </div>
-            </div>
-            <!--end:Menu sub-->
-          </div>
-          <!--end:Menu item-->
-        </div>
+        <!--end:Menu item-->
+        <!--begin:Menu item-->
         <div
-          data-kt-menu-trigger="{default: 'click', lg: 'hover'}"
-          data-kt-menu-placement="right-start"
-          class="menu-item py-2"
-          style="transition: background-color 0.3s; border-radius: 15px"
-          onmouseout="this.style.backgroundColor='';"
-        >
-          <!--begin:Menu link-->
-          <span class="menu-link menu-center">
-            <span class="menu-icon me-0">
-              <i class="ki-duotone ki-briefcase fs-2x">
-                <span class="path1"></span>
-                <span class="path2"></span>
-              </i>
-            </span>
-          </span>
-          <!--end:Menu link-->
+              class="menu-item here py-2 show menu-dropdown"
+              style="transition: background-color 0.3s; border-radius: 15px"
+            >
+              <span class="menu-link menu-center">
+                <div class="menu-icon-text-container">
+                  <span class="menu-icon me-0">
+                    <i class="ki-duotone ki-user-tick" style="font-size: 2em;">
+                      <span class="path1"></span>
+                      <span class="path2"></span>
+                      <span class="path3"></span>
+                      </i>
+                  </span>
+                  <span class="menu-text">Administración</span>
+                </div>
+              </span>
+
+              <!-- Submenú -->
+              <div
+  class="menu-sub menu-sub-dropdown px-2 py-4 w-250px mh-75 overflow-auto"
+  style="z-index:107; position:fixed; inset:0px auto auto 0px; margin:0px; transform: translate(128px,540px);"
+  *ngIf="showSubMenu"
+  [ngStyle]="{ display: showSubMenu ? 'block' : 'none' }"
+>
+  <div class="menu-item">
+    <div class="menu-content">
+      <span class="menu-section fs-5 fw-bolder ps-1 py-1">Admin</span>
+    </div>
+  </div>
+  <div class="menu-item">
+    <div class="menu-content">
+      <a href="#" (click)="navigateToPersonal($event)" class="menu-link">
+        <span class="menu-bullet">
+          <span class="bullet bullet-dot"></span>
+        </span>
+        <span class="menu-tittle">Personal</span>
+        </a>
+    </div>
+  </div>
+  <div class="menu-item">
+    <div class="menu-content">
+      <a href="#" (click)="navigateToUsuarios($event)" class="menu-link"><span class="menu-bullet">
+        <span class="bullet bullet-dot"></span>
+      </span>
+      <span class="menu-tittle">Usuarios</span>
+      </a>
+    </div>
+  </div>
+  <div class="menu-item">
+    <div class="menu-content">
+      <a href="#" (click)="navigateToTerapias($event)" class="menu-link"><span class="menu-bullet">
+        <span class="bullet bullet-dot"></span>
+      </span>
+      <span class="menu-tittle">Terapias</span>
+      </a>
+    </div>
+  </div>
+  <div class="menu-item">
+    <div class="menu-content">
+      <a href="#" (click)="navigateToPacientes($event)" class="menu-link"><span class="menu-bullet">
+        <span class="bullet bullet-dot"></span>
+      </span>
+      <span class="menu-tittle">Pacientes</span>
+      </a>
+    </div>
+  </div>
+  <div class="menu-item">
+    <div class="menu-content">
+      <a href="#" (click)="navigateToSede($event)" class="menu-link"><span class="menu-bullet">
+        <span class="bullet bullet-dot"></span>
+      </span>
+      <span class="menu-tittle">Sedes</span>
+      </a>
+    </div>
+  </div>
+  <div class="menu-item">
+    <div class="menu-content">
+      <a href="#" (click)="navigateToPaquetes($event)" class="menu-link"><span class="menu-bullet">
+        <span class="bullet bullet-dot"></span>
+      </span>
+      <span class="menu-tittle">Paquetes</span>
+      </a>
+    </div>
+  </div>
+
+
         </div>
+</div>
+
         <!--end:Menu sub-->
       </div>
       <!--end:Menu item-->
