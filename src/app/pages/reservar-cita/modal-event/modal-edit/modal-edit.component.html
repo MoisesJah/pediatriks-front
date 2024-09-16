@@ -5,7 +5,12 @@
       <span>
         <i style="vertical-align: top;" class="ki-duotone ki-notepad-edit text-gray-900 fs-1"><span class="path1"></span><span class="path2"></span></i>
       </span>
-      Editar Cita
+      <span>
+        Editar Cita &bull;
+        <span [ngClass]="getCambiosRestantes() === 0 ? 'text-warning' : ''">
+          ({{getCambiosRestantes()}} cambios restantes)
+        </span>
+      </span>
     </h4>
       <button
         type="button"
@@ -19,6 +24,7 @@
     </button>
   </div>
   <div class="modal-body">
+    <span class="text-danger mb-4 d-block" *ngIf="!canEditSession()">No se puede editar esta sesión (0) cambios restantes</span>
     <form class="form d-flex flex-column gap-4" [formGroup]="editEventForm">
       <section class="row">
         <div class="form-group col">
@@ -53,7 +59,7 @@
         </div>
         <div class="form-check">
           <input type="checkbox" class="form-check-input" formControlName="sesiones_restantes">
-          <label class="form-check-label" for="">Actualizar en las sesiones restantes</label>
+          <label class="form-check-label" for="">Actualizar Especialista en las sesiones restantes</label>
         </div>
       </div>
 
@@ -79,6 +85,8 @@
   </div>
   <div class="modal-footer">
     <button type="button" class="btn btn-secondary" (click)="closeModal()">Cerrar</button>
-    <button type="button" [disabled]="!editEventForm.valid" class="btn btn-primary" (click)="updateEvent()">Actualizar</button>
+    @if (canEditSession()) {
+      <button type="button" [disabled]="!editEventForm.valid || (isLoading | async)" class="btn btn-primary" (click)="updateEvent()">Actualizar</button>
+    }
   </div>
 </div>

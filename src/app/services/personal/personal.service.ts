@@ -21,6 +21,12 @@ export class PersonalService {
     );
   }
 
+  getByTerapia(id: string) {
+    return this.http.get<{ data: Personal[] }>(
+      `${this.apiUrl}/personal/terapias/${id}`
+    );
+  }
+
   create(personal: Personal) {
     const data = new FormData();
       data.append('nombre', personal.nombre);

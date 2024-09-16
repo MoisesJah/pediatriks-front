@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, inject, OnInit } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
 import {
   CalendarOptions,
   DateSelectArg,
@@ -45,11 +45,12 @@ export class CronogramaComponent implements OnInit {
   terapiasList: Observable<{ id_terapia: string; nombre: string }[]> = new Observable();
 
   currentTerapia: Terapia | undefined;
+  loading: boolean = true;
 
   gridMonth = new Date().getMonth() + 1;
   gridYear = new Date().getFullYear();
 
-  constructor(private route: ActivatedRoute) {}
+  constructor(private route: ActivatedRoute, private changeDetector: ChangeDetectorRef) {}
 
   citasEvent: Observable<EventApi[]> = new Observable();
 
@@ -67,15 +68,13 @@ export class CronogramaComponent implements OnInit {
     selectable: true,
     selectMirror: true,
     dayMaxEvents: true,
-    // select: this.handleDateSelect.bind(this),
     eventClick: this.handleEventClick.bind(this),
-    // eventsSet: this.handleEvents.bind(this),
-    eventsSet(events) {
-        console.log(events);
+    loading:(isLoading) => {
+        this.loading = isLoading;
     },
-    
     locale: esLocale,
     datesSet: (arg) => {
+      this.changeDetector.detectChanges();
       this.gridMonth = arg.view.currentStart.getMonth() + 1;
       this.gridYear = arg.view.currentStart.getFullYear();
       this.loadCitas(this.gridMonth, this.gridYear);
@@ -117,7 +116,9 @@ export class CronogramaComponent implements OnInit {
 
     modalRef.componentInstance.eventId = event.id;
     modalRef.componentInstance.citaId = event.extendedProps.id_cita;
-
+    modalRef.componentInstance.eventUpdated.subscribe(() => {
+      this.loadCitas(this.gridMonth, this.gridYear);
+    })
   }
 
   handleSelectChange(event: any) {

@@ -59,6 +59,7 @@ export class ReservarCitaComponent implements OnInit, OnDestroy {
   terapiasList: { id_terapia: string; nombre: string }[] = [];
 
   subscriptions: Subscription[] = [];
+  listLoading = false;
 
   calendarVisible = true;
   calendarOptions: CalendarOptions = {
@@ -170,7 +171,9 @@ export class ReservarCitaComponent implements OnInit, OnDestroy {
 
     modalRef.componentInstance.eventId = event.id;
     modalRef.componentInstance.citaId = event.extendedProps.id_cita;
-
+    modalRef.componentInstance.eventUpdated.subscribe(() => {
+      this.loadCitas();
+    })
   }
 
   handleEvents(events: EventApi[]) {

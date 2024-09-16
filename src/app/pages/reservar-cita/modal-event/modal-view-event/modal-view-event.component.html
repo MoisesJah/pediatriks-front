@@ -28,20 +28,23 @@
         </div>
       }@else {
         <div class="d-flex gap-5 mb-8 justify-content-center flex-column">
-          <div class="d-flex align-items-center gap-5">
-            <div class="">
-              <div class="d-flex gap-2 flex-column">
+          <div class="d-flex flex-column gap-2">
+              <div class="d-flex gap-2 w-100 flex-column">
                 <span class="fs-3 fw-bold" data-kt-calendar="event_name">
-                  {{event?.paciente}} #{{sessionInfo()}}
+                  {{event?.paciente}} 
                 </span>
-                <div class="fs-6" data-kt-calendar="event_description">
-                  <span class="badge badge-light-success">{{event?.terapia.nombre}}</span>
+                <div class="fs-6 d-flex justify-content-between align-items-center" data-kt-calendar="event_description">
+                  <span class="badge badge-light-primary">{{event?.terapia.nombre}}</span>
+                  <span class="fw-bold">{{sessionInfo()}}</span>
                 </div>
               </div>
              
-            </div>
+              <div class="fs-6 d-flex align-items-center gap-2">
+                <span [ngClass]="sessionStatus(event?.sesion.status.nombre)"></span>
+                <span class="">{{event?.sesion.status.nombre}} </span>
+              </div>
           </div>
-          <section class="d-grid gap-4">
+          <section class="d-grid mt-6 gap-4">
             <div class="d-flex align-items-center justify-content-between">
               <div class="fs-6 d-flex align-items-center gap-2">
                 <i class="ki-outline ki-calendar fs-1 text-primary"></i>
@@ -75,7 +78,7 @@
                 <i class="ki-solid ki-geolocation fs-1 text-gray-700 "></i>
                 <span class="fw-bold fs-6">Sede:</span>
               </div>
-              <span class="fs-6" data-kt-calendar="event_location">{{event?.sede}}</span>
+              <span class="fs-6" data-kt-calendar="event_location">{{event?.sede.nombre}}</span>
             </div>
           </section>
                   

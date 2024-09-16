@@ -1,6 +1,9 @@
 <!-- Modal para agregar nuevo evento -->
 <div class="modal-header">
-  <h4 class="modal-title">Registrar Nueva Cita</h4>
+  <h4 class="modal-title">
+    <i style="vertical-align: text-top;" class="ki-duotone ki-calendar-add text-gray-900 fs-1"><span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span><span class="path5"></span><span class="path6"></span></i>  
+    Registrar Nueva Cita
+  </h4>
   <button type="button" class="btn btn-sm btn-icon btn-active-color-primary btn-color-gray-800" aria-label="Close"
     (click)="closeModal()">
     <i class="ki-duotone ki-cross-square fs-1"><span class="path1"></span><span class="path2"></span></i>
@@ -61,7 +64,7 @@
               mwlFlatpickr [options]="timeOptions" placeholder="Seleccionar Hora de Fin" />
             </div>
           </div>
-          
+
           <div class="row">
             <div class="col-6">
               <label class="form-label" for="">Terapia</label>
@@ -90,22 +93,6 @@
               <label class="form-label" for="calendar_event_title">Paquete de la Cita</label>
               <ng-select (change)="changePaquete($event,i)" [items]="paquetesId[i]" bindValue="id_paquetes" formControlName="id_paquete" [loadingText]="'Cargando..'"
                 placeholder="Seleccionar" bindLabel="nombre"></ng-select>
-            </div>
-          </div>
-          <div class="row">
-
-          </div>
-
-          <div class="row">
-            <div class="col-6">
-              <label class="form-label" for="">Terapia</label>
-              <ng-select [items]="terapiasList | async" bindValue="id_terapia" [loadingText]="'Cargando..'"
-                placeholder="Seleccionar" bindLabel="nombre" (change)="getTerapiaId($event,i)" formControlName="id_terapia"></ng-select>
-            </div>
-            <div class="col-6">
-              <label class="form-label" for="">Especialista</label>
-              <ng-select [items]="avaiblePersonal[i]" bindValue="id_personal" [loadingText]="'Cargando..'"
-                placeholder="Seleccionar" bindLabel="nombre" formControlName="id_personal"></ng-select>
             </div>
           </div>
         </div>

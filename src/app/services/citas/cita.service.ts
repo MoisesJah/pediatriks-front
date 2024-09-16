@@ -15,40 +15,40 @@ export class CitaService {
   getAll(month?: number, year?: number) {
     if (month && year) {
       return this.http.get<{ data: EventApi[] }>(
-        `${this.apiUrl}/cita-test/list/${month}/${year}`
+        `${this.apiUrl}/citas/list/${month}/${year}`
       )
     }
-    return this.http.get<{ data: EventApi[] }>(`${this.apiUrl}/cita-test/list`);
+    return this.http.get<{ data: EventApi[] }>(`${this.apiUrl}/citas/list`);
   }
 
   getByTerapia(id: string, month: number, year: number) {
       return this.http.get<{ data: EventApi[] }>(
-        `${this.apiUrl}/cita-test/list/${month}/${year}/${id}`
+        `${this.apiUrl}/citas/list/${month}/${year}/${id}`
       );
   }
 
   getById(id_cita: string, id_sesion: string) {
-    return this.http.get<{ data: Cita }>(`${this.apiUrl}/cita-test/sesion/${id_cita}/${id_sesion}`);
+    return this.http.get<{ data: Cita }>(`${this.apiUrl}/citas/sesion/${id_cita}/${id_sesion}`);
   }
 
   getCitasByPaciente(idPaciente: string) {
-    return this.http.get<{ data: Cita[] }>(`${this.apiUrl}/cita-test/paciente/${idPaciente}`);
+    return this.http.get<{ data: Cita[] }>(`${this.apiUrl}/citas/paciente/${idPaciente}`);
   }
 
 
   create(cita: any) {
-    return this.http.post<{ data: Cita }>(`${this.apiUrl}/cita-test/add`, cita);
+    return this.http.post<{ data: Cita }>(`${this.apiUrl}/citas/add`, cita);
   }
 
   createForTherapy(cita: any) {
-    return this.http.post<{ data: Cita }>(`${this.apiUrl}/cita-test/add/therapy`, cita);
+    return this.http.post<{ data: Cita }>(`${this.apiUrl}/citas/add/therapy`, cita);
   }
 
   getPersonal(body: any) {
-    return this.http.post<{ data: any }>(`${this.apiUrl}/cita-test/terapist`, body);
+    return this.http.post<{ data: any }>(`${this.apiUrl}/citas/terapist`, body);
   }
 
   update(id_cita: string,cita: any ) {
-    return this.http.put(`${this.apiUrl}/cita-test/edit/${id_cita}`, cita);  
+    return this.http.put(`${this.apiUrl}/citas/edit/${id_cita}`, cita);  
   }
 }

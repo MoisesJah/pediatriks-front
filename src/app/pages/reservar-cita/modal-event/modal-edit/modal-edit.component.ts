@@ -15,7 +15,19 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import flatpickr from 'flatpickr';
 import { Spanish } from 'flatpickr/dist/l10n/es.js';
 import { PersonalService } from 'src/app/services/personal/personal.service';
-import { map, Observable } from 'rxjs';
+import {
+  catchError,
+  combineLatest,
+  debounceTime,
+  distinctUntilChanged,
+  filter,
+  finalize,
+  map,
+  Observable,
+  of,
+  Subject,
+  switchMap,
+} from 'rxjs';
 import { Personal } from 'src/app/models/personal';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { LoadingService } from 'src/app/services/loading.service';
@@ -31,7 +43,7 @@ import { Cita } from 'src/app/models/cita';
   templateUrl: './modal-edit.component.html',
   styleUrls: ['./modal-edit.component.scss'],
 })
-export class ModalEditComponent implements OnInit {
+export class ModalEditComponent implements OnInit, AfterViewInit {
   @Output() eventUpdated = new EventEmitter<CalendarEvent>();
 
   personalService = inject(PersonalService);
@@ -50,6 +62,16 @@ export class ModalEditComponent implements OnInit {
     altInput: true,
     altFormat: 'd/m/Y',
   };
+
+  getCambiosRestantes() {
+    const num_cambios = this.event?.sesion.num_cambios!;
+    return 3 - num_cambios;
+  }
+
+  canEditSession() {
+    const num_cambios = this.event?.sesion.num_cambios!;
+    return num_cambios < 3;
+  }
 
   getIcon(status: string): string {
     switch (status) {
@@ -100,14 +122,22 @@ export class ModalEditComponent implements OnInit {
     this.loadPersonal();
     this.loadStatus();
     this.loadCurrentSesion();
+  }
+
+  ngAfterViewInit() {
     this.editEventForm.valueChanges.subscribe(() => this.endTimeValidation());
   }
 
   loadPersonal() {
-    this.personalList = this.personalService.getAll().pipe(
-      map((resp) => resp.data),
-      untilDestroyed(this)
-    );
+    // this.personalList = this.personalService.getByTerapia(this.event?.terapia.id_terapia!).pipe(
+    //   map((resp) => resp.data),
+    //   untilDestroyed(this)
+    // )
+    // console.log(this.personalList);
+    this.personalService.getByTerapia(this.event?.terapia.id_terapia!).subscribe((resp) => {
+      this.personalList = of(resp.data);
+      console.log(resp.data);
+    })
   }
 
   loadStatus() {
@@ -124,6 +154,7 @@ export class ModalEditComponent implements OnInit {
   loadCurrentSesion() {
     const id_cita = this.event?.id_cita!;
     const id_sesion = this.event?.sesion.id_sesion!;
+
     this.citaService.getById(id_cita, id_sesion).subscribe((resp) => {
       this.editEventForm.patchValue({
         id_cita: resp.data.id_cita,
@@ -145,8 +176,8 @@ export class ModalEditComponent implements OnInit {
         id_sesion: this.event?.sesion.id_sesion!,
       })
       .subscribe((resp) => {
-        console.log(resp);
         this.eventUpdated.emit();
+        this.closeModal();
       });
   }
 }

@@ -33,7 +33,7 @@
       >
         <div class="demo-app-main">
          @defer () {
-          <full-calendar *ngIf="calendarVisible" [loading]=" isLoading | async" [events]="citasEvent | async" [options]="calendarOptions">
+          <full-calendar [ngClass]="{ 'opacity-50': isLoading | async }" *ngIf="calendarVisible" [loading]=" isLoading | async" [events]="citasEvent | async" [options]="calendarOptions">
           </full-calendar>
          }@placeholder() {
           <div

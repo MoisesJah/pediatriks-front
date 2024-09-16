@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, EventEmitter, inject, OnInit, Output } from '@angular/core';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { CalendarEvent } from 'src/app/models/calendar-event';
@@ -21,16 +21,13 @@ export class ModalViewEventComponent implements OnInit {
   citaService = inject(CitaService);
   isLoading = inject(LoadingService).isLoading;
 
+  @Output() eventUpdated = new EventEmitter<CalendarEvent>();
   event: Cita | null = null;
 
   constructor() {}
 
   ngOnInit(): void {
-    this.citaService.getById(this.citaId, this.eventId).subscribe((resp) => {
-      this.event = resp.data;
-      console.log(this.event);
-      console.log(this.citaId, this.eventId);
-    });
+    this.loadEvent();
   }
 
   sessionInfo() {
@@ -40,11 +37,30 @@ export class ModalViewEventComponent implements OnInit {
     if (tipocita === 'Evaluación' && sesion <= 1) {
       return `Evaluación`;
     }
-    return `Sesión ${sesion}`;
+    return `# Sesión ${sesion}`;
+  }
+
+  sessionStatus(status: string) {
+    switch (status) {
+      case 'Programado':
+        return 'h-10px w-10px rounded-circle bg-primary';
+      case 'Asistió':
+        return 'h-10px w-10px rounded-circle bg-success';
+      case 'No Asistió':
+        return 'h-10px w-10px rounded-circle bg-danger';
+      default:
+        return '';
+    }
   }
 
   closeModal() {
     this.activeModal.close();
+  }
+
+  loadEvent() {
+    this.citaService.getById(this.citaId, this.eventId).subscribe((resp) => {
+      this.event = resp.data;
+    });
   }
 
   openEditModal() {
@@ -55,9 +71,10 @@ export class ModalViewEventComponent implements OnInit {
     });
 
     modalRef.componentInstance.event = this.event;
-    // modalRef.componentInstance.eventUpdated.subscribe((event) => {
-    //   this.event = event;
-    // });
+    modalRef.componentInstance.eventUpdated.subscribe(() => {
+      this.loadEvent();
+      this.eventUpdated.emit()
+    });
   }
 
   deleteEvent() {
