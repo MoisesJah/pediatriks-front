@@ -69,6 +69,13 @@
     </div>
 
     <div class="form-group">
+      <label for="exampleFormControlInput1" class="required form-label">
+        Tipo de usuario
+      </label>
+      <ng-select [items]="tipoUserList | async" [loading]="isLoading | async" [loadingText]="'Cargando...'" bindValue="id_tipousers" placeholder="Seleccionar" bindLabel="nombre" formControlName="id_tipousers"></ng-select>
+    </div>
+
+    <div class="form-group">
       <div
         class="d-flex align-items-center justify-content-between"
         style="margin-bottom: 0.75rem"

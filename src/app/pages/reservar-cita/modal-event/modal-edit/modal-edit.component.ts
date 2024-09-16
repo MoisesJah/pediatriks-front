@@ -1,4 +1,14 @@
-import { Component, Input, OnInit, EventEmitter, Output, ViewChild, ElementRef, AfterViewInit, inject } from '@angular/core';
+import {
+  Component,
+  Input,
+  OnInit,
+  EventEmitter,
+  Output,
+  ViewChild,
+  ElementRef,
+  AfterViewInit,
+  inject,
+} from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CalendarEvent } from 'src/app/models/calendar-event';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
@@ -12,54 +22,69 @@ import { LoadingService } from 'src/app/services/loading.service';
 import { FlatpickrDefaultsInterface } from 'angularx-flatpickr';
 import { FlatPickrOutputOptions } from 'angularx-flatpickr/lib/flatpickr.directive';
 import { SesionstatusService } from 'src/app/services/status/sesionstatus.service';
+import { CitaService } from 'src/app/services/citas/cita.service';
+import { Cita } from 'src/app/models/cita';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
   selector: 'app-modal-edit',
   templateUrl: './modal-edit.component.html',
-  styleUrls: ['./modal-edit.component.scss']
+  styleUrls: ['./modal-edit.component.scss'],
 })
 export class ModalEditComponent implements OnInit {
-  @Input() event: CalendarEvent | null = null;
   @Output() eventUpdated = new EventEmitter<CalendarEvent>();
 
   personalService = inject(PersonalService);
+  citaService = inject(CitaService);
   statusService = inject(SesionstatusService);
   isLoading = inject(LoadingService).isLoading;
 
+  event: Cita | null = null;
   editEventForm: FormGroup;
 
   personalList: Observable<Personal[]> = new Observable();
   statusList: Observable<any[]> = new Observable();
 
   fechaOptions: FlatpickrDefaultsInterface = {
-    locale: {...Spanish},
+    locale: { ...Spanish },
     altInput: true,
     altFormat: 'd/m/Y',
+  };
+
+  getIcon(status: string): string {
+    switch (status) {
+      case 'Programado':
+        return 'h-10px w-10px rounded-circle bg-primary';
+      case 'Asistió':
+        return 'h-10px w-10px rounded-circle bg-success';
+      case 'No Asistió':
+        return 'h-10px w-10px rounded-circle bg-danger';
+      default:
+        return '';
+    }
   }
-  
+
   horaInicioOptions: FlatpickrDefaultsInterface = {
     enableTime: true,
     noCalendar: true,
     dateFormat: 'H:i',
-  }
+  };
 
   horaFinOptions: FlatpickrDefaultsInterface = {
     enableTime: true,
     noCalendar: true,
     dateFormat: 'H:i',
-  }
+  };
 
   constructor(private fb: FormBuilder, public activeModal: NgbActiveModal) {
     this.editEventForm = this.fb.group({
       descripcion: [null],
       id_personal: [null],
       fecha_inicio: [null],
-      fecha_fin: [null],
       hora_inicio: [null],
       hora_fin: [null],
-      status: [null],
-      check_personal: [false],
+      id_status: [null],
+      sesiones_restantes: [true],
     });
   }
 
@@ -74,6 +99,7 @@ export class ModalEditComponent implements OnInit {
   ngOnInit() {
     this.loadPersonal();
     this.loadStatus();
+    this.loadCurrentSesion();
     this.editEventForm.valueChanges.subscribe(() => this.endTimeValidation());
   }
 
@@ -95,7 +121,32 @@ export class ModalEditComponent implements OnInit {
     this.activeModal.dismiss(); // Cierra el modal sin realizar cambios
   }
 
+  loadCurrentSesion() {
+    const id_cita = this.event?.id_cita!;
+    const id_sesion = this.event?.sesion.id_sesion!;
+    this.citaService.getById(id_cita, id_sesion).subscribe((resp) => {
+      this.editEventForm.patchValue({
+        id_cita: resp.data.id_cita,
+        id_sesion: resp.data.sesion.id_sesion,
+        id_personal: resp.data.sesion.personal.id_personal,
+        id_status: resp.data.sesion.status.id_status,
+        fecha_inicio: resp.data.sesion.fecha_inicio,
+        hora_inicio: resp.data.sesion.hora_inicio,
+        hora_fin: resp.data.sesion.hora_fin,
+      });
+    });
+  }
+
   updateEvent() {
-    console.log(this.editEventForm.value); // Cierra el modal después de actualizar el evento
+    this.citaService
+      .update(this.event?.id_cita!, {
+        ...this.editEventForm.value,
+        id_cita: this.event?.id_cita!,
+        id_sesion: this.event?.sesion.id_sesion!,
+      })
+      .subscribe((resp) => {
+        console.log(resp);
+        this.eventUpdated.emit();
+      });
   }
 }

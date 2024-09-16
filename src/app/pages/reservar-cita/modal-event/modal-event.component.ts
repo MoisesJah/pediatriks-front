@@ -114,7 +114,7 @@ export class ModalCreateEventComponent implements OnInit, AfterViewInit {
   }
 
   changeTipoCita(event: any) {
-    this.isCitaContinua = event?.nombre !== 'Evaluación';
+    this.isCitaContinua = event?.nombre && event?.nombre !== 'Evaluación';
     if (this.isCitaContinua) {
       this.detalle.controls.forEach((control) => {
         control.get('id_paquete')?.setValidators(Validators.required);
@@ -244,10 +244,7 @@ export class ModalCreateEventComponent implements OnInit, AfterViewInit {
                 this.avaiblePersonal[index] = resp.data;
               });
           }
-          // console.log('yoooo',control.get('id_terapia'))
         });
-        console.log(value);
-        console.log(id_sede);
       });
   }
 
@@ -321,39 +318,6 @@ export class ModalCreateEventComponent implements OnInit, AfterViewInit {
     });
     console.log(this.eventForm.value);
   }
-
-  // updateEvent() {
-  //   if (this.editEventForm.invalid) {
-  //     alert('Por favor, complete todos los campos requeridos.');
-  //     return;
-  //   }
-
-  //   const startDateTime = this.combineDateTime(
-  //     this.editEventForm.value.startDate,
-  //     this.editEventForm.value.startTime
-  //   );
-
-  //   const endDateTime = this.combineDateTime(
-  //     this.editEventForm.value.endDate || this.editEventForm.value.startDate,
-  //     this.editEventForm.value.endTime || this.editEventForm.value.startTime
-  //   );
-
-  //   const eventToUpdate: CalendarEvent = {
-  //     id: this.event!.id,
-  //     title: this.editEventForm.value.therapyType,
-  //     start: startDateTime,
-  //     end: endDateTime,
-  //     description: this.editEventForm.value.eventDescription,
-  //     therapyType: this.editEventForm.value.therapyType,
-  //     doctor: this.editEventForm.value.doctor, // Añadir el doctor
-  //     selectedPatient: this.editEventForm.value.selectedPatient,
-  //   };
-
-  //   console.log('Event to update:', eventToUpdate);
-
-  //   this.eventSubmitted.emit(eventToUpdate);
-  //   this.activeModal.close();
-  // }
 
   deleteEvent() {
     if (this.event) {

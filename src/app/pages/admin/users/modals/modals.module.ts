@@ -7,6 +7,7 @@ import { EditModalComponent } from './edit-modal/edit-modal.component';
 import { DeleteModalComponent } from './delete-modal/delete-modal.component';
 import {ClipboardModule} from '@angular/cdk/clipboard';
 import { ActionButtonsComponent } from './action-buttons/action-buttons.component';
+import { NgSelectModule } from '@ng-select/ng-select';
 
 
 @NgModule({
@@ -22,6 +23,7 @@ import { ActionButtonsComponent } from './action-buttons/action-buttons.componen
     NgbModule,
     NgbTooltipModule,
     ClipboardModule,
+    NgSelectModule,
     ReactiveFormsModule
   ],
   exports: [

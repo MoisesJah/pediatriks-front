@@ -83,6 +83,10 @@ ng-select.ng-invalid.ng-touched .ng-select-container {
   border-radius: 0.95rem !important;
 }
 
+.modal-open .fc .fc-popover  {
+  z-index: 1 !important;
+} 
+
 .ng-select.ng-select-top > .ng-select-container {
   border-bottom-left-radius: 0.95rem !important;
   border-bottom-right-radius: 0.95rem !important;

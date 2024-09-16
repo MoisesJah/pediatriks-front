@@ -18,7 +18,7 @@
           <button [disabled]="isLoading | async" class="btn btn-flex btn-primary me-2" (click)="openModal()">
             <i class="ki-duotone ki-plus fs-2"></i> Agregar Citas
           </button>
-          <ng-select [items]="terapiasList" bindLabel="nombre" (change)="handleSelectChange($event)" placeholder="Seleccionar Terapia" bindValue="id_terapia"></ng-select>
+          <ng-select [items]="terapiasList | async" bindLabel="nombre" (change)="handleSelectChange($event)" placeholder="Seleccionar Terapia" bindValue="id_terapia"></ng-select>
         </div>
       </div>
       <div class="card-body" style="

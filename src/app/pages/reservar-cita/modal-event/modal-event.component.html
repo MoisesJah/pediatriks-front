@@ -26,10 +26,6 @@
           [loadingText]="'Cargando..'" placeholder="Seleccionar" bindLabel="nombre"></ng-select>
       </div>
     </div>
-    <div class="form-group mb-3">
-      <label class="form-label" for="calendar_event_description">Descripción de la Cita</label>
-      <textarea rows="2" name="" class="form-control" id=""></textarea>
-    </div>
 
     <div formArrayName="detalle">
       <div class="d-flex justify-content-between  align-items-center">
@@ -41,7 +37,7 @@
         </button>
       </div>
       <ng-container *ngFor="let terapia of detalle.controls; let i = index">
-        <div class="form-group position-relative p-4 border-2 mt-2 border-dashed border-gray-300 rounded"
+        <div class="form-group d-flex flex-column gap-3 position-relative p-4 border-2 mt-2 border-dashed border-gray-300 rounded"
           [formGroupName]="i">
           <div *ngIf="i > 0" class="position-absolute end-0" style="transform: translateY(-18px) translateX(12px);"><button
               class="btn btn-sm fs-10 btn-icon btn-active-color-danger btn-danger" (click)="removeInfoTerapia(i)">
@@ -49,22 +45,36 @@
             </button>
           </div>
           <div class="row">
-            <div class="form-group col mb-3">
+            <div class="form-group col">
               <label class="form-label" for="kt_calendar_datepicker_date">Fecha de Inicio</label>
               <input type="text" class="form-control" id="kt_calendar_datepicker_date" formControlName="fecha_inicio"
               mwlFlatpickr [locale]="es" [altInput]="true" [minDate]="minDate" [altFormat]="'d/m/Y'" [monthSelectorType]="'dropdown'" placeholder="Seleccionar Fecha(s)" />
             </div>
-            <div class="form-group col mb-3">
+            <div class="form-group col">
               <label class="form-label" for="kt_calendar_datepicker_start_time">Hora de Inicio</label>
               <input type="text" class="form-control" id="kt_calendar_datepicker_start_time"
                 formControlName="hora_inicio" mwlFlatpickr [options]="timeOptions" (flatpickrChange)="onStartTimeChange($event,i)" placeholder="Seleccionar Hora de Inicio" />
             </div>
-            <div class="form-group col mb-3">
+            <div class="form-group col">
               <label class="form-label" for="kt_calendar_datepicker_end_time">Hora de Fin</label>
               <input type="text" class="form-control" id="kt_calendar_datepicker_end_time" formControlName="hora_fin"
               mwlFlatpickr [options]="timeOptions" placeholder="Seleccionar Hora de Fin" />
             </div>
           </div>
+          
+          <div class="row">
+            <div class="col-6">
+              <label class="form-label" for="">Terapia</label>
+              <ng-select [items]="terapiasList | async" bindValue="id_terapia" [loadingText]="'Cargando..'"
+                placeholder="Seleccionar" bindLabel="nombre" (change)="getTerapiaId($event,i)" formControlName="id_terapia"></ng-select>
+            </div>
+            <div class="col-6">
+              <label class="form-label" for="">Especialista</label>
+              <ng-select [items]="avaiblePersonal[i]" bindValue="id_personal" [loadingText]="'Cargando..'"
+                placeholder="Seleccionar" bindLabel="nombre" formControlName="id_personal"></ng-select>
+            </div>
+          </div>
+
           <div *ngIf="isCitaContinua" class="row">
             <div  class="form-group d-flex flex-column col mb-3">
               <label class="form-label" for="kt_calendar_datepicker_end_date">Dias de Recurrencia</label>
@@ -80,22 +90,6 @@
               <label class="form-label" for="calendar_event_title">Paquete de la Cita</label>
               <ng-select (change)="changePaquete($event,i)" [items]="paquetesId[i]" bindValue="id_paquetes" formControlName="id_paquete" [loadingText]="'Cargando..'"
                 placeholder="Seleccionar" bindLabel="nombre"></ng-select>
-            </div>
-          </div>
-          <div class="row">
-
-          </div>
-
-          <div class="row">
-            <div class="col-6">
-              <label class="form-label" for="">Terapia</label>
-              <ng-select [items]="terapiasList | async" bindValue="id_terapia" [loadingText]="'Cargando..'"
-                placeholder="Seleccionar" bindLabel="nombre" (change)="getTerapiaId($event,i)" formControlName="id_terapia"></ng-select>
-            </div>
-            <div class="col-6">
-              <label class="form-label" for="">Especialista</label>
-              <ng-select [items]="avaiblePersonal[i]" bindValue="id_personal" [loadingText]="'Cargando..'"
-                placeholder="Seleccionar" bindLabel="nombre" formControlName="id_personal"></ng-select>
             </div>
           </div>
         </div>

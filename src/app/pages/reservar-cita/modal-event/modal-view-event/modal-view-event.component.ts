@@ -48,11 +48,16 @@ export class ModalViewEventComponent implements OnInit {
   }
 
   openEditModal() {
-    this.modal.open(ModalEditComponent, {
+    const modalRef = this.modal.open(ModalEditComponent, {
       size: 'lg',
       centered: true,
       windowClass: 'modal-edit',
     });
+
+    modalRef.componentInstance.event = this.event;
+    // modalRef.componentInstance.eventUpdated.subscribe((event) => {
+    //   this.event = event;
+    // });
   }
 
   deleteEvent() {
