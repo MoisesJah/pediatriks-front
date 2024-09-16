@@ -77,6 +77,7 @@ export class LayoutComponent {
     target.classList.add('selected');
     // Navegar al componente reservar-cita
     this.router.navigate(['/admin/reservar-cita']);
+    console.log('Citas');
   }
 
   navigateToSede(event: Event): void {
@@ -118,6 +119,7 @@ export class LayoutComponent {
     event.stopPropagation();
     this.removeSelectedClass();
     this.router.navigate(['/admin/terapias']);
+    console.log('Terapias');
   }
 
   navigateToPacientes(event: Event): void {
@@ -125,6 +127,7 @@ export class LayoutComponent {
     event.stopPropagation();
     this.removeSelectedClass();
     this.router.navigate(['/admin/pacientes']);
+    console.log('Pacientes');
   }
 
   private removeSelectedClass(): void {

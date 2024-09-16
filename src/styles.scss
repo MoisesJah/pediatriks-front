@@ -146,34 +146,6 @@ textarea {
   position: relative;
 }
 
-.submenu {
-  position: absolute;
-  top: 100%; // Para desplegar justo debajo del elemento padre
-  left: 0;
-  background-color: #6c757d;
-  border: 1px solid black;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  padding: 10px;
-  border-radius: 15px;
-  z-index: 1000;
-  color:#000;
 
-  ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-
-    li {
-      padding: 8px 12px;
-      cursor: pointer;
-      transition: background-color 0.3s;
-      border-radius: 5px;
-
-      &:hover {
-        background-color: #f0f0f0;
-      }
-    }
-  }
-}
 
 

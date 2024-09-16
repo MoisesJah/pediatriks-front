@@ -103,27 +103,6 @@
               <!--end:Menu item-->
               <!--begin:Menu item-->
               <div
-                data-kt-menu-trigger="{default: 'click', lg: 'hover'}"
-                data-kt-menu-placement="right-start"
-                class="menu-item py-2"
-                style="transition: background-color 0.3s; border-radius: 15px"
-                onmouseout="this.style.backgroundColor='';"
-              >
-                <!--begin:Menu link-->
-                <span class="menu-link menu-center">
-                  <span class="menu-icon me-0">
-                    <i class="ki-duotone ki-abstract-26 fs-2x">
-                      <span class="path1"></span>
-                      <span class="path2"></span>
-                    </i>
-                  </span>
-                </span>
-                <!--end:Menu link-->
-                <!--begin:Menu sub-->
-
-                <!--end:Menu item-->
-              </div>
-              <div
               *ngIf="isAdmin() || isPaciente()"
             data-kt-menu-trigger="{default: 'click', lg: 'hover'}"
             data-kt-menu-placement="right-start"
@@ -150,7 +129,7 @@
 
               <div
               *ngIf="isAdmin()"
-              class="menu-item py-2"
+              class="menu-item here py-2 show menu-dropdown"
               style="transition: background-color 0.3s; border-radius: 15px"
               (mouseenter)="showSubMenu = true"
               (mouseleave)="showSubMenu = false"
@@ -170,18 +149,73 @@
 
               <!-- Submenú -->
               <div
-                class="submenu"
-                *ngIf="showSubMenu"
-                [ngStyle]="{ display: showSubMenu ? 'block' : 'none' }"
-              >
-                <ul>
-                  <li (click)="navigateToPersonal($event)">Personal</li>
-                  <li (click)="navigateToUsuarios($event)">Usuarios</li>
-                  <li (click)="navigateToTerapias($event)">Terapias</li>
-                  <li (click)="navigateToPacientes($event)">Pacientes</li>
-                  <li (click)="navigateToSede($event)">Sedes</li>
-                  <li (click)="navigateToPaquetes($event)">Paquetes</li>
-                </ul>
+  class="menu-sub menu-sub-dropdown px-2 py-4 w-250px mh-75 overflow-auto"
+  style="z-index:107; position:fixed; inset:0px auto auto 0px; margin:0px; transform: translate(128px,540px);"
+  *ngIf="showSubMenu"
+  [ngStyle]="{ display: showSubMenu ? 'block' : 'none' }"
+>
+  <div class="menu-item">
+    <div class="menu-content">
+      <span class="menu-section fs-5 fw-bolder ps-1 py-1">Admin</span>
+    </div>
+  </div>
+  <div class="menu-item">
+    <div class="menu-content">
+      <a href="#" (click)="navigateToPersonal($event)" class="menu-link">
+        <span class="menu-bullet">
+          <span class="bullet bullet-dot"></span>
+        </span>
+        <span class="menu-tittle">Personal</span>
+        </a>
+    </div>
+  </div>
+  <div class="menu-item">
+    <div class="menu-content">
+      <a href="#" (click)="navigateToUsuarios($event)" class="menu-link"><span class="menu-bullet">
+        <span class="bullet bullet-dot"></span>
+      </span>
+      <span class="menu-tittle">Usuarios</span>
+      </a>
+    </div>
+  </div>
+  <div class="menu-item">
+    <div class="menu-content">
+      <a href="#" (click)="navigateToTerapias($event)" class="menu-link"><span class="menu-bullet">
+        <span class="bullet bullet-dot"></span>
+      </span>
+      <span class="menu-tittle">Terapias</span>
+      </a>
+    </div>
+  </div>
+  <div class="menu-item">
+    <div class="menu-content">
+      <a href="#" (click)="navigateToPacientes($event)" class="menu-link"><span class="menu-bullet">
+        <span class="bullet bullet-dot"></span>
+      </span>
+      <span class="menu-tittle">Pacientes</span>
+      </a>
+    </div>
+  </div>
+  <div class="menu-item">
+    <div class="menu-content">
+      <a href="#" (click)="navigateToSede($event)" class="menu-link"><span class="menu-bullet">
+        <span class="bullet bullet-dot"></span>
+      </span>
+      <span class="menu-tittle">Sedes</span>
+      </a>
+    </div>
+  </div>
+  <div class="menu-item">
+    <div class="menu-content">
+      <a href="#" (click)="navigateToPaquetes($event)" class="menu-link"><span class="menu-bullet">
+        <span class="bullet bullet-dot"></span>
+      </span>
+      <span class="menu-tittle">Paquetes</span>
+      </a>
+    </div>
+  </div>
+
+
         </div>
 </div>
 
