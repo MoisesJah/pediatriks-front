@@ -65,7 +65,6 @@ export class EditarModalComponent implements OnInit {
       sueldo: ['', [Validators.required, Validators.min(0)]],
       id_tipopersonal: [null, Validators.required],
       id_terapia: [null, Validators.required],
-      id_horariop: [null, Validators.required],
     });
   }
 

@@ -32,7 +32,7 @@ export class CitaService {
   }
 
   getCitasByPaciente(idPaciente: string) {
-    return this.http.get<{ data: Cita[] }>(`${this.apiUrl}/citas/paciente/${idPaciente}`);
+    return this.http.get<{ data: Cita[] }>(`${this.apiUrl}/citas/user/${idPaciente}`);
   }
 
 

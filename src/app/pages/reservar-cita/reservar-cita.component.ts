@@ -69,7 +69,7 @@ export class ReservarCitaComponent implements OnInit, OnDestroy {
       center: 'title',
       right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek',
     },
-    initialView: 'dayGridMonth',
+    initialView: 'timeGridWeek',
     weekends: true,
     editable: true,
     selectable: true,

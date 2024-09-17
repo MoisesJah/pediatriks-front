@@ -48,12 +48,12 @@
     <div class="card-footer bg-none border-top-2">
       <!-- Dropdown para seleccionar paciente -->
 <div class="dropdown">
-  <select class="form-select" (change)="handleSelectChange($event)">
+  <!-- <select class="form-select" (change)="handleSelectChange($event)">
     <option value="" disabled selected>Seleccionar Paciente</option>
     <option *ngFor="let paciente of pacientesList | async" [value]="paciente.id_paciente">
       {{ paciente.nombre }}
     </option>
-  </select>
+  </select> -->
 </div>
 
     </div>
