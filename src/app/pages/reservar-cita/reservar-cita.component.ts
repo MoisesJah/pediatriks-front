@@ -69,7 +69,30 @@ export class ReservarCitaComponent implements OnInit, OnDestroy {
       center: 'title',
       right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek',
     },
+    // slotDuration: '00:45:00',
+    slotDuration: '00:45:00',
+    // slotLabelInterval: '00:45:00',
+    slotMinTime: '08:00',
+    slotMaxTime: '20:01:00',
+    slotLabelFormat: {
+      hour: 'numeric',
+      minute: '2-digit',
+      omitZeroMinute: false,
+      meridiem: 'narrow',
+    },
     initialView: 'timeGridWeek',
+    // businessHours: [
+    //   {
+    //     daysOfWeek: [ 1, 2, 3 ], // Monday, Tuesday, Wednesday
+    //     startTime: '08:00', // 8am
+    //     endTime: '18:00' // 6pm
+    //   },
+    //   {
+    //     daysOfWeek: [ 4, 5 ], // Thursday, Friday
+    //     startTime: '10:00', // 10am
+    //     endTime: '16:00' // 4pm
+    //   }
+    // ],
     weekends: true,
     editable: true,
     selectable: true,

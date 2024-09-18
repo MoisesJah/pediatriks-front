@@ -5,7 +5,8 @@ export interface Personal {
   id_terapia: string;
   id_genero: string;
   id_sede: string;
-  id_horariop: string;
+  // id_horariop: string;
+  horarios: any[];
   nombre: string;
   dni: string;
   telefono: string;

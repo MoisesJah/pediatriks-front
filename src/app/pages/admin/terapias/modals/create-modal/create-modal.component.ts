@@ -23,6 +23,7 @@ export class CreateModalComponent {
       nombre: ['', Validators.required],
       descripcion: [''],
       precio: ['', [Validators.required, Validators.min(0)]],
+      color: ['', Validators.required],
     });
   }
 

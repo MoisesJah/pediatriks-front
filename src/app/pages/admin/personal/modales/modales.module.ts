@@ -9,13 +9,15 @@ import { FlatpickrModule } from 'angularx-flatpickr';
 import { CrearModalComponent } from './crear-modal/crear-modal.component';
 import { EditarModalComponent } from './editar-modal/editar-modal.component';
 import { BorrarModalComponent } from './borrar-modal/borrar-modal.component';
+import { HorariosListComponent } from './horarios-list/horarios-list.component';
 
 
 @NgModule({
   declarations: [
     CrearModalComponent,
     EditarModalComponent,
-    BorrarModalComponent
+    BorrarModalComponent,
+    HorariosListComponent
   ],
   imports: [
     CommonModule,

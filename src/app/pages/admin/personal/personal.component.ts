@@ -16,6 +16,8 @@ import { formatMoney } from 'src/app/utils/formatCurrency';
 import { AG_GRID_LOCALE_ES } from '@ag-grid-community/locale';
 import { CvViewerComponent } from './modales/cv-viewer/cv-viewer.component';
 import { ThemeService } from 'src/app/services/theme.service';
+import { getDayWeek } from 'src/app/utils/getdayWeek';
+import { HorariosListComponent } from './modales/horarios-list/horarios-list.component';
 
 @Component({
   selector: 'app-personal',
@@ -37,6 +39,7 @@ export class PersonalComponent implements OnInit {
     {
       field: 'cv_url',
       headerName: 'CV',
+      filter: false,
       cellRendererSelector: (params) => {
         return params.value
           ? { component: CvViewerComponent, params: params.data.id_personal }
@@ -61,8 +64,17 @@ export class PersonalComponent implements OnInit {
       valueFormatter: (params) => formatMoney(params.value),
     },
     { field: 'terapia.nombre', headerName: 'Especialidad', filter: true },
-    { field: 'horario.horario_iniciop', headerName: 'Horario Inicio' },
-    { field: 'horario.horario_finalp', headerName: 'Horario Fin' },
+    {
+      field: 'horarios',
+      headerName: 'Horario Semanal',
+      filter: false,
+      autoHeight: true,
+      minWidth: 250,
+      valueFormatter: (params) => {
+        return params.data.horarios.map((h: any) => getDayWeek(h.dia_semana)).join(', ');
+      },
+      cellRenderer: HorariosListComponent,
+    },
 
     {
       headerName: 'Acciones',
