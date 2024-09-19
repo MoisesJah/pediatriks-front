@@ -72,6 +72,11 @@ export class ModalCreateEventComponent implements OnInit, AfterViewInit {
 
   eventForm: FormGroup;
   minDate: string;
+
+  startDate!: string;
+  startTime!: string;
+  endTime!: string;
+  
   es = Spanish.es;
 
   isCitaContinua = false;
@@ -98,6 +103,9 @@ export class ModalCreateEventComponent implements OnInit, AfterViewInit {
     this.eventForm = this.fb.group({
       id_paciente: [null, Validators.required],
       id_sede: [null, Validators.required],
+      fecha_inicio: ['', Validators.required],
+      hora_inicio: ['', Validators.required],
+      hora_fin: ['', Validators.required],
       id_tipocita: [null, Validators.required],
       detalle: this.fb.array([this.createDetalle()]),
     });
@@ -173,9 +181,6 @@ export class ModalCreateEventComponent implements OnInit, AfterViewInit {
     return this.fb.group({
       id_terapia: [null, Validators.required],
       id_paquete: [null],
-      fecha_inicio: ['', Validators.required],
-      hora_inicio: ['', Validators.required],
-      hora_fin: ['', Validators.required],
       num_sesiones: [null],
       id_personal: [null, Validators.required],
       recurrencia: this.fb.control([]),
@@ -322,10 +327,11 @@ export class ModalCreateEventComponent implements OnInit, AfterViewInit {
   }
 
   submitEvent() {
-    this.citaService.create(this.eventForm.value).subscribe((resp) => {
-      this.eventSubmitted.emit();
-      this.closeModal();
-    });
+    console.log(this.eventForm.value);
+    // this.citaService.create(this.eventForm.value).subscribe((resp) => {
+    //   this.eventSubmitted.emit();
+    //   this.closeModal();
+    // });
   }
 
   deleteEvent() {

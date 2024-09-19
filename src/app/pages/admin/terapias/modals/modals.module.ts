@@ -7,6 +7,7 @@ import { EditModalComponent } from './edit-modal/edit-modal.component';
 import { DeleteModalComponent } from './delete-modal/delete-modal.component';
 import { ActionButtonsComponent } from './action-buttons/action-buttons.component';
 import { NgxColorsModule } from 'ngx-colors';
+import { FlatpickrModule } from 'angularx-flatpickr';
 
 
 @NgModule({
@@ -21,7 +22,8 @@ import { NgxColorsModule } from 'ngx-colors';
     NgbModule,
     ReactiveFormsModule,
     FormsModule,
-    NgxColorsModule    
+    NgxColorsModule,
+    FlatpickrModule    
   ],
   exports: [
     CreateModalComponent,

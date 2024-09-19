@@ -69,6 +69,11 @@ export class ReservarCitaComponent implements OnInit, OnDestroy {
       center: 'title',
       right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek',
     },
+    allDaySlot: false,
+    eventColor: '#ffe082',
+    expandRows:true,
+    // eventTextColor: 'black',
+    eventMinHeight: 30,
     // slotDuration: '00:45:00',
     slotDuration: '00:45:00',
     // slotLabelInterval: '00:45:00',
@@ -158,27 +163,32 @@ export class ReservarCitaComponent implements OnInit, OnDestroy {
       backdrop: 'static',
     });
 
-    modalRef.componentInstance.startDate = selectInfo.startStr;
-    modalRef.componentInstance.endDate = selectInfo.endStr;
+    console.log(selectInfo);
 
-    modalRef.componentInstance.eventSubmitted.subscribe(
-      (newEvent: CalendarEvent) => {
-        if (this.fullCalendarComponent) {
-          const calendarApi = this.fullCalendarComponent.getApi();
-          calendarApi.addEvent({
-            id: newEvent.id,
-            title: newEvent.title,
-            start: newEvent.start,
-            end: newEvent.end,
-            description: newEvent.description,
-            location: newEvent.location,
-            therapyType: newEvent.therapyType,
-            selectedPatient: newEvent.selectedPatient,
-            doctor: newEvent.doctor, // Asegúrate de agregar el campo doctor aquí
-          });
-        }
-      }
-    );
+    modalRef.componentInstance.eventForm.patchValue({
+      fecha_inicio: selectInfo.startStr.substring(0, 10),
+      hora_inicio: selectInfo.startStr.substring(11, 16),
+      hora_fin: selectInfo.endStr.substring(11, 16),
+    })
+
+    // modalRef.componentInstance.eventSubmitted.subscribe(
+    //   (newEvent: CalendarEvent) => {
+    //     if (this.fullCalendarComponent) {
+    //       const calendarApi = this.fullCalendarComponent.getApi();
+    //       calendarApi.addEvent({
+    //         id: newEvent.id,
+    //         title: newEvent.title,
+    //         start: newEvent.start,
+    //         end: newEvent.end,
+    //         description: newEvent.description,
+    //         location: newEvent.location,
+    //         therapyType: newEvent.therapyType,
+    //         selectedPatient: newEvent.selectedPatient,
+    //         doctor: newEvent.doctor, // Asegúrate de agregar el campo doctor aquí
+    //       });
+    //     }
+    //   }
+    // );
   }
 
   handleEventClick(clickInfo: EventClickArg) {
@@ -196,7 +206,7 @@ export class ReservarCitaComponent implements OnInit, OnDestroy {
     modalRef.componentInstance.citaId = event.extendedProps.id_cita;
     modalRef.componentInstance.eventUpdated.subscribe(() => {
       this.loadCitas();
-    })
+    });
   }
 
   handleEvents(events: EventApi[]) {
@@ -206,7 +216,7 @@ export class ReservarCitaComponent implements OnInit, OnDestroy {
 
   handleSelectChange(event: any) {
     const selectedValue = event.id_terapia;
-    
+
     // this.router.navigate([selectedValue], { relativeTo: this.route });
     this.router.navigateByUrl(`/admin/reservar-cita/${selectedValue}`);
   }
@@ -218,9 +228,8 @@ export class ReservarCitaComponent implements OnInit, OnDestroy {
       backdrop: 'static',
     });
 
-    modalRef.componentInstance.eventSubmitted.subscribe(()=>{
+    modalRef.componentInstance.eventSubmitted.subscribe(() => {
       this.loadCitas();
-    })
+    });
   }
-
 }

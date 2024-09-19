@@ -30,6 +30,24 @@
       </div>
     </div>
 
+    <div class="row">
+      <div class="form-group col">
+        <label class="form-label" for="kt_calendar_datepicker_date">Fecha de Inicio</label>
+        <input type="text" mwlFlatpickr [noCalendar]="true" altFormat="d/m/Y" [altInput]="true" class="form-control" id="kt_calendar_datepicker_date" formControlName="fecha_inicio"
+         placeholder="Seleccionar Fecha(s)" />
+      </div>
+      <div class="form-group col">
+        <label class="form-label" for="kt_calendar_datepicker_start_time">Hora de Inicio</label>
+        <input type="text" readonly class="form-control" id="kt_calendar_datepicker_start_time"
+          formControlName="hora_inicio" placeholder="Seleccionar Hora de Inicio" />
+      </div>
+      <div class="form-group col">
+        <label class="form-label" for="kt_calendar_datepicker_end_time">Hora de Fin</label>
+        <input type="text" readonly class="form-control" id="kt_calendar_datepicker_end_time" formControlName="hora_fin"
+         placeholder="Seleccionar Hora de Fin" />
+      </div>
+    </div>
+
     <div formArrayName="detalle">
       <div class="d-flex justify-content-between  align-items-center">
         <label class="form-label fw-bolder fs-5" for="">Detalle de la Cita</label>
@@ -47,23 +65,7 @@
               <i class="ki-solid ki-cross"></i>
             </button>
           </div>
-          <div class="row">
-            <div class="form-group col">
-              <label class="form-label" for="kt_calendar_datepicker_date">Fecha de Inicio</label>
-              <input type="text" class="form-control" id="kt_calendar_datepicker_date" formControlName="fecha_inicio"
-              mwlFlatpickr [locale]="es" [altInput]="true" [minDate]="minDate" [altFormat]="'d/m/Y'" [monthSelectorType]="'dropdown'" placeholder="Seleccionar Fecha(s)" />
-            </div>
-            <div class="form-group col">
-              <label class="form-label" for="kt_calendar_datepicker_start_time">Hora de Inicio</label>
-              <input type="text" class="form-control" id="kt_calendar_datepicker_start_time"
-                formControlName="hora_inicio" mwlFlatpickr [options]="timeOptions" (flatpickrChange)="onStartTimeChange($event,i)" placeholder="Seleccionar Hora de Inicio" />
-            </div>
-            <div class="form-group col">
-              <label class="form-label" for="kt_calendar_datepicker_end_time">Hora de Fin</label>
-              <input type="text" class="form-control" id="kt_calendar_datepicker_end_time" formControlName="hora_fin"
-              mwlFlatpickr [options]="timeOptions" placeholder="Seleccionar Hora de Fin" />
-            </div>
-          </div>
+         
 
           <div class="row">
             <div class="col-6">
