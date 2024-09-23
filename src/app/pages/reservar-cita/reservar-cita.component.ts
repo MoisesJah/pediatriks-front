@@ -86,24 +86,11 @@ export class ReservarCitaComponent implements OnInit, OnDestroy {
       meridiem: 'narrow',
     },
     initialView: 'timeGridWeek',
-    // businessHours: [
-    //   {
-    //     daysOfWeek: [ 1, 2, 3 ], // Monday, Tuesday, Wednesday
-    //     startTime: '08:00', // 8am
-    //     endTime: '18:00' // 6pm
-    //   },
-    //   {
-    //     daysOfWeek: [ 4, 5 ], // Thursday, Friday
-    //     startTime: '10:00', // 10am
-    //     endTime: '16:00' // 4pm
-    //   }
-    // ],
     weekends: true,
     editable: true,
     selectable: true,
     selectMirror: true,
     dayMaxEvents: true,
-    select: this.handleDateSelect.bind(this),
     eventClick: this.handleEventClick.bind(this),
     eventsSet: this.handleEvents.bind(this),
     locale: esLocale,
@@ -162,8 +149,6 @@ export class ReservarCitaComponent implements OnInit, OnDestroy {
       size: 'lg',
       backdrop: 'static',
     });
-
-    console.log(selectInfo);
 
     modalRef.componentInstance.eventForm.patchValue({
       fecha_inicio: selectInfo.startStr.substring(0, 10),
