@@ -125,7 +125,7 @@
                 data-kt-menu="true" data-kt-element="theme-mode-menu">
                 <!--begin::Menu item-->
                 <div class="menu-item px-3 my-0">
-                  <button (click)="setLightTheme()" type="button" class="btn btn-active-color-primary px-3 py-2" data-kt-element="mode"
+                  <a (click)="setLightTheme()" class="menu-link px-3 py-2" [ngClass]="{ 'active': theme.getThemeMode() == 'light' }" data-kt-element="mode"
                     data-kt-value="light">
                     <span class="menu-icon" data-kt-element="icon">
                       <i class="ki-duotone ki-night-day fs-2">
@@ -142,12 +142,12 @@
                       </i>
                     </span>
                     <span class="menu-title">Claro</span>
-                  </button>
+                  </a>
                 </div>
                 <!--end::Menu item-->
                 <!--begin::Menu item-->
                 <div class="menu-item px-3 my-0">
-                  <button (click)="setDarkTheme()" type="button" class="btn btn-active-color-primary px-3 py-2" data-kt-element="mode"
+                  <a (click)="setDarkTheme()" class="menu-link px-3 py-2" [ngClass]="{ 'active': theme.getThemeMode() == 'dark' }" data-kt-element="mode"
                     data-kt-value="dark">
                     <span class="menu-icon" data-kt-element="icon">
                       <i class="ki-duotone ki-moon fs-2">
@@ -156,12 +156,12 @@
                       </i>
                     </span>
                     <span class="menu-title">Oscuro</span>
-                  </button>
+                  </a>
                 </div>
                 <!--end::Menu item-->
                 <!--begin::Menu item-->
                 <div class="menu-item px-3 my-0">
-                  <button type="button" class="btn btn-active-color-primary px-3 py-2" data-kt-element="mode" data-kt-value="system">
+                  <a (click)="setSystemTheme()" class="menu-link px-3 py-2" [ngClass]="{ 'active': theme.getThemeMode() == 'system' }" data-kt-element="mode" data-kt-value="system">
                     <span class="menu-icon" data-kt-element="icon">
                       <i class="ki-duotone ki-screen fs-2">
                         <span class="path1"></span>
@@ -171,7 +171,7 @@
                       </i>
                     </span>
                     <span class="menu-title">Sistema</span>
-                  </button>
+                  </a>
                 </div>
                 <!--end::Menu item-->
               </div>

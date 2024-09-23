@@ -1,12 +1,47 @@
-<div ngbDropdown placement="bottom-end" [container]="'body'">
+<!-- <div ngbDropdown placement="bottom-end" [container]="'body'">
   <a
     class=""
     id="dropdownConfig"
     ngbDropdownToggle
   >
-    <ng-content select="[dropdown-toggle]"></ng-content>
+    Seleccionar Terapia
 </a>
   <div class="dropdown-menu" ngbDropdownMenu aria-labelledby="dropdownConfig">
     <ng-content select="[dropdown-menu]"></ng-content>
+  </div>
+</div> -->
+
+<div ngbDropdown placement="bottom-end" class="d-inline-block">
+  <button ngbDropdownToggle class="btn btn-secondary">
+    Seleccionar
+  </button>
+  <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+    <ng-container *ngFor="let item of dropdownItems">
+      <button ngbDropdownItem *ngIf="!item.children">
+        {{ item.label }}
+      </button>
+      <div #dropdown="ngbDropdown"  ngbDropdown placement="left-top" class="d-inline-block" *ngIf="item.children">
+        <!-- <div class="d-flex">
+          <button ngbDropdownToggle></button>
+          <a href="" ngbDropdownItem class="">
+            {{ item.label }}
+          </a>
+        </div> -->
+        <span ngbDropdownAnchor (mouseover)="yo(dropdown)">
+          {{ item.label }}
+        </span>
+        <div ngbDropdownMenu aria-labelledby="dropdownBasic2">
+          <ng-container *ngFor="let child of item.children">
+            <button ngbDropdownItem *ngIf="!child.children">
+              {{ child.label }}
+            </button>
+            <div ngbDropdown class="d-inline-block" *ngIf="child.children">
+              <!-- Recursive dropdown -->
+              <app-dropdown-item [item]="child"></app-dropdown-item>
+            </div>
+          </ng-container>
+        </div>
+      </div>
+    </ng-container>
   </div>
 </div>

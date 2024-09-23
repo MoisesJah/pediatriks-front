@@ -34,7 +34,12 @@ export class ThemeService {
 
   setThemeMode(mode: 'dark' | 'light' | 'system') {
     this.themeMode = mode;
-    document.documentElement.setAttribute('data-bs-theme', mode);
+    if (mode === 'system') {
+      this.themeMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+        ? 'dark'
+        : 'light';
+    }
+    document.documentElement.setAttribute('data-bs-theme', this.themeMode);
     localStorage.setItem('data-bs-theme', mode);
   }
 

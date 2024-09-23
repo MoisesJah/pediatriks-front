@@ -7,6 +7,7 @@ import { FullCalendarModule } from '@fullcalendar/angular';
 import { HeaderComponent } from 'src/app/components/ui/header/header.component';
 import { CronogramaComponent } from './cronograma/cronograma.component';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { DropdownComponent } from 'src/app/components/ui/dropdown/dropdown.component';
 
 @NgModule({
   declarations: [ReservarCitaComponent],
@@ -15,7 +16,8 @@ import { NgSelectModule } from '@ng-select/ng-select';
     ReservarCitaRoutingModule,
     FullCalendarModule,
     HeaderComponent,
-    NgSelectModule
+    NgSelectModule,
+    DropdownComponent
   ],
   exports: [ReservarCitaComponent],
 })
