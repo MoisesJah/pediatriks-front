@@ -24,6 +24,7 @@ import { DrawerComponent } from './components/ui/drawer/drawer.component';
 import localeEs from '@angular/common/locales/es';
 import { IMAGE_CONFIG, registerLocaleData } from '@angular/common';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import { PaquetesComponent } from './pages/paquetes/paquetes.component';
 
 registerLocaleData(localeEs);
 @NgModule({
@@ -48,6 +49,7 @@ registerLocaleData(localeEs);
     TerapiasModalsModule,
     PacientesModalsModule,
     SedesModalsModule,
+    PaquetesComponent
   ],
   providers: [
     provideHttpClient(withInterceptors([tokenInterceptor, loadingInterceptor])),

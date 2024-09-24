@@ -92,11 +92,24 @@ export class LayoutComponent {
 
   navigateToPaquetes(event: Event): void {
     event.preventDefault();
-    event.stopPropagation();
     this.removeSelectedClass();
-    this.router.navigate(['/admin/paquetes']);
+
+    const target = event.currentTarget as HTMLElement;
+    target.classList.add('selected');
+
+    // Verificar el rol del usuario y navegar a la ruta correspondiente
+    if (this.isAdmin()) {
+      // Redirigir a la ruta del Administrador
+      this.router.navigate(['/admin/paquetes']);
+    } else {
+      // Redirigir a la ruta estándar de paquetes
+      this.router.navigate(['/paquetes']);
+    }
+
     console.log('Paquetes');
   }
+
+
 
   navigateToPersonal(event: Event): void {
     event.preventDefault();

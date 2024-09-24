@@ -103,7 +103,6 @@
               <!--end:Menu item-->
               <!--begin:Menu item-->
               <div
-              *ngIf="isAdmin() || isPaciente()"
             data-kt-menu-trigger="{default: 'click', lg: 'hover'}"
             data-kt-menu-placement="right-start"
             class="menu-item py-2"
@@ -150,7 +149,7 @@
               <!-- Submenú -->
               <div
   class="menu-sub menu-sub-dropdown px-2 py-4 w-250px mh-75 overflow-auto"
-  style="z-index:107; position:fixed; inset:0px auto auto 0px; margin:0px; transform: translate(128px,740px);"
+  style="z-index:107; position:fixed; inset:0px auto auto 0px; margin:0px; transform: translate(128px,540px);"
   *ngIf="showSubMenu"
   [ngStyle]="{ display: showSubMenu ? 'block' : 'none' }"
 >

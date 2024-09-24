@@ -34,8 +34,17 @@ const routes: Routes = [
         (m) => m.DashboardModule
       ),
   },
+  {
+    path: 'paquetes',  // Agregar esta ruta
+    canActivate: [authGuard],  // Si necesitas un guard
+    loadChildren: () =>
+      import('./pages/paquetes/paquetes.module').then(
+        (m) => m.PaquetesModule
+      ),
+  },
   { path: '**', redirectTo: 'login', pathMatch: 'full' },
 ];
+
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],

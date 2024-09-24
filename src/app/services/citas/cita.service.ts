@@ -3,6 +3,8 @@ import { Injectable } from '@angular/core';
 import { EventApi } from '@fullcalendar/core';
 import { Cita } from 'src/app/models/cita';
 import { environment } from 'src/environments/environment';
+import { Observable } from 'rxjs';
+
 
 @Injectable({
   providedIn: 'root',
@@ -31,8 +33,8 @@ export class CitaService {
     return this.http.get<{ data: Cita }>(`${this.apiUrl}/citas/sesion/${id_cita}/${id_sesion}`);
   }
 
-  getCitasByPaciente(idPaciente: string) {
-    return this.http.get<{ data: Cita[] }>(`${this.apiUrl}/citas/user/${idPaciente}`);
+  getCitasByUser(id: string): Observable<any> {
+    return this.http.get<any>(`/api/citas/user/${id}`);
   }
 
 
@@ -49,6 +51,6 @@ export class CitaService {
   }
 
   update(id_cita: string,cita: any ) {
-    return this.http.put(`${this.apiUrl}/citas/edit/${id_cita}`, cita);  
+    return this.http.put(`${this.apiUrl}/citas/edit/${id_cita}`, cita);
   }
 }
