@@ -36,13 +36,14 @@ export class DashboardComponent implements OnInit {
   selectedPacienteId: string | null = null; // Almacena el ID del paciente seleccionado
 
   colDefs: ColDef[] = [
-    { field: 'paciente.nombre', headerName: 'Paciente', filter: true },
-    //{ field: 'sesion.fecha_inicio', headerName: 'Fecha Inicio', filter: true, valueFormatter: (params) => formatDate(params.value, 'dd/MM/yyyy', 'en') },
-    //{ field: 'sesion.hora_inicio', headerName: 'Hora Inicio', filter: true },
-    //{ field: 'sesion.hora_fin', headerName: 'Hora Fin', filter: true },
-    { field: 'terapia.nombre', headerName: 'Terapia', filter: true },
-    { field: 'sede.nombre', headerName: 'Sede', filter: true },
+    {field: 'paciente.nombre',headerName: 'Paciente',filter: true,},
+    {field: 'sesion.fecha_inicio',headerName: 'Fecha Inicio',filter: true,},
+    {field: 'sesion.hora_inicio',headerName: 'Hora Inicio',filter: true,},
+    {field: 'sesion.hora_fin',headerName: 'Hora Fin',filter: true,},
+    {field: 'tipocita.nombre',headerName: 'Terapia',filter: true,},
+    {field: 'sede.nombre',headerName: 'Sede',filter: true,},
   ];
+
 
 
   constructor(
@@ -66,7 +67,7 @@ export class DashboardComponent implements OnInit {
   // Cargar citas del paciente seleccionado
   loadCitasPaciente(idPaciente: string) {
     this.citasPaciente = this.citaService.getCitasByPaciente(idPaciente).pipe(
-      map((resp: { data: Cita[] }) => resp.data), // Tipar la respuesta correctamente
+      map((resp: { data: Cita[] }) => resp.data),
       untilDestroyed(this)
     );
   }
@@ -81,10 +82,8 @@ export class DashboardComponent implements OnInit {
         const pacienteSeleccionado = pacientes.find(p => p.id_paciente === selectedValue);
 
         if (pacienteSeleccionado) {
-          // Cargar citas del paciente seleccionado
           this.loadCitasPaciente(pacienteSeleccionado.id_paciente);
 
-          // Luego, establece los datos en el grid
           this.citasPaciente.pipe(take(1)).subscribe((citas) => {
             this.gridApi.applyTransaction({ add: citas });
           });
