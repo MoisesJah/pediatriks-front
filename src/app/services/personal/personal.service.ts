@@ -27,7 +27,7 @@ export class PersonalService {
     );
   }
 
-  create(personal: Personal) {
+  create(personal: any) {
     const data = new FormData();
       data.append('nombre', personal.nombre);
       data.append('dni', personal.dni);
@@ -38,7 +38,8 @@ export class PersonalService {
       data.append('sueldo', personal.sueldo.toString());
       data.append('id_tipopersonal', personal.id_tipopersonal);
       data.append('id_terapia', personal.id_terapia);
-      data.append('id_horariop', personal.id_horariop);
+      // data.append('id_horariop', personal.id_horariop);
+      data.append('horarios', JSON.stringify(personal.horarios));
       data.append('cv', personal.cv ? personal.cv : 'null');
 
     return this.http.post<Personal>(`${this.apiUrl}/personal/add`, data);

@@ -4,18 +4,12 @@
       <i style="vertical-align: middle;" class="ki-duotone ki-add-files text-gray-900 fs-1">
         <span class="path1"></span><span class="path2"></span>
         <span class="path3"></span></i>
-      </span>
+    </span>
     Añadir Terapia
   </h4>
-  <button
-    type="button"
-    class="btn btn-sm btn-icon btn-active-color-primary btn-color-gray-800"
-    aria-label="Close"
-    (click)="close()"
-  >
-    <i class="ki-duotone ki-cross-square fs-1"
-      ><span class="path1"></span><span class="path2"></span
-    ></i>
+  <button type="button" class="btn btn-sm btn-icon btn-active-color-primary btn-color-gray-800" aria-label="Close"
+    (click)="close()">
+    <i class="ki-duotone ki-cross-square fs-1"><span class="path1"></span><span class="path2"></span></i>
   </button>
 </div>
 
@@ -23,37 +17,38 @@
   <form [formGroup]="terapiaForm" class="form d-flex flex-column gap-4">
     <div class="form-group">
       <label class="required form-label" for="name"> Nombre </label>
-      <input
-        formControlName="nombre"
-        id="name"
-        type="text"
-        class="form-control"
-        placeholder="Ingresar Nombre"
-      />
+      <input formControlName="nombre" id="name" type="text" class="form-control" placeholder="Ingresar Nombre" />
     </div>
     <div class="form-group">
       <label class=" form-label" for="description"> Descripción </label>
-      <textarea
-        formControlName="descripcion"
-        id="description"
-        type="text"
-        class="form-control"
-        data-kt-autosize="true"
-        placeholder="Ingresar Descripción de la Terapia"
-      ></textarea>
+      <textarea formControlName="descripcion" id="description" type="text" class="form-control" data-kt-autosize="true"
+        placeholder="Ingresar Descripción de la Terapia"></textarea>
     </div>
 
-    <div class="form-group">
-      <label class="required form-label" for="price"> Precio </label>
-      <input
-        formControlName="precio"
-        type="number"
-        step="0.01"
-        min="0"
-        class="form-control"
-        placeholder="Ingresar Precio de la Terapia"
-      />
+    <div class="form-group d-flex flex-column">
+      <label class=" form-label" for="">Color de la Terapia</label>
+      @defer () {
+      <div class="d-flex position-relative  justify-content-center align-items-center">
+        <ngx-colors ngx-colors-trigger class="position-absolute" [hideTextInput]="true" [hideColorPicker]="true"
+          style="display: inline-block; margin:5px;left: 10px;" formControlName="color"></ngx-colors>
+        <input [value]="terapiaForm.get('color')?.value" type="text" readonly class="form-control ps-16">
+      </div>
+      }
     </div>
+
+    <div class="row">
+      <div class="form-group col-6">
+        <label class=" form-label" for="">Duración</label>
+        <input mwlFlatpickr [options]="timeOptions" formControlName="duracion" class="form-control" type="text">
+      </div>
+
+      <div class="form-group col-6">
+        <label class="required form-label" for="price"> Precio </label>
+        <input formControlName="precio" type="number" step="0.01" min="0" class="form-control"
+          placeholder="Ingresar Precio de la Terapia" />
+      </div>
+    </div>
+
   </form>
 </div>
 
@@ -61,16 +56,9 @@
   <button type="button" class="btn btn-light" (click)="close()">
     Cancelar
   </button>
-  <button
-    [disabled]="terapiaForm.invalid || (isLoading | async)"
-    type="button"
-    class="btn btn-primary"
-    (click)="save()"
-  >
+  <button [disabled]="terapiaForm.invalid || (isLoading | async)" type="button" class="btn btn-primary"
+    (click)="save()">
     Guardar
-    <span
-      *ngIf="isLoading | async"
-      class="spinner-border spinner-border-sm align-middle ms-2"
-    ></span>
+    <span *ngIf="isLoading | async" class="spinner-border spinner-border-sm align-middle ms-2"></span>
   </button>
 </div>

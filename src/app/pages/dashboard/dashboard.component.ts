@@ -30,6 +30,7 @@ export class DashboardComponent implements OnInit {
   localeText = AG_GRID_LOCALE_ES;
   isLoading = inject(LoadingService).isLoading;
   theme = inject(ThemeService);
+
   pacienteService = inject(PacienteService);
   pacientesList: Observable<IPaciente[]> = new Observable();
   citasPaciente: Observable<Cita[]> = new Observable(); // Observable para las citas del paciente seleccionado
@@ -54,7 +55,7 @@ export class DashboardComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.loadPacientes();
+    this.loadCitasPaciente(277);
   }
 
   loadPacientes() {
@@ -65,21 +66,21 @@ export class DashboardComponent implements OnInit {
   }
 
   // Cargar citas del paciente seleccionado
-  loadCitasPaciente(idPaciente: string) {
+  loadCitasPaciente(idPaciente: any) {
     this.citasPaciente = this.citaService.getCitasByPaciente(idPaciente).pipe(
       map((resp: { data: Cita[] }) => resp.data),
       untilDestroyed(this)
     );
   }
 
-  handleSelectChange(event: Event) {
-    const selectElement = event.target as HTMLSelectElement;
-    const selectedValue = selectElement.value;
+  // handleSelectChange(event: Event) {
+  //   const selectElement = event.target as HTMLSelectElement;
+  //   const selectedValue = selectElement.value;
 
-    if (selectedValue) {
-      // Busca el paciente seleccionado en la lista de pacientes
-      this.pacientesList.pipe(take(1)).subscribe((pacientes) => {
-        const pacienteSeleccionado = pacientes.find(p => p.id_paciente === selectedValue);
+  //   if (selectedValue) {
+  //     // Busca el paciente seleccionado en la lista de pacientes
+  //     this.pacientesList.pipe(take(1)).subscribe((pacientes) => {
+  //       const pacienteSeleccionado = pacientes.find(p => p.id_paciente === selectedValue);
 
         if (pacienteSeleccionado) {
           this.loadCitasPaciente(pacienteSeleccionado.id_paciente);

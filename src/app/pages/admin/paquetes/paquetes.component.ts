@@ -90,7 +90,6 @@ export class PaquetesComponent implements OnInit, OnDestroy {
       filter: 'agDateColumnFilter',
       valueFormatter: (params) => formatDate(params.value, 'dd/MM/yyyy', 'en'),
     },
-    { field: 'sesionesrestantes', headerName: 'Sesiones Restantes' },
     {
       headerName: 'Acciones',
       cellRenderer: ActionButtonsComponent,

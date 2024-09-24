@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, inject, Output } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { LoadingService } from 'src/app/services/loading.service';
 import { PersonalService } from 'src/app/services/personal/personal.service';
@@ -14,6 +14,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { map, Observable } from 'rxjs';
 import { GeneroService } from 'src/app/services/genero/genero.service';
 import { SedesService } from 'src/app/services/sedes/sedes.service';
+import { FlatpickrDefaultsInterface } from 'angularx-flatpickr';
 
 @Component({
   selector: 'app-editar-modal',
@@ -37,6 +38,21 @@ export class EditarModalComponent implements OnInit {
   horariosList: Observable<HorarioPersonal[]> = new Observable();
   generosList: Observable<any> = new Observable();
   sedesList: Observable<any> = new Observable();
+
+  timeOptions: FlatpickrDefaultsInterface = {
+    enableTime: true,
+    noCalendar: true,
+    dateFormat: 'H:i',
+  }
+
+  dias = [
+    { value: 1, name: 'Lunes' },
+    { value: 2, name: 'Martes' },
+    { value: 3, name: 'Miércoles' },
+    { value: 4, name: 'Jueves' },
+    { value: 5, name: 'Viernes' },
+    { value: 6, name: 'Sábado' },
+  ];
 
   loadingGenero : boolean;
   loadingSedes : boolean;
@@ -65,8 +81,29 @@ export class EditarModalComponent implements OnInit {
       sueldo: ['', [Validators.required, Validators.min(0)]],
       id_tipopersonal: [null, Validators.required],
       id_terapia: [null, Validators.required],
-      id_horariop: [null, Validators.required],
+      horarios: this.fb.array([]),
     });
+  }
+
+  get horarios(): FormArray {
+    return this.editForm.get('horarios') as FormArray;
+  }
+
+  createHorario() { 
+    return this.fb.group({
+      id_horario: [null],
+      dia_semana: [null, Validators.required],
+      hora_inicio: [null, Validators.required],
+      hora_fin: [null, Validators.required],
+    }) 
+  }
+
+  addHorario() {
+    this.horarios.push(this.createHorario());
+  }
+
+  removeHorario(index: number) {
+    this.horarios.removeAt(index);
   }
 
   ngOnInit(): void {
@@ -103,6 +140,17 @@ export class EditarModalComponent implements OnInit {
       this.personalService.getById(this.personalId).subscribe({
         next: (personal) => {
           this.editForm.patchValue(personal.data);
+
+          if (personal.data.horarios) {
+            personal.data.horarios.forEach((horario: any) => {
+              this.horarios.push(this.fb.group({
+                id_horario: [horario.id_horario],
+                dia_semana: [horario.dia_semana, Validators.required],
+                hora_inicio: [horario.hora_inicio, Validators.required],
+                hora_fin: [horario.hora_fin, Validators.required],
+              }));
+            });
+          }
         },
         error: (err: HttpErrorResponse) => {
           console.error('Error al cargar datos del personal:', err.message);

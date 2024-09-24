@@ -1,26 +1,28 @@
 import {
+  AfterViewInit,
   Component,
+  ElementRef,
   EventEmitter,
   inject,
-  Output,
-  AfterViewInit,
-  ViewChild,
-  ElementRef,
   OnInit,
+  Output,
+  ViewChild,
 } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { LoadingService } from 'src/app/services/loading.service';
-import { PersonalService } from 'src/app/services/personal/personal.service';
-import { TipoPersonalService } from 'src/app/services/tipopersonal/tipopersonal.service';
-import { TerapiaService } from 'src/app/services/terapia/terapia.service';
-import { HorarioPersonalService } from 'src/app/services/horariopersonal/horariopersonal.service';
-import { TipoPersonal } from 'src/app/models/tipopersonal';
+import { FlatpickrDefaultsInterface } from 'angularx-flatpickr';
+import Spanish from 'flatpickr/dist/l10n/es.js';
+import { finalize, map, Observable, Subject } from 'rxjs';
 import { HorarioPersonal } from 'src/app/models/horariop';
 import { Terapia } from 'src/app/models/terapia';
-import { map, Observable, Subject } from 'rxjs';
+import { TipoPersonal } from 'src/app/models/tipopersonal';
 import { GeneroService } from 'src/app/services/genero/genero.service';
+import { HorarioPersonalService } from 'src/app/services/horariopersonal/horariopersonal.service';
+import { LoadingService } from 'src/app/services/loading.service';
+import { PersonalService } from 'src/app/services/personal/personal.service';
 import { SedesService } from 'src/app/services/sedes/sedes.service';
+import { TerapiaService } from 'src/app/services/terapia/terapia.service';
+import { TipoPersonalService } from 'src/app/services/tipopersonal/tipopersonal.service';
 
 @Component({
   selector: 'app-crear-modal',
@@ -44,7 +46,6 @@ export class CrearModalComponent implements OnInit {
   generosList: Observable<any> = new Observable();
   sedesList: Observable<any> = new Observable();
 
-
   archivo: File | null = null;
 
   loadingGenero : boolean;
@@ -53,6 +54,20 @@ export class CrearModalComponent implements OnInit {
   loadingTPersonal : boolean;
   loadingHorario : boolean;
 
+  timeOptions: FlatpickrDefaultsInterface = {
+    enableTime: true,
+    noCalendar: true,
+    dateFormat: 'H:i',
+  }
+
+  dias = [
+    { value: 1, name: 'Lunes' },
+    { value: 2, name: 'Martes' },
+    { value: 3, name: 'Miércoles' },
+    { value: 4, name: 'Jueves' },
+    { value: 5, name: 'Viernes' },
+    { value: 6, name: 'Sábado' },
+  ];
 
   @Output() onSaveComplete = new EventEmitter<void>();
 
@@ -77,12 +92,30 @@ export class CrearModalComponent implements OnInit {
       sueldo: [0, [Validators.required, Validators.min(0)]],
       id_tipopersonal: [null, Validators.required],
       id_terapia: [null, Validators.required],
-      id_horariop: [null, Validators.required],
       cv: [null],
+      horarios: this.fb.array([this.createHorario()]),
     });
   }
 
+  get horarios(): FormArray {
+    return this.personalForm.get('horarios') as FormArray;
+  }
 
+  createHorario() { 
+    return this.fb.group({
+      dia_semana: [null, Validators.required],
+      hora_inicio: [null, Validators.required],
+      hora_fin: [null, Validators.required],
+    }) 
+  }
+
+  addHorario() {
+    this.horarios.push(this.createHorario());
+  }
+
+  removeHorario(index: number) {
+    this.horarios.removeAt(index);
+  }
 
   ngOnInit(): void {
     this.getTipoPersonalList();
@@ -97,9 +130,12 @@ export class CrearModalComponent implements OnInit {
   }
 
   save() {
+
     if (this.personalForm.valid) {
-      console.log(this.personalForm.value);
-      this.personalService.create(this.personalForm.value).subscribe({
+      this.personalService.create({
+        ...this.personalForm.value,
+        horarios: this.horarios.value
+        }).subscribe({
         next: () => {
           this.onSaveComplete.emit();
           this.modal.dismissAll();
@@ -114,10 +150,8 @@ export class CrearModalComponent implements OnInit {
   getTipoPersonalList(): void {
     this.loadingTPersonal = true;
     this.tiposPersonalList = this.tipoPersonalService.getAll().pipe(
-      map((response: any) =>{
-        this.loadingTPersonal = false;
-        return response.data;
-      }),
+      map((response: any) => response.data),
+      finalize(() => this.loadingTPersonal = false),
     );
   }
 

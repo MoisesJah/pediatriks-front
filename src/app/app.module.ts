@@ -22,7 +22,8 @@ import { PacientesModalsModule } from './pages/admin/pacientes/modals/modals.mod
 import { SedesModalsModule } from './pages/admin/sedes/modales/modales.module';
 import { DrawerComponent } from './components/ui/drawer/drawer.component';
 import localeEs from '@angular/common/locales/es';
-import { registerLocaleData } from '@angular/common';
+import { IMAGE_CONFIG, registerLocaleData } from '@angular/common';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 
 registerLocaleData(localeEs);
 @NgModule({
@@ -30,6 +31,7 @@ registerLocaleData(localeEs);
   imports: [
     BrowserModule,
     AppRoutingModule,
+    BrowserAnimationsModule,
     FullCalendarModule,
     FormsModule,
     ReactiveFormsModule,
@@ -51,6 +53,7 @@ registerLocaleData(localeEs);
     provideHttpClient(withInterceptors([tokenInterceptor, loadingInterceptor])),
     { provide: LOCALE_ID, useValue: 'es' },
     { provide: 'localeData', useValue: localeEs },
+    { provide: IMAGE_CONFIG, useValue: { disableImageSizeWarning: true, disableImageLazyLoadWarning: true } },
   ],
   bootstrap: [AppComponent],
 })

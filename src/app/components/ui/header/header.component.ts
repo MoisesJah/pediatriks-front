@@ -33,6 +33,10 @@ export class HeaderComponent {
     this.theme.setThemeMode('light')  
   }
 
+  setSystemTheme() {
+    this.theme.setThemeMode('system')
+  }
+
   logout() {
     this.authService.logout();
     this.removeCredentials();

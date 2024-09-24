@@ -15,9 +15,6 @@
       <div class="card-header">
         <!-- <h2 class="card-title fw-bold">{{ currentTerapia?.nombre }}</h2> -->
         <div class="card-toolbar d-flex ms-auto justify-content-end">
-          <button [disabled]="isLoading | async" class="btn btn-flex btn-primary me-2" (click)="openModal()">
-            <i class="ki-duotone ki-plus fs-2"></i> Agregar Citas
-          </button>
           <ng-select [items]="terapiasList | async" bindLabel="nombre" (change)="handleSelectChange($event)" placeholder="Seleccionar Terapia" bindValue="id_terapia"></ng-select>
         </div>
       </div>

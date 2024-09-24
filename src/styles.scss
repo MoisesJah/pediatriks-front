@@ -83,9 +83,9 @@ ng-select.ng-invalid.ng-touched .ng-select-container {
   border-radius: 0.95rem !important;
 }
 
-.modal-open .fc .fc-popover  {
+.modal-open .fc .fc-popover {
   z-index: 1 !important;
-} 
+}
 
 .ng-select.ng-select-top > .ng-select-container {
   border-bottom-left-radius: 0.95rem !important;
@@ -135,6 +135,15 @@ textarea {
   justify-content: center;
 }
 
+.opened[_ngcontent-ng-c1814545840]
+  .colors[_ngcontent-ng-c1814545840]
+  .circle.wrapper.color[_ngcontent-ng-c1814545840],
+.opened[_ngcontent-ng-c1814545840]
+  .colors[_ngcontent-ng-c1814545840]
+  .circle.wrapper[_ngcontent-ng-c1814545840] {
+  padding-left: 0px !important;
+}
+
 .menu-text {
   margin-top: 4px; /* Ajusta el margen según sea necesario */
   font-size: 12px; /* Ajusta el tamaño de la fuente */
@@ -150,6 +159,6 @@ textarea {
   position: relative;
 }
 
-
-
-
+ngb-popover-window .popover-body{
+  padding: 0;
+}

@@ -1,4 +1,10 @@
-import { AfterViewInit, ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  inject,
+  OnInit,
+} from '@angular/core';
 import {
   CalendarOptions,
   DateSelectArg,
@@ -14,7 +20,15 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { CitaService } from 'src/app/services/citas/cita.service';
 import esLocale from '@fullcalendar/core/locales/es';
 import { ActivatedRoute, Router } from '@angular/router';
-import { combineLatest, distinctUntilChanged, forkJoin, map, Observable, switchMap, tap } from 'rxjs';
+import {
+  combineLatest,
+  distinctUntilChanged,
+  forkJoin,
+  map,
+  Observable,
+  switchMap,
+  tap,
+} from 'rxjs';
 import { FullCalendarModule } from '@fullcalendar/angular';
 import { CommonModule } from '@angular/common';
 import { HeaderComponent } from 'src/app/components/ui/header/header.component';
@@ -42,7 +56,8 @@ export class CronogramaComponent implements OnInit {
   terapiasService = inject(TerapiaService);
   router = inject(Router);
   terapiaId: string | undefined;
-  terapiasList: Observable<{ id_terapia: string; nombre: string }[]> = new Observable();
+  terapiasList: Observable<{ id_terapia: string; nombre: string }[]> =
+    new Observable();
 
   currentTerapia: Terapia | undefined;
   loading: boolean = true;
@@ -50,7 +65,10 @@ export class CronogramaComponent implements OnInit {
   gridMonth = new Date().getMonth() + 1;
   gridYear = new Date().getFullYear();
 
-  constructor(private route: ActivatedRoute, private changeDetector: ChangeDetectorRef) {}
+  constructor(
+    private route: ActivatedRoute,
+    private changeDetector: ChangeDetectorRef
+  ) {}
 
   citasEvent: Observable<EventApi[]> = new Observable();
 
@@ -61,18 +79,31 @@ export class CronogramaComponent implements OnInit {
       center: 'title',
       right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek',
     },
-    initialView: 'dayGridMonth',
-    // initialEvents: INITIAL_EVENTS,
+    initialView: 'timeGridWeek',
+    allDaySlot: false,
+    expandRows: true,
+    eventMinHeight: 30,
+    slotDuration: '00:45:00',
+    // slotLabelInterval: '00:45:00',
+    slotMinTime: '08:00',
+    slotMaxTime: '20:01:00',
+    slotLabelFormat: {
+      hour: 'numeric',
+      minute: '2-digit',
+      omitZeroMinute: false,
+      meridiem: 'narrow',
+    },
     weekends: true,
     editable: true,
     selectable: true,
     selectMirror: true,
     dayMaxEvents: true,
     eventClick: this.handleEventClick.bind(this),
-    loading:(isLoading) => {
-        this.loading = isLoading;
+    loading: (isLoading) => {
+      this.loading = isLoading;
     },
     locale: esLocale,
+    select: this.handleDateSelect.bind(this),
     datesSet: (arg) => {
       this.changeDetector.detectChanges();
       this.gridMonth = arg.view.currentStart.getMonth() + 1;
@@ -82,24 +113,35 @@ export class CronogramaComponent implements OnInit {
   };
 
   ngOnInit(): void {
-    this.route.params.pipe(
-      tap(({ tag }) => (this.terapiaId = tag)),
-      switchMap(() => combineLatest([this.loadCurrentTerapia(), this.loadTerapias()])),
-    ).subscribe(() => this.loadCitas(this.gridMonth, this.gridYear));
+    this.route.params
+      .pipe(
+        tap(({ tag }) => (this.terapiaId = tag)),
+        switchMap(() =>
+          combineLatest([this.loadCurrentTerapia(), this.loadTerapias()])
+        )
+      )
+      .subscribe(() => this.loadCitas(this.gridMonth, this.gridYear));
     // this.loadTerapias();
     // this.loadCurrentTerapia()
   }
 
-  openModal() {
+  handleDateSelect(selectInfo: DateSelectArg) {
     const modalRef = this.modalService.open(CrearModalComponent, {
       size: 'lg',
       centered: true,
       // backdrop: 'static',
     });
     modalRef.componentInstance.terapia = this.currentTerapia;
+
+    modalRef.componentInstance.createForm.patchValue({
+      fecha_inicio: selectInfo.startStr.substring(0, 10),
+      hora_inicio: selectInfo.startStr.substring(11, 16),
+      hora_fin: selectInfo.endStr.substring(11, 16),
+    });
+
     modalRef.componentInstance.eventSubmitted.subscribe(() => {
       this.loadCitas(this.gridMonth, this.gridYear);
-    })
+    });
   }
 
   handleEventClick(clickInfo: EventClickArg) {
@@ -118,13 +160,13 @@ export class CronogramaComponent implements OnInit {
     modalRef.componentInstance.citaId = event.extendedProps.id_cita;
     modalRef.componentInstance.eventUpdated.subscribe(() => {
       this.loadCitas(this.gridMonth, this.gridYear);
-    })
+    });
   }
 
   handleSelectChange(event: any) {
     const terapia = event as { id_terapia: string; nombre: string };
     const selectedValue = terapia.id_terapia;
-    
+
     this.router.navigateByUrl(`/admin/reservar-cita/${selectedValue}`);
   }
 
@@ -132,25 +174,30 @@ export class CronogramaComponent implements OnInit {
     if (this.terapiaId) {
       this.citasEvent = this.citasService
         .getByTerapia(this.terapiaId, month, year)
-        .pipe(distinctUntilChanged((prev, curr) => JSON.stringify(prev) === JSON.stringify(curr)), map((resp) => resp.data));
+        .pipe(
+          distinctUntilChanged(
+            (prev, curr) => JSON.stringify(prev) === JSON.stringify(curr)
+          ),
+          map((resp) => resp.data)
+        );
     }
   }
 
   loadTerapias() {
-    return this.terapiasList = this.terapiasService.getAll().pipe(
+    return (this.terapiasList = this.terapiasService.getAll().pipe(
       map((resp) => [
         { id_terapia: '/admin/reservar-cita', nombre: 'Cronograma' },
         ...resp.data.map((t: Terapia) => ({
           id_terapia: t.id_terapia,
           nombre: t.nombre,
         })),
-      ]),
-    )
+      ])
+    ));
   }
 
   loadCurrentTerapia() {
-    return this.terapiasService.getById(this.terapiaId!).pipe(
-      tap((resp) => (this.currentTerapia = resp.data)),
-    );
+    return this.terapiasService
+      .getById(this.terapiaId!)
+      .pipe(tap((resp) => (this.currentTerapia = resp.data)));
   }
 }

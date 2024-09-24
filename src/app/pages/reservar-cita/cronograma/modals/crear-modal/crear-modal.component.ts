@@ -80,11 +80,12 @@ export class CrearModalComponent implements OnInit, AfterViewInit {
       // id_terapia: [null, Validators.required],
       id_personal: [null, Validators.required],
       id_tipocita: [null, Validators.required],
-      id_paquete: [null, Validators.required],
+      id_paquete: [null],
       fecha_inicio: [null, Validators.required],
       hora_inicio: [null, Validators.required],
       hora_fin: [null, Validators.required],
       descripcion: [null],
+      paquete: [null],
       num_sesiones: [null],
       recurrencia: this.fb.array([]),
     });
@@ -134,7 +135,7 @@ export class CrearModalComponent implements OnInit, AfterViewInit {
 
   changeTipoCita(event: any) {
     // console.log(event);
-    this.isCitaContinua = event?.nombre !== 'Evaluación';
+    this.isCitaContinua = event && event?.nombre !== 'Evaluación';
   }
 
   ngOnInit(): void {

@@ -131,7 +131,7 @@
         ></ng-select>
       </div>
 
-      <div class="form-group col-6">
+      <!-- <div class="form-group col-6">
         <label for="id_horario" class="required form-label">Horario</label>
         <ng-select
           [items]="horariosList | async"
@@ -149,6 +149,50 @@
             {{ item.horario_iniciop }} - {{ item.horario_finalp }}
           </ng-template>
         </ng-select>
+      </div> -->
+      <div formArrayName="horarios">
+        <div class="d-flex justify-content-between mt-4 align-items-center">
+          <label class="form-label fw-bolder fs-5" for="">Horarios</label>
+          <button class="btn btn-primary fs-10 btn-sm btn-icon" (click)="addHorario()">
+            <span><i class="ki-duotone ki-plus">
+                <span class="path1"></span><span class="path2"></span>
+              </i></span>
+          </button>
+        </div>
+
+        <ng-container *ngFor="let horario of horarios.controls; let i = index">
+          <div class="form-group d-flex flex-column gap-3 position-relative p-4 border-2 mt-2 border-dashed border-gray-300 rounded"
+          [formGroupName]="i">
+          <div *ngIf="i > 0" class="position-absolute end-0" style="transform: translateY(-18px) translateX(12px);"><button
+            class="btn btn-sm fs-10 btn-icon btn-active-color-danger btn-danger" (click)="removeHorario(i)">
+            <i class="ki-solid ki-cross"></i>
+          </button>
+        </div>
+          <div class="row">
+            <div class="form-group col-4">
+              <input type="hidden" name="id_horario" formControlName="id_horario">
+              <label for="id_horario" class="required form-label">Dia de Semana</label>
+              <ng-select [items]="dias" bindValue="value" placeholder="Seleccionar" bindLabel="name" formControlName="dia_semana"></ng-select>
+            </div>  
+            <div class="form-group col-4">
+              <label for="id_horario" class="required form-label">Hora de Inicio</label>
+              <input
+                type="text"
+                mwlFlatpickr
+                placeholder="Inicio"
+                [options]="timeOptions"
+                formControlName="hora_inicio"
+                class="form-control"
+              />
+            </div>
+            <div class="form-group col-4">
+              <label for="id_horario" class="required form-label">Hora de Fin</label>
+              <input type="text" class="form-control" id="kt_calendar_datepicker_end_time" formControlName="hora_fin"
+              mwlFlatpickr [options]="timeOptions" placeholder="Seleccionar Hora de Fin" />
+            </div>
+          </div>
+        </div>
+        </ng-container>
       </div>
     </div>
   </form>
