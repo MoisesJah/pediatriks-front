@@ -27,7 +27,7 @@ export class HorariosListComponent implements ICellRendererAngularComp {
   }
 
   getDayWeek (dayWeek: number) {
-    return ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'][dayWeek];
+    return ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'][dayWeek-1];
   }
 
   refresh(params: ICellRendererParams): boolean {

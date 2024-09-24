@@ -88,7 +88,7 @@ export class ReservarCitaComponent implements OnInit, OnDestroy {
     initialView: 'timeGridWeek',
     weekends: true,
     editable: true,
-    selectable: true,
+    selectable: false,
     selectMirror: true,
     dayMaxEvents: true,
     eventClick: this.handleEventClick.bind(this),

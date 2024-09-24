@@ -20,20 +20,6 @@ export class CreateModalComponent {
   terapiaForm: FormGroup;
 
   timeOptions: FlatpickrDefaultsInterface = {
-    // enableTime: true,
-    // noCalendar: true,
-    // dateFormat: 'h:i',
-    // minuteIncrement: 15,
-    // time24hr: true,
-    // minTime: '00:00',
-    // enable: [
-    //   {
-    //     from: '00:00',
-    //     to: '23:59'
-    //   }
-    // ],
-    // defaultMinute: 45,
-    // hourIncrement: 0
     enableTime: true,
     noCalendar: true,
     dateFormat: 'H:i',

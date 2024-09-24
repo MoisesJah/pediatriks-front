@@ -39,12 +39,19 @@ import { LoadingService } from 'src/app/services/loading.service';
 import { CrearModalComponent } from './modals/crear-modal/crear-modal.component';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { ModalViewEventComponent } from '../modal-event/modal-view-event/modal-view-event.component';
+import { DropdownComponent } from 'src/app/components/ui/dropdown/dropdown.component';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
   selector: 'app-cronograma',
   standalone: true,
-  imports: [FullCalendarModule, CommonModule, HeaderComponent, NgSelectModule],
+  imports: [
+    FullCalendarModule,
+    CommonModule,
+    HeaderComponent,
+    NgSelectModule,
+    DropdownComponent,
+  ],
   templateUrl: './cronograma.component.html',
   styleUrl: './cronograma.component.scss',
 })
@@ -106,7 +113,8 @@ export class CronogramaComponent implements OnInit {
     select: this.handleDateSelect.bind(this),
     datesSet: (arg) => {
       this.changeDetector.detectChanges();
-      this.gridMonth = arg.view.currentStart.getMonth() + 1;
+      console.log(arg);
+      this.gridMonth = arg.view.currentEnd.getMonth() + 1;
       this.gridYear = arg.view.currentStart.getFullYear();
       this.loadCitas(this.gridMonth, this.gridYear);
     },

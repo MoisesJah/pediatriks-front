@@ -46,6 +46,17 @@ ng-select {
   line-height: 1.5;
 }
 
+.dropdown-content:hover {
+  color: var(--bs-dropdown-link-hover-color);
+  // background-color: var(--bs-gray-700);
+  background-color: var(--bs-dropdown-link-hover-bg);
+}
+
+.dropdown-toggle:empty{
+  color: var(--bs-dropdown-link-hover-color);
+  transform: rotate(90deg);
+}
+
 [data-bs-theme="dark"] {
   .ng-select > .ng-select-container {
     background-color: var(--bs-body-bg);
@@ -159,6 +170,6 @@ textarea {
   position: relative;
 }
 
-ngb-popover-window .popover-body{
+ngb-popover-window .popover-body {
   padding: 0;
 }

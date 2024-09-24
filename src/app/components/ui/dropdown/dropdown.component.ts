@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit, ViewChild } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { NgbDropdown, NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 import { map, Observable } from 'rxjs';
 import { Personal } from 'src/app/models/personal';
@@ -14,7 +15,7 @@ interface DropdownItem {
   selector: 'app-dropdown',
   standalone: true,
   templateUrl: './dropdown.component.html',
-  imports: [NgbDropdownModule, CommonModule],
+  imports: [NgbDropdownModule, CommonModule, RouterLink],
   styleUrl: './dropdown.component.scss',
 })
 export class DropdownComponent implements OnInit {
@@ -31,28 +32,15 @@ export class DropdownComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.terapiasList = this.terapiasService
-      .getAllPersonal()
-      .pipe(
-        map((resp: any) => resp.data));
+    this.terapiasList = this.terapiasService.getAllPersonal().pipe(
+      map((resp: any) => [
+        { link: '/admin/reservar-cita', nombre: 'Cronograma General' },
+        ...resp.data.map((t:any) => ({
+          link: `/admin/reservar-cita/${t.id_terapia}`,
+          nombre: t.nombre,
+          personal: t.personal,
+        })),
+      ])
+    );
   }
-
-  dropdownItems = [
-    { label: 'Level 1 - Item 1' },
-    { label: 'Level 1 - Item 2' },
-    {
-      label: 'Level 1 - Submenu',
-      children: [
-        { label: 'Level 2 - Item 1' },
-        { label: 'Level 2 - Item 2' },
-        {
-          label: 'Level 2 - Submenu',
-          children: [
-            { label: 'Level 3 - Item 1' },
-            { label: 'Level 3 - Item 2' },
-          ],
-        },
-      ],
-    },
-  ];
 }
