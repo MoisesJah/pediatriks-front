@@ -1,36 +1,25 @@
-<!-- <div ngbDropdown placement="bottom-end" [container]="'body'">
-  <a
-    class=""
-    id="dropdownConfig"
-    ngbDropdownToggle
-  >
-    Seleccionar Terapia
-</a>
-  <div class="dropdown-menu" ngbDropdownMenu aria-labelledby="dropdownConfig">
-    <ng-content select="[dropdown-menu]"></ng-content>
-  </div>
-</div> -->
-
 <div ngbDropdown placement="bottom-end" class="d-inline-block">
-  <span ngbDropdownToggle class="btn btn-secondary" role="button">
-    Seleccionar Terapia
-  </span>
-  <div ngbDropdownMenu aria-labelledby="dropdown-basic">
+  <button ngbDropdownToggle class="btn btn-secondary">
+    Seleccionar
+  </button>
+  <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
     <ng-container *ngFor="let terapia of terapiasList | async">
-      <a ngbDropdownItem href="#" (mouseover)="showSubmenu = terapia.id_terapia" (mouseout)="showSubmenu = null">
-        {{ terapia.nombre }}
-        <span ngbDropdownAnchor></span>
-        <div ngbDropdown placement="top"  *ngIf="showSubmenu === terapia.id_terapia">
-          <div ngbDropdownMenu class="d-inline-block">
-  
-            <ng-container *ngFor="let staff of terapia.personal">
-              <a ngbDropdownItem href="#">
-                {{ staff.nombre }}
-              </a>
-            </ng-container>
-          </div>
+      <div #dropdown="ngbDropdown"  ngbDropdown placement="left-top" class="d-inline-block w-100" *ngIf="terapia.personal">
+        <div class="d-flex align-items-center">
+          <span class="ps-3" role="button" ngbDropdownToggle></span>
+          <a href="" ngbDropdownItem class="">
+            {{ terapia.nombre }}
+          </a>
         </div>
-      </a>
+        
+        <div ngbDropdownMenu aria-labelledby="dropdownBasic2">
+          <ng-container *ngFor="let staff of terapia.personal">
+            <button ngbDropdownItem>
+              {{ staff.nombre }}
+            </button>
+          </ng-container>
+        </div>
+      </div>
     </ng-container>
   </div>
 </div>
