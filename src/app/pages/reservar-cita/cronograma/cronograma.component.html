@@ -26,7 +26,7 @@
         ">
         <div class="demo-app-main">
           @defer (on viewport) {
-          <full-calendar [ngClass]="{ 'opacity-50': isLoading | async }" [events]="citasEvent | async" [options]="calendarOptions">
+          <full-calendar #calendar [ngClass]="{ 'opacity-50': isLoading | async }" [events]="citasEvent | async" [options]="calendarOptions">
 
           </full-calendar>
           }@placeholder() {
