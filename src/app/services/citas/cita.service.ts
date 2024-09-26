@@ -13,13 +13,11 @@ export class CitaService {
 
   constructor(private http: HttpClient) {}
 
-  getAll(month?: number, year?: number) {
-    if (month && year) {
-      return this.http.get<{ data: EventApi[] }>(
-        `${this.apiUrl}/citas/list/${month}/${year}`
-      );
-    }
-    return this.http.get<{ data: EventApi[] }>(`${this.apiUrl}/citas/list`);
+  getAll(body: any) {
+    return this.http.post<{ data: EventApi[] }>(
+      `${this.apiUrl}/citas/list`,
+      body
+    );
   }
 
   getByTerapia(body: any) {
