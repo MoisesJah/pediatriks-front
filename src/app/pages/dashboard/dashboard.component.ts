@@ -14,6 +14,7 @@ import { PacienteService } from 'src/app/services/paciente/paciente.service';
 import { Cita } from 'src/app/models/cita';
 import { CitaService } from 'src/app/services/citas/cita.service';
 import { LoadingService } from 'src/app/services/loading.service';
+import { AuthService } from 'src/app/services/auth.service';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -29,20 +30,24 @@ export class DashboardComponent implements OnInit {
   localeText = AG_GRID_LOCALE_ES;
   isLoading = inject(LoadingService).isLoading;
   theme = inject(ThemeService);
+  authService = inject(AuthService);
 
   pacienteService = inject(PacienteService);
   pacientesList: Observable<IPaciente[]> = new Observable();
-  citasPaciente: Observable<Cita[]> = new Observable(); // Observable para las citas del paciente seleccionado
-  selectedPacienteId: string | null = null; // Almacena el ID del paciente seleccionado
+  citasPaciente: Observable<Cita[]> = new Observable();
+  user = this.authService.user();
 
   colDefs: ColDef[] = [
     { field: 'paciente.nombre', headerName: 'Paciente', filter: true },
-    //{ field: 'sesion.fecha_inicio', headerName: 'Fecha Inicio', filter: true },
-    //{ field: 'sesion.hora_inicio', headerName: 'Hora Inicio', filter: true },
-    //{ field: 'sesion.hora_fin', headerName: 'Hora Fin', filter: true },
     { field: 'tipocita.nombre', headerName: 'Terapia', filter: true },
     { field: 'sede.nombre', headerName: 'Sede', filter: true },
+    { field: 'fecha', headerName: 'Fecha de Cita', filter: true },
+    { field: 'hora', headerName: 'Hora de Cita', filter: true },
+    { field: 'terapias.sesiones[0].status', headerName: 'Estado de Sesión', filter: true },
+    { field: 'terapias.sesiones[0].personal.nombre', headerName: 'Terapista', filter: true },
+    { field: 'estado', headerName: 'Estado', filter: true },
   ];
+
 
   constructor(
     private route: ActivatedRoute,
@@ -52,7 +57,13 @@ export class DashboardComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-
+    if (this.user) {
+      console.log('Usuario autenticado:', this.user);
+      const userId = this.user.id.toString();
+      this.loadCitasPaciente(userId);
+    } else {
+      console.error('No se ha encontrado un usuario autenticado');
+    }
   }
 
   loadPacientes() {
@@ -62,13 +73,16 @@ export class DashboardComponent implements OnInit {
     );
   }
 
-  // Función para cargar las citas del paciente seleccionado
-  loadCitasPaciente(idPaciente: any) {
+  loadCitasPaciente(idPaciente: string) {
     this.citasPaciente = this.citaService.getCitasByUser(idPaciente).pipe(
-      map((resp: { data: Cita[] }) => resp.data),
+      map((resp: { data: Cita[] }) => {
+        console.log('Datos de citas recibidos:', resp.data); 
+        return resp.data;
+      }),
       untilDestroyed(this)
     );
   }
+
 
   gridReady(params: GridReadyEvent) {
     this.gridApi = params.api;
