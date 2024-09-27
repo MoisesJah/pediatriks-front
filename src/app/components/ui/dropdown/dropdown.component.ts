@@ -38,7 +38,10 @@ export class DropdownComponent implements OnInit {
         ...resp.data.map((t:any) => ({
           link: `/admin/reservar-cita/${t.id_terapia}`,
           nombre: t.nombre,
-          personal: t.personal,
+          personal: t.personal.map((p: any) => ({
+            link: `/admin/reservar-cita/${t.id_terapia}/${p.id_personal}`,	
+            nombre: p.nombre
+          })),
         })),
       ])
     );

@@ -6,9 +6,17 @@ const routes: Routes = [
   { path: '', component: ReservarCitaComponent },
   {
     path: ':tag',
+    // pathMatch: 'full',
     loadComponent: () =>
       import('./cronograma/cronograma.component').then(
         (m) => m.CronogramaComponent
+      ),
+  },
+  {
+    path: ':tag/:terapist',
+    loadComponent: () =>
+      import('./cronograma/especialista/especialista.component').then(
+        (m) => m.EspecialistaComponent
       ),
   },
 ];

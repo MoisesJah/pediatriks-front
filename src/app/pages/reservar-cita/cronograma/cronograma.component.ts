@@ -139,7 +139,8 @@ export class CronogramaComponent implements OnInit {
   ngOnInit(): void {
     this.route.params
       .pipe(tap(({ tag }) => (this.terapiaId = tag)))
-      .subscribe(() => {
+      .subscribe((e) => {
+        console.log(e)
         this.loadCurrentTerapia(), this.loadCitas(this.bodyParams);
       });
   }

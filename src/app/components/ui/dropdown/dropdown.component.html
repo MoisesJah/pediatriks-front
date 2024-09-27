@@ -14,7 +14,7 @@
         
         <div ngbDropdownMenu aria-labelledby="dropdownBasic2"  *ngIf="terapia.personal">
           <ng-container *ngFor="let staff of terapia.personal">
-            <a ngbDropdownItem>
+            <a routerLink="{{ staff.link }}" ngbDropdownItem>
               {{ staff.nombre }}
             </a>
           </ng-container>
