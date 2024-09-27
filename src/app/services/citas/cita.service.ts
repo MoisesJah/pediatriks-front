@@ -34,7 +34,7 @@ export class CitaService {
   }
 
   getCitasByUser(id: string): Observable<any> {
-    return this.http.get<any>(`/api/citas/user/${id}`);
+    return this.http.get<any>(`${this.apiUrl}/citas/user/${id}`);
   }
 
   create(cita: any) {
