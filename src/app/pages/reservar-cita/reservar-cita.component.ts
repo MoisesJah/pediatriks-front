@@ -38,6 +38,7 @@ import { TerapiaService } from 'src/app/services/terapia/terapia.service';
 import { Terapia } from 'src/app/models/terapia';
 import { LoadingService } from 'src/app/services/loading.service';
 import { EventImpl } from '@fullcalendar/core/internal';
+import { getWeekStartEndDates } from 'src/app/utils/getdatesFromWeek';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -61,6 +62,16 @@ export class ReservarCitaComponent implements OnInit, OnDestroy {
   subscriptions: Subscription[] = [];
   listLoading = false;
 
+  startWeek = getWeekStartEndDates().startOfWeek;
+  endWeek = getWeekStartEndDates().endOfWeek;
+
+  get bodyParams() {
+    return {
+      startWeek: this.startWeek,
+      endWeek: this.endWeek,
+    };
+  }
+
   calendarVisible = true;
   calendarOptions: CalendarOptions = {
     plugins: [interactionPlugin, dayGridPlugin, timeGridPlugin, listPlugin],
@@ -70,7 +81,7 @@ export class ReservarCitaComponent implements OnInit, OnDestroy {
       right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek',
     },
     allDaySlot: false,
-    eventColor: '#ffe082',
+    // eventColor: '#ffe082',
     expandRows:true,
     // eventTextColor: 'black',
     eventMinHeight: 30,
@@ -88,16 +99,17 @@ export class ReservarCitaComponent implements OnInit, OnDestroy {
     initialView: 'timeGridWeek',
     weekends: true,
     editable: true,
-    selectable: true,
+    // selectable: true,
+    // select: this.handleDateSelect.bind(this),
     selectMirror: true,
     dayMaxEvents: true,
     eventClick: this.handleEventClick.bind(this),
     eventsSet: this.handleEvents.bind(this),
     locale: esLocale,
     datesSet: (arg) => {
-      const gridMonth = arg.view.currentStart.getMonth() + 1;
-      const gridYear = arg.view.currentStart.getFullYear();
-      this.loadCitas(gridMonth, gridYear);
+      this.startWeek = arg.view.activeStart;
+      this.endWeek = arg.view.activeEnd;
+      this.loadCitas(this.bodyParams);
     },
   };
 
@@ -111,28 +123,19 @@ export class ReservarCitaComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    this.loadTerapias();
   }
 
   ngOnDestroy() {
     this.subscriptions.forEach((subscription) => subscription.unsubscribe());
   }
 
-  loadCitas(month?: number, year?: number) {
-    this.citasEvent = this.citasService.getAll(month, year).pipe(
+  loadCitas(body: any) {
+    this.citasEvent = this.citasService.getAll(body).pipe(
       map((resp) => resp.data),
       untilDestroyed(this)
     );
   }
 
-  loadTerapias() {
-    this.terapiasService.getAll().subscribe((resp) => {
-      this.terapiasList = resp.data.map((t: Terapia) => ({
-        id_terapia: t.id_terapia,
-        nombre: t.nombre,
-      }));
-    });
-  }
 
   handleCalendarToggle() {
     this.calendarVisible = !this.calendarVisible;
@@ -190,20 +193,13 @@ export class ReservarCitaComponent implements OnInit, OnDestroy {
     modalRef.componentInstance.eventId = event.id;
     modalRef.componentInstance.citaId = event.extendedProps.id_cita;
     modalRef.componentInstance.eventUpdated.subscribe(() => {
-      this.loadCitas();
+      this.loadCitas(this.bodyParams);
     });
   }
 
   handleEvents(events: EventApi[]) {
     // this.currentEvents = events;
     // this.changeDetector.detectChanges();
-  }
-
-  handleSelectChange(event: any) {
-    const selectedValue = event.id_terapia;
-
-    // this.router.navigate([selectedValue], { relativeTo: this.route });
-    this.router.navigateByUrl(`/admin/reservar-cita/${selectedValue}`);
   }
 
   openModal() {
@@ -214,7 +210,7 @@ export class ReservarCitaComponent implements OnInit, OnDestroy {
     });
 
     modalRef.componentInstance.eventSubmitted.subscribe(() => {
-      this.loadCitas();
+      this.loadCitas(this.bodyParams);
     });
   }
 }

@@ -43,11 +43,29 @@ export class TerapiasComponent implements OnInit, OnDestroy {
     {
       field: 'precio',
       headerName: 'Precio',
+      maxWidth: 120,
       filter: 'agNumberColumnFilter',
       cellClass: 'fw-bold',
 
       valueFormatter: (params) => formatMoney(params.value),
       resizable: true,
+    },
+    {
+      headerName: 'Duración',
+      field: 'duracion',
+      maxWidth: 150,
+      filter: 'agNumberColumnFilter',
+      valueFormatter: (params) => params.value ? `${params.value.substring(0, 5)} min` : '',
+      resizable: true,
+    },
+    {
+      headerName: 'Color',
+      field: 'color',
+      maxWidth: 75,
+      filter:false,
+      cellRenderer: (params: any) => {
+        return `<div class="h-20px w-20px mt-3 rounded-circle" style="background-color: ${params.value}"></div>`;
+      }
     },
     {
       headerName: 'Acciones',

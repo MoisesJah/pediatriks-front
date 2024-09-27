@@ -1,22 +1,22 @@
 <div ngbDropdown placement="bottom-end" class="d-inline-block">
   <button ngbDropdownToggle class="btn btn-secondary">
-    Seleccionar
+    Seleccionar Terapia
   </button>
   <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
     <ng-container *ngFor="let terapia of terapiasList | async">
-      <div #dropdown="ngbDropdown"  ngbDropdown placement="left-top" class="d-inline-block w-100" *ngIf="terapia.personal">
-        <div class="d-flex align-items-center">
-          <span class="ps-3" role="button" ngbDropdownToggle></span>
-          <a href="" ngbDropdownItem class="">
+      <div #dropdown="ngbDropdown"  ngbDropdown placement="left-top" class="d-inline-block w-100">
+        <div class="d-flex dropdown-content align-items-center">
+          <span class="px-3" role="button" *ngIf="terapia.personal" ngbDropdownToggle></span>
+          <a routerLink="{{ terapia.link }}" ngbDropdownItem [ngClass]="[ terapia.personal ? 'ps-0' : 'ps-8' ]">
             {{ terapia.nombre }}
           </a>
         </div>
         
-        <div ngbDropdownMenu aria-labelledby="dropdownBasic2">
+        <div ngbDropdownMenu aria-labelledby="dropdownBasic2"  *ngIf="terapia.personal">
           <ng-container *ngFor="let staff of terapia.personal">
-            <button ngbDropdownItem>
+            <a ngbDropdownItem>
               {{ staff.nombre }}
-            </button>
+            </a>
           </ng-container>
         </div>
       </div>
