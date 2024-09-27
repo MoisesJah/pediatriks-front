@@ -6,6 +6,7 @@ export interface Terapia {
   precio: number;
   created_at: Date;
   updated_at: Date;
+  duracion: string;
   deleted_at: Date | null;
   id: number;
   estado: number;

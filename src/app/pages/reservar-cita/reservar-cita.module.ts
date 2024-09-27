@@ -8,9 +8,10 @@ import { HeaderComponent } from 'src/app/components/ui/header/header.component';
 import { CronogramaComponent } from './cronograma/cronograma.component';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { DropdownComponent } from 'src/app/components/ui/dropdown/dropdown.component';
+import { CreateModalComponent } from './cronograma/especialista/create-modal/create-modal.component';
 
 @NgModule({
-  declarations: [ReservarCitaComponent],
+  declarations: [ReservarCitaComponent, CreateModalComponent],
   imports: [
     CommonModule,
     ReservarCitaRoutingModule,

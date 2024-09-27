@@ -246,13 +246,13 @@ export class ModalCreateEventComponent implements OnInit, AfterViewInit {
 
           if (requiredFields.every(Boolean) && id_sede) {
             this.citaService
-              .getPersonal(body)
+              .getAvailablePersonal(body)
               .pipe(take(1))
               .subscribe({
                 next: (resp: any) => {
                   this.avaiblePersonal[index] = resp.data;
                 },
-                error: (err) => {
+                error: () => {
                   this.avaiblePersonal[index] = [];
                 }
               });

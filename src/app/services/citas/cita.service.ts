@@ -48,8 +48,15 @@ export class CitaService {
     );
   }
 
-  getPersonal(body: any) {
-    return this.http.post<{ data: any }>(`${this.apiUrl}/citas/terapist`, body);
+  getByPersonal(body: any) {
+    return this.http.post<{ data: any }>(`${this.apiUrl}/citas/personal`, body);
+  }
+
+  getAvailablePersonal(body: any) {
+    return this.http.post<{ data: any }>(
+      `${this.apiUrl}/citas/personal/available`,
+      body
+    );
   }
 
   update(id_cita: string, cita: any) {

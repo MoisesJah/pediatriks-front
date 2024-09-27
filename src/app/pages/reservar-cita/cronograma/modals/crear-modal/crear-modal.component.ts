@@ -164,7 +164,7 @@ export class CrearModalComponent implements OnInit, AfterViewInit {
         };
 
         if (requiredFields.every(Boolean)) {
-          this.citaService.getPersonal(body).subscribe((resp: any) => {
+          this.citaService.getAvailablePersonal(body).subscribe((resp: any) => {
             this.personalList = resp.data;
           });
         } else {

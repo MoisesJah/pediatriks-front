@@ -70,7 +70,7 @@ export class CronogramaComponent implements OnInit {
   router = inject(Router);
   terapiaId: string | undefined = this.route.snapshot.params['tag'];
 
-  currentTerapia: Terapia | undefined;
+  currentTerapia?: Terapia | undefined;
   loading: boolean = true;
 
   startWeek = getWeekStartEndDates().startOfWeek;
@@ -140,7 +140,6 @@ export class CronogramaComponent implements OnInit {
     this.route.params
       .pipe(tap(({ tag }) => (this.terapiaId = tag)))
       .subscribe((e) => {
-        console.log(e)
         this.loadCurrentTerapia(), this.loadCitas(this.bodyParams);
       });
   }
