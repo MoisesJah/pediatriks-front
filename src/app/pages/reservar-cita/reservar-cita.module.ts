@@ -11,7 +11,7 @@ import { DropdownComponent } from 'src/app/components/ui/dropdown/dropdown.compo
 import { CreateModalComponent } from './cronograma/especialista/create-modal/create-modal.component';
 
 @NgModule({
-  declarations: [ReservarCitaComponent, CreateModalComponent],
+  declarations: [ReservarCitaComponent],
   imports: [
     CommonModule,
     ReservarCitaRoutingModule,

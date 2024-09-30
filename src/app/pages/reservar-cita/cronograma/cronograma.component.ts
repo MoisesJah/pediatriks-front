@@ -75,8 +75,8 @@ export class CronogramaComponent implements OnInit {
 
   startWeek = getWeekStartEndDates().startOfWeek;
   endWeek = getWeekStartEndDates().endOfWeek;
-  
-  get bodyParams () {
+
+  get bodyParams() {
     return {
       id_terapia: this.terapiaId!,
       startWeek: this.startWeek,
@@ -107,8 +107,7 @@ export class CronogramaComponent implements OnInit {
     allDaySlot: false,
     expandRows: true,
     eventMinHeight: 30,
-    slotDuration: '00:45:00',
-    // slotLabelInterval: '00:45:00',
+    slotLabelInterval: '00:05:00',
     slotMinTime: '08:00',
     slotMaxTime: '20:01:00',
     slotLabelFormat: {
@@ -194,9 +193,18 @@ export class CronogramaComponent implements OnInit {
   }
 
   loadCurrentTerapia() {
-    return this.terapiasService.getById(this.terapiaId!).subscribe((resp) => {
-      this.currentTerapia = resp.data;
-      this.changeDetector.detectChanges();
-    });
+    return this.terapiasService
+      .getById(this.terapiaId!)
+      .pipe(
+        map((resp) => (this.currentTerapia = resp.data)),
+        tap(
+          () =>
+            (this.calendarOptions = {
+              ...this.calendarOptions,
+              slotDuration: this.currentTerapia?.duracion,
+            })
+        )
+      )
+      .subscribe();
   }
 }

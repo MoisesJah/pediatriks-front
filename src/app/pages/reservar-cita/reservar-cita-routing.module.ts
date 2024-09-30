@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { ReservarCitaComponent } from './reservar-cita.component';
+import { testerResolver } from 'src/app/resolvers/tester.resolver';
 
 const routes: Routes = [
   { path: '', component: ReservarCitaComponent },
@@ -14,6 +15,9 @@ const routes: Routes = [
   },
   {
     path: ':tag/:terapist',
+    resolve: {
+      personal: testerResolver 
+    },
     loadComponent: () =>
       import('./cronograma/especialista/especialista.component').then(
         (m) => m.EspecialistaComponent

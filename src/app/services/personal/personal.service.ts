@@ -21,6 +21,12 @@ export class PersonalService {
     );
   }
 
+  getHorarios(id: string) {
+    return this.http.get<{ data: any }>(
+      `${this.apiUrl}/personal/horarios/${id}`
+    )
+  }
+
   getByTerapia(id: string) {
     return this.http.get<{ data: Personal[] }>(
       `${this.apiUrl}/personal/terapias/${id}`
