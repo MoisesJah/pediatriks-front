@@ -63,10 +63,6 @@
         </div>
         <div class="row">
             <div class="form-group col-6">
-                <label class="form-label" for="">Terapia Asignada</label>
-                <input type="text" [value]="personal?.nombre" readonly class="form-control">
-            </div>
-            <div class="form-group col-6">
                 <label class="form-label" for="">Terapista Asignado</label>
                 <input type="text" [value]="personal?.nombre" readonly class="form-control">
             </div>
@@ -77,5 +73,9 @@
 
 <div class="modal-footer">
     <button type="button" class="btn btn-light" (click)="closeModal()">Cancelar</button>
-    <button type="button" class="btn btn-primary" (click)="createCita()">Registrar</button>
+    <button type="button" [disabled]="!createForm.valid || (isLoading | async)" class="btn btn-primary"
+        (click)="createCita()">
+        Registrar
+        <span *ngIf="isLoading | async" class="spinner-border spinner-border-sm align-middle ms-2"></span>
+    </button>
 </div>

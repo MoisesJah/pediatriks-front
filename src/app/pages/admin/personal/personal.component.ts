@@ -53,11 +53,6 @@ export class PersonalComponent implements OnInit {
     { field: 'genero.nombre', headerName: 'Género', filter: true },
     { field: 'sede.nombre', headerName: 'Sede', filter: true },
     {
-      field: 'tipopersonal.especialidad',
-      headerName: 'Tipo de Personal',
-      filter: true,
-    },
-    {
       field: 'sueldo',
       headerName: 'Sueldo',
       filter: 'agNumberColumnFilter',

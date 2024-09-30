@@ -11,6 +11,7 @@ import {
   DateSelectArg,
   DatesSetArg,
   EventApi,
+  EventClickArg,
 } from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import interactionPlugin, { DateClickArg } from '@fullcalendar/interaction';
@@ -30,8 +31,9 @@ import { CrearModalComponent } from '../modals/crear-modal/crear-modal.component
 import { CreateModalComponent } from './create-modal/create-modal.component';
 import { Terapia } from 'src/app/models/terapia';
 import { Sede } from 'src/app/models/sede';
+import { ModalViewEventComponent } from '../../modal-event/modal-view-event/modal-view-event.component';
 
-type Horarios = {
+export type CurrentPersonal = {
   id_personal: string;
   nombre: string;
   terapia: Terapia;
@@ -62,7 +64,7 @@ export class EspecialistaComponent implements OnInit {
   modalService = inject(NgbModal);
 
   router = inject(Router);
-  currentPersonal!: Horarios;
+  currentPersonal!: CurrentPersonal;
 
   citasEvent: Observable<EventApi[]> = new Observable();
 
@@ -93,7 +95,7 @@ export class EspecialistaComponent implements OnInit {
     // slotDuration: this.currentPersonal?.terapia.duracion,
     slotLabelInterval: '00:05:00',
     slotMinTime: '08:00',
-    slotMaxTime: '20:01:00',
+    slotMaxTime: '20:00:00',
     slotLabelFormat: {
       hour: 'numeric',
       minute: '2-digit',
@@ -113,9 +115,11 @@ export class EspecialistaComponent implements OnInit {
     selectMirror: true,
     dayMaxEvents: true,
     locale: esLocale,
-    // select: this.handleDateSelect.bind(this),
-    // eventClick: this.handleEventClick.bind(this),
-    // eventsSet: this.handleEvents.bind(this),
+    datesSet: (arg) => {
+      this.startWeek = arg.view.activeStart;
+      this.endWeek = arg.view.activeEnd;
+      this.loadCitas(this.bodyParams);
+    },
   };
 
   constructor(private route: ActivatedRoute) {
@@ -123,13 +127,14 @@ export class EspecialistaComponent implements OnInit {
       this.startWeek = this.calendar?.getApi()?.view.activeStart;
       this.endWeek = this.calendar?.getApi()?.view.activeEnd;
     });
-
   }
 
   ngOnInit(): void {
-    this.route.params.subscribe((e) => {
-      this.loadCitas(this.bodyParams);
-    });
+    this.route.params
+      .pipe(tap(({ terapist }) => (this.personalId = terapist)))
+      .subscribe((e) => {
+        this.loadCitas(this.bodyParams);
+      });
     this.route.data.subscribe((data) => {
       console.log(data);
       this.currentPersonal = data['personal'];
@@ -138,7 +143,7 @@ export class EspecialistaComponent implements OnInit {
         ...this.calendarOptions,
         businessHours: this.currentPersonal?.horarios,
         slotDuration: this.currentPersonal?.terapia.duracion,
-      }
+      };
     });
   }
 
@@ -161,10 +166,31 @@ export class EspecialistaComponent implements OnInit {
     });
   }
 
+  handleEventClick(clickInfo: EventClickArg) {
+    const event = clickInfo.event;
+
+    const modalRef = this.modalService.open(ModalViewEventComponent, {
+      centered: true,
+      size: '100',
+      scrollable: true,
+      backdrop: 'static',
+    });
+
+    window.document.body.classList.add('modal-open');
+
+    modalRef.componentInstance.eventId = event.id;
+    modalRef.componentInstance.citaId = event.extendedProps.id_cita;
+    modalRef.componentInstance.eventUpdated.subscribe(() => {
+      this.loadCitas(this.bodyParams);
+    });
+  }
+
   loadCitas(params: any) {
-    this.citasEvent = this.citasService
-      .getByPersonal(params)
-      .pipe(map((resp) => resp.data));
+    if (this.currentPersonal) {
+      return (this.citasEvent = this.citasService
+        .getByPersonal(params)
+        .pipe(map((resp) => resp.data)));
+    }
   }
 
   // loadCurrentPersonal() {

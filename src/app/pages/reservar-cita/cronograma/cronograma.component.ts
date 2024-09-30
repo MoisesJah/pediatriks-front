@@ -109,7 +109,7 @@ export class CronogramaComponent implements OnInit {
     eventMinHeight: 30,
     slotLabelInterval: '00:05:00',
     slotMinTime: '08:00',
-    slotMaxTime: '20:01:00',
+    slotMaxTime: '20:00:00',
     slotLabelFormat: {
       hour: 'numeric',
       minute: '2-digit',
@@ -129,8 +129,8 @@ export class CronogramaComponent implements OnInit {
     select: this.handleDateSelect.bind(this),
     datesSet: (arg) => {
       console.log(arg);
-      this.startWeek = arg.view.currentStart;
-      this.endWeek = arg.view.currentEnd;
+      this.startWeek = arg.view.activeStart;
+      this.endWeek = arg.view.activeEnd;
       this.loadCitas(this.bodyParams);
     },
   };

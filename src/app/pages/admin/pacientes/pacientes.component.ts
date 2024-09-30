@@ -44,8 +44,7 @@ export class PacientesComponent implements OnInit {
       filter: 'agDateColumnFilter',
       valueFormatter: (params) => formatDate(params.value, 'dd/MM/yyyy', 'en'),
     },
-    { field: 'user.name', headerName: 'Padre de familia', filter: true },
-    { field: 'direccion', headerName: 'Dirección', filter: true },
+    { field: 'user.name', headerName: 'Apoderado', filter: true },
     { field: 'colegio', headerName: 'Colegio', filter: true },
     {
       headerName: 'Acciones',
