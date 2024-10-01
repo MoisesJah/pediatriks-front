@@ -1,5 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, EventEmitter, inject, OnInit, Output } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  EventEmitter,
+  inject,
+  OnInit,
+  Output,
+} from '@angular/core';
 import {
   FormArray,
   FormBuilder,
@@ -15,7 +22,13 @@ import {
   FlatpickrDefaultsInterface,
   FlatpickrModule,
 } from 'angularx-flatpickr';
-import { distinctUntilChanged, map, Observable } from 'rxjs';
+import {
+  debounceTime,
+  distinctUntilChanged,
+  distinctUntilKeyChanged,
+  map,
+  Observable,
+} from 'rxjs';
 import { IPaciente } from 'src/app/models/paciente';
 import { Personal } from 'src/app/models/personal';
 import { Sede } from 'src/app/models/sede';
@@ -97,7 +110,16 @@ export class CrearModalComponent implements OnInit, AfterViewInit {
     { label: 'MI', value: 3 },
     { label: 'J', value: 4 },
     { label: 'V', value: 5 },
+    { label: 'S', value: 6 },
   ];
+
+  isEnabledDay = (option: { label: string; value: number }) => {
+    const id_personal = this.createForm.get('id_personal')?.value;
+    return this.personalList.some(
+      (personal: Personal) => personal.horarios.some((horario) => horario.dia_semana === option.value && horario.id_personal === id_personal)
+    );
+  }
+    
 
   onStartTimeChange(event: any): void {
     const [hours, minutes] = event.dateString.split(':').map(Number);
@@ -124,9 +146,9 @@ export class CrearModalComponent implements OnInit, AfterViewInit {
     }
   }
 
-  isOptionSelected = (option: { label: string; value: string }) => {
+  isOptionSelected = (option: { label: string; value: number }) => {
     const recurrenciaControl = this.createForm.get('recurrencia') as FormArray;
-    return recurrenciaControl.value.includes(option.value);
+    return recurrenciaControl.value.includes(option.value) && this.isEnabledDay(option);
   };
 
   closeModal() {
@@ -147,12 +169,9 @@ export class CrearModalComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
     this.createForm.valueChanges
-      .pipe(
-        distinctUntilChanged((prev, curr) => JSON.stringify(prev) === JSON.stringify(curr)),
-        untilDestroyed(this))
+      .pipe(distinctUntilKeyChanged('id_sede'))
       .subscribe((value) => {
-        const { id_sede, fecha_inicio, hora_inicio, hora_fin } = value;
-
+        const { id_sede, fecha_inicio, hora_inicio, hora_fin, id_personal } = value;
         const requiredFields = [id_sede, fecha_inicio, hora_inicio, hora_fin];
 
         const body = {
@@ -164,9 +183,12 @@ export class CrearModalComponent implements OnInit, AfterViewInit {
         };
 
         if (requiredFields.every(Boolean)) {
-          this.citaService.getAvailablePersonal(body).subscribe((resp: any) => {
-            this.personalList = resp.data;
-          });
+          this.citaService
+            .getAvailablePersonal(body)
+            .pipe(debounceTime(500))
+            .subscribe((resp: any) => {
+              this.personalList = resp.data;
+            });
         } else {
           this.personalList = [];
           this.createForm.get('id_personal')?.setValue(null);
@@ -205,12 +227,14 @@ export class CrearModalComponent implements OnInit, AfterViewInit {
   }
 
   createCita() {
-    this.citaService.createForTherapy({
-      ...this.createForm.value,
-      id_terapia: this.terapia.id_terapia
-    }).subscribe((resp) => {
-      this.eventSubmitted.emit(resp.data);
-      this.modal.dismissAll();
-    })
+    this.citaService
+      .createForTherapy({
+        ...this.createForm.value,
+        id_terapia: this.terapia.id_terapia,
+      })
+      .subscribe((resp) => {
+        this.eventSubmitted.emit(resp.data);
+        this.modal.dismissAll();
+      });
   }
 }

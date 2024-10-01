@@ -57,6 +57,11 @@ ng-select {
   transform: rotate(90deg);
 }
 
+.btn:disabled {
+  cursor: not-allowed;
+  pointer-events: initial;
+}
+
 [data-bs-theme="dark"] {
   .ng-select > .ng-select-container {
     background-color: var(--bs-body-bg);
