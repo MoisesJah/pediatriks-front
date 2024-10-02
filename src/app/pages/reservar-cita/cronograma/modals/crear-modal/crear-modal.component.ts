@@ -115,9 +115,22 @@ export class CrearModalComponent implements OnInit, AfterViewInit {
 
   isEnabledDay = (option: { label: string; value: number }) => {
     const id_personal = this.createForm.get('id_personal')?.value;
-    return this.personalList.some(
-      (personal: Personal) => personal.horarios.some((horario) => horario.dia_semana === option.value && horario.id_personal === id_personal)
+    const hora_inicio = this.createForm.get('hora_inicio')?.value;
+    const hora_fin = this.createForm.get('hora_fin')?.value;
+
+    return this.personalList.some((personal: Personal) =>
+      personal.horarios?.some(
+        (horario) =>
+          horario.hora_inicio <= hora_inicio &&
+          horario.hora_fin >= hora_fin &&
+          horario.dia_semana === option.value &&
+          personal.id_personal === id_personal
+      )
     );
+  };
+
+  onChangeSede(event: any) {
+    this.createForm.get('id_personal')?.setValue(null);
   }
     
 

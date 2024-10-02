@@ -35,7 +35,7 @@
             <div class="form-group col-6">
                 <label class="form-label" for="">Seleccionar Sede</label>
                 <ng-select [items]="sedesList | async" [loading]="isLoading | async" [loadingText]="'Cargando...'"
-                    bindValue="id_sede" placeholder="Seleccionar Sede" bindLabel="nombre" formControlName="id_sede">
+                    bindValue="id_sede" (change)="onChangeSede($event)" placeholder="Seleccionar Sede" bindLabel="nombre" formControlName="id_sede">
                 </ng-select>
             </div>
             <div *ngIf="isCitaContinua" class="form-group col-6">
