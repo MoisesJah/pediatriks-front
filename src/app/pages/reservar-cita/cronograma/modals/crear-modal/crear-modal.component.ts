@@ -121,8 +121,8 @@ export class CrearModalComponent implements OnInit, AfterViewInit {
     return this.personalList.some((personal: Personal) =>
       personal.horarios?.some(
         (horario) =>
-          horario.hora_inicio <= hora_inicio &&
-          horario.hora_fin >= hora_fin &&
+          horario.hora_inicio.substring(0, 5) <= hora_inicio &&
+          horario.hora_fin.substring(0, 5) >= hora_fin &&
           horario.dia_semana === option.value &&
           personal.id_personal === id_personal
       )

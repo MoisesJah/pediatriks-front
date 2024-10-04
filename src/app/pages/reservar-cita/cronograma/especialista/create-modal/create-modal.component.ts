@@ -1,13 +1,14 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, inject, OnInit, Output } from '@angular/core';
 import {
+  FormArray,
   FormBuilder,
   FormControl,
   FormGroup,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import {
@@ -31,7 +32,7 @@ import { CurrentPersonal } from '../especialista.component';
 @Component({
   selector: 'app-create-modal',
   standalone: true,
-  imports: [ReactiveFormsModule, FlatpickrModule, NgSelectModule, CommonModule],
+  imports: [ReactiveFormsModule, FlatpickrModule, NgSelectModule, CommonModule,NgbTooltipModule],
   templateUrl: './create-modal.component.html',
   styleUrl: './create-modal.component.scss',
 })
@@ -83,8 +84,49 @@ export class CreateModalComponent implements OnInit {
   ngOnInit(): void {
     this.loadPacientes();
     this.loadTipoCitas();
-    this.loadPaquetes();
+    // this.loadPaquetes();
   }
+
+  options = [
+    { label: 'L', value: 1 },
+    { label: 'M', value: 2 },
+    { label: 'MI', value: 3 },
+    { label: 'J', value: 4 },
+    { label: 'V', value: 5 },
+    { label: 'S', value: 6 },
+  ];
+
+  isEnabledDay = (option: { label: string; value: number }) => {
+    const hora_inicio = this.createForm.get('hora_inicio')?.value;
+    const hora_fin = this.createForm.get('hora_fin')?.value;
+
+    const horarios = this.personal?.horarios as any[];
+
+    return horarios.some(
+        (horario) =>
+          horario.startTime.substring(0, 5) <= hora_inicio &&
+          horario.endTime.substring(0, 5) >= hora_fin &&
+          horario.daysOfWeek.includes(option.value)
+      )
+    
+  };
+
+  toggleOption(option: { label: string; value: string }) {
+    const recurrenciaControl = this.createForm.get('recurrencia') as FormArray;
+
+    if (recurrenciaControl.value.includes(option.value)) {
+      recurrenciaControl.removeAt(
+        recurrenciaControl.value.indexOf(option.value)
+      );
+    } else {
+      recurrenciaControl.push(this.fb.control(option.value));
+    }
+  }
+
+  isOptionSelected = (option: { label: string; value: number }) => {
+    const recurrenciaControl = this.createForm.get('recurrencia') as FormArray;
+    return recurrenciaControl.value.includes(option.value) && this.isEnabledDay(option);
+  };
 
   changePaquete(event: any) {
     const sesionesControl = this.createForm.get('num_sesiones') as FormControl;

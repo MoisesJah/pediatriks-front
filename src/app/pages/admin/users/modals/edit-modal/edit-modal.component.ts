@@ -42,6 +42,7 @@ export class EditModalComponent implements OnInit {
       id_tipousers: [null, Validators.required],
       telefono: ['', [Validators.required, Validators.pattern('^[0-9]*')]],
       password: ['', [Validators.required, Validators.minLength(8)]],
+      direccion: [''],
     });
 
   }
@@ -62,7 +63,7 @@ export class EditModalComponent implements OnInit {
 
   generatePassword(): void {
     const length = 12;
-    const charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    const charset = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+={}[]|;:<>?,./`~';
     let password = '';
     for (let i = 0; i < length; i++) {
       const randomIndex = Math.floor(Math.random() * charset.length);

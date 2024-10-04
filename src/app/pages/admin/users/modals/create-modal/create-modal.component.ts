@@ -39,6 +39,7 @@ export class CreateModalComponent implements OnInit {
       id_tipousers: [null, Validators.required],
       telefono: ['', [Validators.required, Validators.pattern('^[0-9]*')]],
       password: ['', [Validators.required, Validators.minLength(8)]],
+      direccion: [''],
     });
   }
 

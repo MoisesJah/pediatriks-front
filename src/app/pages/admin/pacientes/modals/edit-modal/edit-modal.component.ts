@@ -18,6 +18,7 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { IUser } from 'src/app/models/user';
 import { GeneroService } from 'src/app/services/genero/genero.service';
 import Spanish from 'flatpickr/dist/l10n/es.js';
+import { ParentescosService } from 'src/app/services/paciente/parentescos.service';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -32,11 +33,13 @@ export class EditModalComponent implements AfterViewInit, OnDestroy, OnInit {
   pacienteService = inject(PacienteService);
   userService = inject(UserService);
   generoService = inject(GeneroService);
+  parentescoService = inject(ParentescosService);
 
   userList: Observable<IUser[]> = new Observable();
   es = Spanish.es;
   paciente?: IPaciente;
   generos: Observable<any> = new Observable();
+  parentescos: Observable<any> = new Observable();
 
   @Output() onSaveComplete = new EventEmitter();
 
@@ -47,7 +50,7 @@ export class EditModalComponent implements AfterViewInit, OnDestroy, OnInit {
       fecha_nacimiento: ['', Validators.required],
       id: [null, Validators.required],
       id_genero: [null, Validators.required],
-      direccion: ['', Validators.required],
+      id_parentesco: [null, Validators.required],
       pos_hijo: [''],
       colegio: [''],
     });
@@ -74,6 +77,11 @@ export class EditModalComponent implements AfterViewInit, OnDestroy, OnInit {
         const generosData = response as { data: any };
         return generosData.data;
       })
+    );
+
+    this.parentescos = this.parentescoService.getAll().pipe(
+      untilDestroyed(this),
+      map((resp) => resp.data)
     );
   }
 

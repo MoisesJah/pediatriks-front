@@ -31,18 +31,7 @@
                 </ng-select>
             </div>
         </section>
-        <section class="row">
-            <div *ngIf="isCitaContinua" class="form-group col-6">
-                <div class="form-check form-check-sm">
-                    <input class="form-check-input" formControlName="paquete" type="checkbox" name="" id="">
-                    <label class="form-check-label" for="">Tiene Paquete</label>
-                </div>
-                <ng-select *ngIf="createForm.get('paquete')?.value" [items]="paquetesList | async"
-                    [loading]="isLoading | async" [loadingText]="'Cargando...'" bindValue="id_paquete"
-                    placeholder="Seleccionar Paquete" bindLabel="nombre" formControlName="id_paquete">
-                </ng-select>
-            </div>
-        </section>
+       
         <div class="row">
             <div class="form-group col mb-3">
                 <label class="form-label" for="kt_calendar_datepicker_date">Fecha</label>
@@ -61,12 +50,20 @@
                     readonly placeholder="Seleccionar Hora de Fin" />
             </div>
         </div>
-        <div class="row">
-            <div class="form-group col-6">
-                <label class="form-label" for="">Terapista Asignado</label>
-                <input type="text" [value]="personal?.nombre" readonly class="form-control">
+
+        <div *ngIf="isCitaContinua" class="row">
+            <div class="form-group d-flex flex-column col mb-3">
+                <label class="form-label" for="kt_calendar_datepicker_end_date">Dias Disponibles</label>
+                <div class="btn-group">
+                    <button [disableTooltip]="isEnabledDay(option)" ngbTooltip="No Disponible" [disabled]="!isEnabledDay(option)" *ngFor="let option of options" class="btn btn-outline"
+                        [ngClass]="{ 'btn-active-primary active': isOptionSelected(option), 'cursor-not-allowed': !isEnabledDay(option) }"
+                        (click)="toggleOption(option)">
+                        {{ option.label }}
+                    </button>
+                </div>
             </div>
         </div>
+       
 
     </form>
 </div>

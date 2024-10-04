@@ -116,20 +116,7 @@
 
     <!-- Selector de Tipo de Personal -->
     <div class="row">
-      <div class="form-group col-6">
-        <label for="id_tipopersonal" class="required form-label"
-          >Tipo de Personal</label
-        >
-        <ng-select
-          [items]="tiposPersonalList | async"
-          bindValue="id_tipopersonal"
-          placeholder="Seleccionar"
-          bindLabel="especialidad"
-          formControlName="id_tipopersonal"
-          [loading]=loadingTPersonal
-          loadingText='Cargando...'
-        ></ng-select>
-      </div>
+      
 
       <!-- <div class="form-group col-6">
         <label for="id_horario" class="required form-label">Horario</label>

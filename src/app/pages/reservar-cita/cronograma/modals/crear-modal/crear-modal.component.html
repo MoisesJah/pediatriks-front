@@ -38,7 +38,7 @@
                     bindValue="id_sede" (change)="onChangeSede($event)" placeholder="Seleccionar Sede" bindLabel="nombre" formControlName="id_sede">
                 </ng-select>
             </div>
-            <div *ngIf="isCitaContinua" class="form-group col-6">
+            <!-- <div *ngIf="isCitaContinua" class="form-group col-6">
                 <div class="form-check form-check-sm">
                     <input class="form-check-input" formControlName="paquete" type="checkbox" name="" id="">
                     <label class="form-check-label" for="">Tiene Paquete</label>
@@ -47,7 +47,7 @@
                     [loading]="isLoading | async" [loadingText]="'Cargando...'" bindValue="id_paquete"
                     placeholder="Seleccionar Paquete" bindLabel="nombre" formControlName="id_paquete">
                 </ng-select>
-            </div>
+            </div> -->
         </section>
         <div class="row">
             <div class="form-group col mb-3">
@@ -80,7 +80,7 @@
             </div>
         </div>
 
-        <div *ngIf="createForm.get('id_personal')?.value" class="row">
+        <div *ngIf="createForm.get('id_personal')?.value && isCitaContinua" class="row">
             <div class="form-group d-flex flex-column col mb-3">
                 <label class="form-label" for="kt_calendar_datepicker_end_date">Dias Disponibles</label>
                 <div class="btn-group">

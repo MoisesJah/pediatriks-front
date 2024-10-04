@@ -33,7 +33,6 @@ export class EditarModalComponent implements OnInit {
 
   personalId!: string; // Asegúrate de que el ID sea pasado como Input
   editForm: FormGroup;
-  tiposPersonalList: Observable<TipoPersonal[]> = new Observable();
   terapiasList: Observable<Terapia[]> = new Observable();
   horariosList: Observable<HorarioPersonal[]> = new Observable();
   generosList: Observable<any> = new Observable();
@@ -79,7 +78,6 @@ export class EditarModalComponent implements OnInit {
       id_genero: [null, Validators.required],
       id_sede: [null, Validators.required],
       sueldo: ['', [Validators.required, Validators.min(0)]],
-      id_tipopersonal: [null, Validators.required],
       id_terapia: [null, Validators.required],
       horarios: this.fb.array([]),
     });
@@ -110,7 +108,6 @@ export class EditarModalComponent implements OnInit {
     if (this.personalId) {
       this.loadPersonalData();
     }
-    this.getTipoPersonalList();
     this.getTerapiasList();
     this.getHorariosList();
     this.getGenerosList();
@@ -159,15 +156,6 @@ export class EditarModalComponent implements OnInit {
     }
   }
 
-  getTipoPersonalList(): void {
-    this.loadingTPersonal = true;
-    this.tiposPersonalList = this.tipoPersonalService.getAll().pipe(
-      map((response: any) =>{
-        this.loadingTPersonal = false;
-        return response.data;
-      }),
-    );
-  }
 
   getGenerosList(): void {
     this.loadingGenero = true;
