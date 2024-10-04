@@ -15,7 +15,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import {
@@ -48,7 +48,7 @@ import Spanish from 'flatpickr/dist/l10n/es.js';
 @Component({
   selector: 'app-crear-modal',
   standalone: true,
-  imports: [NgSelectModule, CommonModule, ReactiveFormsModule, FlatpickrModule],
+  imports: [NgSelectModule, NgbTooltipModule, CommonModule, ReactiveFormsModule, FlatpickrModule],
   templateUrl: './crear-modal.component.html',
   styleUrl: './crear-modal.component.scss',
 })
