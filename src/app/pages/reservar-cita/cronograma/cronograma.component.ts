@@ -128,7 +128,6 @@ export class CronogramaComponent implements OnInit {
     locale: esLocale,
     select: this.handleDateSelect.bind(this),
     datesSet: (arg) => {
-      console.log(arg);
       this.startWeek = arg.view.activeStart;
       this.endWeek = arg.view.activeEnd;
       this.loadCitas(this.bodyParams);

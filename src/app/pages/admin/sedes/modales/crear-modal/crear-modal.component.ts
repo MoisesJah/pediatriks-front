@@ -67,7 +67,6 @@ export class CrearModalComponent implements AfterViewInit {
       this.loadingService.setLoading(true, 'sede/create');
       this.sedeService.create(this.sedeForm.value).subscribe({
         next: (response: any) => { // Especifica el tipo de `response` si es posible
-          console.log('Sede creada con éxito:', response);
           this.loadingService.setLoading(false, 'sede/create');
           this.onSaveComplete.emit();
           this.close();

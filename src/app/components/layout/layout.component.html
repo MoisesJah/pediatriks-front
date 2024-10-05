@@ -21,7 +21,7 @@
           <div id="kt_aside_menu_wrapper" class="w-100 hover-scroll-y scroll-lg-ms d-flex">
             <div id=""
               class="menu menu-column menu-title-gray-600 menu-state-primary menu-state-icon-primary menu-state-bullet-primary menu-icon-gray-500 menu-arrow-gray-500 fw-semibold fs-6 my-auto">
-              <div data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-placement="right-start"
+              <div routerLinkActive="here" data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-placement="right-start"
                 class="menu-item py-2" style="transition: background-color 0.3s; border-radius: 15px"
                 onmouseout="this.style.backgroundColor='';" (click)="navigateToInicio($event)">
                 <span class="menu-link menu-center">
@@ -39,9 +39,9 @@
 
 
               <!--begin:Menu item-->
-              <div data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-placement="right-start"
+              <a routerLink="/admin/reservar-cita" routerLinkActive="here" data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-placement="right-start"
                 class="menu-item py-2" style="transition: background-color 0.3s; border-radius: 15px"
-                onmouseout="this.style.backgroundColor='';" (click)="navigateToReservarCita($event)">
+                onmouseout="this.style.backgroundColor='';">
                 <!--begin:Menu link-->
                 <span class="menu-link menu-center">
                   <div class="menu-icon-text-container">
@@ -62,12 +62,12 @@
                 <!--begin:Menu sub-->
 
                 <!--end:Menu sub-->
-              </div>
+              </a>
               <!--end:Menu item-->
               <!--begin:Menu item-->
               <div data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-placement="right-start"
                 class="menu-item py-2" style="transition: background-color 0.3s; border-radius: 15px"
-                onmouseout="this.style.backgroundColor='';" (click)="navigateToPaquetes($event)">
+                onmouseout="this.style.backgroundColor='';">
                 <!--begin:Menu link-->
                 <span class="menu-link menu-center">
                   <div class="menu-icon-text-container">
@@ -84,7 +84,7 @@
               </div>
               <!--end:Menu sub-->
 
-              <div *ngIf="isAdmin()" class="menu-item here py-2 show menu-dropdown"
+              <div *ngIf="isAdmin()" class="menu-item py-2 menu-dropdown"
                 style="transition: background-color 0.3s; border-radius: 15px" (mouseenter)="showSubMenu = true"
                 (mouseleave)="showSubMenu = false">
                 <span class="menu-link menu-center">
@@ -110,61 +110,15 @@
                     </div>
                   </div>
                   <div class="menu-item">
-                    <div class="menu-content">
-                      <a href="#" (click)="navigateToPersonal($event)" class="menu-link">
+                    <div class="menu-content" *ngFor="let item of adminList">
+                      <a routerLink="{{ item.link }}" [routerLinkActive]="['active']" #activeLink="routerLinkActive" class="menu-link">
                         <span class="menu-bullet">
                           <span class="bullet bullet-dot"></span>
                         </span>
-                        <span class="menu-tittle">Personal</span>
+                        <span class="menu-tittle">{{ item.nombre }}</span>
                       </a>
                     </div>
                   </div>
-                  <div class="menu-item">
-                    <div class="menu-content">
-                      <a href="#" (click)="navigateToUsuarios($event)" class="menu-link"><span class="menu-bullet">
-                          <span class="bullet bullet-dot"></span>
-                        </span>
-                        <span class="menu-tittle">Usuarios</span>
-                      </a>
-                    </div>
-                  </div>
-                  <div class="menu-item">
-                    <div class="menu-content">
-                      <a href="#" (click)="navigateToTerapias($event)" class="menu-link"><span class="menu-bullet">
-                          <span class="bullet bullet-dot"></span>
-                        </span>
-                        <span class="menu-tittle">Terapias</span>
-                      </a>
-                    </div>
-                  </div>
-                  <div class="menu-item">
-                    <div class="menu-content">
-                      <a href="#" (click)="navigateToPacientes($event)" class="menu-link"><span class="menu-bullet">
-                          <span class="bullet bullet-dot"></span>
-                        </span>
-                        <span class="menu-tittle">Pacientes</span>
-                      </a>
-                    </div>
-                  </div>
-                  <div class="menu-item">
-                    <div class="menu-content">
-                      <a href="#" (click)="navigateToSede($event)" class="menu-link"><span class="menu-bullet">
-                          <span class="bullet bullet-dot"></span>
-                        </span>
-                        <span class="menu-tittle">Sedes</span>
-                      </a>
-                    </div>
-                  </div>
-                  <div class="menu-item">
-                    <div class="menu-content">
-                      <a href="#" (click)="navigateToPaquetes($event)" class="menu-link"><span class="menu-bullet">
-                          <span class="bullet bullet-dot"></span>
-                        </span>
-                        <span class="menu-tittle">Paquetes</span>
-                      </a>
-                    </div>
-                  </div>
-
 
                 </div>
               </div>

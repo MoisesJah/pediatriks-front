@@ -108,9 +108,9 @@ export class EspecialistaComponent implements OnInit {
     editable: true,
     loading: (isLoading) => {
       this.loadingCalendar = isLoading;
-      console.log('isLoading', isLoading);
     },
     select: (arg) => this.handleClick(arg),
+    eventClick: this.handleEventClick.bind(this),
     selectable: true,
     selectMirror: true,
     dayMaxEvents: true,
@@ -136,7 +136,6 @@ export class EspecialistaComponent implements OnInit {
         this.loadCitas(this.bodyParams);
       });
     this.route.data.subscribe((data) => {
-      console.log(data);
       this.currentPersonal = data['personal'];
 
       this.calendarOptions = {

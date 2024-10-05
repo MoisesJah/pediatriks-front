@@ -7,17 +7,16 @@ import {
   ViewChild,
 } from '@angular/core';
 import { HeaderComponent } from '../ui/header/header.component';
-import { Router } from '@angular/router';
+import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { CommonModule } from '@angular/common';
 import { DrawerComponent } from '../ui/drawer/drawer.component';
 import { AuthService } from '../../services/auth.service';
 
-
 @Component({
   selector: 'app-layout',
   standalone: true,
-  imports: [CommonModule, HeaderComponent,DrawerComponent],
+  imports: [CommonModule, HeaderComponent, DrawerComponent, RouterLink,RouterLinkActive],
   templateUrl: './layout.component.html',
   styleUrl: './layout.component.scss',
 })
@@ -26,6 +25,33 @@ export class LayoutComponent {
   open: boolean = false;
   authService = inject(AuthService);
   showSubMenu: boolean = false;
+
+  adminList = [
+    {
+      nombre: 'Usuarios',
+      link: '/admin/usuarios',
+    },
+    {
+      nombre: 'Personal',
+      link: '/admin/personal',
+    },
+    {
+      nombre: 'Pacientes',
+      link: '/admin/pacientes',
+    },
+    {
+      nombre: 'Terapias',
+      link: '/admin/terapias',
+    },
+    {
+      nombre: 'Sedes',
+      link: '/admin/sedes',
+    },
+    {
+      nombre: 'Paquetes',
+      link: '/admin/paquetes',
+    },
+  ];
 
   constructor(private router: Router) {}
 
@@ -45,7 +71,6 @@ export class LayoutComponent {
     // Utiliza la función del servicio de autenticación para verificar si es paciente
     return this.authService.isPaciente();
   }
-
 
   navigateToInicio(event: Event): void {
     event.preventDefault();
@@ -67,82 +92,6 @@ export class LayoutComponent {
     }
   }
 
-
-  navigateToReservarCita(event: Event): void {
-    // Detener el comportamiento por defecto del click, si lo hubiera
-    event.preventDefault();
-    // Agregar clase seleccionada
-    const target = event.currentTarget as HTMLElement;
-    this.removeSelectedClass();
-    target.classList.add('selected');
-    // Navegar al componente reservar-cita
-    this.router.navigate(['/admin/reservar-cita']);
-    console.log('Citas');
-  }
-
-  navigateToSede(event: Event): void {
-    event.preventDefault();
-    event.stopPropagation(); // Esto detiene la propagación del evento hacia otros manejadores
-    const target = event.currentTarget as HTMLElement;
-    this.removeSelectedClass();
-    target.classList.add('selected');
-    this.router.navigate(['/admin/sedes']);
-    console.log('Sedes');
-  }
-
-  navigateToPaquetes(event: Event): void {
-    event.preventDefault();
-    this.removeSelectedClass();
-
-    const target = event.currentTarget as HTMLElement;
-    target.classList.add('selected');
-
-    // Verificar el rol del usuario y navegar a la ruta correspondiente
-    if (this.isAdmin()) {
-      // Redirigir a la ruta del Administrador
-      this.router.navigate(['/admin/paquetes']);
-    } else {
-      // Redirigir a la ruta estándar de paquetes
-      this.router.navigate(['/paquetes']);
-    }
-
-    console.log('Paquetes');
-  }
-
-
-
-  navigateToPersonal(event: Event): void {
-    event.preventDefault();
-    event.stopPropagation();
-    this.removeSelectedClass();
-    this.router.navigate(['/admin/personal']);
-    console.log('Personal');
-  }
-
-  navigateToUsuarios(event: Event): void {
-    event.preventDefault();
-    event.stopPropagation();
-    this.removeSelectedClass();
-    this.router.navigate(['/admin/usuarios']);
-    console.log('Usuarios');
-  }
-
-  navigateToTerapias(event: Event): void {
-    event.preventDefault();
-    event.stopPropagation();
-    this.removeSelectedClass();
-    this.router.navigate(['/admin/terapias']);
-    console.log('Terapias');
-  }
-
-  navigateToPacientes(event: Event): void {
-    event.preventDefault();
-    event.stopPropagation();
-    this.removeSelectedClass();
-    this.router.navigate(['/admin/pacientes']);
-    console.log('Pacientes');
-  }
-
   private removeSelectedClass(): void {
     const selectedElements = document.querySelectorAll('.menu-item.selected');
     selectedElements.forEach((el) => {
@@ -150,5 +99,4 @@ export class LayoutComponent {
       (el as HTMLElement).style.backgroundColor = '';
     });
   }
-
 }
