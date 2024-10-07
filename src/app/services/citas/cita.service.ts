@@ -62,4 +62,11 @@ export class CitaService {
   update(id_cita: string, cita: any) {
     return this.http.put(`${this.apiUrl}/citas/edit/${id_cita}`, cita);
   }
+
+  delete(body: any) {
+    // return this.http.delete(`${this.apiUrl}/citas/delete`, body);
+    return this.http.delete(`${this.apiUrl}/citas/delete`, {
+      body
+    });
+  }
 }

@@ -102,7 +102,7 @@ export class ReservarCitaComponent implements OnInit, OnDestroy {
     selectMirror: true,
     dayMaxEvents: true,
     eventClick: this.handleEventClick.bind(this),
-    eventsSet: this.handleEvents.bind(this),
+    // eventsSet: this.handleEvents.bind(this),
     locale: esLocale,
     datesSet: (arg) => {
       this.startWeek = arg.view.activeStart;
@@ -157,29 +157,10 @@ export class ReservarCitaComponent implements OnInit, OnDestroy {
       hora_fin: selectInfo.endStr.substring(11, 16),
     })
 
-    // modalRef.componentInstance.eventSubmitted.subscribe(
-    //   (newEvent: CalendarEvent) => {
-    //     if (this.fullCalendarComponent) {
-    //       const calendarApi = this.fullCalendarComponent.getApi();
-    //       calendarApi.addEvent({
-    //         id: newEvent.id,
-    //         title: newEvent.title,
-    //         start: newEvent.start,
-    //         end: newEvent.end,
-    //         description: newEvent.description,
-    //         location: newEvent.location,
-    //         therapyType: newEvent.therapyType,
-    //         selectedPatient: newEvent.selectedPatient,
-    //         doctor: newEvent.doctor, // Asegúrate de agregar el campo doctor aquí
-    //       });
-    //     }
-    //   }
-    // );
   }
 
   handleEventClick(clickInfo: EventClickArg) {
     const event = clickInfo.event;
-    console.log(clickInfo);
 
     const modalRef = this.modalService.open(ModalViewEventComponent, {
       centered: true,
@@ -193,11 +174,6 @@ export class ReservarCitaComponent implements OnInit, OnDestroy {
     modalRef.componentInstance.eventUpdated.subscribe(() => {
       this.loadCitas(this.bodyParams);
     });
-  }
-
-  handleEvents(events: EventApi[]) {
-    // this.currentEvents = events;
-    // this.changeDetector.detectChanges();
   }
 
   openModal() {

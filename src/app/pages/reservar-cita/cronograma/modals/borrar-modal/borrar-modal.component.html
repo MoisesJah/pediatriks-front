@@ -1,0 +1,48 @@
+<div class="modal-header">
+    <h4 class="modal-title d-flex align-items-center gap-1" id="modal-basic-title">
+        <span>
+            <i style="vertical-align: middle;" class="ki-duotone ki-information text-danger fs-2hx"><span
+                    class="path1"></span><span class="path2"></span><span class="path3"></span></i>
+        </span>
+        Eliminar Cita
+    </h4>
+    <button type="button" class="btn btn-sm btn-icon btn-active-color-primary btn-color-gray-800" aria-label="Close"
+        (click)="closeModal()">
+        <i class="ki-duotone ki-cross-square fs-1">
+            <span class="path1"></span><span class="path2"></span>
+        </i>
+    </button>
+</div>
+
+<div class="modal-body">
+    <form class="d-flex flex-column gap-3" [formGroup]="deleteForm">
+        <div class="form-check form-check-custom form-check-danger form-check-solid">
+            <input class="form-check-input" formControlName="deleteOption" type="radio" value="1" id="flexCheckboxLg" />
+            <label class="form-check-label text-gray-900" for="flexCheckboxLg">
+                Esta Sesión
+            </label>
+        </div>
+
+        <div class="form-check form-check-custom form-check-danger form-check-solid">
+            <input class="form-check-input" type="radio" formControlName="deleteOption" value="2" id="flexCheckboxSm" />
+            <label class="form-check-label text-gray-900" for="flexCheckboxSm">
+                Esta y las sesiones siguientes
+            </label>
+        </div>
+
+        <div class="form-check form-check-custom form-check-danger form-check-solid">
+            <input class="form-check-input" type="radio" formControlName="deleteOption" value="3" id="flexRadioLg" />
+            <label class="form-check-label text-gray-900" for="flexRadioLg">
+                Todas las Sesiones
+            </label>
+        </div>
+    </form>
+</div>
+
+<div class="modal-footer">
+    <button type="button" class="btn btn-light btn-sm" (click)="closeModal()">Cancelar</button>
+    <button type="button" [disabled]="isLoading" class="btn btn-sm btn-danger" (click)="deleteEvent()">
+        Eliminar
+        <span *ngIf="isLoading" class="spinner-border spinner-border-sm align-middle ms-2"></span>
+    </button>
+</div>

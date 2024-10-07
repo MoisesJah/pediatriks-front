@@ -6,6 +6,7 @@ import { Cita } from 'src/app/models/cita';
 import { CitaService } from 'src/app/services/citas/cita.service';
 import { LoadingService } from 'src/app/services/loading.service';
 import { ModalEditComponent } from '../modal-edit/modal-edit.component';
+import { BorrarModalComponent } from '../../cronograma/modals/borrar-modal/borrar-modal.component';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -78,6 +79,16 @@ export class ModalViewEventComponent implements OnInit {
   }
 
   deleteEvent() {
-    
+    const modalRef = this.modal.open(BorrarModalComponent, {
+      size: 'sm',
+      centered: true,
+      windowClass: 'modal-edit',
+    });
+
+    modalRef.componentInstance.event = this.event;
+    modalRef.componentInstance.eventDeleted.subscribe(() => {
+      this.modal.dismissAll();
+      this.eventUpdated.emit()
+    })
   }
 }
