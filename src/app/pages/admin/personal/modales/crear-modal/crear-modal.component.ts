@@ -10,6 +10,7 @@ import {
 } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { UntilDestroy } from '@ngneat/until-destroy';
 import { FlatpickrDefaultsInterface } from 'angularx-flatpickr';
 import Spanish from 'flatpickr/dist/l10n/es.js';
 import { finalize, map, Observable, Subject } from 'rxjs';
@@ -24,12 +25,13 @@ import { SedesService } from 'src/app/services/sedes/sedes.service';
 import { TerapiaService } from 'src/app/services/terapia/terapia.service';
 import { TipoPersonalService } from 'src/app/services/tipopersonal/tipopersonal.service';
 
+@UntilDestroy({ checkProperties: true })
 @Component({
   selector: 'app-crear-modal',
   templateUrl: './crear-modal.component.html',
   styleUrls: ['./crear-modal.component.scss'],
 })
-export class CrearModalComponent implements OnInit {
+export class CrearModalComponent implements OnInit, AfterViewInit {
   modal = inject(NgbModal);
   isLoading = inject(LoadingService).isLoading;
   personalService = inject(PersonalService);
@@ -48,17 +50,17 @@ export class CrearModalComponent implements OnInit {
 
   archivo: File | null = null;
 
-  loadingGenero : boolean;
-  loadingSedes : boolean;
-  loadingTerapia : boolean;
-  loadingTPersonal : boolean;
-  loadingHorario : boolean;
+  loadingGenero: boolean;
+  loadingSedes: boolean;
+  loadingTerapia: boolean;
+  loadingTPersonal: boolean;
+  loadingHorario: boolean;
 
   timeOptions: FlatpickrDefaultsInterface = {
     enableTime: true,
     noCalendar: true,
     dateFormat: 'H:i',
-  }
+  };
 
   dias = [
     { value: 1, name: 'Lunes' },
@@ -78,12 +80,15 @@ export class CrearModalComponent implements OnInit {
     this.loadingTPersonal = false;
     this.loadingHorario = false;
 
-
     this.personalForm = this.fb.group({
       nombre: ['', Validators.required],
       dni: [
         '',
-        [Validators.required, Validators.minLength(8),Validators.pattern('^[0-9]*'), ],
+        [
+          Validators.required,
+          Validators.minLength(8),
+          Validators.pattern('^[0-9]*'),
+        ],
       ],
       telefono: ['', [Validators.required, Validators.pattern('^[0-9]*')]],
       correo: ['', [Validators.required, Validators.email]],
@@ -101,12 +106,12 @@ export class CrearModalComponent implements OnInit {
     return this.personalForm.get('horarios') as FormArray;
   }
 
-  createHorario() { 
+  createHorario() {
     return this.fb.group({
       dia_semana: [null, Validators.required],
       hora_inicio: [null, Validators.required],
       hora_fin: [null, Validators.required],
-    }) 
+    });
   }
 
   addHorario() {
@@ -118,11 +123,21 @@ export class CrearModalComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getTipoPersonalList();
     this.getTerapiasList();
-    this.getHorariosList();
     this.getGenerosList();
     this.getSedesList();
+  }
+
+  ngAfterViewInit(): void {
+    this.horarios.valueChanges.subscribe((horarios) => {
+      for (let i = 0; i < horarios.length; i++) {
+        const horario = horarios[i];
+        if (horario.hora_fin < horario.hora_inicio) {
+          horario.hora_fin = horario.hora_inicio;
+          this.horarios.at(i).get('hora_fin')?.setValue(horario.hora_fin);
+        }
+      }
+    });
   }
 
   close() {
@@ -130,82 +145,72 @@ export class CrearModalComponent implements OnInit {
   }
 
   save() {
-
     if (this.personalForm.valid) {
-      this.personalService.create({
-        ...this.personalForm.value,
-        horarios: this.horarios.value
-        }).subscribe({
-        next: () => {
-          this.onSaveComplete.emit();
-          this.modal.dismissAll();
-        },
-        error: (err) => {
-          console.error('Error al guardar personal:', err);
-        },
-      });
+      this.personalService
+        .create({
+          ...this.personalForm.value,
+          horarios: this.horarios.value,
+        })
+        .subscribe({
+          next: () => {
+            this.onSaveComplete.emit();
+            this.modal.dismissAll();
+          },
+          error: (err) => {
+            console.error('Error al guardar personal:', err);
+          },
+        });
     }
-  }
-
-  getTipoPersonalList(): void {
-    this.loadingTPersonal = true;
-    this.tiposPersonalList = this.tipoPersonalService.getAll().pipe(
-      map((response: any) => response.data),
-      finalize(() => this.loadingTPersonal = false),
-    );
   }
 
   getGenerosList(): void {
     this.loadingGenero = true;
     this.generosList = this.generosService.getAll().pipe(
-      map((response: any) =>{
+      map((response: any) => {
         this.loadingGenero = false;
         return response.data;
-      }),
+      })
     );
   }
 
   getSedesList(): void {
     this.loadingSedes = true;
     this.sedesList = this.sedesService.getAll().pipe(
-      map((response: any) =>{
+      map((response: any) => {
         this.loadingSedes = false;
         return response.data;
-      }),
-
+      })
     );
   }
 
   getTerapiasList(): void {
     this.loadingTerapia = true;
     this.terapiasList = this.terapiaService.getAll().pipe(
-      map((response: any) =>{
+      map((response: any) => {
         this.loadingTerapia = false;
         return response.data;
-      }),
-    )
+      })
+    );
   }
 
   getHorariosList(): void {
     this.loadingHorario = true;
     this.horariosList = this.horarioPersonalService.getAll().pipe(
-      map((response: any) =>{
+      map((response: any) => {
         this.loadingHorario = false;
         return response.data;
-      }),
-    )
+      })
+    );
   }
 
-
-  evtSelectFile(event: Event): void{
+  evtSelectFile(event: Event): void {
     const files = (event.target as HTMLInputElement).files;
     const file: File | null = files ? files[0] : null;
     this.archivo = file;
     this.personalForm.patchValue({
-      cv: this.archivo
-    })
+      cv: this.archivo,
+    });
 
-    console.log(this.personalForm.value);
+    // console.log(this.personalForm.value);
   }
-
 }

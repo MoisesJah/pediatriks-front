@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, inject, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, inject, Output, AfterViewInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { LoadingService } from 'src/app/services/loading.service';
@@ -15,13 +15,15 @@ import { map, Observable } from 'rxjs';
 import { GeneroService } from 'src/app/services/genero/genero.service';
 import { SedesService } from 'src/app/services/sedes/sedes.service';
 import { FlatpickrDefaultsInterface } from 'angularx-flatpickr';
+import { UntilDestroy } from '@ngneat/until-destroy';
 
+@UntilDestroy({checkProperties:true})
 @Component({
   selector: 'app-editar-modal',
   templateUrl: './editar-modal.component.html',
   styleUrls: ['./editar-modal.component.scss']
 })
-export class EditarModalComponent implements OnInit {
+export class EditarModalComponent implements OnInit, AfterViewInit {
   modal = inject(NgbModal);
   personalService = inject(PersonalService);
   tipoPersonalService = inject(TipoPersonalService);
@@ -112,6 +114,18 @@ export class EditarModalComponent implements OnInit {
     this.getHorariosList();
     this.getGenerosList();
     this.getSedesList();
+  }
+
+  ngAfterViewInit(): void {
+    this.horarios.valueChanges.subscribe((horarios) => {
+      for (let i = 0; i < horarios.length; i++) {
+        const horario = horarios[i];
+        if (horario.hora_fin < horario.hora_inicio) {
+          horario.hora_fin = horario.hora_inicio;
+          this.horarios.at(i).get('hora_fin')?.setValue(horario.hora_fin);
+        }
+      }
+    });
   }
 
   close() {
