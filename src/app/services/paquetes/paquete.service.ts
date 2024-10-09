@@ -20,15 +20,15 @@ export class PaqueteService {
     return this.http.get<{ data: Paquete }>(`${this.apiUrl}/show/${id}`);
   }
 
-  create(paquete: Paquete): Observable<Paquete> {
-    return this.http.post<Paquete>(`${this.apiUrl}/add`, paquete);
+  create(paquete: any) {
+    return this.http.post(`${this.apiUrl}/add`, paquete);
   }
 
-  update(id: string, paquete: Paquete): Observable<Paquete> {
-    return this.http.put<Paquete>(`${this.apiUrl}/edit/${id}`, paquete); // Ruta para actualizar un paquete
+  update(id: string, paquete: any) {
+    return this.http.put(`${this.apiUrl}/edit/${id}`, paquete);
   }
 
   delete(id: string): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/delete/${id}`); // Ruta para eliminar un paquete
+    return this.http.delete<void>(`${this.apiUrl}/delete/${id}`);
   }
 }

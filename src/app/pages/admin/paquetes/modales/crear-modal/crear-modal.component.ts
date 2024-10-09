@@ -1,6 +1,20 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, Output, Input, EventEmitter, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import {
+  Component,
+  inject,
+  Output,
+  Input,
+  EventEmitter,
+  ViewChild,
+  ElementRef,
+  AfterViewInit,
+} from '@angular/core';
+import {
+  FormBuilder,
+  FormGroup,
+  Validators,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { LoadingService } from 'src/app/services/loading.service';
 import { PaqueteService } from 'src/app/services/paquetes/paquete.service';
@@ -18,7 +32,7 @@ import { NgSelectModule } from '@ng-select/ng-select';
   templateUrl: './crear-modal.component.html',
   styleUrls: ['./crear-modal.component.scss'],
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule,NgSelectModule] // Asegúrate de importar CommonModule aquí
+  imports: [ReactiveFormsModule, CommonModule, NgSelectModule], // Asegúrate de importar CommonModule aquí
 })
 export class CrearModalComponent implements AfterViewInit {
   modal = inject(NgbModal);
@@ -39,27 +53,64 @@ export class CrearModalComponent implements AfterViewInit {
   constructor(private fb: FormBuilder) {
     this.paqueteForm = this.fb.group({
       nombre: ['', Validators.required],
-      descripcion: ['', Validators.required],
+      descripcion: [''],
       cantidadsesiones: ['', [Validators.required, Validators.min(1)]],
-      precioregular: ['', [Validators.required, Validators.min(0), Validators.pattern('^[0-9]+(\\.[0-9]{1,2})?$')]],
-      descuento: ['', [Validators.required, Validators.min(0), Validators.max(100), Validators.pattern('^[0-9]+(\\.[0-9]{1,2})?$')]],
-      preciopaquete: ['', [Validators.required, Validators.min(0), Validators.pattern('^[0-9]+(\\.[0-9]{1,2})?$')]],
+      precioregular: [
+        '',
+        [
+          Validators.required,
+          Validators.min(0),
+          Validators.pattern('^[0-9]+(\\.[0-9]{1,2})?$'),
+        ],
+      ],
+      descuento: [
+        '',
+        [
+          Validators.required,
+          Validators.min(0),
+          Validators.max(100),
+          Validators.pattern('^[0-9]+(\\.[0-9]{1,2})?$'),
+        ],
+      ],
+      preciopaquete: [
+        '',
+        [
+          Validators.required,
+          Validators.min(0),
+          Validators.pattern('^[0-9]+(\\.[0-9]{1,2})?$'),
+        ],
+      ],
       fechainicio: ['', Validators.required],
-      fechafin: ['', Validators.required,],
+      fechafin: ['', Validators.required],
       terapias: [null, Validators.required],
-      sesionesrestantes: ['', [Validators.required, Validators.min(0)]],
+      banner_url: [''],
     });
+  }
+
+  evtSelectFile(event: Event): void {
+    const files = (event.target as HTMLInputElement).files;
+    this.paqueteForm.get('banner_url')?.setValue(files?.item(0));
+
   }
 
   ngOnInit(): void {
     this.loadTerapias();
     // Suscribirse a los cambios en precioregular y descuento
-    this.paqueteForm.get('precioregular')?.valueChanges.subscribe(() => this.calculatePreciopaquete());
-    this.paqueteForm.get('descuento')?.valueChanges.subscribe(() => this.calculatePreciopaquete());
+    this.paqueteForm
+      .get('precioregular')
+      ?.valueChanges.subscribe(() => this.calculatePreciopaquete());
+    this.paqueteForm
+      .get('descuento')
+      ?.valueChanges.subscribe(() => this.calculatePreciopaquete());
 
     this.paqueteForm.get('fechainicio')?.valueChanges.subscribe(() => {
-      if (this.paqueteForm.get('fechafin')?.value < this.paqueteForm.get('fechainicio')?.value) {
-        this.paqueteForm.get('fechafin')?.setValue(this.paqueteForm.get('fechainicio')?.value);
+      if (
+        this.paqueteForm.get('fechafin')?.value <
+        this.paqueteForm.get('fechainicio')?.value
+      ) {
+        this.paqueteForm
+          .get('fechafin')
+          ?.setValue(this.paqueteForm.get('fechainicio')?.value);
       }
     });
   }
@@ -68,7 +119,7 @@ export class CrearModalComponent implements AfterViewInit {
     this.terapiasList = this.terapiaService.getAll().pipe(
       map((resp) => resp.data),
       untilDestroyed(this)
-    )
+    );
   }
 
   ngAfterViewInit(): void {
@@ -77,24 +128,27 @@ export class CrearModalComponent implements AfterViewInit {
     if (this.datePicker && this.datePicker.nativeElement) {
       flatpickr(this.datePicker.nativeElement, {
         locale: Spanish,
-        altFormat: "d/m/Y",
+        altFormat: 'd/m/Y',
         altInput: true,
         minDate: today, // Solo permite fechas actuales o futuras
         onChange: (selectedDates) => {
           const startDate = selectedDates[0];
           if (this.endDatePicker && this.endDatePicker.nativeElement) {
-            const endPickerInstance = flatpickr(this.endDatePicker.nativeElement, {
-              locale: Spanish,
-              altFormat: "d/m/Y",
-              altInput: true,
-              minDate: startDate, // Establece la fecha mínima para la fecha de fin
-            });
+            const endPickerInstance = flatpickr(
+              this.endDatePicker.nativeElement,
+              {
+                locale: Spanish,
+                altFormat: 'd/m/Y',
+                altInput: true,
+                minDate: startDate, // Establece la fecha mínima para la fecha de fin
+              }
+            );
             if (this.paqueteForm.get('fechafin')?.value < startDate) {
               this.paqueteForm.get('fechafin')?.setValue(startDate);
               endPickerInstance.setDate(startDate);
             }
           }
-        }
+        },
       });
     }
 
@@ -102,7 +156,7 @@ export class CrearModalComponent implements AfterViewInit {
       flatpickr(this.endDatePicker.nativeElement, {
         locale: Spanish,
         altInput: true,
-        altFormat: "d/m/Y",
+        altFormat: 'd/m/Y',
         // dateFormat: "d/m/Y",
         minDate: today,
       });
@@ -114,22 +168,25 @@ export class CrearModalComponent implements AfterViewInit {
   }
 
   save() {
-    if (this.paqueteForm.valid) {
-      this.loadingService.setLoading(true, 'paquete/create'); 
-      console.log(this.paqueteForm.value);
-      this.paqueteService.create(this.paqueteForm.value).subscribe({
-        next: (response) => {
-          console.log('Paquete creado con éxito:', response);
-          this.loadingService.setLoading(false, 'paquete/create'); // Elimina la URL única
-          this.onSaveComplete.emit(); // Emite evento cuando se guarda el paquete
-          this.close();
-        },
-        error: (error) => {
-          console.error('Error al crear paquete:', error);
-          this.loadingService.setLoading(false, 'paquete/create'); // Elimina la URL única
-        }
-      });
-    }
+    const formData = new FormData();
+    Object.keys(this.paqueteForm.value).forEach((key) => {
+      const control = this.paqueteForm.get(key);
+      if (Array.isArray(control?.value)) {
+        formData.append(key, JSON.stringify(control?.value));
+      } else {
+        formData.append(key, control?.value);
+      }
+    });
+
+    this.paqueteService.create(formData).subscribe({
+      next: () => {
+        this.modal.dismissAll();
+        this.onSaveComplete.emit();
+      },
+      error: (err: any) => {
+        console.log(err);
+      },
+    });
   }
 
   private calculatePreciopaquete(): void {
@@ -138,8 +195,10 @@ export class CrearModalComponent implements AfterViewInit {
 
     if (precioregular && descuento != null) {
       const descuentoDecimal = descuento / 100;
-      const preciopaquete = precioregular - (precioregular * descuentoDecimal);
-      this.paqueteForm.get('preciopaquete')?.setValue(preciopaquete.toFixed(2), { emitEvent: false });
+      const preciopaquete = precioregular - precioregular * descuentoDecimal;
+      this.paqueteForm
+        .get('preciopaquete')
+        ?.setValue(preciopaquete.toFixed(2), { emitEvent: false });
     }
   }
 }

@@ -23,7 +23,11 @@
         placeholder="Ingresa Nombre del Paquete" />
     </div>
     <div class="form-group">
-      <label for="descripcion" class="required form-label">Descripción</label>
+      <label class="required form-label" for="">Imagen</label>
+      <input type="file" id="imagen" accept="image/*" class="form-control" (change)="evtSelectFile($event)" />
+    </div>
+    <div class="form-group">
+      <label for="descripcion" class=" form-label">Descripción</label>
       <textarea cols="3" rows="2" id="descripcion" formControlName="descripcion" class="form-control"
         placeholder="Ingresa Descripción del Paquete"></textarea>
     </div>

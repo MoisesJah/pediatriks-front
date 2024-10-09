@@ -121,6 +121,11 @@ export class CronogramaComponent implements OnInit {
     selectable: true,
     selectMirror: true,
     dayMaxEvents: true,
+    eventTimeFormat: {
+      hour: 'numeric',
+      minute: '2-digit',
+      meridiem: 'short'
+    },
     eventClick: this.handleEventClick.bind(this),
     loading: (isLoading) => {
       this.loading = isLoading;

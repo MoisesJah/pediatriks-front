@@ -94,6 +94,11 @@ export class ReservarCitaComponent implements OnInit, OnDestroy {
       omitZeroMinute: false,
       meridiem: 'narrow',
     },
+    eventTimeFormat: {
+      hour: 'numeric',
+      minute: '2-digit',
+      meridiem: 'short'
+    },
     initialView: 'timeGridWeek',
     weekends: true,
     editable: true,

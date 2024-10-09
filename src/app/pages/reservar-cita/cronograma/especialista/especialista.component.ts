@@ -102,6 +102,11 @@ export class EspecialistaComponent implements OnInit {
       omitZeroMinute: false,
       meridiem: 'narrow',
     },
+    eventTimeFormat: {
+      hour: 'numeric',
+      minute: '2-digit',
+      meridiem: 'short'
+    },
     selectConstraint: 'businessHours',
     initialView: 'timeGridWeek',
     weekends: true,

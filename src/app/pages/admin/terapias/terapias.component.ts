@@ -38,6 +38,15 @@ export class TerapiasComponent implements OnInit, OnDestroy {
   localeText = AG_GRID_LOCALE_ES;
 
   colDefs: ColDef[] = [
+    {
+      headerName: 'Color',
+      field: 'color',
+      maxWidth: 75,
+      filter:false,
+      cellRenderer: (params: any) => {
+        return `<div class="h-20px w-20px mt-3 rounded-circle" style="background-color: ${params.value}"></div>`;
+      }
+    },
     { field: 'nombre', headerName: 'Nombre', filter: true, resizable: true, },
     { field: 'descripcion', headerName: 'Descripción', filter: true, resizable: true, },
     {
@@ -57,15 +66,6 @@ export class TerapiasComponent implements OnInit, OnDestroy {
       filter: 'agNumberColumnFilter',
       valueFormatter: (params) => params.value ? `${params.value.substring(0, 5)} min` : '',
       resizable: true,
-    },
-    {
-      headerName: 'Color',
-      field: 'color',
-      maxWidth: 75,
-      filter:false,
-      cellRenderer: (params: any) => {
-        return `<div class="h-20px w-20px mt-3 rounded-circle" style="background-color: ${params.value}"></div>`;
-      }
     },
     {
       headerName: 'Acciones',

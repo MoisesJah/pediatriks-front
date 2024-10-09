@@ -62,7 +62,9 @@ export class PaquetesComponent implements OnInit, OnDestroy {
     },
     {
       field: 'cantidadsesiones',
-      headerName: 'Cantidad de Sesiones',
+      headerName: 'N° de Sesiones',
+      maxWidth: 150,
+      filter: 'agNumberColumnFilter',
     },
     {
       field: 'precioregular',
