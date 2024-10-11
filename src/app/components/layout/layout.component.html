@@ -65,10 +65,9 @@
               </a>
               <!--end:Menu item-->
               <!--begin:Menu item-->
-              <div data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-placement="right-start"
-                class="menu-item py-2" style="transition: background-color 0.3s; border-radius: 15px"
+              <!--begin:Menu item-->
+                <a routerLink="/paquetes" routerLinkActive="here" *ngIf="isPaciente()" class="menu-item py-2" style="transition: background-color 0.3s; border-radius: 15px"
                 onmouseout="this.style.backgroundColor='';">
-                <!--begin:Menu link-->
                 <span class="menu-link menu-center">
                   <div class="menu-icon-text-container">
                     <span class="menu-icon me-0">
@@ -80,8 +79,8 @@
                     <span class="menu-text">Paquetes</span>
                   </div>
                 </span>
-                <!--end:Menu link-->
-              </div>
+                </a>
+                <!--end:Menu item-->
               <!--end:Menu sub-->
 
               <div *ngIf="isAdmin()" class="menu-item py-2 menu-dropdown"
@@ -102,7 +101,7 @@
 
                 <!-- Submenú -->
                 <div class="menu-sub menu-sub-dropdown px-2 py-4 w-250px mh-75 overflow-auto"
-                  style="z-index:107; position:fixed; transition: all cubic-bezier(0.5, 0, 0, 1) 0.3s; margin:0px; transform: translate(50%, -100%);"  
+                  style="z-index:107; position:fixed; transition: all cubic-bezier(0.5, 0, 0, 1) 0.3s; margin:0px; transform: translate(50%, -100%);"
                   *ngIf="showSubMenu" [ngStyle]="{ display: showSubMenu ? 'inline-block' : 'none' }">
                   <div class="menu-item">
                     <div class="menu-content">
