@@ -10,6 +10,7 @@ import { HeaderComponent } from 'src/app/components/ui/header/header.component';
 import { CrearModalComponent } from './modales/crear-modal/crear-modal.component';
 import { BorrarModalComponent } from './modales/borrar-modal/borrar-modal.component';
 import { EditarModalComponent } from './modales/editar-modal/editar-modal.component';
+import { ComprarModalComponent } from './modales/comprar-modal/comprar-modal.component';
 import { AgGridAngular } from 'ag-grid-angular';
 import { ColDef, GridReadyEvent, GridApi } from 'ag-grid-community';
 import { ActionButtonsComponent } from './modales/action-buttons/action-buttons.component';
@@ -36,23 +37,9 @@ export class PaquetesComponent implements OnInit, OnDestroy {
   paquetesList: Observable<Paquete[]> = new Observable();
   localeText = AG_GRID_LOCALE_ES;
   private gridApi!: GridApi;
+  
 
   colDefs: ColDef[] = [
-    {
-      field: 'banner_url',
-      headerName: 'Imagen',
-      autoHeight: true,
-      filter: false,
-      maxWidth: 145,
-      cellRendererSelector: (params) => {
-        return params.value
-          ? {
-              component: ImageDisplayComponent,
-              params: params.data.banner_url,
-            }
-          : undefined;
-      },
-    },
     { field: 'nombre', headerName: 'Nombre', filter: true },
     { field: 'descripcion', headerName: 'Descripcion' },
     {
@@ -126,10 +113,14 @@ export class PaquetesComponent implements OnInit, OnDestroy {
 
   private fetchPaquetes(): void {
     this.paquetesList = this.paquetesService.getAll().pipe(
-      map((resp) => resp.data),
+      map((resp) => {
+        console.log('Paquetes recibidos:', resp.data);
+        return resp.data;
+      }),
       untilDestroyed(this)
     );
   }
+
 
   loadTabla() {
     this.fetchPaquetes();
@@ -158,11 +149,14 @@ export class PaquetesComponent implements OnInit, OnDestroy {
     });
   }
 
-  // En el componente que abre el modal
-  openEditarModal(paquete: { id_paquetes: string }) {
-    const modalRef = this.modal.open(EditarModalComponent);
+  getTerapiasNombres(terapias: Terapia[]): string {
+    return terapias.map(terapia => terapia.nombre).join(', ');
+  }
 
-    modalRef.componentInstance.paqueteId = paquete.id_paquetes;
+  openEditarModal(paquete: Paquete) {
+    const modalRef = this.modal.open(EditarModalComponent);
+    modalRef.componentInstance.paqueteId = paquete.id_paquetes; // Asegúrate que esto se esté pasando correctamente
+
     modalRef.componentInstance.onSaveComplete.subscribe(() => {
       this.fetchPaquetes();
     });
@@ -184,6 +178,16 @@ export class PaquetesComponent implements OnInit, OnDestroy {
     modalRef.componentInstance.onSaveComplete.subscribe(() => {
       this.fetchPaquetes();
     });
+  }
+
+  openComprarModal(paquete: Paquete) {
+    const modalRef = this.modal.open(ComprarModalComponent, {
+      size: '300px',
+      animation: true,
+      centered: true,
+    });
+
+    modalRef.componentInstance.paquete = paquete;
   }
 
   ngOnDestroy(): void {

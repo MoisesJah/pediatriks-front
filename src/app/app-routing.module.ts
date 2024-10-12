@@ -35,8 +35,8 @@ const routes: Routes = [
       ),
   },
   {
-    path: 'paquetes',  // Agregar esta ruta
-    canActivate: [authGuard],  // Si necesitas un guard
+    path: 'paquetes',  
+    canActivate: [authGuard],
     loadChildren: () =>
       import('./pages/paquetes/paquetes.module').then(
         (m) => m.PaquetesModule
