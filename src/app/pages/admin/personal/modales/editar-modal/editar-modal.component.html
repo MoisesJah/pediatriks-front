@@ -28,6 +28,15 @@
         class="form-control"
       />
     </div>
+    <div class="form-group">
+      <label for="apellidos" class="form-label">Subir Nuevo CV</label>
+      <input
+        type="file"
+        accept="application/pdf"
+        (change)="evtSelectFile($event)"
+        class="form-control"
+      />
+    </div>
     <div class="d-flex gap-3">
       <div class="form-group">
         <label for="dni" class="required form-label">DNI</label>

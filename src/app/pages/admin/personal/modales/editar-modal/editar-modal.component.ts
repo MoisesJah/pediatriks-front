@@ -1,4 +1,12 @@
-import { Component, EventEmitter, Input, OnInit, inject, Output, AfterViewInit } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  inject,
+  Output,
+  AfterViewInit,
+} from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { LoadingService } from 'src/app/services/loading.service';
@@ -7,21 +15,20 @@ import { TipoPersonalService } from 'src/app/services/tipopersonal/tipopersonal.
 import { TerapiaService } from 'src/app/services/terapia/terapia.service';
 import { HorarioPersonalService } from 'src/app/services/horariopersonal/horariopersonal.service';
 import { Personal } from 'src/app/models/personal';
-import { TipoPersonal } from 'src/app/models/tipopersonal';
 import { HorarioPersonal } from 'src/app/models/horariop';
 import { Terapia } from 'src/app/models/terapia';
 import { HttpErrorResponse } from '@angular/common/http';
-import { map, Observable } from 'rxjs';
+import { finalize, map, Observable } from 'rxjs';
 import { GeneroService } from 'src/app/services/genero/genero.service';
 import { SedesService } from 'src/app/services/sedes/sedes.service';
 import { FlatpickrDefaultsInterface } from 'angularx-flatpickr';
-import { UntilDestroy } from '@ngneat/until-destroy';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
-@UntilDestroy({checkProperties:true})
+@UntilDestroy({ checkProperties: true })
 @Component({
   selector: 'app-editar-modal',
   templateUrl: './editar-modal.component.html',
-  styleUrls: ['./editar-modal.component.scss']
+  styleUrls: ['./editar-modal.component.scss'],
 })
 export class EditarModalComponent implements OnInit, AfterViewInit {
   modal = inject(NgbModal);
@@ -44,7 +51,7 @@ export class EditarModalComponent implements OnInit, AfterViewInit {
     enableTime: true,
     noCalendar: true,
     dateFormat: 'H:i',
-  }
+  };
 
   dias = [
     { value: 1, name: 'Lunes' },
@@ -55,22 +62,19 @@ export class EditarModalComponent implements OnInit, AfterViewInit {
     { value: 6, name: 'Sábado' },
   ];
 
-  loadingGenero : boolean;
-  loadingSedes : boolean;
-  loadingTerapia : boolean;
-  loadingTPersonal : boolean;
-  loadingHorario : boolean;
+  loadingGenero: boolean;
+  loadingSedes: boolean;
+  loadingTerapia: boolean;
+  loadingTPersonal: boolean;
+  loadingHorario: boolean;
   @Output() onSaveComplete = new EventEmitter<void>();
 
-  constructor(
-    private fb: FormBuilder,
-  ) {
+  constructor(private fb: FormBuilder) {
     this.loadingGenero = false;
     this.loadingSedes = false;
     this.loadingTerapia = false;
     this.loadingTPersonal = false;
     this.loadingHorario = false;
-
 
     this.editForm = this.fb.group({
       nombre: ['', Validators.required],
@@ -82,6 +86,7 @@ export class EditarModalComponent implements OnInit, AfterViewInit {
       sueldo: ['', [Validators.required, Validators.min(0)]],
       id_terapia: [null, Validators.required],
       horarios: this.fb.array([]),
+      cv: [null],
     });
   }
 
@@ -89,13 +94,13 @@ export class EditarModalComponent implements OnInit, AfterViewInit {
     return this.editForm.get('horarios') as FormArray;
   }
 
-  createHorario() { 
+  createHorario() {
     return this.fb.group({
       id_horario: [null],
       dia_semana: [null, Validators.required],
       hora_inicio: [null, Validators.required],
       hora_fin: [null, Validators.required],
-    }) 
+    });
   }
 
   addHorario() {
@@ -106,12 +111,16 @@ export class EditarModalComponent implements OnInit, AfterViewInit {
     this.horarios.removeAt(index);
   }
 
+  evtSelectFile(event: Event): void {
+    const files = (event.target as HTMLInputElement).files;
+    this.editForm.get('cv')?.setValue(files?.item(0));
+  }
+
   ngOnInit(): void {
     if (this.personalId) {
       this.loadPersonalData();
     }
     this.getTerapiasList();
-    this.getHorariosList();
     this.getGenerosList();
     this.getSedesList();
   }
@@ -133,15 +142,25 @@ export class EditarModalComponent implements OnInit, AfterViewInit {
   }
 
   save() {
+    const formData = new FormData();
+    Object.keys(this.editForm.value).forEach((key) => {
+      const control = this.editForm.get(key);
+      if (Array.isArray(control?.value)) {
+        formData.append(key, JSON.stringify(control?.value));
+      } else {
+        formData.append(key, control?.value);
+      }
+    });
+
     if (this.editForm.valid) {
-      this.personalService.update(this.editForm.value, this.personalId).subscribe({
+      this.personalService.update(formData, this.personalId).subscribe({
         next: () => {
           this.onSaveComplete.emit();
           this.modal.dismissAll();
         },
         error: (err: HttpErrorResponse) => {
           console.error('Error al actualizar personal:', err.message);
-        }
+        },
       });
     }
   }
@@ -154,60 +173,49 @@ export class EditarModalComponent implements OnInit, AfterViewInit {
 
           if (personal.data.horarios) {
             personal.data.horarios.forEach((horario: any) => {
-              this.horarios.push(this.fb.group({
-                id_horario: [horario.id_horario],
-                dia_semana: [horario.dia_semana, Validators.required],
-                hora_inicio: [horario.hora_inicio, Validators.required],
-                hora_fin: [horario.hora_fin, Validators.required],
-              }));
+              this.horarios.push(
+                this.fb.group({
+                  id_horario: [horario.id_horario],
+                  dia_semana: [horario.dia_semana, Validators.required],
+                  hora_inicio: [horario.hora_inicio, Validators.required],
+                  hora_fin: [horario.hora_fin, Validators.required],
+                })
+              );
             });
           }
         },
         error: (err: HttpErrorResponse) => {
           console.error('Error al cargar datos del personal:', err.message);
-        }
+        },
       });
     }
   }
 
-
   getGenerosList(): void {
     this.loadingGenero = true;
     this.generosList = this.generosService.getAll().pipe(
-      map((response: any) =>{
+      map((response: any) => {
         this.loadingGenero = false;
         return response.data;
-      }),
+      })
     );
   }
 
   getTerapiasList(): void {
     this.loadingTerapia = true;
     this.terapiasList = this.terapiaService.getAll().pipe(
-      map((response: any) =>{
-        this.loadingTerapia = false;
-        return response.data;
-      }),
-    )
+      map((response: any) => response.data),
+      finalize(() => (this.loadingTerapia = false)),
+      untilDestroyed(this)
+    );
   }
 
   getSedesList(): void {
     this.loadingSedes = true;
     this.sedesList = this.sedesService.getAll().pipe(
-      map((response: any) =>{
-        this.loadingSedes = false;
-        return response.data;
-      }),
+      map((response: any) => response.data),
+      finalize(() => (this.loadingSedes = false)),
+      untilDestroyed(this)
     );
-  }
-
-  getHorariosList(): void {
-    this.loadingHorario = true;
-    this.horariosList = this.horarioPersonalService.getAll().pipe(
-      map((response: any) =>{
-        this.loadingHorario = false;
-        return response.data;
-      }),
-    )
   }
 }

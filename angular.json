@@ -44,7 +44,6 @@
               "src/styles.scss"
             ],
             "scripts": [
-              "public/assets/js/scripts.bundle.js",
               "public/assets/plugins/custom/fullcalendar/fullcalendar.bundle.js",
               "public/assets/plugins/custom/datatables/datatables.bundle.js"
             ]

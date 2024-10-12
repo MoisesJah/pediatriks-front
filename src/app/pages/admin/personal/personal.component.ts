@@ -40,6 +40,7 @@ export class PersonalComponent implements OnInit {
       field: 'cv_url',
       headerName: 'CV',
       filter: false,
+      maxWidth: 90,
       cellRendererSelector: (params) => {
         return params.value
           ? { component: CvViewerComponent, params: params.data.id_personal }

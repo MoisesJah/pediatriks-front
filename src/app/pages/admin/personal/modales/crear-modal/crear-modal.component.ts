@@ -95,7 +95,6 @@ export class CrearModalComponent implements OnInit, AfterViewInit {
       id_genero: [null, Validators.required],
       id_sede: [null, Validators.required],
       sueldo: [0, [Validators.required, Validators.min(0)]],
-      id_tipopersonal: [null, Validators.required],
       id_terapia: [null, Validators.required],
       cv: [null],
       horarios: this.fb.array([this.createHorario()]),

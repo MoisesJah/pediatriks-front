@@ -17,6 +17,7 @@ import { AG_GRID_LOCALE_ES } from '@ag-grid-community/locale';
 import { ThemeService } from 'src/app/services/theme.service';
 import { Terapia } from 'src/app/models/terapia';
 import { formatMoney } from 'src/app/utils/formatCurrency';
+import { ImageDisplayComponent } from './modales/image-display/image-display.component';
 
 @UntilDestroy()
 @Component({
@@ -35,9 +36,23 @@ export class PaquetesComponent implements OnInit, OnDestroy {
   paquetesList: Observable<Paquete[]> = new Observable();
   localeText = AG_GRID_LOCALE_ES;
   private gridApi!: GridApi;
-  
 
   colDefs: ColDef[] = [
+    {
+      field: 'banner_url',
+      headerName: 'Imagen',
+      autoHeight: true,
+      filter: false,
+      maxWidth: 145,
+      cellRendererSelector: (params) => {
+        return params.value
+          ? {
+              component: ImageDisplayComponent,
+              params: params.data.banner_url,
+            }
+          : undefined;
+      },
+    },
     { field: 'nombre', headerName: 'Nombre', filter: true },
     { field: 'descripcion', headerName: 'Descripcion' },
     {
