@@ -37,9 +37,17 @@ export class PaquetesComponent implements OnInit, OnDestroy {
   paquetesList: Observable<Paquete[]> = new Observable();
   localeText = AG_GRID_LOCALE_ES;
   private gridApi!: GridApi;
-  
 
   colDefs: ColDef[] = [
+    {
+      field: 'banner_url',
+      headerName: 'Imagen',
+      cellRendererSelector: (params) => {
+        return params.value
+          ? { component: ImageDisplayComponent, params: params.data.banner_url }
+          : undefined;
+      },
+    },
     { field: 'nombre', headerName: 'Nombre', filter: true },
     { field: 'descripcion', headerName: 'Descripcion' },
     {
@@ -121,7 +129,6 @@ export class PaquetesComponent implements OnInit, OnDestroy {
     );
   }
 
-
   loadTabla() {
     this.fetchPaquetes();
   }
@@ -150,7 +157,7 @@ export class PaquetesComponent implements OnInit, OnDestroy {
   }
 
   getTerapiasNombres(terapias: Terapia[]): string {
-    return terapias.map(terapia => terapia.nombre).join(', ');
+    return terapias.map((terapia) => terapia.nombre).join(', ');
   }
 
   openEditarModal(paquete: Paquete) {
