@@ -24,6 +24,7 @@ import { PersonalService } from 'src/app/services/personal/personal.service';
 import { SedesService } from 'src/app/services/sedes/sedes.service';
 import { TerapiaService } from 'src/app/services/terapia/terapia.service';
 import { TipoPersonalService } from 'src/app/services/tipopersonal/tipopersonal.service';
+import { generateColorPalette } from 'src/app/utils/colorPalette';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -55,6 +56,7 @@ export class CrearModalComponent implements OnInit, AfterViewInit {
   loadingTerapia: boolean;
   loadingTPersonal: boolean;
   loadingHorario: boolean;
+  colorTerapia: null | string = null;
 
   timeOptions: FlatpickrDefaultsInterface = {
     enableTime: true,
@@ -97,6 +99,7 @@ export class CrearModalComponent implements OnInit, AfterViewInit {
       sueldo: [0, [Validators.required, Validators.min(0)]],
       id_terapia: [null, Validators.required],
       cv: [null],
+      color: [null, Validators.required],
       horarios: this.fb.array([this.createHorario()]),
     });
   }
@@ -111,6 +114,15 @@ export class CrearModalComponent implements OnInit, AfterViewInit {
       hora_inicio: [null, Validators.required],
       hora_fin: [null, Validators.required],
     });
+  }
+
+  onChangeTerapia(event: any) {
+    this.colorTerapia = event?.color;
+    this.personalForm.get('color')?.setValue(null);
+  }
+
+  get colorPalette() {
+    return this.colorTerapia ? generateColorPalette(this.colorTerapia,12) : [];
   }
 
   addHorario() {
@@ -185,10 +197,8 @@ export class CrearModalComponent implements OnInit, AfterViewInit {
   getTerapiasList(): void {
     this.loadingTerapia = true;
     this.terapiasList = this.terapiaService.getAll().pipe(
-      map((response: any) => {
-        this.loadingTerapia = false;
-        return response.data;
-      })
+      map((response: any) => response.data),
+      finalize(() => (this.loadingTerapia = false))
     );
   }
 

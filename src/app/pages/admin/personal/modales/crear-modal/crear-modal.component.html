@@ -109,6 +109,7 @@
         <ng-select
           [items]="terapiasList | async"
           bindValue="id_terapia"
+          (change)="onChangeTerapia($event)"
           placeholder="Seleccionar"
           bindLabel="nombre"
           formControlName="id_terapia"
@@ -116,24 +117,35 @@
           loadingText='Cargando...'
         ></ng-select>
       </div>
-      <div class="form-group col-6">
-        <label for="id_sede" class="required form-label">Sede</label>
-
-        <ng-select
-          [items]="sedesList | async"
-          bindValue="id_sede"
-          placeholder="Seleccionar"
-          bindLabel="nombre"
-          formControlName="id_sede"
-          [loading]=loadingSedes
-          loadingText='Cargando...'
-        ></ng-select>
+      
+      <div class="form-group col-6 d-flex flex-column">
+        <label class=" form-label" for="">Color</label>
+        @defer () {
+        <div class="d-flex position-relative  justify-content-center align-items-center">
+          <ngx-colors ngx-colors-trigger [palette]="colorPalette" class="position-absolute" [hideTextInput]="true" [hideColorPicker]="true"
+            style="display: inline-block; margin:5px;left: 10px;" formControlName="color"></ngx-colors>
+          <input [value]="personalForm.get('color')?.value" type="text" readonly class="form-control ps-16">
+        </div>
+        }
       </div>
+
     </div>
 
+    <div class="form-group ">
+      <label for="id_sede" class="required form-label">Sede</label>
+
+      <ng-select
+        [items]="sedesList | async"
+        bindValue="id_sede"
+        placeholder="Seleccionar"
+        bindLabel="nombre"
+        formControlName="id_sede"
+        [loading]=loadingSedes
+        loadingText='Cargando...'
+      ></ng-select>
+    </div>
     <!-- Selector de Tipo de Personal -->
     <div class="row">
-      
     
       <div formArrayName="horarios">
         <div class="d-flex justify-content-between mt-4 align-items-center">
