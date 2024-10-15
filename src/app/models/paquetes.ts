@@ -11,5 +11,6 @@ export interface Paquete {
   fechainicio: string;
   fechafin: string;
   sesionesrestantes: number;
+  banner_url: string;
   terapias: Terapia[];
 }

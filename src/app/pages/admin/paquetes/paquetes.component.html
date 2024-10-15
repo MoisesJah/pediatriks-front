@@ -15,49 +15,34 @@
           <input type="hidden">
           <!--end::Hidden input-->
 
-          <!--begin::Icon-->
-          <i class="ki-duotone ki-magnifier fs-2 search-icon position-absolute top-50 translate-middle-y ms-4"><span
-              class="path1"></span><span class="path2"></span></i> <!--end::Icon-->
-
-          <!--begin::Input-->
-          <input type="search" (input)="onFilterTextBoxChanged()" id="paquete-search"
-            class="form-control custom-form-control ps-13" name="search" value="" placeholder="Búsqueda"
-            data-kt-search-element="input">
-          <!--end::Input-->
-        </form>
-        <div class="d-flex align-items-center gap-3">
-          <button type="button" class="btn btn-light-primary" (click)="loadTabla()">
-            <span class="d-flex align-items-center">
-              <span class="fa-solid fa-rotate-right"></span>
-              <span class="ms-2">Actualizar</span>
-            </span>
-          </button>
-          <button type="button" class="btn btn-primary" (click)="openCrearModal()">
-            <span class="d-flex align-items-center">
-              <span class="ki-solid ki-plus text-white fs-1"></span>
-              <span class="text-white ms-2">Añadir</span>
-            </span>
-          </button>
+    <div class="row">
+      <div class="col-md-4" *ngFor="let paquete of paquetesList | async">
+        <div class="card mb-4" style="width: 18rem;">
+          <div class="position-relative">
+            <img src="{{ paquete.banner_url }}" class="card-img-top" alt="{{ paquete.nombre }}">
+            <div class="position-absolute top-0 end-0 p-2">
+              <div class="action-buttons">
+                <div class="d-flex align-items-center gap-2" style="padding-block: 0.15rem">
+                  <button type="button" (click)="openEditarModal(paquete)" class="btn btn-icon btn-sm bg-success">
+                    <span class="ki-solid ki-pencil text-white"></span>
+                  </button>
+                  <button type="button" (click)="openBorrarModal(paquete)" class="btn btn-icon btn-sm btn-danger">
+                    <span class="ki-solid ki-trash text-white"></span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card-body">
+            <h5 class="card-title">{{ paquete.nombre }}</h5>
+            <p class="card-text"><strong>Terapias:</strong> {{ getTerapiasNombres(paquete.terapias) }}</p>
+            <p class="card-text">{{ paquete.descripcion }}</p>
+            <p class="card-text"><strong>${{ paquete.preciopaquete }}</strong></p>
+            <button type="button" (click)="openComprarModal(paquete)" class="btn btn-primary btn-lg w-100 d-flex justify-content-center align-items-center">
+              <span class="ki-duotone ki-handcart text-white me-2"></span> Comprar
+            </button>
+          </div>
         </div>
       </div>
-      <div style="height: 400px"
-       id="myGrid"
-       [ngClass]="[theme.getThemeMode() === 'light' ? 'ag-theme-quartz' : 'ag-theme-quartz-dark']"
-       >
-        @defer() {
-        <ag-grid-angular
-          style="width: 100%; height: 100%"
-          [rowData]="paquetesList | async "
-          [localeText]="localeText"
-          [columnDefs]="colDefs"
-          [pagination]="true"
-          [enableCellTextSelection]="true"
-          [loading]="isLoading | async"
-          (gridReady)="gridReady($event)"
-          loadingMessage="Cargando...">
-        </ag-grid-angular>
-        }
-      </div>
     </div>
-  </div>
-</div>
+
