@@ -29,7 +29,7 @@ export class PacientesComponent implements OnInit {
   pacienteService = inject(PacienteService);
   theme = inject(ThemeService);
   isLoading = inject(LoadingService).isLoading;
-  localeText = AG_GRID_LOCALE_ES
+  localeText = AG_GRID_LOCALE_ES;
 
   pacientesList: Observable<IPaciente[]> = new Observable();
   private gridApi!: GridApi;
@@ -45,7 +45,7 @@ export class PacientesComponent implements OnInit {
       valueFormatter: (params) => formatDate(params.value, 'dd/MM/yyyy', 'en'),
     },
     { field: 'user.name', headerName: 'Apoderado', filter: true },
-    { field:'parentesco.nombre', headerName: 'Parentesco', filter: true },
+    { field: 'parentesco.nombre', headerName: 'Parentesco', filter: true },
     { field: 'colegio', headerName: 'Colegio', filter: true },
     {
       headerName: 'Acciones',
@@ -72,7 +72,7 @@ export class PacientesComponent implements OnInit {
     );
   }
 
-  loadTabla(){
+  loadTabla() {
     this.fetchPacientes();
   }
 
