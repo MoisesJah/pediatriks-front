@@ -23,6 +23,7 @@ import { GeneroService } from 'src/app/services/genero/genero.service';
 import { SedesService } from 'src/app/services/sedes/sedes.service';
 import { FlatpickrDefaultsInterface } from 'angularx-flatpickr';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { generateColorPalette } from 'src/app/utils/colorPalette';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -61,6 +62,8 @@ export class EditarModalComponent implements OnInit, AfterViewInit {
     { value: 5, name: 'Viernes' },
     { value: 6, name: 'Sábado' },
   ];
+  
+  colorTerapia: null | string = null;
 
   loadingGenero: boolean;
   loadingSedes: boolean;
@@ -87,6 +90,7 @@ export class EditarModalComponent implements OnInit, AfterViewInit {
       id_terapia: [null, Validators.required],
       horarios: this.fb.array([]),
       cv: [null],
+      color: [null, Validators.required],
     });
   }
 
@@ -114,6 +118,15 @@ export class EditarModalComponent implements OnInit, AfterViewInit {
   evtSelectFile(event: Event): void {
     const files = (event.target as HTMLInputElement).files;
     this.editForm.get('cv')?.setValue(files?.item(0));
+  }
+
+  onChangeTerapia(event: any) {
+    this.colorTerapia = event?.color;
+    this.editForm.get('color')?.setValue(null);
+  }
+
+  get colorPalette() {
+    return this.colorTerapia ? generateColorPalette(this.colorTerapia,10) : [];
   }
 
   ngOnInit(): void {
@@ -170,6 +183,7 @@ export class EditarModalComponent implements OnInit, AfterViewInit {
       this.personalService.getById(this.personalId).subscribe({
         next: (personal) => {
           this.editForm.patchValue(personal.data);
+          this.colorTerapia = personal.data.terapia?.color;
 
           if (personal.data.horarios) {
             personal.data.horarios.forEach((horario: any) => {

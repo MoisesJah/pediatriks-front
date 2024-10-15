@@ -84,13 +84,19 @@ export class CronogramaComponent implements OnInit {
     };
   }
 
+   get isSelectable() {
+    // console.log(new Date() > new Date(this.bodyParams.startWeek));
+    // console.log(new Date(), this.bodyParams);
+    return new Date() > new Date(this.bodyParams.startWeek);
+  }
+
   constructor(
     private route: ActivatedRoute,
     private changeDetector: ChangeDetectorRef
   ) {
     this.route.params.subscribe(() => {
-      this.startWeek = this.calendar?.getApi()?.view.currentStart;
-      this.endWeek = this.calendar?.getApi()?.view.currentEnd;
+      this.startWeek = this.calendar?.getApi()?.view.activeStart;
+      this.endWeek = this.calendar?.getApi()?.view.activeEnd;
     });
   }
 
@@ -106,7 +112,6 @@ export class CronogramaComponent implements OnInit {
     initialView: 'timeGridWeek',
     allDaySlot: false,
     expandRows: true,
-    eventMinHeight: 30,
     slotLabelInterval: '00:05:00',
     slotMinTime: '08:00',
     slotMaxTime: '20:00:00',
@@ -116,9 +121,16 @@ export class CronogramaComponent implements OnInit {
       omitZeroMinute: false,
       meridiem: 'narrow',
     },
+    selectAllow: (selectInfo) => {
+      const now = new Date();
+      const currentStartWeek = new Date(now.setDate(now.getDate() - now.getDay() + 1));
+      currentStartWeek.setHours(0, 0, 0, 0);
+      return selectInfo.start >= currentStartWeek;
+    },
+    selectable: true,
+    selectLongPressDelay: 10,
     weekends: true,
     editable: true,
-    selectable: true,
     selectMirror: true,
     dayMaxEvents: true,
     eventTimeFormat: {
@@ -145,6 +157,7 @@ export class CronogramaComponent implements OnInit {
       .subscribe((e) => {
         this.loadCurrentTerapia(), this.loadCitas(this.bodyParams);
       });
+      this.isSelectable
   }
 
   handleDateSelect(selectInfo: DateSelectArg) {

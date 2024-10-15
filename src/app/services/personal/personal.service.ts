@@ -44,6 +44,7 @@ export class PersonalService {
       data.append('sueldo', personal.sueldo.toString());
       data.append('id_terapia', personal.id_terapia);
       data.append('horarios', JSON.stringify(personal.horarios));
+      data.append('color', personal.color);
       data.append('cv', personal.cv ? personal.cv : 'null');
 
     return this.http.post<Personal>(`${this.apiUrl}/personal/add`, data);

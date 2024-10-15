@@ -90,7 +90,6 @@ export class EspecialistaComponent implements OnInit {
     },
     allDaySlot: false,
     expandRows: true,
-    eventMinHeight: 30,
     // slotDuration: '00:45:00',
     // slotDuration: this.currentPersonal?.terapia.duracion,
     slotLabelInterval: '00:05:00',
@@ -116,6 +115,12 @@ export class EspecialistaComponent implements OnInit {
     },
     select: (arg) => this.handleClick(arg),
     eventClick: this.handleEventClick.bind(this),
+    selectAllow: (selectInfo) => {
+      const now = new Date();
+      const currentStartWeek = new Date(now.setDate(now.getDate() - now.getDay() + 1));
+      currentStartWeek.setHours(0, 0, 0, 0);
+      return selectInfo.start >= currentStartWeek;
+    },
     selectable: true,
     selectMirror: true,
     dayMaxEvents: true,

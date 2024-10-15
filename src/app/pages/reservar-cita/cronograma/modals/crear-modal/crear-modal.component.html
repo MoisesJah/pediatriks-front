@@ -38,16 +38,18 @@
                     bindValue="id_sede" (change)="onChangeSede($event)" placeholder="Seleccionar Sede" bindLabel="nombre" formControlName="id_sede">
                 </ng-select>
             </div>
-            <!-- <div *ngIf="isCitaContinua" class="form-group col-6">
-                <div class="form-check form-check-sm">
+            <div *ngIf="isCitaPaquete" class="form-group col-6">
+                <!-- <div class="form-check form-check-sm">
                     <input class="form-check-input" formControlName="paquete" type="checkbox" name="" id="">
                     <label class="form-check-label" for="">Tiene Paquete</label>
-                </div>
-                <ng-select *ngIf="createForm.get('paquete')?.value" [items]="paquetesList | async"
-                    [loading]="isLoading | async" [loadingText]="'Cargando...'" bindValue="id_paquete"
+                </div> -->
+                <label class="form-label" for="">Seleccionar Paquete</label>
+                <ng-select [items]="paquetesList | async"
+                    (change)="changePaquete($event)"
+                    [loading]="isLoading | async" [loadingText]="'Cargando...'" bindValue="id_paquetes"
                     placeholder="Seleccionar Paquete" bindLabel="nombre" formControlName="id_paquete">
                 </ng-select>
-            </div> -->
+            </div> 
         </section>
         <div class="row">
             <div class="form-group col mb-3">

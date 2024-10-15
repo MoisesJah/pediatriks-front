@@ -70,6 +70,7 @@ export class CrearModalComponent implements OnInit, AfterViewInit {
   terapia!: Terapia;
   es = Spanish.es;
   isCitaContinua = false;
+  isCitaPaquete = false;
 
   sedesList: Observable<Sede[]> = new Observable();
   pacientesList: Observable<IPaciente[]> = new Observable();
@@ -147,8 +148,18 @@ export class CrearModalComponent implements OnInit, AfterViewInit {
     sesionesControl.setValue(event?.cantidadsesiones);
   }
 
-  toggleOption(option: { label: string; value: string }) {
+  toggleOption(option: { label: string; value: number }) {
+    const fecha_inicio = this.createForm.get('fecha_inicio')?.value;
+
     const recurrenciaControl = this.createForm.get('recurrencia') as FormArray;
+    const dayOfWeek = new Date(fecha_inicio).getDay() + 1;
+
+    if (!recurrenciaControl.value.includes(dayOfWeek)) {
+      recurrenciaControl.push(this.fb.control(dayOfWeek));
+    }
+
+    if (option.value === dayOfWeek) return;
+
 
     if (recurrenciaControl.value.includes(option.value)) {
       recurrenciaControl.removeAt(
@@ -160,7 +171,12 @@ export class CrearModalComponent implements OnInit, AfterViewInit {
   }
 
   isOptionSelected = (option: { label: string; value: number }) => {
+    const fecha_inicio = this.createForm.get('fecha_inicio')?.value;
+    const dayOfWeek = new Date(fecha_inicio).getDay() + 1;
     const recurrenciaControl = this.createForm.get('recurrencia') as FormArray;
+
+    if (option.value === dayOfWeek) return true;
+
     return recurrenciaControl.value.includes(option.value) && this.isEnabledDay(option);
   };
 
@@ -171,6 +187,7 @@ export class CrearModalComponent implements OnInit, AfterViewInit {
   changeTipoCita(event: any) {
     // console.log(event);
     this.isCitaContinua = event && event?.nombre !== 'Evaluación';
+    this.isCitaPaquete = event && event?.nombre === 'Paquete';
   }
 
   ngOnInit(): void {

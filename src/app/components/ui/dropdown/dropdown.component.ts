@@ -25,12 +25,6 @@ export class DropdownComponent implements OnInit {
 
   terapiasList: Observable<DropdownItem[]> = new Observable();
 
-  yo(vetn: MouseEvent, cv: NgbDropdown) {
-    console.log(cv);
-    // vetn.stopPropagation();
-    cv.toggle();
-  }
-
   ngOnInit(): void {
     this.terapiasList = this.terapiasService.getAllPersonal().pipe(
       map((resp: any) => [
