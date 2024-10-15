@@ -64,19 +64,18 @@ export class ModalEditComponent implements OnInit, AfterViewInit {
   };
 
   getCambiosRestantes() {
-    const num_cambios = this.event?.sesion.num_cambios!;
-    return 3 - num_cambios;
+    return this.event?.sesion.num_cambios
+      ? 3 - this.event.sesion.num_cambios
+      : 3;
   }
-
+  
   canEditSession() {
-    const num_cambios = this.event?.sesion.num_cambios!;
-    return num_cambios < 3;
+    return !this.event || this.event.sesion.num_cambios < 3;
   }
 
   getIcon(status: string): string {
     switch (status) {
       case 'Programado':
-        return 'h-10px w-10px rounded-circle bg-primary';
       case 'Asistió':
         return 'h-10px w-10px rounded-circle bg-success';
       case 'No Asistió':
@@ -134,10 +133,12 @@ export class ModalEditComponent implements OnInit, AfterViewInit {
     //   untilDestroyed(this)
     // )
     // console.log(this.personalList);
-    this.personalService.getByTerapia(this.event?.terapia.id_terapia!).subscribe((resp) => {
-      this.personalList = of(resp.data);
-      console.log(resp.data);
-    })
+    this.personalService
+      .getByTerapia(this.event?.terapia.id_terapia!)
+      .subscribe((resp) => {
+        this.personalList = of(resp.data);
+        console.log(resp.data);
+      });
   }
 
   loadStatus() {

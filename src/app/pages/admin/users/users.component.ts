@@ -46,8 +46,10 @@ export class UsersComponent implements OnInit, OnDestroy {
   colDefs: ColDef[] = [
     { field: 'name', headerName: 'Nombre', filter: true },
     { field: 'dni', headerName: 'DNI', filter: true },
+    { field: 'direccion', headerName: 'Dirección', filter: true },
     { field: 'telefono', headerName: 'Teléfono', filter: true },
     { field: 'email', headerName: 'Correo', filter: true },
+    { field: 'tipo_user.nombre', headerName: 'Tipo de Usuario', filter: true },
     {
       headerName: 'Acciones',
       cellRenderer: ActionButtonsComponent,
@@ -67,19 +69,7 @@ export class UsersComponent implements OnInit, OnDestroy {
   //https://stackoverflow.com/questions/72812674/ag-grid-size-to-fit-on-desktop-and-auto-size-on-mobile
   gridReady(params: GridReadyEvent) {
     this.gridApi = params.api;
-    this.sizeColumnsToFit();
-  }
-
-  sizeColumnsToFit(): void {
-    const handleResize = () => this.gridApi.sizeColumnsToFit();
-    const resizeObserver = new ResizeObserver(() => {
-      if (window.innerWidth >= 768) {
-        handleResize();
-      }
-    });
-
-    resizeObserver.observe(document.body);
-    handleResize(); // Call it initially too
+    // this.sizeColumnsToFit();
   }
 
   private fetchUsers() {

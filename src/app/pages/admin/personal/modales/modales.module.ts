@@ -10,6 +10,7 @@ import { CrearModalComponent } from './crear-modal/crear-modal.component';
 import { EditarModalComponent } from './editar-modal/editar-modal.component';
 import { BorrarModalComponent } from './borrar-modal/borrar-modal.component';
 import { HorariosListComponent } from './horarios-list/horarios-list.component';
+import { NgxColorsModule } from 'ngx-colors';
 
 
 @NgModule({
@@ -25,6 +26,7 @@ import { HorariosListComponent } from './horarios-list/horarios-list.component';
     FormsModule,
     NgbModule,
     NgSelectModule,
+    NgxColorsModule,
     FlatpickrModule.forRoot()
   ],
   exports: [

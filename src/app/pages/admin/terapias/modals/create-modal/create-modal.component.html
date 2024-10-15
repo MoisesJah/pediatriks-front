@@ -29,7 +29,7 @@
       <label class=" form-label" for="">Color de la Terapia</label>
       @defer () {
       <div class="d-flex position-relative  justify-content-center align-items-center">
-        <ngx-colors ngx-colors-trigger class="position-absolute" [hideTextInput]="true" [hideColorPicker]="true"
+        <ngx-colors ngx-colors-trigger [palette]="colorPalette" class="position-absolute" [hideTextInput]="true" [hideColorPicker]="true"
           style="display: inline-block; margin:5px;left: 10px;" formControlName="color"></ngx-colors>
         <input [value]="terapiaForm.get('color')?.value" type="text" readonly class="form-control ps-16">
       </div>

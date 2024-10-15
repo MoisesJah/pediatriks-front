@@ -8,30 +8,12 @@
 
 <div class="content d-flex flex-column flex-column-fluid">
   <div class="container-xxl">
-    <div class="d-flex py-4 justify-content-between align-items-center">
-      <form data-kt-search-element="form" class="position-relative" autocomplete="off">
-        <input type="hidden">
-        <i class="ki-duotone ki-magnifier fs-2 search-icon position-absolute top-50 translate-middle-y ms-4"><span
-          class="path1"></span><span class="path2"></span></i>
-        <input type="search" (input)="onFilterTextBoxChanged()" id="paquete-search"
-          class="form-control custom-form-control ps-13" name="search" placeholder="Búsqueda"
-          data-kt-search-element="input">
-      </form>
-      <div class="d-flex align-items-center gap-3">
-        <button type="button" class="btn btn-light-primary" (click)="loadTabla()">
-          <span class="d-flex align-items-center">
-            <span class="fa-solid fa-rotate-right"></span>
-            <span class="ms-2">Actualizar</span>
-          </span>
-        </button>
-        <button type="button" class="btn btn-primary" (click)="openCrearModal()">
-          <span class="d-flex align-items-center">
-            <span class="ki-solid ki-plus text-white fs-1"></span>
-            <span class="text-white ms-2">Añadir</span>
-          </span>
-        </button>
-      </div>
-    </div>
+    <div class="card shadow p-2 px-4">
+      <div class="d-flex py-4 justify-content-between align-items-center">
+        <form data-kt-search-element="form" class=" position-relative" autocomplete="off">
+          <!--begin::Hidden input(Added to disable form autocomplete)-->
+          <input type="hidden">
+          <!--end::Hidden input-->
 
     <div class="row">
       <div class="col-md-4" *ngFor="let paquete of paquetesList | async">
@@ -60,8 +42,7 @@
               <span class="ki-duotone ki-handcart text-white me-2"></span> Comprar
             </button>
           </div>
-        </div>  
+        </div>
       </div>
     </div>
-  </div>
-</div>
+

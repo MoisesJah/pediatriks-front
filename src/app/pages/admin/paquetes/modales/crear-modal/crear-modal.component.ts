@@ -90,7 +90,6 @@ export class CrearModalComponent implements AfterViewInit {
   evtSelectFile(event: Event): void {
     const files = (event.target as HTMLInputElement).files;
     this.paqueteForm.get('banner_url')?.setValue(files?.item(0));
-
   }
 
   ngOnInit(): void {

@@ -18,6 +18,7 @@ import { AG_GRID_LOCALE_ES } from '@ag-grid-community/locale';
 import { ThemeService } from 'src/app/services/theme.service';
 import { Terapia } from 'src/app/models/terapia';
 import { formatMoney } from 'src/app/utils/formatCurrency';
+import { ImageDisplayComponent } from './modales/image-display/image-display.component';
 
 @UntilDestroy()
 @Component({
@@ -37,6 +38,82 @@ export class PaquetesComponent implements OnInit, OnDestroy {
   localeText = AG_GRID_LOCALE_ES;
   private gridApi!: GridApi;
 
+  colDefs: ColDef[] = [
+    {
+      field: 'banner_url',
+      headerName: 'Imagen',
+      cellRendererSelector: (params) => {
+        return params.value
+          ? { component: ImageDisplayComponent, params: params.data.banner_url }
+          : undefined;
+      },
+    },
+    { field: 'nombre', headerName: 'Nombre', filter: true },
+    { field: 'descripcion', headerName: 'Descripcion' },
+    {
+      field: 'terapias',
+      headerName: 'Terapias Incluidas',
+      filter: true,
+      filterValueGetter: (params: any) => {
+        const therapies = params.data.terapias as Terapia[];
+        return therapies.map((therapy) => therapy.nombre).join(', ');
+      },
+      valueFormatter: (params: any) => {
+        const therapies = params.data.terapias as Terapia[];
+        return therapies.map((therapy) => therapy.nombre).join(', ');
+      },
+      cellRenderer: (params: any) => {
+        const therapies = params.data.terapias as Terapia[];
+        return `<ul>${therapies
+          .map((therapy) => `<li>${therapy.nombre}</li>`)
+          .join('')}</ul>`;
+      },
+      autoHeight: true,
+    },
+    {
+      field: 'cantidadsesiones',
+      headerName: 'N° de Sesiones',
+      maxWidth: 150,
+      filter: 'agNumberColumnFilter',
+    },
+    {
+      field: 'precioregular',
+      headerName: 'Precio Regular',
+      valueFormatter: (params) => formatMoney(params.value),
+    },
+    {
+      field: 'descuento',
+      headerName: 'Descuento',
+      valueFormatter: (params) => `${params.value}%`,
+    },
+    {
+      field: 'preciopaquete',
+      headerName: 'Precio del Paquete',
+      valueFormatter: (params) => formatMoney(params.value),
+    },
+    {
+      field: 'fechainicio',
+      headerName: 'Fecha de Inicio',
+      filter: 'agDateColumnFilter',
+      valueFormatter: (params) => formatDate(params.value, 'dd/MM/yyyy', 'en'),
+    },
+    {
+      field: 'fechafin',
+      headerName: 'Fecha de Fin',
+      filter: 'agDateColumnFilter',
+      valueFormatter: (params) => formatDate(params.value, 'dd/MM/yyyy', 'en'),
+    },
+    {
+      headerName: 'Acciones',
+      cellRenderer: ActionButtonsComponent,
+      cellRendererParams: {
+        onEdit: (data: any) => this.openEditarModal(data),
+        onDelete: (data: any) => this.openBorrarModal(data),
+      },
+      maxWidth: 100,
+      resizable: false,
+    },
+  ];
 
   ngOnInit(): void {
     this.fetchPaquetes();
@@ -51,7 +128,6 @@ export class PaquetesComponent implements OnInit, OnDestroy {
       untilDestroyed(this)
     );
   }
-
 
   loadTabla() {
     this.fetchPaquetes();
@@ -81,7 +157,7 @@ export class PaquetesComponent implements OnInit, OnDestroy {
   }
 
   getTerapiasNombres(terapias: Terapia[]): string {
-    return terapias.map(terapia => terapia.nombre).join(', ');
+    return terapias.map((terapia) => terapia.nombre).join(', ');
   }
 
   openEditarModal(paquete: Paquete) {

@@ -42,17 +42,15 @@ export class PersonalService {
       data.append('id_genero', personal.id_genero);
       data.append('id_sede', personal.id_sede);
       data.append('sueldo', personal.sueldo.toString());
-      data.append('id_tipopersonal', personal.id_tipopersonal);
       data.append('id_terapia', personal.id_terapia);
-      // data.append('id_horariop', personal.id_horariop);
       data.append('horarios', JSON.stringify(personal.horarios));
       data.append('cv', personal.cv ? personal.cv : 'null');
 
     return this.http.post<Personal>(`${this.apiUrl}/personal/add`, data);
   }
 
-  update(personal: Personal, id: string) {
-    return this.http.put<Personal>(
+  update(personal: any, id: string) {
+    return this.http.post<any>(
       `${this.apiUrl}/personal/edit/${id}`,
       personal
     );
