@@ -82,7 +82,6 @@ export class ReservarCitaComponent implements OnInit, OnDestroy {
     // eventColor: '#ffe082',
     expandRows:true,
     // eventTextColor: 'black',
-    eventMinHeight: 30,
     // slotDuration: '00:45:00',
     slotDuration: '00:45:00',
     // slotLabelInterval: '00:45:00',

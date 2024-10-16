@@ -45,7 +45,6 @@
             ],
             "scripts": [
               "public/assets/plugins/custom/fullcalendar/fullcalendar.bundle.js",
-              "public/assets/plugins/custom/datatables/datatables.bundle.js"
             ]
           },
           "configurations": {
