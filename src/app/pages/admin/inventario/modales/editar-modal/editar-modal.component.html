@@ -1,0 +1,42 @@
+<div class="modal-header">
+  <h4 class="modal-title d-flex align-items-center gap-1" id="modal-basic-title">
+    <span>
+      <i style="vertical-align: top;" class="ki-duotone ki-notepad-edit text-gray-900 fs-1"><span
+          class="path1"></span><span class="path2"></span></i>
+    </span>
+    Editar Inventario
+  </h4>
+  <button type="button" class="btn btn-sm btn-icon btn-active-color-primary btn-color-gray-800" aria-label="Close"
+    (click)="close()">
+    <i class="ki-duotone ki-cross-square fs-1">
+      <span class="path1"></span>
+      <span class="path2"></span>
+    </i>
+  </button>
+</div>
+<div class="modal-body">
+  <form [formGroup]="inventarioForm" class="form d-flex flex-column gap-4">
+    <div class="form-group">
+      <label for="nombre" class="required form-label">Nombre del Inventario</label>
+      <input type="text" id="nombre" formControlName="nombre" class="form-control" />
+    </div>
+    <div class="form-group">
+      <label for="descripcion" class="required form-label">Descripción</label>
+      <textarea rows="2" id="descripcion" formControlName="descripcion" class="form-control"></textarea>
+    </div>
+    <!-- <div class="form-group">
+      <label class="required form-label" for="">Imagen </label>
+      <input type="file" id="fileInput" accept="image/*" class="form-control" (change)="evtSelectFile($event)" />
+    </div> -->
+  </form>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-secondary" (click)="close()">
+    Cancelar
+  </button>
+  <button [disabled]="inventarioForm.invalid || (isLoading | async)" type="button" class="btn btn-primary"
+    (click)="save()">
+    Guardar
+    <span *ngIf="isLoading | async" class="spinner-border spinner-border-sm align-middle ms-2"></span>
+  </button>
+</div>

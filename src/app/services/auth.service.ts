@@ -72,6 +72,10 @@ export class AuthService {
     return user ? user.tipo_user === 'paciente' : false;
   }
 
+  isTerapeuta(): boolean {
+    const user = this.user();
+    return user ? user.tipo_user === 'terapeuta' : false;
+  }
 
   getToken(): string | null {
     return localStorage.getItem('token');

@@ -45,6 +45,12 @@ const routes: Routes = [
       ),
   },
   {
+    path: 'inventario',
+    loadComponent: () =>
+      import('./inventario/inventario.component').then(
+        (m) => m.InventarioComponent),
+  },
+  {
     path: 'sedes',
     loadComponent: () =>
       import('./sedes/sedes.component').then((m) => m.SedesComponent),
