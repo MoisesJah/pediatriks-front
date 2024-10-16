@@ -1,0 +1,54 @@
+<div class="modal-header">
+  <h4 class="modal-title d-flex align-items-center gap-1" id="modal-basic-title">
+    <span class="text-primary">
+      <i style="vertical-align: text-top;" class="ki-duotone ki-add-files text-gray-900 fs-1">
+        <span class="path1"></span><span class="path2"></span><span class="path3"></span>
+      </i>
+    </span>
+    Añadir Inventario
+  </h4>
+  <button type="button" class="btn btn-sm btn-icon btn-active-color-primary btn-color-gray-800" aria-label="Close"
+    (click)="close()">
+    <i class="ki-duotone ki-cross-square fs-1">
+      <span class="path1"></span><span class="path2"></span>
+    </i>
+  </button>
+</div>
+
+<div class="modal-body">
+  <form [formGroup]="inventarioForm" class="form d-flex flex-column gap-4" (ngSubmit)="save()">
+    <div class="form-group">
+      <label for="nombre" class="required form-label">Nombre del Item</label>
+      <input type="text" id="nombre" formControlName="nombre" class="form-control"
+        placeholder="Ingresa Nombre del Item" />
+    </div>
+
+    <div class="form-group">
+      <label class="required form-label" for="">Imagen</label>
+      <input type="file" id="imagen" accept="image/*" class="form-control" (change)="evtSelectFile($event)" />
+    </div>
+
+    <div class="form-group">
+      <label for="descripcion" class=" form-label">Descripción</label>
+      <textarea cols="3" rows="2" id="descripcion" formControlName="descripcion" class="form-control"
+        placeholder="Ingresa Descripción del Paquete"></textarea>
+    </div>
+
+    <div class="form-group">
+      <label for="stock" class="form-label">Stock</label>
+      <input id="stock" formControlName="stock" type="number" class="form-control" placeholder="Ingresa el stock" />
+      <div *ngIf="inventarioForm.get('stock')?.invalid && (inventarioForm.get('stock')?.touched || inventarioForm.get('stock')?.dirty)">
+        <small class="text-danger">El stock debe ser mayor que 0.</small>
+      </div>
+    </div>
+
+  </form>
+</div>
+
+<div class="modal-footer">
+  <button type="button" class="btn btn-secondary" (click)="close()">Cancelar</button>
+  <button [disabled]="inventarioForm.invalid || (isLoading | async)" type="button" class="btn btn-primary" (click)="save()">
+    Guardar
+    <span *ngIf="isLoading | async" class="spinner-border spinner-border-sm align-middle ms-2"></span>
+  </button>
+</div>

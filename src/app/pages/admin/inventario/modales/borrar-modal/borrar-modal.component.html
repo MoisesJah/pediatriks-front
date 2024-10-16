@@ -1,0 +1,41 @@
+<div class="modal-header">
+  <h4 class="modal-title d-flex align-items-center gap-1" id="modal-basic-title">
+    <span>
+      <i style="vertical-align: middle;" class="ki-duotone ki-information text-danger fs-2hx"><span class="path1"></span><span class="path2"></span><span class="path3"></span></i>
+    </span>
+    Eliminar Inventario
+  </h4>
+  <button
+    type="button"
+    class="btn btn-sm btn-icon btn-active-color-primary btn-color-gray-800"
+    aria-label="Close"
+    (click)="close()"
+  >
+    <i class="ki-duotone ki-cross-square fs-1">
+      <span class="path1"></span><span class="path2"></span>
+    </i>
+  </button>
+</div>
+
+<div class="modal-body text-center">
+  <p>¿Estás seguro de eliminar este registro de inventario?</p>
+  <p>Toda la información relacionada con este ítem se perderá.</p>
+</div>
+
+<div class="modal-footer">
+  <button type="button" class="btn btn-secondary" (click)="close()">
+    Cancelar
+  </button>
+  <button
+    [disabled]="isLoading | async"
+    type="button"
+    class="btn btn-danger"
+    (click)="delete()"
+  >
+    Eliminar
+    <span
+      *ngIf="isLoading | async"
+      class="spinner-border spinner-border-sm align-middle ms-2"
+    ></span>
+  </button>
+</div>

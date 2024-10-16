@@ -13,7 +13,7 @@ export class PaqueteService {
   constructor(private http: HttpClient) {}
 
   getAll(): Observable<{ data: Paquete[] }> {
-    return this.http.get<{ data: Paquete[] }>(`${this.apiUrl}/list`); // Ruta para obtener todos los paquetes
+    return this.http.get<{ data: Paquete[] }>(`${this.apiUrl}/list`);
   }
 
   getById(id: string): Observable<{ data: Paquete }> {
@@ -33,7 +33,7 @@ export class PaqueteService {
   }
 
   purchase(paqueteId: string, pacienteId: string): Observable<any> {
-    const body = { paqueteId, pacienteId }; 
+    const body = { paqueteId, pacienteId };
     return this.http.post(`${this.apiUrl}/purchase`, body);
   }
 }

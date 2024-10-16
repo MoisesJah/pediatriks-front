@@ -52,6 +52,11 @@ export class DrawerComponent {
     return this.authService.isPaciente();
   }
 
+  isTerapeuta(): boolean {
+    // Utiliza la función del servicio de autenticación para verificar si es terapeuta
+    return this.authService.isTerapeuta();
+  }
+
   navigateToInicio(event: Event): void {
     event.preventDefault();
     this.removeSelectedClass();
@@ -68,6 +73,26 @@ export class DrawerComponent {
       this.router.navigate(['/dashboard']);
     } else {
       // Manejar otros casos o roles no reconocidos
+      this.router.navigate(['/home']);
+    }
+  }
+
+  navigateToInventario(event: Event): void {
+    event.preventDefault();
+    this.removeSelectedClass();
+
+    const target = event.currentTarget as HTMLElement;
+    target.classList.add('selected');
+
+    // Verificar si es administrador o terapeuta
+    if (this.isAdmin()) {
+      // Redirigir al inventario del administrador
+      this.router.navigate(['/admin/inventario']);
+    } else if (this.isTerapeuta()) {
+      // Redirigir al inventario del terapeuta
+      this.router.navigate(['/terapeuta/inventario']);
+    } else {
+      // Manejar otros roles o casos no reconocidos
       this.router.navigate(['/home']);
     }
   }
