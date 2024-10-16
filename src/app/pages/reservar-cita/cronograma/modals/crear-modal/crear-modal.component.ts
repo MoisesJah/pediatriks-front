@@ -26,6 +26,7 @@ import {
   debounceTime,
   distinctUntilChanged,
   distinctUntilKeyChanged,
+  interval,
   map,
   Observable,
 } from 'rxjs';
@@ -48,7 +49,13 @@ import Spanish from 'flatpickr/dist/l10n/es.js';
 @Component({
   selector: 'app-crear-modal',
   standalone: true,
-  imports: [NgSelectModule, NgbTooltipModule, CommonModule, ReactiveFormsModule, FlatpickrModule],
+  imports: [
+    NgSelectModule,
+    NgbTooltipModule,
+    CommonModule,
+    ReactiveFormsModule,
+    FlatpickrModule,
+  ],
   templateUrl: './crear-modal.component.html',
   styleUrl: './crear-modal.component.scss',
 })
@@ -133,7 +140,6 @@ export class CrearModalComponent implements OnInit, AfterViewInit {
   onChangeSede(event: any) {
     this.createForm.get('id_personal')?.setValue(null);
   }
-    
 
   onStartTimeChange(event: any): void {
     const [hours, minutes] = event.dateString.split(':').map(Number);
@@ -154,12 +160,7 @@ export class CrearModalComponent implements OnInit, AfterViewInit {
     const recurrenciaControl = this.createForm.get('recurrencia') as FormArray;
     const dayOfWeek = new Date(fecha_inicio).getDay() + 1;
 
-    if (!recurrenciaControl.value.includes(dayOfWeek)) {
-      recurrenciaControl.push(this.fb.control(dayOfWeek));
-    }
-
     if (option.value === dayOfWeek) return;
-
 
     if (recurrenciaControl.value.includes(option.value)) {
       recurrenciaControl.removeAt(
@@ -175,9 +176,17 @@ export class CrearModalComponent implements OnInit, AfterViewInit {
     const dayOfWeek = new Date(fecha_inicio).getDay() + 1;
     const recurrenciaControl = this.createForm.get('recurrencia') as FormArray;
 
+    if (!recurrenciaControl.value.includes(dayOfWeek)) {
+      console.log(dayOfWeek);
+      recurrenciaControl.push(this.fb.control(dayOfWeek));
+    }
+
     if (option.value === dayOfWeek) return true;
 
-    return recurrenciaControl.value.includes(option.value) && this.isEnabledDay(option);
+    return (
+      recurrenciaControl.value.includes(option.value) &&
+      this.isEnabledDay(option)
+    );
   };
 
   closeModal() {
@@ -195,13 +204,15 @@ export class CrearModalComponent implements OnInit, AfterViewInit {
     this.loadPacientes();
     this.loadTipoCitas();
     this.loadPaquetes();
+
   }
 
   ngAfterViewInit(): void {
     this.createForm.valueChanges
       .pipe(distinctUntilKeyChanged('id_sede'))
       .subscribe((value) => {
-        const { id_sede, fecha_inicio, hora_inicio, hora_fin, id_personal } = value;
+        const { id_sede, fecha_inicio, hora_inicio, hora_fin, id_personal } =
+          value;
         const requiredFields = [id_sede, fecha_inicio, hora_inicio, hora_fin];
 
         const body = {
@@ -257,14 +268,19 @@ export class CrearModalComponent implements OnInit, AfterViewInit {
   }
 
   createCita() {
-    this.citaService
-      .createForTherapy({
-        ...this.createForm.value,
-        id_terapia: this.terapia.id_terapia,
-      })
-      .subscribe((resp) => {
-        this.eventSubmitted.emit(resp.data);
-        this.modal.dismissAll();
-      });
+    if (this.createForm.valid) {
+      this.citaService
+        .createForTherapy({
+          ...this.createForm.value,
+          id_terapia: this.terapia.id_terapia,
+        })
+        .subscribe((resp) => {
+          this.eventSubmitted.emit(resp.data);
+          this.modal.dismissAll();
+        });
+    }
+  }
+  butong(){
+    console.log(this.createForm.value)
   }
 }
