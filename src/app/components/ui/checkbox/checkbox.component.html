@@ -1,0 +1,21 @@
+<div ngbAccordion>
+    selected {{ selectedValues | json }}
+    <ng-container *ngFor="let group of items">
+        <div ngbAccordionItem>
+            <input type="checkbox" [indeterminate]="isGroupIndeterminate(group)" [checked]="isGroupChecked(group)"
+                (change)="checkGroup($event.target.checked, group)">
+            <a ngbAccordionTitle>{{ group.nombre }} </a>
+            <span ngbAccordionToggle role="button">
+                <i class="fas fa-chevron-down"></i>
+            </span>
+            <div ngbAccordionCollapse>
+                <ng-container *ngFor="let item of group.personal">
+                    <div ngbAccordionBody>
+                        <input type="checkbox" [checked]="item.checked" (change)="updateSelectedItem(item)" >
+                        {{ item.nombre }}
+                    </div>
+                </ng-container>
+            </div>
+        </div>
+    </ng-container>
+</div>

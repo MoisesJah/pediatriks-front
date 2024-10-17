@@ -280,7 +280,4 @@ export class CrearModalComponent implements OnInit, AfterViewInit {
         });
     }
   }
-  butong(){
-    console.log(this.createForm.value)
-  }
 }

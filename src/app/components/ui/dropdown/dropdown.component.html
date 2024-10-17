@@ -6,10 +6,14 @@
     <ng-container *ngFor="let terapia of terapiasList | async">
       <div #dropdown="ngbDropdown"  ngbDropdown placement="left-top" class="d-inline-block w-100">
         <div class="d-flex dropdown-content align-items-center">
-          <span class="px-3" role="button" *ngIf="terapia.personal" ngbDropdownToggle></span>
-          <a routerLink="{{ terapia.link }}" ngbDropdownItem [ngClass]="[ terapia.personal ? 'ps-0' : 'ps-8' ]">
+          <span class="px-3" role="button" ngbDropdownToggle></span>
+          <a routerLink="{{ terapia.link }}" ngbDropdownItem class="ps-0">
             {{ terapia.nombre }}
           </a>
+        </div>
+
+        <div ngbDropdownMenu aria-labelledby="dropdownBasic2"  *ngIf="terapia.nombre === 'Cronograma General'">
+          <app-checkbox [items]="checkBoxList"></app-checkbox>
         </div>
         
         <div ngbDropdownMenu aria-labelledby="dropdownBasic2"  *ngIf="terapia.personal">

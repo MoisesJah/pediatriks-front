@@ -160,7 +160,8 @@ export class EditarModalComponent implements OnInit, AfterViewInit {
       const control = this.editForm.get(key);
       if (Array.isArray(control?.value)) {
         formData.append(key, JSON.stringify(control?.value));
-      } else {
+
+      } else if(control?.value) {
         formData.append(key, control?.value);
       }
     });
