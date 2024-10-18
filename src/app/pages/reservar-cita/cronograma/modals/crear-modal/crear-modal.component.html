@@ -19,13 +19,13 @@
         <section class="row">
             <div class="form-group col-6">
                 <label class="form-label" for="kt_calendar_datepicker_date">Seleccionar Paciente</label>
-                <ng-select [items]="pacientesList | async" [loading]="isLoading | async" [loadingText]="'Cargando...'"
+                <ng-select [items]="pacientesList | async" [loading]="loadingPacientes" [loadingText]="'Cargando...'"
                     bindValue="id_paciente" placeholder="Seleccionar" bindLabel="nombre" formControlName="id_paciente">
                 </ng-select>
             </div>
             <div class="form-group col-6">
                 <label class="form-label">Seleccionar Tipo de Cita</label>
-                <ng-select [items]="tipoCitasList | async" [loading]="isLoading | async" [loadingText]="'Cargando...'"
+                <ng-select [items]="tipoCitasList | async" [loading]="loadingTipoCitas" [loadingText]="'Cargando...'"
                     bindValue="id_tipocita" (change)="changeTipoCita($event)" placeholder="Seleccionar"
                     bindLabel="nombre" formControlName="id_tipocita">
                 </ng-select>
@@ -34,7 +34,7 @@
         <section class="row">
             <div class="form-group col-6">
                 <label class="form-label" for="">Seleccionar Sede</label>
-                <ng-select [items]="sedesList | async" [loading]="isLoading | async" [loadingText]="'Cargando...'"
+                <ng-select [items]="sedesList | async" [loading]="loadingSedes" [loadingText]="'Cargando...'"
                     bindValue="id_sede" (change)="onChangeSede($event)" placeholder="Seleccionar Sede" bindLabel="nombre" formControlName="id_sede">
                 </ng-select>
             </div>
@@ -46,7 +46,7 @@
                 <label class="form-label" for="">Seleccionar Paquete</label>
                 <ng-select [items]="paquetesList | async"
                     (change)="changePaquete($event)"
-                    [loading]="isLoading | async" [loadingText]="'Cargando...'" bindValue="id_paquetes"
+                    [loading]="loadingPaquetes" [loadingText]="'Cargando...'" bindValue="id_paquetes"
                     placeholder="Seleccionar Paquete" bindLabel="nombre" formControlName="id_paquete">
                 </ng-select>
             </div> 
@@ -82,7 +82,7 @@
             </div>
         </div>
 
-        <div *ngIf="createForm.get('id_personal')?.value && isCitaContinua" class="row">
+        <div *ngIf="createForm.get('id_personal')?.value && isRecurrente" class="row">
             <div class="form-group d-flex flex-column col mb-3">
                 <label class="form-label" for="kt_calendar_datepicker_end_date">Dias Disponibles</label>
                 <div class="btn-group">

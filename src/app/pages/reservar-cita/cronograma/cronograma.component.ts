@@ -123,9 +123,10 @@ export class CronogramaComponent implements OnInit {
     },
     selectAllow: (selectInfo) => {
       const now = new Date();
+      const isTimeGrid = this.calendar?.getApi()?.view.type == 'timeGridWeek';
       const currentStartWeek = new Date(now.setDate(now.getDate() - now.getDay() + 1));
       currentStartWeek.setHours(0, 0, 0, 0);
-      return selectInfo.start >= currentStartWeek;
+      return selectInfo.start >= currentStartWeek && isTimeGrid;
     },
     selectable: true,
     selectLongPressDelay: 10,

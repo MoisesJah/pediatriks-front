@@ -122,7 +122,7 @@ export class CrearModalComponent implements OnInit, AfterViewInit {
   }
 
   get colorPalette() {
-    return this.colorTerapia ? generateColorPalette(this.colorTerapia,10) : [];
+    return this.colorTerapia ? generateColorPalette(this.colorTerapia,15) : [];
   }
 
   addHorario() {

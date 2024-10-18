@@ -26,6 +26,7 @@ import {
   debounceTime,
   distinctUntilChanged,
   distinctUntilKeyChanged,
+  finalize,
   interval,
   map,
   Observable,
@@ -76,7 +77,7 @@ export class CrearModalComponent implements OnInit, AfterViewInit {
   id_terapia!: string;
   terapia!: Terapia;
   es = Spanish.es;
-  isCitaContinua = false;
+  isRecurrente = false;
   isCitaPaquete = false;
 
   sedesList: Observable<Sede[]> = new Observable();
@@ -84,6 +85,11 @@ export class CrearModalComponent implements OnInit, AfterViewInit {
   personalList = [];
   tipoCitasList: Observable<TipoCita[]> = new Observable();
   paquetesList: Observable<any> = new Observable();
+
+  loadingPacientes = false;
+  loadingSedes = false;
+  loadingPaquetes = false;
+  loadingTipoCitas = false;
 
   createForm: FormGroup;
 
@@ -194,8 +200,7 @@ export class CrearModalComponent implements OnInit, AfterViewInit {
   }
 
   changeTipoCita(event: any) {
-    // console.log(event);
-    this.isCitaContinua = event && event?.nombre !== 'Evaluación';
+    this.isRecurrente = event && event?.recurrente;
     this.isCitaPaquete = event && event?.nombre === 'Paquete';
   }
 
@@ -238,31 +243,39 @@ export class CrearModalComponent implements OnInit, AfterViewInit {
   }
 
   loadSedes() {
+    this.loadingSedes = true;
     this.sedesList = this.sedesService.getAll().pipe(
       map((resp) => resp.data),
+      finalize(() => (this.loadingSedes = false)),
       untilDestroyed(this)
     );
   }
 
   loadTipoCitas() {
+    this.loadingTipoCitas = true;
     this.tipoCitasList = this.tipoCitaService.getAll().pipe(
       map((resp) => resp.data),
+      finalize(() => (this.loadingTipoCitas = false)),
       untilDestroyed(this)
     );
   }
 
   loadPaquetes() {
+    this.loadingPaquetes = true;
     this.paquetesList = this.terapiaService
       .getPaquetesByTerapia(this.terapia.id_terapia)
       .pipe(
         map((resp) => resp.data),
+        finalize(() => (this.loadingPaquetes = false)),
         untilDestroyed(this)
       );
   }
 
   loadPacientes() {
+    this.loadingPacientes = true;
     this.pacientesList = this.pacienteService.getAll().pipe(
       map((resp) => resp.data),
+      finalize(() => (this.loadingPacientes = false)),
       untilDestroyed(this)
     );
   }

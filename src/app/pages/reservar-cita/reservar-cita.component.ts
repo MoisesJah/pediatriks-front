@@ -6,6 +6,7 @@ import {
   OnInit,
   OnDestroy,
   inject,
+  TemplateRef,
 } from '@angular/core';
 import { Router } from '@angular/router';
 import {
@@ -37,6 +38,7 @@ import { TerapiaService } from 'src/app/services/terapia/terapia.service';
 import { LoadingService } from 'src/app/services/loading.service';
 import { EventImpl } from '@fullcalendar/core/internal';
 import { getWeekStartEndDates } from 'src/app/utils/getdatesFromWeek';
+import { DropdownComponent } from 'src/app/components/ui/dropdown/dropdown.component';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -44,9 +46,10 @@ import { getWeekStartEndDates } from 'src/app/utils/getdatesFromWeek';
   templateUrl: './reservar-cita.component.html',
   styleUrls: ['./reservar-cita.component.scss'],
 })
-export class ReservarCitaComponent implements OnInit, OnDestroy {
+export class ReservarCitaComponent implements OnInit, OnDestroy,AfterViewInit {
   @ViewChild(FullCalendarComponent)
   fullCalendarComponent!: FullCalendarComponent;
+  @ViewChild('dropdown',{static:true,}) dropdown!: DropdownComponent;
 
   citasService = inject(CitaService);
   terapiasService = inject(TerapiaService);
@@ -101,17 +104,15 @@ export class ReservarCitaComponent implements OnInit, OnDestroy {
     initialView: 'timeGridWeek',
     weekends: true,
     editable: true,
-    // selectable: true,
-    // select: this.handleDateSelect.bind(this),
     selectMirror: true,
     dayMaxEvents: true,
     eventClick: this.handleEventClick.bind(this),
-    // eventsSet: this.handleEvents.bind(this),
     locale: esLocale,
     datesSet: (arg) => {
       this.startWeek = arg.view.activeStart;
       this.endWeek = arg.view.activeEnd;
-      this.loadCitas(this.bodyParams);
+      // this.loadCitas(this.bodyParams);
+      this.loadFilteredCitas();
     },
   };
 
@@ -127,6 +128,27 @@ export class ReservarCitaComponent implements OnInit, OnDestroy {
   ngOnInit() {
   }
 
+  ngAfterViewInit() {
+    // this.loadFilteredCitas();
+  }
+
+  loadFilteredCitas() {
+    this.dropdown.selectedItems.subscribe((items) => {
+      if (items.length > 0) {
+        this.loadCitas({
+          ...this.bodyParams,
+          filter:true,
+          idsPersonal: items,
+        });
+      }
+
+      if (items.length === 0) {
+        this.loadCitas(this.bodyParams);
+      }
+    })
+
+  }
+
   ngOnDestroy() {
     this.subscriptions.forEach((subscription) => subscription.unsubscribe());
   }
@@ -137,7 +159,6 @@ export class ReservarCitaComponent implements OnInit, OnDestroy {
       untilDestroyed(this)
     );
   }
-
 
   handleCalendarToggle() {
     this.calendarVisible = !this.calendarVisible;

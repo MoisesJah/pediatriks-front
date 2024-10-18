@@ -27,7 +27,6 @@ import { HeaderComponent } from '../../../../components/ui/header/header.compone
 import esLocale from '@fullcalendar/core/locales/es';
 import { getWeekStartEndDates } from 'src/app/utils/getdatesFromWeek';
 import { PersonalService } from 'src/app/services/personal/personal.service';
-import { CrearModalComponent } from '../modals/crear-modal/crear-modal.component';
 import { CreateModalComponent } from './create-modal/create-modal.component';
 import { Terapia } from 'src/app/models/terapia';
 import { Sede } from 'src/app/models/sede';
@@ -117,9 +116,10 @@ export class EspecialistaComponent implements OnInit {
     eventClick: this.handleEventClick.bind(this),
     selectAllow: (selectInfo) => {
       const now = new Date();
+      const isTimeGrid = this.calendar?.getApi()?.view.type == 'timeGridWeek';
       const currentStartWeek = new Date(now.setDate(now.getDate() - now.getDay() + 1));
       currentStartWeek.setHours(0, 0, 0, 0);
-      return selectInfo.start >= currentStartWeek;
+      return selectInfo.start >= currentStartWeek && isTimeGrid;
     },
     selectable: true,
     selectMirror: true,

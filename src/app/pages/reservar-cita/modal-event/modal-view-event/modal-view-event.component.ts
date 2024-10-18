@@ -1,6 +1,6 @@
 import { Component, EventEmitter, inject, OnInit, Output } from '@angular/core';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { UntilDestroy } from '@ngneat/until-destroy';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { CalendarEvent } from 'src/app/models/calendar-event';
 import { Cita } from 'src/app/models/cita';
 import { CitaService } from 'src/app/services/citas/cita.service';
@@ -59,9 +59,12 @@ export class ModalViewEventComponent implements OnInit {
   }
 
   loadEvent() {
-    this.citaService.getById(this.citaId, this.eventId).subscribe((resp) => {
-      this.event = resp.data;
-    });
+    this.citaService
+      .getById(this.citaId, this.eventId)
+      .pipe(untilDestroyed(this))
+      .subscribe((resp) => {
+        this.event = resp.data;
+      });
   }
 
   openEditModal() {
@@ -74,7 +77,7 @@ export class ModalViewEventComponent implements OnInit {
     modalRef.componentInstance.event = this.event;
     modalRef.componentInstance.eventUpdated.subscribe(() => {
       this.loadEvent();
-      this.eventUpdated.emit()
+      this.eventUpdated.emit();
     });
   }
 
@@ -88,7 +91,7 @@ export class ModalViewEventComponent implements OnInit {
     modalRef.componentInstance.event = this.event;
     modalRef.componentInstance.eventDeleted.subscribe(() => {
       this.modal.dismissAll();
-      this.eventUpdated.emit()
-    })
+      this.eventUpdated.emit();
+    });
   }
 }

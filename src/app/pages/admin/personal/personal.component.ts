@@ -40,7 +40,7 @@ export class PersonalComponent implements OnInit {
       field: 'cv_url',
       headerName: 'CV',
       filter: false,
-      maxWidth: 90,
+      maxWidth: 70,
       cellRendererSelector: (params) => {
         return params.value
           ? { component: CvViewerComponent, params: params.data.id_personal }
@@ -48,10 +48,10 @@ export class PersonalComponent implements OnInit {
       },
     },
     { field: 'nombre', headerName: 'Nombre', filter: true },
-    { field: 'dni', headerName: 'DNI', filter: true },
-    { field: 'telefono', headerName: 'Teléfono', filter: true },
+    { field: 'dni', headerName: 'DNI', filter: true,maxWidth: 110 },
+    { field: 'telefono', headerName: 'Teléfono', filter: true,maxWidth: 120 },
     { field: 'correo', headerName: 'Correo', filter: true },
-    { field: 'genero.nombre', headerName: 'Género', filter: true },
+    { field: 'genero.nombre', headerName: 'Género', filter: true, maxWidth: 110 },
     { field: 'sede.nombre', headerName: 'Sede', filter: true },
     {
       field: 'sueldo',
@@ -60,6 +60,15 @@ export class PersonalComponent implements OnInit {
       valueFormatter: (params) => formatMoney(params.value),
     },
     { field: 'terapia.nombre', headerName: 'Especialidad', filter: true },
+    {
+      headerName: 'Color',
+      field: 'color',
+      maxWidth: 75,
+      filter: false,
+      cellRenderer: (params: any) => {
+        return `<div class="h-20px w-20px mt-3 rounded-circle" style="background-color: ${params.value}"></div>`;
+      }
+    },
     {
       field: 'horarios',
       headerName: 'Horario Semanal',

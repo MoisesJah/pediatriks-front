@@ -11,9 +11,9 @@
             {{ terapia.nombre }}
           </a>
         </div>
-
+        
         <div ngbDropdownMenu aria-labelledby="dropdownBasic2"  *ngIf="terapia.nombre === 'Cronograma General'">
-          <app-checkbox [items]="checkBoxList"></app-checkbox>
+          <app-checkbox (selected)="changeSelectedItems($event)" [items]="checkBoxList"></app-checkbox>
         </div>
         
         <div ngbDropdownMenu aria-labelledby="dropdownBasic2"  *ngIf="terapia.personal">
