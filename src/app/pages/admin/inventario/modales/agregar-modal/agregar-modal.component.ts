@@ -54,7 +54,7 @@ export class AgregarModalComponent {
       this.inventarioService.getById(id).subscribe({
         next: (inventario) => {
           this.inventarioForm.patchValue({
-            costo_stock: inventario.data.costo_stock,
+            costo_stock: '',
             stock: ''
           });
         },
@@ -83,7 +83,7 @@ export class AgregarModalComponent {
     }
 
     const formData = {
-      id: this.inventarioId.toString(), 
+      id: this.inventarioId.toString(),
       stock: this.inventarioForm.get('stock')?.value,
       costo_stock: this.inventarioForm.get('costo_stock')?.value,
     };

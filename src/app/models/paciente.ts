@@ -3,7 +3,6 @@ export interface IPaciente {
     id: number;
     dni: string;
     nombre: string;
-    // apellidos: string;
     fecha_nacimiento: Date;
     direccion: string;
     genero: string;

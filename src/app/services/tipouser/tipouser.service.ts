@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { IUser } from 'src/app/models/user';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
@@ -11,6 +12,10 @@ export class TipouserService {
 
   getAll() {
     return this.http.get<{ data: any }>(`${this.apiUrl}/tipo-user/list`);
+  }
+
+  getPacientes() {
+    return this.http.get<{ data: IUser[] }>(`${this.apiUrl}/usuario/list/paciente`);
   }
 
   getById(id: string) {

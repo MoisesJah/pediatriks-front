@@ -16,7 +16,7 @@ import {
 } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { LoadingService } from 'src/app/services/loading.service';
-import { InventarioService } from 'src/app/services/inventario/inventario.service'; 
+import { InventarioService } from 'src/app/services/inventario/inventario.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { CommonModule } from '@angular/common';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
@@ -69,30 +69,23 @@ export class EditarModalComponent implements OnInit {
     if (this.inventarioForm.valid) {
       const formData = new FormData();
 
-      Object.keys(this.inventarioForm.value).forEach((key) => {
-        const control = this.inventarioForm.get(key);
-        if (Array.isArray(control?.value)) {
-          formData.append(key, JSON.stringify(control?.value));
-        } else {
-          formData.append(key, control?.value);
-        }
-      });
+      formData.append('nombre', this.inventarioForm.get('nombre')?.value);
+      formData.append('descripcion', this.inventarioForm.get('descripcion')?.value);
 
-      const fileInputElement = this.fileInput?.nativeElement as HTMLInputElement;
-      if (fileInputElement?.files?.length) {
-        formData.append('banner_url', fileInputElement.files[0]);
-      }
+      console.log('Datos que se envían:', this.inventarioForm.value);
 
       const id = typeof this.inventarioId === 'string' ? this.inventarioId : this.inventarioId.id;
 
       if (id) {
         this.inventarioService.update(id, formData).subscribe({
           next: () => {
+            console.log('Actualización exitosa');
             this.onSaveComplete.emit();
             this.modal.dismissAll();
           },
           error: (err: HttpErrorResponse) => {
             console.error('Error al actualizar inventario:', err.message);
+            alert('No se pudo actualizar el inventario. Intenta nuevamente.');
           },
         });
       } else {
@@ -121,8 +114,5 @@ export class EditarModalComponent implements OnInit {
     }
   }
 
-  evtSelectFile(event: Event): void {
-    const files = (event.target as HTMLInputElement).files;
-    this.inventarioForm.get('banner_url')?.setValue(files?.item(0));
-  }
+
 }

@@ -1,12 +1,15 @@
 import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
-import { ReactiveFormsModule,FormsModule } from '@angular/forms';
+import { Observable, of, Subscription } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { LoadingService } from 'src/app/services/loading.service';
+import { UserService } from './../../../../../services/user/user.service';
 import { PaqueteService } from 'src/app/services/paquetes/paquete.service';
 import { PacienteService } from 'src/app/services/paciente/paciente.service';
-import { map, Observable, Subscription } from 'rxjs';
 import { IPaciente } from 'src/app/models/paciente';
+import { IUser } from './../../../../../models/user';
+import { LoadingService } from 'src/app/services/loading.service';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { NgSelectModule } from '@ng-select/ng-select';
 
@@ -16,54 +19,65 @@ import { NgSelectModule } from '@ng-select/ng-select';
   templateUrl: './comprar-modal.component.html',
   styleUrls: ['./comprar-modal.component.scss'],
   standalone: true,
-  imports: [ReactiveFormsModule,FormsModule, CommonModule,NgSelectModule]
+  imports: [ReactiveFormsModule, FormsModule, CommonModule, NgSelectModule]
 })
 export class ComprarModalComponent {
   modal = inject(NgbModal);
   paqueteService = inject(PaqueteService);
+  usuarioService = inject(UserService);
   pacienteService = inject(PacienteService);
-  isLoading$ = inject(LoadingService).isLoading; // Cambiado a observable
+  isLoading = inject(LoadingService).isLoading;
 
   @Input() paqueteId: string | { id_paquete: string } = '';
   @Output() onSaveComplete = new EventEmitter<void>();
 
+  usuariosList: Observable<IUser[]> = new Observable();
   pacientesList: Observable<IPaciente[]> = new Observable();
-  selectedPatient: string | null = null; // Variable para el paciente seleccionado
+  selectedUser: IUser | null = null;
+  selectedPaciente: IPaciente | null = null;
 
-  isLoading: boolean = false; // Variable para almacenar el estado de carga
-  subscription: Subscription;
 
   constructor() {
-    this.fetchPacientes(); // Cargar los pacientes al inicializar el componente
-
-    // Suscribirse a isLoading$
-    this.subscription = this.isLoading$.subscribe(loading => {
-      this.isLoading = loading;
-    });
+    this.fetchUsuarios();
   }
 
-  get isPurchaseDisabled(): boolean {
-    return this.isLoading || !this.selectedPatient;
-  }
-
-  private fetchPacientes() {
-    this.pacientesList = this.pacienteService.getAll().pipe(
+  private fetchUsuarios() {
+    this.usuariosList = this.usuarioService.getPacientes().pipe(
       untilDestroyed(this),
-      map((resp) => {
-        return resp.data || [];
+      map((resp) => resp.data || []),
+      catchError((error) => {
+        console.error('Error al buscar usuarios:', error);
+        return of([]);
+      })
+    );
+  }
+
+  onUserSelect(user: IUser) {
+    this.selectedUser = user;
+    this.loadPacientesByUser(user.id);
+  }
+
+  private loadPacientesByUser(userId: number) {
+    this.pacientesList = this.pacienteService.getAll().pipe(
+      map((resp) => resp.data.filter(paciente => paciente.id === userId)),
+      catchError((error) => {
+        console.error('Error al cargar pacientes:', error);
+        return of([]);
       })
     );
   }
 
   close() {
     this.modal.dismissAll();
-    this.subscription.unsubscribe(); // Desuscribirse al cerrar
   }
 
   purchase() {
     const id = typeof this.paqueteId === 'string' ? this.paqueteId : this.paqueteId.id_paquete;
-    if (id && this.selectedPatient) {
-      this.paqueteService.purchase(id, this.selectedPatient).subscribe({
+    if (id && this.selectedUser && this.selectedPaciente) {
+
+      const pacienteId = this.selectedPaciente.id_paciente;
+
+      this.paqueteService.purchase(id, pacienteId).subscribe({
         next: () => {
           this.onSaveComplete.emit();
           this.modal.dismissAll();
@@ -73,7 +87,7 @@ export class ComprarModalComponent {
         }
       });
     } else {
-      console.error('ID del paquete o paciente no proporcionados');
+      console.error('ID del usuario o paciente no proporcionados');
     }
   }
 }

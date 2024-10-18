@@ -21,33 +21,58 @@
 
 <div class="modal-body text-center">
   <p>¿Estás seguro de comprar este Paquete?</p>
-  <p>Selecciona el paciente que desees para continuar con la compra.</p>
+  <p>Selecciona el usuario y luego el paciente que desees para continuar con la compra.</p>
 
+
+    <div class="col-mb-4 mb-3">
   <ng-select
-    [(ngModel)]="selectedPatient"
-    [items]="(pacientesList | async)"
-    bindLabel="nombre"
-    bindValue="id_paciente"
-    placeholder="Selecciona un paciente"
-    [disabled]="(pacientesList | async)?.length === 0">
+    [(ngModel)]="selectedUser"
+    [items]="usuariosList | async"
+    [loading]="isLoading | async"
+    [loadingText]="'Cargando..'"
+    [notFoundText]="'Sin resultados'"
+    bindLabel="name"
+    bindValue="id"
+    placeholder="Selecciona un usuario"
+    (change)="onUserSelect($event)"
+  >
   </ng-select>
 
-  <div *ngIf="(pacientesList | async)?.length === 0" class="mt-3 text-danger">
-    No hay pacientes disponibles para seleccionar.
+  <div *ngIf="(usuariosList | async)?.length === 0" class="mt-3 text-danger">
+    No hay usuarios disponibles para seleccionar.
   </div>
 </div>
+<div class="col-mb-4 mb-3">
+  <ng-select
+    [(ngModel)]="selectedPaciente"
+    [items]="pacientesList | async"
+    [loading]="isLoading | async"
+    [loadingText]="'Cargando..'"
+    [notFoundText]="'Sin resultados'"
+    bindLabel="nombre"
+    bindValue="id"
+    placeholder="Selecciona un paciente"
+    [disabled]="!selectedUser"
+  >
+  </ng-select>
+</div>
+</div>
+  <div *ngIf="(pacientesList | async)?.length === 0 && selectedUser" class="mt-3 text-danger">
+    No hay pacientes disponibles para este usuario.
+  </div>
+
 
 <div class="modal-footer">
   <button type="button" class="btn btn-secondary" (click)="close()">
     Cancelar
   </button>
   <button
-    [disabled]="(isLoading$ | async) || !selectedPatient"
+    [disabled]="(isLoading | async) || !selectedUser || !selectedPaciente"
     type="button"
     class="btn btn-primary"
     (click)="purchase()"
   >
     Comprar
-    <span *ngIf="isLoading$ | async" class="spinner-border spinner-border-sm align-middle ms-2"></span>
+    <span *ngIf="isLoading | async" class="spinner-border spinner-border-sm align-middle ms-2"></span>
   </button>
 </div>
