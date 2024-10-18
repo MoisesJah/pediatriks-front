@@ -1,18 +1,22 @@
-<div ngbAccordion>
+<div ngbAccordion style="min-width: 250px" class="d-flex flex-column gap-3 p-2">
     selected {{ selectedValues | json }}
     <ng-container *ngFor="let group of items">
-        <div ngbAccordionItem>
-            <input type="checkbox" [indeterminate]="isGroupIndeterminate(group)" [checked]="isGroupChecked(group)"
-                (change)="checkGroup($event.target.checked, group)">
-            <a ngbAccordionTitle>{{ group.nombre }} </a>
+        <div ngbAccordionItem class="form-check form-check-sm d-flex flex-wrap align-items-center justify-content-between"
+            *ngIf="group.personal">
+            <div ngbAccordionHeader>
+                <input class="form-check-input" type="checkbox" [indeterminate]="isGroupIndeterminate(group)"
+                    [checked]="isGroupChecked(group)" (change)="checkGroup($event.target.checked, group)">
+                <label ngbAccordionTitle>{{ group.nombre }} </label>
+            </div>
             <span ngbAccordionToggle role="button">
                 <i class="fas fa-chevron-down"></i>
             </span>
             <div ngbAccordionCollapse>
                 <ng-container *ngFor="let item of group.personal">
-                    <div ngbAccordionBody>
-                        <input type="checkbox" [checked]="item.checked" (change)="updateSelectedItem(item)" >
-                        {{ item.nombre }}
+                    <div ngbAccordionBody class="form-check py-3 form-check-sm">
+                        <input class="form-check-input" type="checkbox" [checked]="item.checked"
+                            (change)="updateSelectedItem(item)">
+                        <label class="form-check-label">{{ item.nombre }}</label>
                     </div>
                 </ng-container>
             </div>
