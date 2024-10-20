@@ -1,7 +1,7 @@
 <app-header>
   <ng-container header-title>
     <h1 class="d-flex flex-column text-gray-900 fw-bold my-1">
-      <span class="" style="color: white">Paquetes</span>
+      <span style="color: white">Paquetes</span>
     </h1>
   </ng-container>
 </app-header>
@@ -11,8 +11,7 @@
     <div class="d-flex py-4 justify-content-between align-items-center">
       <form data-kt-search-element="form" class="position-relative" autocomplete="off">
         <input type="hidden">
-        <i class="ki-duotone ki-magnifier fs-2 search-icon position-absolute top-50 translate-middle-y ms-4"><span
-          class="path1"></span><span class="path2"></span></i>
+        <i class="ki-duotone ki-magnifier fs-2 search-icon position-absolute top-50 translate-middle-y ms-4"></i>
         <input type="search" (input)="onFilterTextBoxChanged()" id="paquete-search"
           class="form-control custom-form-control ps-13" name="search" placeholder="Búsqueda"
           data-kt-search-element="input">
@@ -33,13 +32,25 @@
       </div>
     </div>
 
-    <div class="row">
+
+    <div *ngIf="isLoading | async" class="loading-container d-flex justify-content-center align-items-center">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Cargando...</span>
+      </div>
+    </div>
+
+
+    <div *ngIf="!(isLoading | async) && !(paquetesList | async)?.length" class="text-center">
+      <p>No se encontraron paquetes.</p>
+    </div>
+
+
+    <div class="row justify-content-center" *ngIf="(paquetesList | async)?.length > 0">
       <div class="col-md-4" *ngFor="let paquete of paquetesList | async">
         <div class="card mb-4" style="width: 18rem; padding: 5px;">
 
-          <!-- Contenedor de botones e imagen -->
-          <div class="position-relative" style="padding-top: 40px;"> <!-- Espacio para los botones arriba de la imagen -->
-            <!-- Botones de acción -->
+          <div class="position-relative" style="padding-top: 40px;">
+
             <div class="action-buttons" style="position: absolute; top: 0; right: 10px; z-index: 1;">
               <button type="button" (click)="openEditarModal(paquete)" class="btn btn-icon btn-sm bg-success" style="margin-right: 5px;">
                 <span class="ki-solid ki-pencil text-white"></span>
@@ -49,13 +60,13 @@
               </button>
             </div>
 
-            <!-- Contenedor de la imagen con sombra y borde -->
+
             <div class="image-container" style="box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); border-radius: 8px; overflow: hidden;">
               <img src="{{ paquete.banner_url }}" class="card-img-top" alt="{{ paquete.nombre }}" style="width: 100%; height: auto;">
             </div>
           </div>
 
-          <!-- Información del paquete -->
+
           <div class="card-body">
             <h5 class="card-title">{{ paquete.nombre }}</h5>
             <p class="card-text"><strong>Terapias:</strong> {{ getTerapiasNombres(paquete.terapias) }}</p>
@@ -71,9 +82,3 @@
     </div>
   </div>
 </div>
-
-
-
-
-
-

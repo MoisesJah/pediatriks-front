@@ -32,8 +32,12 @@ export class PaqueteService {
     return this.http.delete<void>(`${this.apiUrl}/delete/${id}`);
   }
 
-  purchase(paqueteId: string, pacienteId: string): Observable<any> {
-    const body = { paqueteId, pacienteId };
+  purchase( pacienteId: string, usuarioId: string): Observable<any> {
+    const body = {
+        pacienteId,
+        usuarioId
+    };
     return this.http.post(`${this.apiUrl}/purchase`, body);
-  }
+}
+
 }
