@@ -112,13 +112,16 @@ export class PaquetesComponent implements OnInit, OnDestroy {
   }
 
   openComprarModal(paquete: Paquete) {
+
+    console.log('Paquete seleccionado:', paquete);
+
     const modalRef = this.modal.open(ComprarModalComponent, {
       size: '300px',
       animation: true,
       centered: true,
     });
 
-    modalRef.componentInstance.paquete = paquete;
+    modalRef.componentInstance.paqueteId = paquete.id_paquetes;
   }
 
   ngOnDestroy(): void {

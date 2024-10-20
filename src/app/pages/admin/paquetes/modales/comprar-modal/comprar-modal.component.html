@@ -25,22 +25,21 @@
 
 
     <div class="col-mb-4 mb-3">
-  <ng-select
-    [(ngModel)]="selectedUser"
-    [items]="usuariosList | async"
-    [loading]="isLoading | async"
-    [loadingText]="'Cargando..'"
-    [notFoundText]="'Sin resultados'"
-    bindLabel="name"
-    bindValue="id"
-    placeholder="Selecciona un usuario"
-    (change)="onUserSelect($event)"
-  >
-  </ng-select>
+      <ng-select
+      [(ngModel)]="selectedUser"
+      [items]="usuariosList | async"
+      [loading]="isLoading | async"
+      [loadingText]="'Cargando..'"
+      [notFoundText]="'Sin resultados'"
+      bindLabel="name"
+      bindValue="id"
+      placeholder="Selecciona un usuario"
+      (change)="onUserSelect($event)"
+      [compareWith]="compareUsers"
+    >
+    </ng-select>
 
-  <div *ngIf="(usuariosList | async)?.length === 0" class="mt-3 text-danger">
-    No hay usuarios disponibles para seleccionar.
-  </div>
+
 </div>
 <div class="col-mb-4 mb-3">
   <ng-select
@@ -57,9 +56,6 @@
   </ng-select>
 </div>
 </div>
-  <div *ngIf="(pacientesList | async)?.length === 0 && selectedUser" class="mt-3 text-danger">
-    No hay pacientes disponibles para este usuario.
-  </div>
 
 
 <div class="modal-footer">
