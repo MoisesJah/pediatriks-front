@@ -24,6 +24,7 @@ import { SedesService } from 'src/app/services/sedes/sedes.service';
 import { FlatpickrDefaultsInterface } from 'angularx-flatpickr';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { generateColorPalette } from 'src/app/utils/colorPalette';
+import { ToastrService } from 'ngx-toastr';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -33,6 +34,7 @@ import { generateColorPalette } from 'src/app/utils/colorPalette';
 })
 export class EditarModalComponent implements OnInit, AfterViewInit {
   modal = inject(NgbModal);
+  toast = inject(ToastrService)
   personalService = inject(PersonalService);
   tipoPersonalService = inject(TipoPersonalService);
   terapiaService = inject(TerapiaService);
@@ -173,7 +175,15 @@ export class EditarModalComponent implements OnInit, AfterViewInit {
           this.modal.dismissAll();
         },
         error: (err: HttpErrorResponse) => {
-          console.error('Error al actualizar personal:', err.message);
+          if (err.error.errors) {
+            const errors = Object.values(err.error.errors).join('\n');
+            this.toast.error(errors, 'Error');
+          } else {
+            this.toast.error(
+              'Ocurrió un error al crear el personal',
+              'Error'
+            );
+          }
         },
       });
     }
@@ -200,7 +210,7 @@ export class EditarModalComponent implements OnInit, AfterViewInit {
           }
         },
         error: (err: HttpErrorResponse) => {
-          console.error('Error al cargar datos del personal:', err.message);
+          this.toast.error('Ocurrió un error.','Error')
         },
       });
     }

@@ -36,6 +36,7 @@ import { FlatPickrOutputOptions } from 'angularx-flatpickr/lib/flatpickr.directi
 import { SesionstatusService } from 'src/app/services/status/sesionstatus.service';
 import { CitaService } from 'src/app/services/citas/cita.service';
 import { Cita } from 'src/app/models/cita';
+import { ToastrService } from 'ngx-toastr';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -48,6 +49,7 @@ export class ModalEditComponent implements OnInit, AfterViewInit {
 
   personalService = inject(PersonalService);
   citaService = inject(CitaService);
+  toast = inject(ToastrService)
   statusService = inject(SesionstatusService);
   isLoading = inject(LoadingService).isLoading;
 
@@ -137,7 +139,7 @@ export class ModalEditComponent implements OnInit, AfterViewInit {
       .getByTerapia(this.event?.terapia.id_terapia!)
       .subscribe((resp) => {
         this.personalList = of(resp.data);
-        console.log(resp.data);
+        // console.log(resp.data);
       });
   }
 
@@ -176,9 +178,22 @@ export class ModalEditComponent implements OnInit, AfterViewInit {
         id_cita: this.event?.id_cita!,
         id_sesion: this.event?.sesion.id_sesion!,
       })
-      .subscribe((resp) => {
-        this.eventUpdated.emit();
-        this.closeModal();
+      .subscribe({
+        next: () => {
+          this.eventUpdated.emit();
+          this.closeModal();
+        },
+        error: (err) => {
+          if (err.error.errors) {
+            const errors = Object.values(err.error.errors).join('');
+            this.toast.error(errors, 'Error');
+          } else {
+            this.toast.error(
+              'Ocurrió un error al crear la cita',
+              'Error'
+            );
+          }
+        },
       });
   }
 }

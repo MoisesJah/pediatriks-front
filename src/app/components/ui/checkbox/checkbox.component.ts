@@ -26,6 +26,11 @@ export class CheckboxComponent implements OnInit {
     this.items.forEach(item => item.checked = checked);
   }
 
+  uncheckAll() {
+    this.items.forEach(item => item.personal.forEach((person: any) => person.checked = false));
+    this.selected.emit(this.selectedValues);
+  }
+
   updateSelectedItem(item: any) {
     item.checked = !item.checked;
     this.selected.emit(this.selectedValues);

@@ -1,5 +1,8 @@
 <div ngbAccordion style="min-width: 250px" class="d-flex flex-column gap-3 p-2">
-    <span class="fw-bold px-2">Filtrar</span>
+    <div class="d-flex justify-content-between">
+        <span class="fw-bold px-2 fs-5">Filtrar</span>
+        <button type="button" *ngIf="selectedValues.length" (click)="uncheckAll()" class="btn btn-sm btn-danger">Limpiar <i class="fas fa-times"></i></button>
+    </div>
     <ng-container *ngFor="let group of items">
         <div ngbAccordionItem class="form-check form-check-sm d-flex flex-wrap align-items-center justify-content-between"
             *ngIf="group.personal">

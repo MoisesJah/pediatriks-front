@@ -1,18 +1,17 @@
 import {
   AfterViewInit,
   Component,
-  ElementRef,
   EventEmitter,
   inject,
   OnInit,
   Output,
-  ViewChild,
 } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { FlatpickrDefaultsInterface } from 'angularx-flatpickr';
 import Spanish from 'flatpickr/dist/l10n/es.js';
+import { ToastrService } from 'ngx-toastr';
 import { finalize, map, Observable, Subject } from 'rxjs';
 import { HorarioPersonal } from 'src/app/models/horariop';
 import { Terapia } from 'src/app/models/terapia';
@@ -34,6 +33,7 @@ import { generateColorPalette } from 'src/app/utils/colorPalette';
 })
 export class CrearModalComponent implements OnInit, AfterViewInit {
   modal = inject(NgbModal);
+  toast = inject(ToastrService);
   isLoading = inject(LoadingService).isLoading;
   personalService = inject(PersonalService);
   tipoPersonalService = inject(TipoPersonalService);
@@ -122,7 +122,7 @@ export class CrearModalComponent implements OnInit, AfterViewInit {
   }
 
   get colorPalette() {
-    return this.colorTerapia ? generateColorPalette(this.colorTerapia,15) : [];
+    return this.colorTerapia ? generateColorPalette(this.colorTerapia, 15) : [];
   }
 
   addHorario() {
@@ -168,7 +168,15 @@ export class CrearModalComponent implements OnInit, AfterViewInit {
             this.modal.dismissAll();
           },
           error: (err) => {
-            console.error('Error al guardar personal:', err);
+            if (err.error.errors) {
+              const errors = Object.values(err.error.errors).join('\n');
+              this.toast.error(errors, 'Error');
+            } else {
+              this.toast.error(
+                'Ocurrió un error al crear el personal',
+                'Error'
+              );
+            }
           },
         });
     }

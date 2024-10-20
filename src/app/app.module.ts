@@ -25,6 +25,7 @@ import localeEs from '@angular/common/locales/es';
 import { IMAGE_CONFIG, registerLocaleData } from '@angular/common';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { PaquetesComponent } from './pages/paquetes/paquetes.component';
+import { ToastrModule } from 'ngx-toastr';
 
 registerLocaleData(localeEs);
 @NgModule({
@@ -38,6 +39,13 @@ registerLocaleData(localeEs);
     ReactiveFormsModule,
     NgbModule,
     FlatpickrModule.forRoot(),
+    ToastrModule.forRoot({
+      // toastClass:'toastr toastr-container',
+      // positionClass:'toastr-top-right',
+      // titleClass:'toastr-title',
+      // messageClass:'toastr-message',
+      // progressBar:true
+    }), // ToastrModule added
     ModalEventModule,
     UserModalsModule,
     ModalEditModule,

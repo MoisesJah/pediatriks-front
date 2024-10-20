@@ -3,6 +3,9 @@
 @import "ag-grid-community/styles/ag-grid.css";
 /* Quartz Theme Specific CSS */
 @import "ag-grid-community/styles/ag-theme-quartz.css";
+@import 'ngx-toastr/toastr';
+
+// @import 'ngx-toastr/toastr-bs5-alert';
 
 :root {
   --select2-single-height: fit-content;

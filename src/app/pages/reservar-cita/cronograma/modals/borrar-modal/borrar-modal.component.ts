@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, inject, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ToastrService } from 'ngx-toastr';
 import { finalize } from 'rxjs';
 import { Cita } from 'src/app/models/cita';
 import { CitaService } from 'src/app/services/citas/cita.service';
@@ -17,6 +18,7 @@ import { LoadingService } from 'src/app/services/loading.service';
 export class BorrarModalComponent {
   event: Cita | null = null;
   activeModal = inject(NgbActiveModal);
+  toast = inject(ToastrService);
   citasService = inject(CitaService);
   isLoading = false;
   modal = inject(NgbModal);
@@ -43,8 +45,15 @@ export class BorrarModalComponent {
           ...this.deleteForm.value,
         })
         .pipe(finalize(() => (this.isLoading = false)))
-        .subscribe(() => {
-          this.eventDeleted.emit();
+        .subscribe({
+          next: () => {
+            this.eventDeleted.emit();
+            this.closeModal();
+          },
+          error: (err) => {
+            this.toast.error('Ocurrió un error', 'Error');
+          },
         });
     }
-  }}
+  }
+}
