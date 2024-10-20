@@ -29,7 +29,7 @@ import { CalendarEvent } from 'src/app/models/calendar-event';
 import { Cronogramas } from 'src/app/fake/cronograma';
 import { Cronograma } from 'src/app/models/cronograma';
 import { ActivatedRoute, Params } from '@angular/router';
-import { map, Observable, Subscription } from 'rxjs';
+import { map, Observable, shareReplay, Subscription, takeLast } from 'rxjs';
 import { ModalViewEventComponent } from './modal-event/modal-view-event/modal-view-event.component';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Cita } from 'src/app/models/cita';
@@ -82,7 +82,6 @@ export class ReservarCitaComponent implements OnInit, OnDestroy,AfterViewInit {
       right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek',
     },
     allDaySlot: false,
-    // eventColor: '#ffe082',
     expandRows:true,
     // eventTextColor: 'black',
     // slotDuration: '00:45:00',
@@ -155,6 +154,7 @@ export class ReservarCitaComponent implements OnInit, OnDestroy,AfterViewInit {
 
   loadCitas(body: any) {
     this.citasEvent = this.citasService.getAll(body).pipe(
+      takeLast(1),
       map((resp) => resp.data),
       untilDestroyed(this)
     );

@@ -27,6 +27,7 @@ import { PersonalService } from 'src/app/services/personal/personal.service';
 import { TerapiaService } from 'src/app/services/terapia/terapia.service';
 import { TipocitaService } from 'src/app/services/tipocita/tipocita.service';
 import { CurrentPersonal } from '../especialista.component';
+import { ToastrService } from 'ngx-toastr';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -44,6 +45,7 @@ export class CreateModalComponent implements OnInit {
   paquetesService = inject(PaqueteService);
   isLoading = inject(LoadingService).isLoading;
   citaService = inject(CitaService);
+  toast = inject(ToastrService)
 
   @Output() onSaveComplete = new EventEmitter();
 
@@ -172,9 +174,22 @@ export class CreateModalComponent implements OnInit {
       id_sede: this.personal?.sede.id_sede,
       id_terapia: this.personal?.terapia.id_terapia,
       id_personal: this.personal?.id_personal,
-    }).subscribe((resp) => {
-      this.onSaveComplete.emit();
-      this.modal.dismissAll();
+    }).subscribe({
+      next: () => {
+        this.onSaveComplete.emit();
+        this.closeModal();
+      },
+      error: (err) => {
+        if (err.error.errors) {
+          const errors = Object.values(err.error.errors).join('\n');
+          this.toast.error(errors, 'Error');
+        } else {
+          this.toast.error(
+            'Ocurrió un error al crear la cita',
+            'Error'
+          );
+        }
+      },
     });
   }
 }

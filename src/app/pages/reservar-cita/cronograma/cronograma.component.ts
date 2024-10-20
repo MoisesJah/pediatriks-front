@@ -84,12 +84,6 @@ export class CronogramaComponent implements OnInit {
     };
   }
 
-   get isSelectable() {
-    // console.log(new Date() > new Date(this.bodyParams.startWeek));
-    // console.log(new Date(), this.bodyParams);
-    return new Date() > new Date(this.bodyParams.startWeek);
-  }
-
   constructor(
     private route: ActivatedRoute,
     private changeDetector: ChangeDetectorRef
@@ -158,7 +152,6 @@ export class CronogramaComponent implements OnInit {
       .subscribe((e) => {
         this.loadCurrentTerapia(), this.loadCitas(this.bodyParams);
       });
-      this.isSelectable
   }
 
   handleDateSelect(selectInfo: DateSelectArg) {

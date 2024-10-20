@@ -45,6 +45,7 @@ import { SedesService } from 'src/app/services/sedes/sedes.service';
 import { TerapiaService } from 'src/app/services/terapia/terapia.service';
 import { TipocitaService } from 'src/app/services/tipocita/tipocita.service';
 import Spanish from 'flatpickr/dist/l10n/es.js';
+import { ToastrService } from 'ngx-toastr';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -62,6 +63,7 @@ import Spanish from 'flatpickr/dist/l10n/es.js';
 })
 export class CrearModalComponent implements OnInit, AfterViewInit {
   modal = inject(NgbModal);
+  toast = inject(ToastrService);
   sedesService = inject(SedesService);
   personalService = inject(PersonalService);
   pacienteService = inject(PacienteService);
@@ -209,7 +211,6 @@ export class CrearModalComponent implements OnInit, AfterViewInit {
     this.loadPacientes();
     this.loadTipoCitas();
     this.loadPaquetes();
-
   }
 
   ngAfterViewInit(): void {
@@ -287,9 +288,22 @@ export class CrearModalComponent implements OnInit, AfterViewInit {
           ...this.createForm.value,
           id_terapia: this.terapia.id_terapia,
         })
-        .subscribe((resp) => {
-          this.eventSubmitted.emit(resp.data);
-          this.modal.dismissAll();
+        .subscribe({
+          next: () => {
+            this.eventSubmitted.emit();
+            this.closeModal();
+          },
+          error: (err) => {
+            if (err.error.errors) {
+              const errors = Object.values(err.error.errors).join('\n');
+              this.toast.error(errors, 'Error');
+            } else {
+              this.toast.error(
+                'Ocurrió un error al crear la cita',
+                'Error'
+              );
+            }
+          },
         });
     }
   }

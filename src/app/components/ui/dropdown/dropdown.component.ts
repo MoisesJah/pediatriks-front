@@ -49,6 +49,12 @@ export class DropdownComponent implements OnInit {
     return this.router.url === '/admin/reservar-cita';
   }
 
+  displayFilters(terapia: any) {
+    let isCronograma = terapia.nombre === 'Cronograma General';
+    const isCronogramaSelected = this.router.url !== '/admin/reservar-cita' && isCronograma;
+    return isCronogramaSelected;
+  }
+
   ngOnInit(): void {
     this.terapiasList = this.terapiasService.getAllPersonal().pipe(
       map((resp: any) => [
