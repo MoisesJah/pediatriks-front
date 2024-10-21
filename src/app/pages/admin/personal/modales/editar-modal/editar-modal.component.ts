@@ -191,7 +191,7 @@ export class EditarModalComponent implements OnInit, AfterViewInit {
 
   private loadPersonalData() {
     if (this.personalId) {
-      this.personalService.getById(this.personalId).subscribe({
+      this.personalService.getById(this.personalId).pipe(untilDestroyed(this)).subscribe({
         next: (personal) => {
           this.editForm.patchValue(personal.data);
           this.colorTerapia = personal.data.terapia?.color;

@@ -48,7 +48,7 @@ export class EditModalComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.userService.getById(this.userId!).subscribe((user) => {
+    this.userService.getById(this.userId!).pipe(untilDestroyed(this)).subscribe((user) => {
       this.userForm.patchValue(user.data);
     })
     this.loadTipousers();

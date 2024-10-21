@@ -57,9 +57,12 @@ export class EditModalComponent implements AfterViewInit, OnDestroy, OnInit {
   }
 
   ngOnInit(): void {
-    this.pacienteService.getById(this.paciente?.id_paciente!).subscribe((paciente) => {
-      this.pacienteForm.patchValue(paciente.data);
-    })
+    this.pacienteService
+      .getById(this.paciente?.id_paciente!)
+      .pipe(untilDestroyed(this))
+      .subscribe((paciente) => {
+        this.pacienteForm.patchValue(paciente.data);
+      });
   }
 
   ngAfterViewInit(): void {

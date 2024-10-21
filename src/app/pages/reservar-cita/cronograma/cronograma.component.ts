@@ -116,9 +116,9 @@ export class CronogramaComponent implements OnInit {
       meridiem: 'narrow',
     },
     selectAllow: (selectInfo) => {
-      const now = new Date();
+      // const now = new Date();
       const isTimeGrid = this.calendar?.getApi()?.view.type == 'timeGridWeek';
-      const currentStartWeek = new Date(now.setDate(now.getDate() - now.getDay() + 1));
+      const currentStartWeek = new Date()
       currentStartWeek.setHours(0, 0, 0, 0);
       return selectInfo.start >= currentStartWeek && isTimeGrid;
     },

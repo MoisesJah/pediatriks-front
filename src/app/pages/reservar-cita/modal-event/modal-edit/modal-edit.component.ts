@@ -27,6 +27,7 @@ import {
   of,
   Subject,
   switchMap,
+  tap,
 } from 'rxjs';
 import { Personal } from 'src/app/models/personal';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
@@ -49,7 +50,7 @@ export class ModalEditComponent implements OnInit, AfterViewInit {
 
   personalService = inject(PersonalService);
   citaService = inject(CitaService);
-  toast = inject(ToastrService)
+  toast = inject(ToastrService);
   statusService = inject(SesionstatusService);
   isLoading = inject(LoadingService).isLoading;
 
@@ -70,7 +71,7 @@ export class ModalEditComponent implements OnInit, AfterViewInit {
       ? 3 - this.event.sesion.num_cambios
       : 3;
   }
-  
+
   canEditSession() {
     return !this.event || this.event.sesion.num_cambios < 3;
   }
@@ -90,12 +91,16 @@ export class ModalEditComponent implements OnInit, AfterViewInit {
   horaInicioOptions: FlatpickrDefaultsInterface = {
     enableTime: true,
     noCalendar: true,
+    minTime: '08:00',
+    maxTime: '20:00',
     dateFormat: 'H:i',
   };
 
   horaFinOptions: FlatpickrDefaultsInterface = {
     enableTime: true,
     noCalendar: true,
+    minTime: '08:00',
+    maxTime: '20:00',
     dateFormat: 'H:i',
   };
 
@@ -111,18 +116,36 @@ export class ModalEditComponent implements OnInit, AfterViewInit {
     });
   }
 
+  get minutesTerapia() {
+    return Number(this.event?.terapia.duracion.split(':')[1]);
+  }
+
   endTimeValidation() {
     const horaInicio = this.editEventForm.get('hora_inicio')?.value;
-    const horaFin = this.editEventForm.get('hora_fin')?.value;
-    if (horaFin < horaInicio) {
-      this.editEventForm.get('hora_fin')?.setValue(horaInicio);
+
+    if (horaInicio) {
+      const [hours, minutes] = horaInicio.split(':').map(Number);
+      const newMinutes = minutes + this.minutesTerapia;
+      const newHours = hours + Math.floor(newMinutes / 60);
+      const remainingMinutes = newMinutes % 60;
+
+      this.editEventForm
+        .get('hora_fin')
+        ?.setValue(
+          `${newHours.toString().padStart(2, '0')}:${remainingMinutes
+            .toString()
+            .padStart(2, '0')}`,
+          { emitEvent: false }
+        );
     }
   }
 
   ngOnInit() {
     this.loadPersonal();
     this.loadStatus();
-    this.loadCurrentSesion();
+    if (this.event) {
+      this.loadCurrentSesion();
+    }
   }
 
   ngAfterViewInit() {
@@ -130,13 +153,9 @@ export class ModalEditComponent implements OnInit, AfterViewInit {
   }
 
   loadPersonal() {
-    // this.personalList = this.personalService.getByTerapia(this.event?.terapia.id_terapia!).pipe(
-    //   map((resp) => resp.data),
-    //   untilDestroyed(this)
-    // )
-    // console.log(this.personalList);
     this.personalService
       .getByTerapia(this.event?.terapia.id_terapia!)
+      .pipe(untilDestroyed(this))
       .subscribe((resp) => {
         this.personalList = of(resp.data);
         // console.log(resp.data);
@@ -157,18 +176,22 @@ export class ModalEditComponent implements OnInit, AfterViewInit {
   loadCurrentSesion() {
     const id_cita = this.event?.id_cita!;
     const id_sesion = this.event?.sesion.id_sesion!;
+    console.log(this.event);
 
-    this.citaService.getById(id_cita, id_sesion).subscribe((resp) => {
-      this.editEventForm.patchValue({
-        id_cita: resp.data.id_cita,
-        id_sesion: resp.data.sesion.id_sesion,
-        id_personal: resp.data.sesion.personal.id_personal,
-        id_status: resp.data.sesion.status.id_status,
-        fecha_inicio: resp.data.sesion.fecha_inicio,
-        hora_inicio: resp.data.sesion.hora_inicio,
-        hora_fin: resp.data.sesion.hora_fin,
+    this.citaService
+      .getById(id_cita, id_sesion)
+      .pipe(untilDestroyed(this))
+      .subscribe((resp) => {
+        this.editEventForm.patchValue({
+          id_cita: resp.data.id_cita,
+          id_sesion: resp.data.sesion.id_sesion,
+          id_personal: resp.data.sesion.personal.id_personal,
+          id_status: resp.data.sesion.status.id_status,
+          fecha_inicio: resp.data.sesion.fecha_inicio,
+          hora_inicio: resp.data.sesion.hora_inicio,
+          hora_fin: resp.data.sesion.hora_fin,
+        });
       });
-    });
   }
 
   updateEvent() {
@@ -188,10 +211,7 @@ export class ModalEditComponent implements OnInit, AfterViewInit {
             const errors = Object.values(err.error.errors).join('');
             this.toast.error(errors, 'Error');
           } else {
-            this.toast.error(
-              'Ocurrió un error al crear la cita',
-              'Error'
-            );
+            this.toast.error('Ocurrió un error al crear la cita', 'Error');
           }
         },
       });

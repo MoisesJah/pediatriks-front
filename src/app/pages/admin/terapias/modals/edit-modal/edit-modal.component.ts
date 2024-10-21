@@ -1,11 +1,13 @@
 import { Component, EventEmitter, inject, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { FlatpickrDefaultsInterface } from 'angularx-flatpickr';
 import { Terapia } from 'src/app/models/terapia';
 import { LoadingService } from 'src/app/services/loading.service';
 import { TerapiaService } from 'src/app/services/terapia/terapia.service';
 
+@UntilDestroy()
 @Component({
   selector: 'app-edit-modal',
   templateUrl: './edit-modal.component.html',
@@ -43,7 +45,7 @@ export class EditModalComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.terapiaService.getById(this.terapiaId!).subscribe((terapia) => {
+    this.terapiaService.getById(this.terapiaId!).pipe(untilDestroyed(this)).subscribe((terapia) => {
       this.terapiaForm.patchValue(terapia.data);
     });
   }
