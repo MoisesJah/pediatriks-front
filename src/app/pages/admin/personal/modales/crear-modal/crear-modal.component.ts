@@ -146,7 +146,8 @@ export class CrearModalComponent implements OnInit, AfterViewInit {
       for (let i = 0; i < horarios.length; i++) {
         const horario = horarios[i];
         const horaInicio = horario.hora_inicio;
-        if (horaInicio) {
+        const horaFin = horario.hora_fin;
+        if (horaInicio > horaFin){
           const [hours, minutes] = horaInicio.split(':').map(Number);
           const newMinutes = minutes + 60;
           const newHours = hours + Math.floor(newMinutes / 60);

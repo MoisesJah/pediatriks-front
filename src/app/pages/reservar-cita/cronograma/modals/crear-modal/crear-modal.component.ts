@@ -78,6 +78,7 @@ export class CrearModalComponent implements OnInit, AfterViewInit {
 
   id_terapia!: string;
   terapia!: Terapia;
+  maxSesiones = 0;
   es = Spanish.es;
   isRecurrente = false;
   isCitaPaquete = false;
@@ -158,8 +159,12 @@ export class CrearModalComponent implements OnInit, AfterViewInit {
   }
 
   changePaquete(event: any) {
+    const paquetesControl = this.createForm.get('paquete') as FormControl;
     const sesionesControl = this.createForm.get('num_sesiones') as FormControl;
-    sesionesControl.setValue(event?.cantidadsesiones);
+    this.maxSesiones = event?.cantidadsesiones;
+    if (paquetesControl.value) {
+        sesionesControl.setValidators(Validators.required);   
+    }
   }
 
   toggleOption(option: { label: string; value: number }) {
@@ -204,6 +209,12 @@ export class CrearModalComponent implements OnInit, AfterViewInit {
   changeTipoCita(event: any) {
     this.isRecurrente = event && event?.recurrente;
     this.isCitaPaquete = event && event?.nombre === 'Paquete';
+
+    if (this.isCitaPaquete) {
+      this.createForm.get('id_paquete')?.setValidators(Validators.required);
+    } else {
+      this.createForm.get('id_paquete')?.clearValidators();
+    }
   }
 
   ngOnInit(): void {
