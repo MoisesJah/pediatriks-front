@@ -103,7 +103,7 @@ export class CronogramaComponent implements OnInit {
       center: 'title',
       right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek',
     },
-    eventMaxStack: 1,
+    // eventMaxStack: 1,
     initialView: 'timeGridWeek',
     allDaySlot: false,
     expandRows: true,

@@ -159,7 +159,7 @@ export class CrearModalComponent implements OnInit, AfterViewInit {
   }
 
   changePaquete(event: any) {
-    const paquetesControl = this.createForm.get('paquete') as FormControl;
+    const paquetesControl = this.createForm.get('id_paquete') as FormControl;
     const sesionesControl = this.createForm.get('num_sesiones') as FormControl;
     this.maxSesiones = event?.cantidadsesiones;
     if (paquetesControl.value) {

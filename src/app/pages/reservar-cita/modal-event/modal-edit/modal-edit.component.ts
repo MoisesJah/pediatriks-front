@@ -8,6 +8,7 @@ import {
   ElementRef,
   AfterViewInit,
   inject,
+  viewChild,
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CalendarEvent } from 'src/app/models/calendar-event';
@@ -47,6 +48,7 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class ModalEditComponent implements OnInit, AfterViewInit {
   @Output() eventUpdated = new EventEmitter<CalendarEvent>();
+  @ViewChild('fechaInicio') fechaInicio!: ElementRef;
 
   personalService = inject(PersonalService);
   citaService = inject(CitaService);
@@ -119,10 +121,10 @@ export class ModalEditComponent implements OnInit, AfterViewInit {
     this.editEventForm = this.fb.group({
       descripcion: [null],
       id_personal: [null],
-      fecha_inicio: [null],
+      fecha_inicio: [null, Validators.required],
       hora_inicio: [null],
       hora_fin: [null],
-      id_status: [null],
+      id_status: [null, Validators.required],
       sesiones_restantes: [true],
     });
   }
@@ -169,14 +171,26 @@ export class ModalEditComponent implements OnInit, AfterViewInit {
           ),
           tap((horarios) => {
             this.horarios = horarios;
-            this.fechaOptions.disable = [
-              (date) => {
-                return !this.horarios.includes(date.getDay());
-              }
-            ];
+            this.initFlatpickr(horarios);
           })
         )
         .subscribe();
+    }
+  }
+
+  initFlatpickr(disabledDays: number[]) {
+    if (this.fechaInicio) {
+      flatpickr(this.fechaInicio.nativeElement,{
+        locale: { ...Spanish },
+        altInput: true,
+        altFormat: 'd/m/Y',
+        minDate: this.event?.sesion.fecha_inicio,
+        disable: [
+          (date) => {
+            return !disabledDays.includes(date.getDay());
+          }
+        ]
+      });
     }
   }
 
