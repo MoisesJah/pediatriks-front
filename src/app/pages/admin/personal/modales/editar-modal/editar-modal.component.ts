@@ -147,7 +147,6 @@ export class EditarModalComponent implements OnInit, AfterViewInit {
         const horaInicio = horario.hora_inicio;
         const horaFin = horario.hora_fin;
         if (horaInicio > horaFin) {
-          console.log(horaInicio, horaFin);
           const [hours, minutes] = horaInicio.split(':').map(Number);
           const newMinutes = minutes + 60;
           const newHours = hours + Math.floor(newMinutes / 60);

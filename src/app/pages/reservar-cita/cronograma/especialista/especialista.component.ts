@@ -87,10 +87,9 @@ export class EspecialistaComponent implements OnInit {
       center: 'title',
       right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek',
     },
+    eventMaxStack: 1,
     allDaySlot: false,
     expandRows: true,
-    // slotDuration: '00:45:00',
-    // slotDuration: this.currentPersonal?.terapia.duracion,
     slotLabelInterval: '00:05:00',
     slotMinTime: '08:00',
     slotMaxTime: '20:00:00',
@@ -115,9 +114,8 @@ export class EspecialistaComponent implements OnInit {
     select: (arg) => this.handleClick(arg),
     eventClick: this.handleEventClick.bind(this),
     selectAllow: (selectInfo) => {
-      const now = new Date();
       const isTimeGrid = this.calendar?.getApi()?.view.type == 'timeGridWeek';
-      const currentStartWeek = new Date(now.setDate(now.getDate() - now.getDay() + 1));
+      const currentStartWeek = new Date();
       currentStartWeek.setHours(0, 0, 0, 0);
       return selectInfo.start >= currentStartWeek && isTimeGrid;
     },
@@ -188,6 +186,7 @@ export class EspecialistaComponent implements OnInit {
     window.document.body.classList.add('modal-open');
 
     modalRef.componentInstance.eventId = event.id;
+    // modalRef.componentInstance.horarios = this.currentPersonal?.horarios;
     modalRef.componentInstance.citaId = event.extendedProps.id_cita;
     modalRef.componentInstance.eventUpdated.subscribe(() => {
       this.loadCitas(this.bodyParams);

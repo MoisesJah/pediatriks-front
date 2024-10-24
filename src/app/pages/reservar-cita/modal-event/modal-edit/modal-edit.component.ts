@@ -20,6 +20,7 @@ import {
   combineLatest,
   debounceTime,
   distinctUntilChanged,
+  distinctUntilKeyChanged,
   filter,
   finalize,
   map,
@@ -33,7 +34,6 @@ import { Personal } from 'src/app/models/personal';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { LoadingService } from 'src/app/services/loading.service';
 import { FlatpickrDefaultsInterface } from 'angularx-flatpickr';
-import { FlatPickrOutputOptions } from 'angularx-flatpickr/lib/flatpickr.directive';
 import { SesionstatusService } from 'src/app/services/status/sesionstatus.service';
 import { CitaService } from 'src/app/services/citas/cita.service';
 import { Cita } from 'src/app/models/cita';
@@ -56,6 +56,7 @@ export class ModalEditComponent implements OnInit, AfterViewInit {
 
   event: Cita | null = null;
   editEventForm: FormGroup;
+  horarios: number[] = [];
 
   personalList: Observable<Personal[]> = new Observable();
   statusList: Observable<any[]> = new Observable();
@@ -63,7 +64,17 @@ export class ModalEditComponent implements OnInit, AfterViewInit {
   fechaOptions: FlatpickrDefaultsInterface = {
     locale: { ...Spanish },
     altInput: true,
-    altFormat: 'd/m/Y',
+    altFormat: 'j/n/Y',
+    // disable: [
+    //   (date) => {
+    //     // if(this.horarios.length){
+    //     //   console.log(this.horarios)
+    //     //   return !this.horarios.includes(date.getDay());
+    //     // } 
+    //     // return false;
+    //     return this.horarios.length > 0 && !this.horarios.includes(date.getDay());
+    //   },
+    // ],
   };
 
   getCambiosRestantes() {
@@ -148,8 +159,36 @@ export class ModalEditComponent implements OnInit, AfterViewInit {
     }
   }
 
+  onChangePersonal(event: any) {
+    if (event.id_personal) {
+      this.personalService
+        .getById(event.id_personal)
+        .pipe(
+          map((resp) =>
+            [...new Set(resp.data.horarios.map((horario) => horario.dia_semana))]
+          ),
+          tap((horarios) => {
+            this.horarios = horarios;
+            this.fechaOptions.disable = [
+              (date) => {
+                return !this.horarios.includes(date.getDay());
+              }
+            ];
+          })
+        )
+        .subscribe();
+    }
+  }
+
   ngAfterViewInit() {
     this.editEventForm.valueChanges.subscribe(() => this.endTimeValidation());
+    this.editEventForm.valueChanges
+      .pipe(distinctUntilKeyChanged('id_personal'))
+      .subscribe((resp) => {
+        if (resp.id_personal) {
+          this.onChangePersonal(resp);
+        }
+      });
   }
 
   loadPersonal() {
@@ -176,7 +215,6 @@ export class ModalEditComponent implements OnInit, AfterViewInit {
   loadCurrentSesion() {
     const id_cita = this.event?.id_cita!;
     const id_sesion = this.event?.sesion.id_sesion!;
-    console.log(this.event);
 
     this.citaService
       .getById(id_cita, id_sesion)
@@ -195,25 +233,30 @@ export class ModalEditComponent implements OnInit, AfterViewInit {
   }
 
   updateEvent() {
-    this.citaService
-      .update(this.event?.id_cita!, {
-        ...this.editEventForm.value,
-        id_cita: this.event?.id_cita!,
-        id_sesion: this.event?.sesion.id_sesion!,
-      })
-      .subscribe({
-        next: () => {
-          this.eventUpdated.emit();
-          this.closeModal();
-        },
-        error: (err) => {
-          if (err.error.errors) {
-            const errors = Object.values(err.error.errors).join('');
-            this.toast.error(errors, 'Error');
-          } else {
-            this.toast.error('Ocurrió un error al crear la cita', 'Error');
-          }
-        },
-      });
+    if (this.editEventForm.valid) {
+      this.citaService
+        .update(this.event?.id_cita!, {
+          ...this.editEventForm.value,
+          id_cita: this.event?.id_cita!,
+          id_sesion: this.event?.sesion.id_sesion!,
+        })
+        .subscribe({
+          next: () => {
+            this.eventUpdated.emit();
+            this.closeModal();
+          },
+          error: (err) => {
+            if (err.error.errors) {
+              const errors = Object.values(err.error.errors).join('');
+              this.toast.error(errors, 'Error');
+            } else {
+              this.toast.error(
+                'Ocurrió un error al actualizar la cita',
+                'Error'
+              );
+            }
+          },
+        });
+    }
   }
 }
