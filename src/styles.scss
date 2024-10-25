@@ -3,6 +3,7 @@
 @import "ag-grid-community/styles/ag-grid.css";
 /* Quartz Theme Specific CSS */
 @import "ag-grid-community/styles/ag-theme-quartz.css";
+@import 'ngx-toastr/toastr';
 
 :root {
   --select2-single-height: fit-content;
@@ -21,6 +22,12 @@
 .ag-theme-quartz,
 .ag-theme-quartz-dark {
   --ag-font-family: Inter, sans-serif;
+}
+
+@media only screen and (max-width: 500px) {
+  .ag-label{
+    display: none !important;
+  }
 }
 
 ::-webkit-scrollbar {

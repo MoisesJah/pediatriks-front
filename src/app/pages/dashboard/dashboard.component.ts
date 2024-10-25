@@ -61,9 +61,7 @@ export class DashboardComponent implements OnInit {
       console.log('Usuario autenticado:', this.user);
       const userId = this.user.id.toString();
       this.loadCitasPaciente(userId);
-    } else {
-      console.error('No se ha encontrado un usuario autenticado');
-    }
+    } 
   }
 
   loadPacientes() {
@@ -76,7 +74,7 @@ export class DashboardComponent implements OnInit {
   loadCitasPaciente(idPaciente: string) {
     this.citasPaciente = this.citaService.getCitasByUser(idPaciente).pipe(
       map((resp: { data: Cita[] }) => {
-        console.log('Datos de citas recibidos:', resp.data); 
+        // console.log('Datos de citas recibidos:', resp.data); 
         return resp.data;
       }),
       untilDestroyed(this)

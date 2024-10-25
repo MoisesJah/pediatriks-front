@@ -46,10 +46,10 @@ import { DropdownComponent } from 'src/app/components/ui/dropdown/dropdown.compo
   templateUrl: './reservar-cita.component.html',
   styleUrls: ['./reservar-cita.component.scss'],
 })
-export class ReservarCitaComponent implements OnInit, OnDestroy,AfterViewInit {
+export class ReservarCitaComponent implements OnInit, OnDestroy, AfterViewInit {
   @ViewChild(FullCalendarComponent)
   fullCalendarComponent!: FullCalendarComponent;
-  @ViewChild('dropdown',{static:true,}) dropdown!: DropdownComponent;
+  @ViewChild('dropdown', { static: true }) dropdown!: DropdownComponent;
 
   citasService = inject(CitaService);
   terapiasService = inject(TerapiaService);
@@ -82,11 +82,9 @@ export class ReservarCitaComponent implements OnInit, OnDestroy,AfterViewInit {
       right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek',
     },
     allDaySlot: false,
-    expandRows:true,
-    // eventTextColor: 'black',
-    // slotDuration: '00:45:00',
+    expandRows: true,
+    eventMaxStack: 1,
     slotDuration: '00:45:00',
-    // slotLabelInterval: '00:45:00',
     slotMinTime: '08:00',
     slotMaxTime: '20:01:00',
     slotLabelFormat: {
@@ -98,7 +96,7 @@ export class ReservarCitaComponent implements OnInit, OnDestroy,AfterViewInit {
     eventTimeFormat: {
       hour: 'numeric',
       minute: '2-digit',
-      meridiem: 'short'
+      meridiem: 'short',
     },
     initialView: 'timeGridWeek',
     weekends: true,
@@ -124,8 +122,7 @@ export class ReservarCitaComponent implements OnInit, OnDestroy,AfterViewInit {
     private route: ActivatedRoute
   ) {}
 
-  ngOnInit() {
-  }
+  ngOnInit() {}
 
   ngAfterViewInit() {
     // this.loadFilteredCitas();
@@ -136,7 +133,7 @@ export class ReservarCitaComponent implements OnInit, OnDestroy,AfterViewInit {
       if (items.length > 0) {
         this.loadCitas({
           ...this.bodyParams,
-          filter:true,
+          filter: true,
           idsPersonal: items,
         });
       }
@@ -144,8 +141,7 @@ export class ReservarCitaComponent implements OnInit, OnDestroy,AfterViewInit {
       if (items.length === 0) {
         this.loadCitas(this.bodyParams);
       }
-    })
-
+    });
   }
 
   ngOnDestroy() {
@@ -180,8 +176,7 @@ export class ReservarCitaComponent implements OnInit, OnDestroy,AfterViewInit {
       fecha_inicio: selectInfo.startStr.substring(0, 10),
       hora_inicio: selectInfo.startStr.substring(11, 16),
       hora_fin: selectInfo.endStr.substring(11, 16),
-    })
-
+    });
   }
 
   handleEventClick(clickInfo: EventClickArg) {
