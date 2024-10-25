@@ -119,44 +119,45 @@ export class ComprarModalComponent {
 
   purchase() {
     if (this.paqueteId === null) {
-      console.error('ID del paquete no está disponible');
-      alert('Por favor, selecciona un paquete válido.');
-      return;
+        console.error('ID del paquete no está disponible');
+        alert('Por favor, selecciona un paquete válido.');
+        return;
     }
 
     const id = typeof this.paqueteId === 'string' ? this.paqueteId : this.paqueteId.id_paquetes;
 
     if (!id) {
-      console.error('ID del paquete no está disponible');
-      alert('Por favor, selecciona un paquete válido.');
-      return;
+        console.error('ID del paquete no está disponible');
+        alert('Por favor, selecciona un paquete válido.');
+        return;
     }
 
     if (!this.selectedUser) {
-      console.error('Usuario no seleccionado');
-      alert('Por favor, selecciona un usuario.');
-      return;
+        console.error('Usuario no seleccionado');
+        alert('Por favor, selecciona un usuario.');
+        return;
     }
 
     if (!this.selectedPaciente) {
-      console.error('Paciente no seleccionado');
-      alert('Por favor, selecciona un paciente.');
-      return;
+        console.error('Paciente no seleccionado');
+        alert('Por favor, selecciona un paciente.');
+        return;
     }
 
     const pacienteId = this.selectedPaciente.id_paciente;
     const usuarioId = this.selectedUser.id;
 
-    this.paqueteService.purchase(id, pacienteId,usuarioId).subscribe({
-      next: () => {
-        console.log('Compra realizada con éxito');
-        this.onSaveComplete.emit();
-        this.modal.dismissAll();
-      },
-      error: (err) => {
-        console.error('Error al comprar paquete:', err);
-        alert('Ocurrió un error al realizar la compra. Inténtalo de nuevo.');
-      }
+    this.paqueteService.purchase(id, pacienteId, usuarioId).subscribe({
+        next: () => {
+            console.log('Compra realizada con éxito');
+            this.onSaveComplete.emit();
+            this.modal.dismissAll();
+        },
+        error: (err) => {
+            console.error('Error al comprar paquete:', err);
+            alert('Ocurrió un error al realizar la compra. Inténtalo de nuevo.');
+        }
     });
-  }
+}
+
 }

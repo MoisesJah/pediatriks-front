@@ -179,3 +179,13 @@ ngb-popover-window .popover-body {
   padding: 0;
 }
 
+.scaled-container {
+  max-width: 100%;
+  max-height: 500px;
+  overflow: auto;
+}
+
+#kt_charts_widget_20 {
+  max-height: 400px;
+  width: 100%; 
+}
