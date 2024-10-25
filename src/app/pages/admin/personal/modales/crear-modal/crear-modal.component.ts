@@ -61,6 +61,8 @@ export class CrearModalComponent implements OnInit, AfterViewInit {
   timeOptions: FlatpickrDefaultsInterface = {
     enableTime: true,
     noCalendar: true,
+    minTime: '08:00',
+    maxTime: '20:00',
     dateFormat: 'H:i',
   };
 
@@ -143,9 +145,23 @@ export class CrearModalComponent implements OnInit, AfterViewInit {
     this.horarios.valueChanges.subscribe((horarios) => {
       for (let i = 0; i < horarios.length; i++) {
         const horario = horarios[i];
-        if (horario.hora_fin < horario.hora_inicio) {
-          horario.hora_fin = horario.hora_inicio;
-          this.horarios.at(i).get('hora_fin')?.setValue(horario.hora_fin);
+        const horaInicio = horario.hora_inicio;
+        const horaFin = horario.hora_fin;
+        if (horaInicio > horaFin){
+          const [hours, minutes] = horaInicio.split(':').map(Number);
+          const newMinutes = minutes + 60;
+          const newHours = hours + Math.floor(newMinutes / 60);
+          const remainingMinutes = newMinutes % 60;
+    
+          this.horarios
+            .at(i)
+            .get('hora_fin')
+            ?.setValue(
+              `${newHours.toString().padStart(2, '0')}:${remainingMinutes
+                .toString()
+                .padStart(2, '0')}`,
+              { emitEvent: false }
+            );
         }
       }
     });

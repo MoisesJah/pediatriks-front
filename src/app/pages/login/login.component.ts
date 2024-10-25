@@ -54,7 +54,7 @@ export class LoginComponent {
           this.redirectToDashboard(value);
         },
         error: (err) => {
-          console.error(err);
+          // console.error(err);
           this.errors = err.error;
         },
       });

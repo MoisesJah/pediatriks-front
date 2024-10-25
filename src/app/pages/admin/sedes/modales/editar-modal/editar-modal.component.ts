@@ -5,7 +5,9 @@ import { SedesService } from 'src/app/services/sedes/sedes.service';
 import { Sede } from 'src/app/models/sede';
 import { Subscription } from 'rxjs';
 import flatpickr from 'flatpickr';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
+@UntilDestroy()
 @Component({
   selector: 'app-editar-modal',
   templateUrl: './editar-modal.component.html',
@@ -75,7 +77,7 @@ export class EditarModalComponent implements OnInit, OnDestroy, AfterViewInit {
 
   loadSedeData(): void {
     this.isLoading = true;
-    const subscription = this.sedeService.getById(this.sedeId).subscribe({
+    const subscription = this.sedeService.getById(this.sedeId).pipe(untilDestroyed(this)).subscribe({
       next: (response: any) => {
         if (response.status === 'success' && response.data) {
           this.sedeForm.patchValue(response.data);

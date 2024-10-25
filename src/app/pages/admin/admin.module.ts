@@ -5,19 +5,8 @@ import { ReportesService } from 'src/app/services/reportes/reportes.service';
 import { FormsModule } from '@angular/forms';
 
 
-
-
-
 @NgModule({
   declarations: [
-
-
-
-
-
-
-
-
   ],
   imports: [
     CommonModule,

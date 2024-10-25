@@ -9,14 +9,14 @@ import {
 import { HeaderComponent } from '../ui/header/header.component';
 import { Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { DrawerComponent } from '../ui/drawer/drawer.component';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-layout',
   standalone: true,
-  imports: [CommonModule, HeaderComponent, DrawerComponent, RouterLink,RouterLinkActive],
+  imports: [CommonModule, HeaderComponent, DrawerComponent, RouterLink,RouterLinkActive,NgOptimizedImage],
   templateUrl: './layout.component.html',
   styleUrl: './layout.component.scss',
 })

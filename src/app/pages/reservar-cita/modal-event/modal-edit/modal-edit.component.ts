@@ -8,6 +8,7 @@ import {
   ElementRef,
   AfterViewInit,
   inject,
+  viewChild,
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CalendarEvent } from 'src/app/models/calendar-event';
@@ -20,6 +21,7 @@ import {
   combineLatest,
   debounceTime,
   distinctUntilChanged,
+  distinctUntilKeyChanged,
   filter,
   finalize,
   map,
@@ -27,12 +29,12 @@ import {
   of,
   Subject,
   switchMap,
+  tap,
 } from 'rxjs';
 import { Personal } from 'src/app/models/personal';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { LoadingService } from 'src/app/services/loading.service';
 import { FlatpickrDefaultsInterface } from 'angularx-flatpickr';
-import { FlatPickrOutputOptions } from 'angularx-flatpickr/lib/flatpickr.directive';
 import { SesionstatusService } from 'src/app/services/status/sesionstatus.service';
 import { CitaService } from 'src/app/services/citas/cita.service';
 import { Cita } from 'src/app/models/cita';
@@ -46,15 +48,17 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class ModalEditComponent implements OnInit, AfterViewInit {
   @Output() eventUpdated = new EventEmitter<CalendarEvent>();
+  @ViewChild('fechaInicio') fechaInicio!: ElementRef;
 
   personalService = inject(PersonalService);
   citaService = inject(CitaService);
-  toast = inject(ToastrService)
+  toast = inject(ToastrService);
   statusService = inject(SesionstatusService);
   isLoading = inject(LoadingService).isLoading;
 
   event: Cita | null = null;
   editEventForm: FormGroup;
+  horarios: number[] = [];
 
   personalList: Observable<Personal[]> = new Observable();
   statusList: Observable<any[]> = new Observable();
@@ -62,7 +66,17 @@ export class ModalEditComponent implements OnInit, AfterViewInit {
   fechaOptions: FlatpickrDefaultsInterface = {
     locale: { ...Spanish },
     altInput: true,
-    altFormat: 'd/m/Y',
+    altFormat: 'j/n/Y',
+    // disable: [
+    //   (date) => {
+    //     // if(this.horarios.length){
+    //     //   console.log(this.horarios)
+    //     //   return !this.horarios.includes(date.getDay());
+    //     // } 
+    //     // return false;
+    //     return this.horarios.length > 0 && !this.horarios.includes(date.getDay());
+    //   },
+    // ],
   };
 
   getCambiosRestantes() {
@@ -70,7 +84,7 @@ export class ModalEditComponent implements OnInit, AfterViewInit {
       ? 3 - this.event.sesion.num_cambios
       : 3;
   }
-  
+
   canEditSession() {
     return !this.event || this.event.sesion.num_cambios < 3;
   }
@@ -90,12 +104,16 @@ export class ModalEditComponent implements OnInit, AfterViewInit {
   horaInicioOptions: FlatpickrDefaultsInterface = {
     enableTime: true,
     noCalendar: true,
+    minTime: '08:00',
+    maxTime: '20:00',
     dateFormat: 'H:i',
   };
 
   horaFinOptions: FlatpickrDefaultsInterface = {
     enableTime: true,
     noCalendar: true,
+    minTime: '08:00',
+    maxTime: '20:00',
     dateFormat: 'H:i',
   };
 
@@ -103,40 +121,94 @@ export class ModalEditComponent implements OnInit, AfterViewInit {
     this.editEventForm = this.fb.group({
       descripcion: [null],
       id_personal: [null],
-      fecha_inicio: [null],
+      fecha_inicio: [null, Validators.required],
       hora_inicio: [null],
       hora_fin: [null],
-      id_status: [null],
+      id_status: [null, Validators.required],
       sesiones_restantes: [true],
     });
   }
 
+  get minutesTerapia() {
+    return Number(this.event?.terapia.duracion.split(':')[1]);
+  }
+
   endTimeValidation() {
     const horaInicio = this.editEventForm.get('hora_inicio')?.value;
-    const horaFin = this.editEventForm.get('hora_fin')?.value;
-    if (horaFin < horaInicio) {
-      this.editEventForm.get('hora_fin')?.setValue(horaInicio);
+
+    if (horaInicio) {
+      const [hours, minutes] = horaInicio.split(':').map(Number);
+      const newMinutes = minutes + this.minutesTerapia;
+      const newHours = hours + Math.floor(newMinutes / 60);
+      const remainingMinutes = newMinutes % 60;
+
+      this.editEventForm
+        .get('hora_fin')
+        ?.setValue(
+          `${newHours.toString().padStart(2, '0')}:${remainingMinutes
+            .toString()
+            .padStart(2, '0')}`,
+          { emitEvent: false }
+        );
     }
   }
 
   ngOnInit() {
     this.loadPersonal();
     this.loadStatus();
-    this.loadCurrentSesion();
+    if (this.event) {
+      this.loadCurrentSesion();
+    }
+  }
+
+  onChangePersonal(event: any) {
+    if (event.id_personal) {
+      this.personalService
+        .getById(event.id_personal)
+        .pipe(
+          map((resp) =>
+            [...new Set(resp.data.horarios.map((horario) => horario.dia_semana))]
+          ),
+          tap((horarios) => {
+            this.horarios = horarios;
+            this.initFlatpickr(horarios);
+          })
+        )
+        .subscribe();
+    }
+  }
+
+  initFlatpickr(disabledDays: number[]) {
+    if (this.fechaInicio) {
+      flatpickr(this.fechaInicio.nativeElement,{
+        locale: { ...Spanish },
+        altInput: true,
+        altFormat: 'd/m/Y',
+        minDate: this.event?.sesion.fecha_inicio,
+        disable: [
+          (date) => {
+            return !disabledDays.includes(date.getDay());
+          }
+        ]
+      });
+    }
   }
 
   ngAfterViewInit() {
     this.editEventForm.valueChanges.subscribe(() => this.endTimeValidation());
+    this.editEventForm.valueChanges
+      .pipe(distinctUntilKeyChanged('id_personal'))
+      .subscribe((resp) => {
+        if (resp.id_personal) {
+          this.onChangePersonal(resp);
+        }
+      });
   }
 
   loadPersonal() {
-    // this.personalList = this.personalService.getByTerapia(this.event?.terapia.id_terapia!).pipe(
-    //   map((resp) => resp.data),
-    //   untilDestroyed(this)
-    // )
-    // console.log(this.personalList);
     this.personalService
       .getByTerapia(this.event?.terapia.id_terapia!)
+      .pipe(untilDestroyed(this))
       .subscribe((resp) => {
         this.personalList = of(resp.data);
         // console.log(resp.data);
@@ -158,42 +230,47 @@ export class ModalEditComponent implements OnInit, AfterViewInit {
     const id_cita = this.event?.id_cita!;
     const id_sesion = this.event?.sesion.id_sesion!;
 
-    this.citaService.getById(id_cita, id_sesion).subscribe((resp) => {
-      this.editEventForm.patchValue({
-        id_cita: resp.data.id_cita,
-        id_sesion: resp.data.sesion.id_sesion,
-        id_personal: resp.data.sesion.personal.id_personal,
-        id_status: resp.data.sesion.status.id_status,
-        fecha_inicio: resp.data.sesion.fecha_inicio,
-        hora_inicio: resp.data.sesion.hora_inicio,
-        hora_fin: resp.data.sesion.hora_fin,
+    this.citaService
+      .getById(id_cita, id_sesion)
+      .pipe(untilDestroyed(this))
+      .subscribe((resp) => {
+        this.editEventForm.patchValue({
+          id_cita: resp.data.id_cita,
+          id_sesion: resp.data.sesion.id_sesion,
+          id_personal: resp.data.sesion.personal.id_personal,
+          id_status: resp.data.sesion.status.id_status,
+          fecha_inicio: resp.data.sesion.fecha_inicio,
+          hora_inicio: resp.data.sesion.hora_inicio,
+          hora_fin: resp.data.sesion.hora_fin,
+        });
       });
-    });
   }
 
   updateEvent() {
-    this.citaService
-      .update(this.event?.id_cita!, {
-        ...this.editEventForm.value,
-        id_cita: this.event?.id_cita!,
-        id_sesion: this.event?.sesion.id_sesion!,
-      })
-      .subscribe({
-        next: () => {
-          this.eventUpdated.emit();
-          this.closeModal();
-        },
-        error: (err) => {
-          if (err.error.errors) {
-            const errors = Object.values(err.error.errors).join('');
-            this.toast.error(errors, 'Error');
-          } else {
-            this.toast.error(
-              'Ocurrió un error al crear la cita',
-              'Error'
-            );
-          }
-        },
-      });
+    if (this.editEventForm.valid) {
+      this.citaService
+        .update(this.event?.id_cita!, {
+          ...this.editEventForm.value,
+          id_cita: this.event?.id_cita!,
+          id_sesion: this.event?.sesion.id_sesion!,
+        })
+        .subscribe({
+          next: () => {
+            this.eventUpdated.emit();
+            this.closeModal();
+          },
+          error: (err) => {
+            if (err.error.errors) {
+              const errors = Object.values(err.error.errors).join('');
+              this.toast.error(errors, 'Error');
+            } else {
+              this.toast.error(
+                'Ocurrió un error al actualizar la cita',
+                'Error'
+              );
+            }
+          },
+        });
+    }
   }
 }

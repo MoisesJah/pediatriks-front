@@ -24,6 +24,7 @@ export class ModalViewEventComponent implements OnInit {
 
   @Output() eventUpdated = new EventEmitter<CalendarEvent>();
   event: Cita | null = null;
+  horarios: any[] = [];
 
   constructor() {}
 
@@ -75,6 +76,7 @@ export class ModalViewEventComponent implements OnInit {
     });
 
     modalRef.componentInstance.event = this.event;
+    modalRef.componentInstance.horarios = this.horarios;
     modalRef.componentInstance.eventUpdated.subscribe(() => {
       this.loadEvent();
       this.eventUpdated.emit();

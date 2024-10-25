@@ -1,6 +1,6 @@
 <div class="modal-content">
 
-    <div class="modal-header border-0 justify-content-end">
+    <div *ngIf="event" class="modal-header border-0 justify-content-end">
       <!--begin::Edit-->
       <div class="btn btn-icon btn-sm btn-color-gray-500 btn-active-icon-success" data-bs-toggle="tooltip" title="Edit Event" id="kt_modal_view_event_edit" (click)="openEditModal()">
         <i class="ki ki-solid ki-pencil fs-1"></i>
@@ -21,7 +21,7 @@
     <div class="modal-body py-4"  style="margin-top: -1.75rem;">
 
       @if (isLoading | async) {
-        <div style="height: 300px;" class="d-flex align-items-center justify-content-center">
+        <div style="height: 381px;" class="d-flex align-items-center justify-content-center">
           <div class="spinner-border text-primary" role="status">
             <span class="visually-hidden">Loading...</span>
           </div>
