@@ -145,8 +145,9 @@ export class ComprarModalComponent {
     }
 
     const pacienteId = this.selectedPaciente.id_paciente;
+    const usuarioId = this.selectedUser.id;
 
-    this.paqueteService.purchase(id, pacienteId).subscribe({
+    this.paqueteService.purchase(id, pacienteId,usuarioId).subscribe({
       next: () => {
         console.log('Compra realizada con éxito');
         this.onSaveComplete.emit();

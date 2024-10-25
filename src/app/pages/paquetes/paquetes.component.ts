@@ -8,7 +8,6 @@ import { Observable, map } from 'rxjs';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { HeaderComponent } from 'src/app/components/ui/header/header.component';
 import { AgGridAngular } from 'ag-grid-angular';
-import { ComprarModalComponent } from './modales/comprar-modal/comprar-modal.component';
 import { ColDef, GridReadyEvent, GridApi } from 'ag-grid-community';
 import { AG_GRID_LOCALE_ES } from '@ag-grid-community/locale';
 import { ThemeService } from 'src/app/services/theme.service';
@@ -64,18 +63,7 @@ export class PaquetesComponent implements OnInit, OnDestroy {
     );
   }
 
-
-  openComprarModal(paquete: Paquete) {
-    const modalRef = this.modal.open(ComprarModalComponent, {
-      size: '300px',
-      animation: true,
-      centered: true,
-    });
-
-    modalRef.componentInstance.paquete = paquete; // Pasa el paquete al modal
-  }
-
-
+  
   getTerapiasNombres(terapias: Terapia[]): string {
     return terapias.map(terapia => terapia.nombre).join(', ');
   }
