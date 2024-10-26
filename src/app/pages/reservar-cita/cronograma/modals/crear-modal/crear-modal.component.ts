@@ -164,7 +164,9 @@ export class CrearModalComponent implements OnInit, AfterViewInit {
     this.maxSesiones = event?.cantidadsesiones;
     if (paquetesControl.value) {
         sesionesControl.setValidators(Validators.required);   
-    }
+      }
+      sesionesControl.setValue(null);
+      sesionesControl.updateValueAndValidity()
   }
 
   toggleOption(option: { label: string; value: number }) {
@@ -207,14 +209,21 @@ export class CrearModalComponent implements OnInit, AfterViewInit {
   }
 
   changeTipoCita(event: any) {
-    this.isRecurrente = event && event?.recurrente;
-    this.isCitaPaquete = event && event?.nombre === 'Paquete';
+    this.isRecurrente = event?.recurrente;
+    this.isCitaPaquete = event?.nombre === 'Paquete';
 
+    const id_paquete = this.createForm.get('id_paquete');
+    const num_sesiones = this.createForm.get('num_sesiones');
     if (this.isCitaPaquete) {
-      this.createForm.get('id_paquete')?.setValidators(Validators.required);
+      id_paquete?.setValidators(Validators.required);
     } else {
-      this.createForm.get('id_paquete')?.clearValidators();
+      id_paquete?.clearValidators();
+      id_paquete?.setValue(null);
+      num_sesiones?.setValue(null);
+      num_sesiones?.clearValidators();
     }
+    id_paquete?.updateValueAndValidity();
+    num_sesiones?.updateValueAndValidity();
   }
 
   ngOnInit(): void {
@@ -224,7 +233,7 @@ export class CrearModalComponent implements OnInit, AfterViewInit {
     this.loadPaquetes();
   }
 
-  ngAfterViewInit(): void {
+  ngAfterViewInit(): void {   
     this.createForm.valueChanges
       .pipe(distinctUntilKeyChanged('id_sede'))
       .subscribe((value) => {
