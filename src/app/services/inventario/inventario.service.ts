@@ -25,7 +25,7 @@ export class InventarioService {
   }
 
   update(id: string, inventario: any) {
-    return this.http.put(`${this.apiUrl}/edit/${id}`, inventario);
+    return this.http.post(`${this.apiUrl}/edit/${id}`, inventario);
   }
 
   delete(id: string): Observable<void> {
