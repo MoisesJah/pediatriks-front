@@ -25,7 +25,7 @@ export class PaqueteService {
   }
 
   update(id: string, paquete: any) {
-    return this.http.put(`${this.apiUrl}/edit/${id}`, paquete);
+    return this.http.post(`${this.apiUrl}/edit/${id}`, paquete);
   }
 
   delete(id: string): Observable<void> {

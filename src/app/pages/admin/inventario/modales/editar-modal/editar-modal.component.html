@@ -17,6 +17,17 @@
 <div class="modal-body">
   <form [formGroup]="inventarioForm" class="form d-flex flex-column gap-4">
     <div class="form-group">
+      <label class="required form-label" for="imagen">Imagen</label>
+      <input
+        type="file"
+        id="imagen"
+        accept="image/*"
+        class="form-control"
+        (change)="evtSelectFile($event)"
+      />
+    </div>
+
+    <div class="form-group">
       <label for="nombre" class="required form-label">Nombre del Inventario</label>
       <input type="text" id="nombre" formControlName="nombre" class="form-control" />
     </div>
