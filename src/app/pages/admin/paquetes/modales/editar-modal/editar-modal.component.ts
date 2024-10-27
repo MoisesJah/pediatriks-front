@@ -64,6 +64,7 @@ export class EditarModalComponent implements OnInit {
       fechafin: ['', Validators.required],
       terapias: [null, Validators.required],
       sesionesrestantes: [0, [Validators.required, Validators.min(0)]],
+      banner_url: [''],
     });
   }
 
@@ -71,12 +72,12 @@ export class EditarModalComponent implements OnInit {
     this.loadTerapias();
 
     if (typeof this.paqueteId === 'string') {
-      this.loadPaqueteData(); // Llama sin argumento
+      this.loadPaqueteData();
     } else if (
       typeof this.paqueteId === 'object' &&
       this.paqueteId.id_paquetes
     ) {
-      // Extrae el ID del objeto y llama con ese ID
+
       this.loadPaqueteData(this.paqueteId.id_paquetes);
     } else {
       console.error(
@@ -114,45 +115,55 @@ export class EditarModalComponent implements OnInit {
     this.modal.dismissAll();
   }
 
+
   save() {
     if (this.paqueteForm.valid) {
-      const paqueteData: Paquete = this.paqueteForm.value;
+      const formData = new FormData();
+      formData.append('nombre', this.paqueteForm.get('nombre')?.value || '');
+      formData.append('descripcion', this.paqueteForm.get('descripcion')?.value || '');
+      formData.append('cantidadsesiones', this.paqueteForm.get('cantidadsesiones')?.value || '');
+      formData.append('precioregular', this.paqueteForm.get('precioregular')?.value || '');
+      formData.append('descuento', this.paqueteForm.get('descuento')?.value || '');
+      formData.append('preciopaquete', this.paqueteForm.get('preciopaquete')?.value || '');
+      formData.append('fechainicio', this.paqueteForm.get('fechainicio')?.value || '');
+      formData.append('fechafin', this.paqueteForm.get('fechafin')?.value || '');
+      formData.append('terapias', JSON.stringify(this.paqueteForm.get('terapias')?.value) || '[]');
+      formData.append('sesionesrestantes', this.paqueteForm.get('sesionesrestantes')?.value || '');
 
-      if (typeof this.paqueteId === 'string') {
-        this.paqueteService.update(this.paqueteId, paqueteData).subscribe({
+      const bannerUrlFile = this.paqueteForm.get('banner_url')?.value;
+      if (bannerUrlFile) {
+        formData.append('banner_url', bannerUrlFile);
+      }
+
+      console.log('Datos enviados:', formData.get('nombre'), formData.get('descripcion'),
+      formData.get('cantidadsesiones'),
+      formData.get('precioregular'),
+      formData.get('descuento'),
+      formData.get('preciopaquete'),
+      formData.get('fechainicio'),
+      formData.get('fechafin'),
+      formData.get('terapias'),
+      formData.get('sesionesrestantes'),
+       formData.get('banner_url'));
+
+      const id = typeof this.paqueteId === 'string' ? this.paqueteId : this.paqueteId.id_paquetes;
+
+      if (id) {
+        this.paqueteService.update(id, formData).subscribe({
           next: () => {
             this.onSaveComplete.emit();
             this.modal.dismissAll();
           },
           error: (err: HttpErrorResponse) => {
             console.error('Error al actualizar paquete:', err.message);
+            alert('No se pudo actualizar el paquete. Intenta nuevamente.');
           },
         });
-      } else if (
-        typeof this.paqueteId === 'object' &&
-        this.paqueteId.id_paquetes
-      ) {
-        this.paqueteService
-          .update(this.paqueteId.id_paquetes, paqueteData)
-          .subscribe({
-            next: () => {
-              this.onSaveComplete.emit();
-              this.modal.dismissAll();
-            },
-            error: (err: HttpErrorResponse) => {
-              console.error('Error al actualizar paquete:', err.message);
-            },
-          });
-      } else {
-        console.error(
-          'ID del paquete no proporcionado o en formato incorrecto'
-        );
       }
     }
   }
 
   private loadPaqueteData(paqueteId?: string) {
-    // Usa el paqueteId de la propiedad de clase si no se pasa como argumento
     const id =
       paqueteId ||
       (typeof this.paqueteId === 'object'
@@ -188,4 +199,12 @@ export class EditarModalComponent implements OnInit {
         ?.setValue(preciopaquete, { emitEvent: false });
     }
   }
+
+  evtSelectFile(event: Event): void {
+    const file = (event.target as HTMLInputElement).files?.[0];
+    if (file) {
+      this.paqueteForm.get('banner_url')?.setValue(file);
+    }
+  }
+
 }

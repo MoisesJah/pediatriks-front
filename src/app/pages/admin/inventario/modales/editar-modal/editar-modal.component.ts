@@ -68,18 +68,21 @@ export class EditarModalComponent implements OnInit {
   save() {
     if (this.inventarioForm.valid) {
       const formData = new FormData();
+      formData.append('nombre', this.inventarioForm.get('nombre')?.value || '');
+      formData.append('descripcion', this.inventarioForm.get('descripcion')?.value || '');
 
-      formData.append('nombre', this.inventarioForm.get('nombre')?.value);
-      formData.append('descripcion', this.inventarioForm.get('descripcion')?.value);
+      const bannerUrlFile = this.inventarioForm.get('banner_url')?.value;
+      if (bannerUrlFile) {
+        formData.append('banner_url', bannerUrlFile);
+      }
 
-      console.log('Datos que se envían:', this.inventarioForm.value);
+      console.log('Datos enviados:', formData.get('nombre'), formData.get('descripcion'), formData.get('banner_url'));
 
       const id = typeof this.inventarioId === 'string' ? this.inventarioId : this.inventarioId.id;
 
       if (id) {
         this.inventarioService.update(id, formData).subscribe({
           next: () => {
-            console.log('Actualización exitosa');
             this.onSaveComplete.emit();
             this.modal.dismissAll();
           },
@@ -88,11 +91,11 @@ export class EditarModalComponent implements OnInit {
             alert('No se pudo actualizar el inventario. Intenta nuevamente.');
           },
         });
-      } else {
-        console.error('ID del inventario no proporcionado o en formato incorrecto');
       }
     }
   }
+
+
 
 
   private loadInventarioData(inventarioId?: string) {
@@ -113,6 +116,14 @@ export class EditarModalComponent implements OnInit {
       console.error('ID del inventario no proporcionado');
     }
   }
+
+  evtSelectFile(event: Event): void {
+    const file = (event.target as HTMLInputElement).files?.[0];
+    if (file) {
+      this.inventarioForm.get('banner_url')?.setValue(file);
+    }
+  }
+
 
 
 }
