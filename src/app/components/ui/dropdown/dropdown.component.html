@@ -8,8 +8,8 @@
         <div class="d-flex dropdown-content align-items-center">
           <span [ngClass]="{ 'd-none': displayFilters(terapia) }" class="px-3"
             role="button" ngbDropdownToggle></span>
-          <a routerLink="{{ terapia.link }}" ngbDropdownItem class="ps-0">
-            {{ terapia.nombre }}
+          <a routerLink="{{ terapia.link }}" ngbDropdownItem [ngClass]="{ 'ps-3': terapia.nombre === 'Cronograma General'}"  class="ps-0 d-flex align-items-center justify-content-between">
+            {{ terapia.nombre }} <span class="h-8px w-8px d-inline-block rounded-circle" [ngStyle]="{ 'background-color': terapia.color }"></span>
           </a>
         </div>
 

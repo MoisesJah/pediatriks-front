@@ -1,7 +1,8 @@
 <app-header>
   <ng-container header-title>
-    <h1 class="d-flex flex-column text-white fw-bold my-1">
-      {{ currentTerapia?.nombre }}
+    <h1 class="d-flex align-items-center text-white fw-bold my-1">
+      <span class="h-15px w-15px me-3 rounded-circle d-inline-block"
+        [ngStyle]="{ 'background-color': currentTerapia?.color }"></span> {{ currentTerapia?.nombre }}
     </h1>
 
   </ng-container>
@@ -26,7 +27,8 @@
         ">
         <div class="demo-app-main">
           @defer (on viewport) {
-          <full-calendar #calendar [ngClass]="{ 'opacity-50': isLoading | async }" [events]="citasEvent | async" [options]="calendarOptions">
+          <full-calendar #calendar [ngClass]="{ 'opacity-50': isLoading | async }" [events]="citasEvent | async"
+            [options]="calendarOptions">
 
           </full-calendar>
           }@placeholder() {

@@ -309,9 +309,10 @@ export class CrearModalComponent implements OnInit, AfterViewInit {
           id_terapia: this.terapia.id_terapia,
         })
         .subscribe({
-          next: () => {
+          next: (data) => {
             this.eventSubmitted.emit();
             this.closeModal();
+            console.log('Cita creada:', data);
           },
           error: (err) => {
             if (err.error.errors) {

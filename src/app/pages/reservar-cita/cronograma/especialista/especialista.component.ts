@@ -36,6 +36,7 @@ export type CurrentPersonal = {
   id_personal: string;
   nombre: string;
   terapia: Terapia;
+  color: string;
   sede: Sede;
   horarios: BusinessHoursInput;
 };

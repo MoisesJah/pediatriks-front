@@ -83,7 +83,7 @@ export class ReservarCitaComponent implements OnInit, OnDestroy, AfterViewInit {
     },
     allDaySlot: false,
     expandRows: true,
-    eventMaxStack: 1,
+    // eventMaxStack: 1,
     slotDuration: '00:45:00',
     slotMinTime: '08:00',
     slotMaxTime: '20:01:00',

@@ -1,5 +1,6 @@
 export interface Terapia {
   id_terapia: string;
+  color: string;
   id_administrador: string;
   nombre: string;
   descripcion: string;
