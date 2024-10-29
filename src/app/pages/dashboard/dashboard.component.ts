@@ -1,6 +1,6 @@
 import { IPaciente } from './../../models/paciente';
 import { Component, ChangeDetectorRef, inject, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, formatDate } from '@angular/common';
 import { Router, RouterModule, RouterOutlet } from '@angular/router';
 import { HeaderComponent } from 'src/app/components/ui/header/header.component';
 import { ActivatedRoute } from '@angular/router';
@@ -25,7 +25,6 @@ import { AuthService } from 'src/app/services/auth.service';
   styleUrls: ['./dashboard.component.scss'],
 })
 export class DashboardComponent implements OnInit {
-
   private gridApi!: GridApi;
   localeText = AG_GRID_LOCALE_ES;
   isLoading = inject(LoadingService).isLoading;
@@ -38,16 +37,30 @@ export class DashboardComponent implements OnInit {
   user = this.authService.user();
 
   colDefs: ColDef[] = [
-    { field: 'paciente.nombre', headerName: 'Paciente', filter: true },
-    { field: 'tipocita.nombre', headerName: 'Terapia', filter: true },
-    { field: 'sede.nombre', headerName: 'Sede', filter: true },
-    { field: 'fecha', headerName: 'Fecha de Cita', filter: true },
-    { field: 'hora', headerName: 'Hora de Cita', filter: true },
-    { field: 'terapias.sesiones[0].status', headerName: 'Estado de Sesión', filter: true },
-    { field: 'terapias.sesiones[0].personal.nombre', headerName: 'Terapista', filter: true },
-    { field: 'estado', headerName: 'Estado', filter: true },
+    { field: 'paciente', headerName: 'Paciente', filter: true },
+    { field: 'tipocita', headerName: 'Tipo de Cita', filter: true },
+    { field: 'sede', headerName: 'Sede', filter: true },
+    {
+      field: 'fecha_sesion',
+      headerName: 'Fecha de Cita',
+      valueFormatter: (params) => formatDate(params.value, 'dd/MM/yyyy', 'en'),
+      cellRenderer: (params: any) => {
+        return `<span class="d-flex gap-2 align-items-center"><i class="ki-outline ki-calendar text-gray-900 fs-2"></i>${params.value}</span>`;
+      },
+      filter: 'agDateColumnFilter',
+    },
+    {
+      field: 'hora_inicio',
+      headerName: 'Hora de Cita',
+      filter: true,
+      cellRenderer: (params: any) => {
+        return `<span class="d-flex gap-2 align-items-center"><i class="ki-outline ki-time text-gray-900 fs-2"></i>${params.value}</span>`;
+      },
+    },
+    { field: 'terapia', headerName: 'Terapia', filter: true },
+    { field: 'terapista', headerName: 'Terapista', filter: true },
+    { field: 'status', headerName: 'Estado', filter: true },
   ];
-
 
   constructor(
     private route: ActivatedRoute,
@@ -58,10 +71,9 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit() {
     if (this.user) {
-      console.log('Usuario autenticado:', this.user);
       const userId = this.user.id.toString();
       this.loadCitasPaciente(userId);
-    } 
+    }
   }
 
   loadPacientes() {
@@ -71,20 +83,20 @@ export class DashboardComponent implements OnInit {
     );
   }
 
+  refreshList() {
+    this.loadCitasPaciente(this.user?.id.toString()!);
+  }
+
   loadCitasPaciente(idPaciente: string) {
     this.citasPaciente = this.citaService.getCitasByUser(idPaciente).pipe(
-      map((resp: { data: Cita[] }) => {
-        // console.log('Datos de citas recibidos:', resp.data); 
-        return resp.data;
-      }),
+      map((resp: { data: Cita[] }) => resp.data),
       untilDestroyed(this)
     );
   }
 
-
   gridReady(params: GridReadyEvent) {
     this.gridApi = params.api;
-    this.sizeColumnsToFit();
+    // this.sizeColumnsToFit();
   }
 
   sizeColumnsToFit(): void {

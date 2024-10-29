@@ -1,64 +1,41 @@
 <app-header>
   <ng-container header-title>
-    <h1 class="d-flex flex-column text-gray-900 fw-bold my-1">
-      <span class="" style="color: white">Dashboard</span>
+    <h1 class="d-flex  text-gray-900 fw-bold align-items-center  gap-2">
+      <i style="vertical-align: middle;" class="ki-duotone ki-calendar text-white fs-2tx"><span class="path1"></span><span class="path2"></span></i>
+      <span class="" style="color: white">Mis Citas</span>
     </h1>
   </ng-container>
 </app-header>
 
-<!-- Contenedor para centrar la tarjeta -->
-<div class="d-flex justify-content-center mt-4">
-  <!-- Card para "Mis Citas" -->
-  <div class="card w-75 shadow-sm">
-    <!-- Título alineado a la izquierda con una línea divisoria -->
-    <div class="card-header bg-none border-bottom-2">
-      <h2 class="card-title fs-4 m-0 text-start">Mis Citas</h2>
-    </div>
-    <!-- Contenido de la tarjeta -->
-    <div class="card-body">
-      <div style="height: 350px" [ngClass]="[theme.getThemeMode() === 'light' ? 'ag-theme-quartz' : 'ag-theme-quartz-dark']">
+<div class="content d-flex flex-column flex-column-fluid">
+  <div class="container-xxl">
+    <div class="card shadow p-2 px-4">
+      <div class="d-flex py-4 justify-content-between align-items-center">
+        
+        <div class="d-flex align-items-center gap-3">
+          <button type="button" class="btn btn-light-primary" (click)="refreshList()">
+            <span class="d-flex align-items-center">
+              <span class="fa-solid fa-rotate-right"></span>
+              <span class="ms-2">Actualizar</span>
+            </span>
+          </button>
+          
+        </div>
+      </div>
+      <div style="height: 350px"
+        [ngClass]="[theme.getThemeMode() === 'light' ? 'ag-theme-quartz' : 'ag-theme-quartz-dark']">
         @defer {
-          <ag-grid-angular
-          style="width: 100%; height: 100%"
-          [rowData]="citasPaciente | async" 
-          [columnDefs]="colDefs"
-          [loading]="isLoading | async" loadingMessage="Cargando..."
-          [localeText]="localeText"
-          [enableCellTextSelection]="true"
-          [ariaHidden]="true"
-          [pagination]="true"
-          (gridReady)="gridReady($event)"
-        ></ag-grid-angular>
+        <ag-grid-angular style="width: 100%; height: 100%" [rowData]="citasPaciente | async" [columnDefs]="colDefs"
+          [loading]="isLoading | async" loadingMessage="Cargando..." [localeText]="localeText"
+          [enableCellTextSelection]="true" [ariaHidden]="true" [pagination]="true"
+          (gridReady)="gridReady($event)"></ag-grid-angular>
 
         }@loading {
-        <div
-          class="d-flex justify-content-center align-items-center"
-          style="height: 100%"
-        >
+        <div class="d-flex justify-content-center align-items-center" style="height: 100%">
           <div class="spinner-border" role="status">
             <span class="visually-hidden">Loading...</span>
           </div>
         </div>
         }
       </div>
-      <hr class="my-3" />
-      <!-- Dropdown para seleccionar paciente -->
     </div>
-    <!-- Línea divisoria inferior -->
-    <div class="card-footer bg-none border-top-2">
-      <!-- Dropdown para seleccionar paciente -->
-<div class="dropdown">
-  <!-- <select class="form-select" (change)="handleSelectChange($event)">
-    <option value="" disabled selected>Seleccionar Paciente</option>
-    <option *ngFor="let paciente of pacientesList | async" [value]="paciente.id_paciente">
-      {{ paciente.nombre }}
-    </option>
-  </select> -->
-</div>
-
-    </div>
-
-
-
-  </div>
-

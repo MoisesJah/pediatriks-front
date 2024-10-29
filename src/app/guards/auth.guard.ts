@@ -6,23 +6,27 @@ export const authGuard: CanActivateFn = (route, state) => {
   const authService = inject(AuthService);
   const router = inject(Router);
 
-  const authRoutes = ['/login', '/registrate'];
+  const isUnauthenticated = !authService.isAuthenticated();
+  const isLoginOrRegister = ['/login', '/registrate'].includes(state.url);
+  const isAdminRoute = state.url.includes('admin');
 
-  //redirect to login if not authenticated
-  if (!authService.isAuthenticated() && state.url !== '/' && !authRoutes.includes(state.url)) {
+  if (isUnauthenticated && !isLoginOrRegister) {
     router.navigate(['/login']);
     return false;
   }
 
-  // redirect to dashboard if already logged in
-  if (authRoutes.includes(state.url) && authService.isAuthenticated()) {
+  if (isLoginOrRegister && authService.isAuthenticated()) {
     const redirectUrl = authService.isAdmin() ? '/admin/dashboard' : '/dashboard';
     router.navigate([redirectUrl]);
     return false;
   }
 
-  // if user logged in is not admin and try to access admin, redirect to dashboard
-  if(!authService.isAdmin() && state.url.includes('admin')  && authService.isAuthenticated()) {
+  if(authService.isAdmin() && !isAdminRoute) {
+    router.navigateByUrl('/admin/dashboard');
+    return false;
+  }
+
+  if (authService.isAuthenticated() && !authService.isAdmin() && isAdminRoute) {
     router.navigateByUrl('/dashboard');
     return false;
   }

@@ -54,7 +54,7 @@ export class DrawerComponent {
 
   isTerapeuta(): boolean {
     // Utiliza la función del servicio de autenticación para verificar si es terapeuta
-    return this.authService.isTerapeuta();
+    return this.authService.isTerapista();
   }
 
   navigateToInicio(event: Event): void {

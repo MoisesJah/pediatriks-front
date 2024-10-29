@@ -72,9 +72,9 @@ export class AuthService {
     return user ? user.tipo_user === 'paciente' : false;
   }
 
-  isTerapeuta(): boolean {
+  isTerapista(): boolean {
     const user = this.user();
-    return user ? user.tipo_user === 'terapeuta' : false;
+    return user ? user.tipo_user === 'terapista' : false;
   }
 
   getToken(): string | null {

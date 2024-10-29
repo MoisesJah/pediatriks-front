@@ -63,18 +63,15 @@ export class LayoutComponent {
   }
 
   isAdmin(): boolean {
-    // Utiliza la función del servicio de autenticación para verificar si es administrador
     return this.authService.isAdmin();
   }
 
   isPaciente(): boolean {
-    // Utiliza la función del servicio de autenticación para verificar si es paciente
     return this.authService.isPaciente();
   }
 
   isTerapeuta(): boolean {
-    // Utiliza la función del servicio de autenticación para verificar si es terapeuta
-    return this.authService.isTerapeuta();
+    return this.authService.isTerapista();
   }
 
   navigateToInicio(event: Event): void {

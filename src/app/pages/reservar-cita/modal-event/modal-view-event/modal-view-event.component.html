@@ -39,9 +39,14 @@
                 </div>
               </div>
              
-              <div class="fs-6 d-flex align-items-center gap-2">
-                <span [ngClass]="sessionStatus(event?.sesion.status.nombre)"></span>
+              <div class="fs-6 d-flex align-items-center justify-content-between gap-2">
+                <div>
+                  <span [ngClass]="sessionStatus(event?.sesion.status.nombre)"></span>
                 <span class="">{{event?.sesion.status.nombre}} </span>
+                </div>
+                <!-- <div *ngIf="event?.paquete">
+                  <span class="text-sm" >{{event?.paquete.nombre}}</span>
+                </div> -->
               </div>
           </div>
           <section class="d-grid mt-6 gap-4">

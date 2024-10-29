@@ -1,4 +1,5 @@
 import { IPaciente } from './paciente';
+import { Paquete } from './paquetes';
 import { Personal } from './personal';
 import { Sede } from './sede';
 import { Terapia } from './terapia';
@@ -10,6 +11,7 @@ export interface Cita {
   sede: Sede;
   tipo_cita: string
   terapia: Terapia;
+  paquete?: Paquete;
   sesion: {
     id_sesion: string;
     personal: Personal;
