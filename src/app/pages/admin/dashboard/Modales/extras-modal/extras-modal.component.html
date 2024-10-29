@@ -1,0 +1,50 @@
+<div class="modal-header">
+  <h4 class="modal-title d-flex align-items-center gap-1" id="modal-basic-title">
+    <span class="text-primary">
+      <i style="vertical-align: text-top;" class="ki-duotone ki-add-files text-gray-900 fs-1">
+        <span class="path1"></span><span class="path2"></span><span class="path3"></span>
+      </i>
+    </span>
+    Añadir Egresos Extras
+  </h4>
+  <button type="button" class="btn btn-sm btn-icon btn-active-color-primary btn-color-gray-800" aria-label="Close"
+    (click)="close()">
+    <i class="ki-duotone ki-cross-square fs-1">
+      <span class="path1"></span><span class="path2"></span>
+    </i>
+  </button>
+</div>
+
+<div class="modal-body">
+<form [formGroup]="extrasForm" (ngSubmit)="onSubmit()">
+  <div class="form-group">
+    <label for="nombre" class="form-label">Nombre</label>
+    <input id="nombre" type="text" class="form-control" formControlName="nombre" placeholder="Ingrese el nombre" />
+  </div>
+
+  <div class="form-group">
+    <label for="descripcion" class="form-label">Descripción</label>
+    <textarea id="descripcion" class="form-control" formControlName="descripcion" placeholder="Ingrese la descripción"></textarea>
+  </div>
+
+  <div class="form-group">
+    <label for="costo" class="form-label">Costo</label>
+    <input id="costo" type="number" class="form-control" formControlName="costo" placeholder="Ingrese el costo" />
+  </div>
+
+  <div class="form-group">
+    <label for="metodoPago" class="form-label">Método de Pago</label>
+    <select id="metodoPago" class="form-select" formControlName="metodoPago">
+      <option *ngFor="let metodo of metodosPago" [value]="metodo">{{ metodo }}</option>
+    </select>
+  </div>
+
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="close()">Cancelar</button>
+    <button [disabled]="extrasForm.invalid || (isLoading | async)" type="button" class="btn btn-primary" (click)="save()">
+      Guardar
+      <span *ngIf="isLoading | async" class="spinner-border spinner-border-sm align-middle ms-2"></span>
+    </button>
+  </div>
+</form>
+</div>

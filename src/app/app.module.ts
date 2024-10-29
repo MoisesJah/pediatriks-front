@@ -22,7 +22,7 @@ import { PacientesModalsModule } from './pages/admin/pacientes/modals/modals.mod
 import { SedesModalsModule } from './pages/admin/sedes/modales/modales.module';
 import { DrawerComponent } from './components/ui/drawer/drawer.component';
 import localeEs from '@angular/common/locales/es';
-import { IMAGE_CONFIG, registerLocaleData } from '@angular/common';
+import { DatePipe, IMAGE_CONFIG, registerLocaleData } from '@angular/common';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { PaquetesComponent } from './pages/paquetes/paquetes.component';
 import { ToastrModule } from 'ngx-toastr';
@@ -64,6 +64,7 @@ registerLocaleData(localeEs);
     { provide: LOCALE_ID, useValue: 'es' },
     { provide: 'localeData', useValue: localeEs },
     { provide: IMAGE_CONFIG, useValue: { disableImageSizeWarning: true, disableImageLazyLoadWarning: true } },
+    DatePipe
   ],
   bootstrap: [AppComponent],
 })
