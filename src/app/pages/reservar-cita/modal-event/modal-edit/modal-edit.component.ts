@@ -39,6 +39,7 @@ import { SesionstatusService } from 'src/app/services/status/sesionstatus.servic
 import { CitaService } from 'src/app/services/citas/cita.service';
 import { Cita } from 'src/app/models/cita';
 import { ToastrService } from 'ngx-toastr';
+import { AuthService } from 'src/app/services/auth.service';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -53,6 +54,7 @@ export class ModalEditComponent implements OnInit, AfterViewInit {
   personalService = inject(PersonalService);
   citaService = inject(CitaService);
   toast = inject(ToastrService);
+  isTerapista = inject(AuthService).isTerapista();
   statusService = inject(SesionstatusService);
   isLoading = inject(LoadingService).isLoading;
 
@@ -102,7 +104,7 @@ export class ModalEditComponent implements OnInit, AfterViewInit {
   }
 
   horaInicioOptions: FlatpickrDefaultsInterface = {
-    enableTime: true,
+    enableTime: !this.isTerapista,
     noCalendar: true,
     minTime: '08:00',
     maxTime: '20:00',
@@ -110,7 +112,7 @@ export class ModalEditComponent implements OnInit, AfterViewInit {
   };
 
   horaFinOptions: FlatpickrDefaultsInterface = {
-    enableTime: true,
+    enableTime: !this.isTerapista,
     noCalendar: true,
     minTime: '08:00',
     maxTime: '20:00',
@@ -154,7 +156,9 @@ export class ModalEditComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
-    this.loadPersonal();
+    if (!this.isTerapista){
+      this.loadPersonal();
+    }
     this.loadStatus();
     if (this.event) {
       this.loadCurrentSesion();
@@ -162,7 +166,7 @@ export class ModalEditComponent implements OnInit, AfterViewInit {
   }
 
   onChangePersonal(event: any) {
-    if (event.id_personal) {
+    if (event.id_personal && !this.isTerapista) {
       this.personalService
         .getById(event.id_personal)
         .pipe(

@@ -7,6 +7,8 @@ import { CitaService } from 'src/app/services/citas/cita.service';
 import { LoadingService } from 'src/app/services/loading.service';
 import { ModalEditComponent } from '../modal-edit/modal-edit.component';
 import { BorrarModalComponent } from '../../cronograma/modals/borrar-modal/borrar-modal.component';
+import { Router } from '@angular/router';
+import { EditCitaComponent } from 'src/app/pages/terapista/modals/edit-cita/edit-cita.component';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -20,6 +22,7 @@ export class ModalViewEventComponent implements OnInit {
   activeModal = inject(NgbActiveModal);
   modal = inject(NgbModal);
   citaService = inject(CitaService);
+  router = inject(Router);
   isLoading = inject(LoadingService).isLoading;
 
   @Output() eventUpdated = new EventEmitter<CalendarEvent>();
@@ -69,6 +72,7 @@ export class ModalViewEventComponent implements OnInit {
   }
 
   openEditModal() {
+    // const modal = this.router.url.includes('/admin') ? ModalEditComponent : EditCitaComponent;
     const modalRef = this.modal.open(ModalEditComponent, {
       size: 'lg',
       centered: true,

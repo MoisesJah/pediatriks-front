@@ -35,10 +35,18 @@ export class LoginComponent {
   redirectToDashboard(value: any) {
     this.storeCredentials(value.token, value.user);
 
-    if (value.user.tipo_user === 'administrador') {
-      this.router.navigate(['admin/dashboard']);
-    } else {
-      this.router.navigate(['/dashboard']);
+    switch (value.user.tipo_user) {
+      case 'administrador':
+        this.router.navigate(['/admin/dashboard']);
+        break;
+      case 'paciente':
+        this.router.navigate(['/dashboard']);
+        break;
+      case 'terapista':
+        this.router.navigate(['/terapista/dashboard']);
+        break;
+      default:
+        break;
     }
   }
 

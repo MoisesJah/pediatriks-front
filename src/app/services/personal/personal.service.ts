@@ -21,6 +21,13 @@ export class PersonalService {
     );
   }
 
+
+  getPersonalByUser(id: number) {
+    return this.http.get<{ data: Personal }>(
+      `${this.apiUrl}/personal/user/${id}`
+    );
+  }
+
   getHorarios(id: string) {
     return this.http.get<{ data: any }>(
       `${this.apiUrl}/personal/horarios/${id}`

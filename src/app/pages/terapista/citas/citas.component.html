@@ -1,1 +1,34 @@
-<p>citas works!</p>
+<app-header>
+    <ng-container header-title>
+        <h1 class="d-flex align-items-center text-white fw-bold my-1">
+            Mis Citas
+        </h1>
+
+    </ng-container>
+</app-header>
+
+<div class="content d-flex flex-column flex-column-fluid">
+    <div class="container-xxl" id="kt_content_container">
+        <!--begin::Card-->
+        <div class="card">
+            <!--begin::Card header-->
+
+            <div class="card-body" style="
+              border: none;
+              box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+              border-radius: 0 0 15px 15px;
+            ">
+                <div class="demo-app-main">
+                    @defer (on viewport) {
+                    <full-calendar #calendar [events]="citasEvent | async"
+                        [ngClass]="{ 'opacity-50': isLoading | async }" [options]="calendarOptions">
+
+                    </full-calendar>
+                    }@placeholder() {
+                    <h1>Loading...</h1>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

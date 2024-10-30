@@ -5,6 +5,7 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { ToastrService } from 'ngx-toastr';
 import { map, Observable } from 'rxjs';
 import { LoadingService } from 'src/app/services/loading.service';
+import { PersonalService } from 'src/app/services/personal/personal.service';
 import { TipouserService } from 'src/app/services/tipouser/tipouser.service';
 import { UserService } from 'src/app/services/user/user.service';
 
@@ -18,11 +19,15 @@ export class CreateModalComponent implements OnInit {
   modal = inject(NgbModal);
   userService = inject(UserService);
   toast = inject(ToastrService);
+  personalService = inject(PersonalService);
   tipouserService = inject(TipouserService);
   userForm: FormGroup;
   isLoading = inject(LoadingService).isLoading;
 
   tipoUserList: Observable<any> = new Observable();
+  personalList: Observable<any> = new Observable();
+
+  isTipoTerapista: boolean = false;
 
   @Output() onSaveComplete = new EventEmitter();
 
@@ -42,11 +47,44 @@ export class CreateModalComponent implements OnInit {
       telefono: ['', [Validators.required, Validators.pattern('^[0-9]*')]],
       password: ['', [Validators.required, Validators.minLength(8)]],
       direccion: [''],
+      id_personal: [null],
     });
   }
 
   ngOnInit(): void {
     this.loadTipousers();
+    this.loadPersonal();
+  }
+
+  changeTipoUser(event: any) {
+    this.isTipoTerapista = event && event?.nombre === 'terapista';
+
+    if (this.isTipoTerapista) {
+
+      this.userForm.get('id_personal')?.setValidators(Validators.required);
+      this.userForm.get('id_personal')?.updateValueAndValidity();
+    } else {
+      this.userForm.get('id_personal')?.clearValidators();
+      this.userForm.get('id_personal')?.updateValueAndValidity();
+    }
+  }
+
+  changePersonal(event?: any) {
+    if (event) {
+      this.userForm.patchValue({
+        name: event.nombre,
+        email: event.correo,
+        dni: event.dni,
+        telefono: event.telefono,
+      });
+    } else {
+      this.userForm.reset({
+        name: '',
+        email: '',
+        dni: '',
+        telefono: '',
+      });
+    }
   }
 
   generatePassword(): void {
@@ -71,6 +109,12 @@ export class CreateModalComponent implements OnInit {
       untilDestroyed(this)
     );
   }
+
+  loadPersonal() {
+   this.personalList = this.personalService.getAll().pipe(
+      map((resp) => resp.data),
+      untilDestroyed(this)
+    )}
 
   save() {
     if (this.userForm.valid) {

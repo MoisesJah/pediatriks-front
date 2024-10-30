@@ -12,7 +12,7 @@ const routes: Routes = [
   },
   {
     path: 'citas',
-    loadChildren: () =>
+    loadComponent: () =>
       import('./citas/citas.component').then(
         (m) => m.CitasComponent
       ),

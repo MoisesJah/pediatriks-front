@@ -84,7 +84,23 @@
       <label for="exampleFormControlInput1" class="required form-label">
         Tipo de usuario
       </label>
-      <ng-select [items]="tipoUserList | async" [loading]="isLoading | async" [loadingText]="'Cargando...'" bindValue="id_tipousers" placeholder="Seleccionar" bindLabel="nombre" formControlName="id_tipousers"></ng-select>
+      <ng-select (change)="changeTipoUser($event)" [items]="tipoUserList | async" [loading]="isLoading | async" [loadingText]="'Cargando...'" bindValue="id_tipousers" placeholder="Seleccionar" bindLabel="nombre" formControlName="id_tipousers"></ng-select>
+    </div>
+
+    <div *ngIf="isTipoTerapista" class="form-group">
+      <label for="exampleFormControlInput1" class="required form-label">
+        Seleccionar Terapista
+      </label>
+      <ng-select
+        [items]="personalList | async"
+        [loading]="isLoading | async"
+        (change)="changePersonal($event)"
+        [loadingText]="'Cargando...'"
+        bindValue="id_personal"
+        placeholder="Seleccionar"
+        bindLabel="nombre"
+        formControlName="id_personal"
+      ></ng-select>
     </div>
 
     <div class="form-group">
