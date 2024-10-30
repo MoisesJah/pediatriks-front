@@ -1,0 +1,41 @@
+<app-header>
+  <ng-container header-title>
+    <h1 class="d-flex  text-gray-900 fw-bold align-items-center  gap-2">
+      <i style="vertical-align: middle;" class="ki-duotone ki-calendar text-white fs-2tx"><span class="path1"></span><span class="path2"></span></i>
+      <span class="" style="color: white">Mis Terapias</span>
+    </h1>
+  </ng-container>
+</app-header>
+
+<div class="content d-flex flex-column flex-column-fluid">
+  <div class="container-xxl">
+    <div class="card shadow p-2 px-4">
+      <div class="d-flex py-4 justify-content-between align-items-center">
+
+        <div class="d-flex align-items-center gap-3">
+          <button type="button" class="btn btn-light-primary" (click)="refreshList()">
+            <span class="d-flex align-items-center">
+              <span class="fa-solid fa-rotate-right"></span>
+              <span class="ms-2">Actualizar</span>
+            </span>
+          </button>
+
+        </div>
+      </div>
+      <div style="height: 350px"
+        [ngClass]="[theme.getThemeMode() === 'light' ? 'ag-theme-quartz' : 'ag-theme-quartz-dark']">
+        @defer {
+        <ag-grid-angular style="width: 100%; height: 100%" [rowData]="citas | async" [columnDefs]="colDefs"
+          [loading]="isLoading | async" loadingMessage="Cargando..." [localeText]="localeText"
+          [enableCellTextSelection]="true" [ariaHidden]="true" [pagination]="true"
+          (gridReady)="gridReady($event)"></ag-grid-angular>
+
+        }@loading {
+        <div class="d-flex justify-content-center align-items-center" style="height: 100%">
+          <div class="spinner-border" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+        </div>
+        }
+      </div>
+    </div>

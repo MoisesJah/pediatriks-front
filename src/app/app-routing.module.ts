@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { adminGuard } from './guards/admin.guard';
 import { authGuard } from './guards/auth.guard';
+import { terapistaGuard } from './guards/terapista.guard';
 
 const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -11,6 +12,13 @@ const routes: Routes = [
     canActivate: [authGuard],
     loadChildren: () =>
       import('./pages/admin/admin.module').then((m) => m.AdminModule),
+  },
+  {
+    path: 'terapista',
+    canMatch: [terapistaGuard],
+    canActivate: [authGuard],
+    loadChildren: () =>
+      import('./pages/terapista/terapista.module').then((m) => m.TerapistaModule),
   },
   {
     path: 'login',
@@ -35,7 +43,7 @@ const routes: Routes = [
       ),
   },
   {
-    path: 'paquetes',  
+    path: 'paquetes',
     canActivate: [authGuard],
     loadChildren: () =>
       import('./pages/paquetes/paquetes.module').then(

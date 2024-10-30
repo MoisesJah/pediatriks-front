@@ -1,4 +1,3 @@
-import { IPaciente } from './../../models/paciente';
 import { Component, ChangeDetectorRef, inject, OnInit } from '@angular/core';
 import { CommonModule, formatDate } from '@angular/common';
 import { Router, RouterModule, RouterOutlet } from '@angular/router';
@@ -10,6 +9,7 @@ import { ColDef, GridReadyEvent, GridApi } from 'ag-grid-community';
 import { AG_GRID_LOCALE_ES } from '@ag-grid-community/locale';
 import { map, Observable } from 'rxjs';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { IPaciente } from '.././../../models/paciente';
 import { PacienteService } from 'src/app/services/paciente/paciente.service';
 import { Cita } from 'src/app/models/cita';
 import { CitaService } from 'src/app/services/citas/cita.service';
@@ -33,7 +33,7 @@ export class DashboardComponent implements OnInit {
 
   pacienteService = inject(PacienteService);
   pacientesList: Observable<IPaciente[]> = new Observable();
-  citasPaciente: Observable<Cita[]> = new Observable();
+  citas: Observable<Cita[]> = new Observable();
   user = this.authService.user();
 
   colDefs: ColDef[] = [
@@ -58,7 +58,6 @@ export class DashboardComponent implements OnInit {
       },
     },
     { field: 'terapia', headerName: 'Terapia', filter: true },
-    { field: 'terapista', headerName: 'Terapista', filter: true },
     { field: 'status', headerName: 'Estado', filter: true },
   ];
 
@@ -71,9 +70,10 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit() {
     if (this.user) {
-      console.log('Usuario logueado:', this.user); // Asegúrate de que tenga el ID
-      const userId = this.user.id.toString();
-      this.loadCitasPaciente(userId);
+      console.log('Usuario logueado:', this.user);
+      const userId = this.user?.id?.toString();
+      this.loadCitas(userId, this.user?.tipo_user);
+      this.loadPacientes();
     }
   }
 
@@ -85,19 +85,38 @@ export class DashboardComponent implements OnInit {
   }
 
   refreshList() {
-    this.loadCitasPaciente(this.user?.id.toString()!);
+    this.loadCitas(this.user?.id?.toString()!, this.user?.tipo_user);
   }
 
-  loadCitasPaciente(idPaciente: string) {
-    this.citasPaciente = this.citaService.getCitasByUser(idPaciente).pipe(
-      map((resp: { data: Cita[] }) => resp.data),
-      untilDestroyed(this)
-    );
+  loadCitas(id: string | undefined, tipoUser: string | undefined) {
+    const today = new Date();
+
+    const startOfWeek = new Date(today);
+    startOfWeek.setDate(today.getDate() - today.getDay() + 1);
+
+    const endOfWeek = new Date(today);
+    endOfWeek.setDate(today.getDate() - today.getDay() + 7);
+
+    const startWeek = startOfWeek.toISOString().split('T')[0];
+    const endWeek = endOfWeek.toISOString().split('T')[0];
+
+    if (tipoUser === 'terapista' && id) {
+      this.citas = this.citaService.getCitasByPersonal({
+        id_personal: id,
+        startWeek: startWeek,
+        endWeek: endWeek,
+      }).pipe(
+        map((resp: { data: Cita[] }) => resp.data),
+        untilDestroyed(this)
+      );
+    } else {
+      console.warn('Usuario no autorizado para esta vista');
+    }
   }
 
   gridReady(params: GridReadyEvent) {
     this.gridApi = params.api;
-
+    this.sizeColumnsToFit();
   }
 
   sizeColumnsToFit(): void {

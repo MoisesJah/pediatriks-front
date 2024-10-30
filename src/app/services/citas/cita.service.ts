@@ -52,6 +52,11 @@ export class CitaService {
     return this.http.post<{ data: any }>(`${this.apiUrl}/citas/personal`, body);
   }
 
+  getCitasByPersonal(body: { id_personal: string; startWeek: string; endWeek: string }) {
+    return this.http.post<{ data: any }>(`${this.apiUrl}/citas/personal`, body);
+  }
+
+
   getAvailablePersonal(body: any) {
     return this.http.post<{ data: any }>(
       `${this.apiUrl}/citas/personal/available`,

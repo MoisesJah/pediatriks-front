@@ -70,9 +70,11 @@ export class LayoutComponent {
     return this.authService.isPaciente();
   }
 
-  isTerapeuta(): boolean {
+  isTerapista(): boolean {
     return this.authService.isTerapista();
   }
+
+
 
   navigateToInicio(event: Event): void {
     event.preventDefault();
@@ -88,6 +90,10 @@ export class LayoutComponent {
     } else if (this.isPaciente()) {
       // Redirigir al inicio del Paciente
       this.router.navigate(['/dashboard']);
+    }
+    else if (this.isTerapista()) {
+      // Redirigir al inicio del Paciente
+      this.router.navigate(['terapista/dashboard']);
     } else {
       // Manejar otros casos o roles no reconocidos
       this.router.navigate(['/home']);
@@ -113,9 +119,9 @@ export class LayoutComponent {
     if (this.isAdmin()) {
       // Redirigir al inventario del administrador
       this.router.navigate(['/admin/inventario']);
-    } else if (this.isTerapeuta()) {
+    } else if (this.isTerapista()) {
       // Redirigir al inventario del terapeuta
-      this.router.navigate(['/terapeuta/inventario']);
+      this.router.navigate(['/terapista/inventario']);
     } else {
       // Manejar otros roles o casos no reconocidos
       this.router.navigate(['/home']);

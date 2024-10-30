@@ -26,6 +26,7 @@ import { DatePipe, IMAGE_CONFIG, registerLocaleData } from '@angular/common';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { PaquetesComponent } from './pages/paquetes/paquetes.component';
 import { ToastrModule } from 'ngx-toastr';
+import { TerapistaModule } from './pages/terapista/terapista.module';
 
 registerLocaleData(localeEs);
 @NgModule({
@@ -56,6 +57,7 @@ registerLocaleData(localeEs);
     NgSelectModule,
     TerapiasModalsModule,
     PacientesModalsModule,
+    TerapistaModule,
     SedesModalsModule,
     PaquetesComponent
   ],
