@@ -2,6 +2,7 @@ import { Component, EventEmitter, inject, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { ToastrService } from 'ngx-toastr';
 import { map, Observable } from 'rxjs';
 import { IUser } from 'src/app/models/user';
 import { LoadingService } from 'src/app/services/loading.service';
@@ -18,6 +19,7 @@ export class EditModalComponent implements OnInit {
   modal = inject(NgbModal)
   userService = inject(UserService)
   tipouserService = inject(TipouserService);
+  toast = inject(ToastrService)
   userForm: FormGroup;
   isLoading = inject(LoadingService).isLoading;
   userId: number | undefined;
@@ -78,9 +80,19 @@ export class EditModalComponent implements OnInit {
 
 
   edit(user: IUser, id: number) {
-    this.userService.update(user, id).subscribe(() => {
-      this.onSaveComplete.emit();
-      this.modal.dismissAll();
+    this.userService.update(user, id).subscribe({
+      next: () => {
+        this.onSaveComplete.emit();
+        this.close();
+      },
+      error: (err) => {
+        if (err.error.errors) {
+          const errors = Object.values(err.error.errors).join('\n');
+          this.toast.error(errors, 'Error');
+        } else {
+          this.toast.error('Ocurrio un error al actualizar el usuario', 'Error');
+        }
+      },
     });
   }
 }

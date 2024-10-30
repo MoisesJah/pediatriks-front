@@ -2,6 +2,7 @@ import { Component, EventEmitter, inject, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { ToastrService } from 'ngx-toastr';
 import { map, Observable } from 'rxjs';
 import { LoadingService } from 'src/app/services/loading.service';
 import { TipouserService } from 'src/app/services/tipouser/tipouser.service';
@@ -16,6 +17,7 @@ import { UserService } from 'src/app/services/user/user.service';
 export class CreateModalComponent implements OnInit {
   modal = inject(NgbModal);
   userService = inject(UserService);
+  toast = inject(ToastrService);
   tipouserService = inject(TipouserService);
   userForm: FormGroup;
   isLoading = inject(LoadingService).isLoading;
@@ -72,9 +74,19 @@ export class CreateModalComponent implements OnInit {
 
   save() {
     if (this.userForm.valid) {
-      this.userService.create(this.userForm.value).subscribe(() => {
-        this.onSaveComplete.emit();
-        this.modal.dismissAll();
+      this.userService.create(this.userForm.value).subscribe({
+        next: () => {
+          this.close();
+          this.onSaveComplete.emit();
+        },
+        error: (err) => {
+          if (err.error.errors) {
+            const errors = Object.values(err.error.errors).join('\n');
+            this.toast.error(errors, 'Error');
+          } else {
+            this.toast.error('Ocurrio un error al crear el usuario', 'Error');
+          }
+        },
       });
     }
   }
