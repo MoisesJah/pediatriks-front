@@ -16,6 +16,7 @@ import { CitaService } from 'src/app/services/citas/cita.service';
 import { LoadingService } from 'src/app/services/loading.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { PersonalService } from 'src/app/services/personal/personal.service';
+import { StatusBadgeComponent } from '../modals/status-badge/status-badge.component';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -65,7 +66,7 @@ export class DashboardComponent implements OnInit {
         return `<span class="d-flex gap-2 align-items-center"><i class="ki-outline ki-time text-gray-900 fs-2"></i>${this.datePipe.transform(new Date(params.value), 'hh:mm')}</span>`;
       },
     },
-    { field: 'estado', headerName: 'Estado', filter: true },
+    { field: 'estado', headerName: 'Estado', filter: true,cellRenderer: StatusBadgeComponent },
   ];
 
   constructor(
@@ -102,7 +103,8 @@ export class DashboardComponent implements OnInit {
         endWeek: endWeek.toISOString() // Convierte a string
       })
       .pipe(
-        map(response => response.data) // Asegúrate de que tu API devuelve un objeto con la propiedad 'data'
+        map(response => response.data),
+        untilDestroyed(this)
       );
     } else {
       console.error('ID personal no disponible');

@@ -16,21 +16,36 @@ export const authGuard: CanActivateFn = (route, state) => {
   }
 
   if (isLoginOrRegister && authService.isAuthenticated()) {
-    const redirectUrl = authService.isAdmin() ? '/admin/dashboard' : '/dashboard';
+    let redirectUrl = '';
+    switch (authService.user()?.tipo_user) {
+      case 'administrador':
+        redirectUrl = '/admin/dashboard';
+        break;
+      case 'terapista':
+        redirectUrl = '/terapista/dashboard';
+        break;
+      case 'paciente':
+        redirectUrl = '/dashboard';
+        break;
+      default:
+        break;
+    }
     router.navigate([redirectUrl]);
     return false;
   }
 
-  if(authService.isAdmin() && !isAdminRoute) {
+  if (authService.isAdmin() && !isAdminRoute) {
     router.navigateByUrl('/admin/dashboard');
     return false;
   }
 
   if (authService.isAuthenticated() && !authService.isAdmin() && isAdminRoute) {
-    router.navigateByUrl('/dashboard');
+    const redirectUrl = authService.isTerapista()
+      ? '/terapista/dashboard'
+      : '/dashboard';
+    router.navigateByUrl(redirectUrl);
     return false;
   }
 
   return true;
 };
-

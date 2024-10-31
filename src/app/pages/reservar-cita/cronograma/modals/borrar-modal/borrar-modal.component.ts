@@ -42,7 +42,7 @@ export class BorrarModalComponent {
       this.citasService
         .delete({
           id_sesion: this.event.sesion.id_sesion!,
-          ...this.deleteForm.value,
+          deleteOption: this.event?.tipo_cita.recurrente ? this.deleteForm.value.deleteOption : 3,
         })
         .pipe(finalize(() => (this.isLoading = false)))
         .subscribe({

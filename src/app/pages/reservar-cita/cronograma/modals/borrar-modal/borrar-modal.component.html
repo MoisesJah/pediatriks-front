@@ -16,6 +16,7 @@
 
 <div class="modal-body">
     <form class="d-flex flex-column gap-3" [formGroup]="deleteForm">
+        @if (this.event?.tipo_cita.recurrente) {
         <div class="form-check form-check-custom form-check-danger form-check-solid">
             <input class="form-check-input" formControlName="deleteOption" type="radio" value="1" id="flexCheckboxLg" />
             <label class="form-check-label text-gray-900" for="flexCheckboxLg">
@@ -36,6 +37,11 @@
                 Todas las Sesiones
             </label>
         </div>
+        }@else {
+        <div>
+            <p>¿Estás seguro de eliminar esta sesión?</p>
+        </div>
+        }
     </form>
 </div>
 

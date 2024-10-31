@@ -1,0 +1,28 @@
+<div>
+    @switch (status) {
+    @case('Programado') {
+    <span class="badge fs-7 badge-light-primary">
+        <span class="h-5px w-5px rounded-circle bg-primary d-inline-block me-2"></span>
+        {{status}}
+    </span>
+    }
+
+    @case('Asistio') {
+    <span class="badge fs-7 badge-light-success ">
+        <span class="h-5px w-5px rounded-circle bg-success d-inline-block me-2"></span>
+        {{status}}</span>
+    }
+
+    @case('No Asistio') {
+    <span class="badge  fs-7 badge-light-danger ">
+        <span class="h-5px w-5px rounded-circle bg-danger d-inline-block me-2"></span>
+        {{status}}
+    </span>
+    }
+
+    @default {
+
+    }
+
+    }
+</div>

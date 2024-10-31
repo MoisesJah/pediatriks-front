@@ -9,7 +9,10 @@ export interface Cita {
   id_cita: string;
   paciente: IPaciente;
   sede: Sede;
-  tipo_cita: string
+  tipo_cita: {
+    nombre: string;
+    recurrente: boolean;
+  }
   terapia: Terapia;
   paquete?: Paquete;
   sesion: {

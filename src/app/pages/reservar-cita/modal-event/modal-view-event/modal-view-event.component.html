@@ -41,8 +41,8 @@
              
               <div class="fs-6 d-flex align-items-center justify-content-between gap-2">
                 <div>
-                  <span [ngClass]="sessionStatus(event?.sesion.status.nombre)"></span>
-                <span class="">{{event?.sesion.status.nombre}} </span>
+                  <span class="d-inline-block me-2" [ngClass]="sessionStatus(event?.sesion.status.nombre)"></span>
+                  <span class="fw-medium">{{event?.sesion.status.nombre}} </span>
                 </div>
                 <!-- <div *ngIf="event?.paquete">
                   <span class="text-sm" >{{event?.paquete.nombre}}</span>
