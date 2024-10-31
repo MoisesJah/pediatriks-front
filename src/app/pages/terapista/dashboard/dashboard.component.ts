@@ -1,5 +1,5 @@
 import { Component, ChangeDetectorRef, inject, OnInit } from '@angular/core';
-import { CommonModule, formatDate } from '@angular/common';
+import { CommonModule, DatePipe, formatDate } from '@angular/common';
 import { Router, RouterModule, RouterOutlet } from '@angular/router';
 import { HeaderComponent } from 'src/app/components/ui/header/header.component';
 import { ActivatedRoute } from '@angular/router';
@@ -15,6 +15,7 @@ import { Cita } from 'src/app/models/cita';
 import { CitaService } from 'src/app/services/citas/cita.service';
 import { LoadingService } from 'src/app/services/loading.service';
 import { AuthService } from 'src/app/services/auth.service';
+import { PersonalService } from 'src/app/services/personal/personal.service';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -30,18 +31,17 @@ export class DashboardComponent implements OnInit {
   isLoading = inject(LoadingService).isLoading;
   theme = inject(ThemeService);
   authService = inject(AuthService);
+  datePipe = inject(DatePipe);
+  personalService = inject(PersonalService);
 
-  pacienteService = inject(PacienteService);
-  pacientesList: Observable<IPaciente[]> = new Observable();
   citas: Observable<Cita[]> = new Observable();
   user = this.authService.user();
 
   colDefs: ColDef[] = [
-    { field: 'paciente', headerName: 'Paciente', filter: true },
+    { field: 'title', headerName: 'Paciente', filter: true },
     { field: 'tipocita', headerName: 'Tipo de Cita', filter: true },
-    { field: 'sede', headerName: 'Sede', filter: true },
     {
-      field: 'fecha_sesion',
+      field: 'date',
       headerName: 'Fecha de Cita',
       valueFormatter: (params) => formatDate(params.value, 'dd/MM/yyyy', 'en'),
       cellRenderer: (params: any) => {
@@ -50,15 +50,22 @@ export class DashboardComponent implements OnInit {
       filter: 'agDateColumnFilter',
     },
     {
-      field: 'hora_inicio',
-      headerName: 'Hora de Cita',
+      field: 'start',
+      headerName: 'Hora de Inicio',
       filter: true,
       cellRenderer: (params: any) => {
-        return `<span class="d-flex gap-2 align-items-center"><i class="ki-outline ki-time text-gray-900 fs-2"></i>${params.value}</span>`;
+        return `<span class="d-flex gap-2 align-items-center"><i class="ki-outline ki-time text-gray-900 fs-2"></i>${this.datePipe.transform(new Date(params.value), 'hh:mm')}</span>`;
       },
     },
-    { field: 'terapia', headerName: 'Terapia', filter: true },
-    { field: 'status', headerName: 'Estado', filter: true },
+    {
+      field: 'end',
+      headerName: 'Hora de Fin',
+      filter: true,
+      cellRenderer: (params: any) => {
+        return `<span class="d-flex gap-2 align-items-center"><i class="ki-outline ki-time text-gray-900 fs-2"></i>${this.datePipe.transform(new Date(params.value), 'hh:mm')}</span>`;
+      },
+    },
+    { field: 'estado', headerName: 'Estado', filter: true },
   ];
 
   constructor(
@@ -69,48 +76,37 @@ export class DashboardComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    if (this.user) {
-      console.log('Usuario logueado:', this.user);
-      const userId = this.user?.id?.toString();
-      this.loadCitas(userId, this.user?.tipo_user);
-      this.loadPacientes();
+    // Llamar al método para cargar las citas
+    this.loadCitas();
+  }
+
+  loadCitas() {
+
+    if(!this.user?.personal){
+      console.log('Mostrar aviso que no tiene personal asignado el usuario');
+      return;
     }
-  }
 
-  loadPacientes() {
-    this.pacientesList = this.pacienteService.getAll().pipe(
-      map((resp) => resp.data),
-      untilDestroyed(this)
-    );
-  }
+    // Obtener el id_personal del usuario y convertirlo a string
+    const id_personal = this.user?.personal?.id_personal; // Asegúrate de que tu AuthService devuelve el id
 
-  refreshList() {
-    this.loadCitas(this.user?.id?.toString()!, this.user?.tipo_user);
-  }
+    const startWeek = new Date();
+    const endWeek = new Date();
+    endWeek.setDate(startWeek.getDate() + 7); // Fin de la semana en 7 días
 
-  loadCitas(id: string | undefined, tipoUser: string | undefined) {
-    const today = new Date();
-
-    const startOfWeek = new Date(today);
-    startOfWeek.setDate(today.getDate() - today.getDay() + 1);
-
-    const endOfWeek = new Date(today);
-    endOfWeek.setDate(today.getDate() - today.getDay() + 7);
-
-    const startWeek = startOfWeek.toISOString().split('T')[0];
-    const endWeek = endOfWeek.toISOString().split('T')[0];
-
-    if (tipoUser === 'terapista' && id) {
+    // Obtener las citas usando el método del servicio de Citas
+    if (id_personal) { // Verifica que id_personal no sea null o undefined
       this.citas = this.citaService.getCitasByPersonal({
-        id_personal: id,
-        startWeek: startWeek,
-        endWeek: endWeek,
-      }).pipe(
-        map((resp: { data: Cita[] }) => resp.data),
-        untilDestroyed(this)
+        id_personal,
+        startWeek: startWeek.toISOString(), // Convierte a string
+        endWeek: endWeek.toISOString() // Convierte a string
+      })
+      .pipe(
+        map(response => response.data) // Asegúrate de que tu API devuelve un objeto con la propiedad 'data'
       );
     } else {
-      console.warn('Usuario no autorizado para esta vista');
+      console.error('ID personal no disponible');
+      this.citas = new Observable(); // Maneja el caso de que no haya ID personal
     }
   }
 

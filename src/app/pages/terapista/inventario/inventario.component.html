@@ -1,1 +1,58 @@
-<p>inventario works!</p>
+<app-header>
+  <ng-container header-title>
+    <h1 class="d-flex flex-column text-gray-900 fw-bold my-1">
+      <span class="" style="color: white">Inventario</span>
+    </h1>
+  </ng-container>
+</app-header>
+
+<div class="content d-flex flex-column flex-column-fluid">
+  <div class="container-xxl">
+    <div class="d-flex py-4 justify-content-between align-items-center">
+      <form data-kt-search-element="form" class="position-relative" autocomplete="off">
+        <input type="hidden">
+        <i class="ki-duotone ki-magnifier fs-2 search-icon position-absolute top-50 translate-middle-y ms-4">
+          <span class="path1"></span><span class="path2"></span>
+        </i>
+        <input type="search" (input)="onFilterTextBoxChanged()" id="item-search"
+          class="form-control custom-form-control ps-13" name="search" placeholder="Búsqueda"
+          data-kt-search-element="input">
+      </form>
+      <div class="d-flex align-items-center gap-3">
+        <button type="button" class="btn btn-light-primary" (click)="loadTabla()">
+          <span class="d-flex align-items-center">
+            <span class="fa-solid fa-rotate-right"></span>
+            <span class="ms-2">Actualizar</span>
+          </span>
+        </button>
+      </div>
+    </div>
+
+    <div *ngIf="isLoading | async" class="loading-container d-flex justify-content-center align-items-center">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Cargando...</span>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-4" *ngFor="let item of inventarioList | async">
+        <div class="card mb-4" style="width: 18rem; padding: 5px;">
+          <!-- Contenedor de la imagen con sombra y borde -->
+          <div class="image-container" style="box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); border-radius: 8px; overflow: hidden;">
+            <img src="{{ item.banner_url }}" class="card-img-top" alt="{{ item.nombre }}" style="width: 100%; height: auto;">
+          </div>
+
+          <!-- Información del inventario -->
+          <div class="card-body">
+            <h5 class="card-title">{{ item.nombre }}</h5>
+            <p class="card-text">{{ item.descripcion }}</p>
+            <p class="card-text"><strong>Stock:</strong> {{ item.stock }}</p>
+            <button type="button" (click)="openSolicitarModal(item)" class="btn btn-primary btn-lg w-100 d-flex justify-content-center align-items-center">
+              <span class="ki-solid ki-plus text-white fs-1"></span> Solicitar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
