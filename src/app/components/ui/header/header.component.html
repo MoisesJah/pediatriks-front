@@ -18,18 +18,69 @@
       <!--begin::Action-->
       <div class="d-flex align-items-center gap-3 py-3 py-lg-0">
         <!--begin::Item-->
-        <div class="" id="notifications">
-          <a class="btn btn-icon btn-custom btn-active-color-primary position-relative" data-kt-menu-trigger="click"
-            data-kt-menu-attach="parent" data-kt-menu-placement="bottom-end">
-            <i class="ki-duotone ki-notification-bing fs-1" style="color: #ffffff">
-              <span class="path1"></span>
-              <span class="path2"></span>
-              <span class="path3"></span>
-            </i>
-            <span
-              class="bullet bullet-dot bg-success h-6px w-6px position-absolute translate-middle top-0 start-50 animation-blink"></span>
-          </a>
-        </div>
+        <app-popover>
+          <ng-container popover-toggle>
+            <div id="notifications" >
+              <a class="btn btn-icon btn-custom btn-active-color-primary position-relative" data-kt-menu-trigger="click"
+                 data-kt-menu-attach="parent" data-kt-menu-placement="bottom-end">
+                <i class="ki-duotone ki-notification-bing fs-1" style="color: #ffffff">
+                  <span class="path1"></span>
+                  <span class="path2"></span>
+                  <span class="path3"></span>
+                </i>
+                <span class="bullet bullet-dot bg-success h-6px w-6px position-absolute translate-middle top-0 start-50 animation-blink"></span>
+              </a>
+            </div>
+          </ng-container>
+
+          <ng-container popover-body>
+            <div class="d-flex flex-column px-9 mt-10 mb-6">
+              <h3 class="text-white fw-semibold">Notificaciones</h3>
+              <span class="fs-8 opacity-75 "> Tienes {{totalsolicitudes}} solicitudes pendientes </span>
+            </div>
+            <div class="notification-list scroll-y mh-325px my-5 ">
+              <!-- Verificar si hay notificaciones pendientes -->
+              <div *ngIf="(isLoadingService.isLoading| async) === false && solicitudesPendientes.length === 0" class="text-center p-3">
+                <span class="text-muted">No tienes ninguna notificación pendiente</span>
+              </div>
+
+              <div class="text-center p-3" *ngIf="(isLoadingService.isLoading| async) === true">
+                <span class="text-muted">Cargando...</span>
+              </div>
+
+              <!-- Mostrar la lista de notificaciones si existen -->
+              <div *ngFor="let solicitud of solicitudesPendientes" class="menu menu-column menu-rounded menu-gray-800 menu-state-bg menu-state-color fw-semibold fs-6" style="width: 250px">
+                <div class="menu-item px-3 py-2">
+                  <div class="d-flex align-items-center">
+                    <div class="d-flex flex-column">
+                      <span class="fw-bold fs-5">Solicitud de {{ solicitud.personal_solicita.nombre }}</span>
+                      <span class="text-muted fs-7">Ítem: {{ solicitud.item.nombre }}</span>
+                      <span class="text-muted fs-7">Cantidad solicitada: {{ solicitud.cantidad }}</span>
+                      <span class="text-muted fs-7">Estado: {{ solicitud.estado.nombre }}</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Botones de acción -->
+                <div class="menu-item px-3 d-flex justify-content-between">
+                  <button (click)="aceptarSolicitud(solicitud.id_solicitud,user.personal?.id_personal)" class="btn btn-sm btn-success me-2">Aceptar</button>
+                  <button (click)="negarSolicitud(solicitud.id_solicitud,solicitud.id_personal_aprueba)" class="btn btn-sm btn-danger">Negar</button>
+                </div>
+
+                <div class="separator my-2"></div>
+              </div>
+            </div>
+            <div class="py-3 text-center border-top">
+              <a href="" class="btn btn-color-gray-600 btn-active-color-primary">Ver todas las solicitudes ({{totalsolicitudes - solicitudesPendientes.length}})
+              <i class="ki-duotone ki-arrow-right fs-5">
+                <span class="path1"></span>
+                <span class="path2"></span>
+              </i></a>
+            </div>
+          </ng-container>
+        </app-popover>
+
+
         <!--end::Item-->
         <!--begin::Item-->
         <app-popover>

@@ -34,10 +34,6 @@
     </div>
 
 
-    <div *ngIf="!(isLoading | async) && !(paquetesList | async)?.length" class="text-center">
-      <p>No se encontraron paquetes.</p>
-    </div>
-
     <div class="row">
       <div class="col-md-4" *ngFor="let paquete of paquetesList | async">
         <div class="card mb-4" style="width: 18rem;">

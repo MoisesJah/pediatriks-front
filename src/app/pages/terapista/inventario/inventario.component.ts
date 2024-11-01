@@ -62,17 +62,17 @@ export class InventarioComponent implements OnInit, OnDestroy {
   }
 
   openSolicitarModal(item: Inventario) {
-
     const modalRef = this.modal.open(SolicitarModalComponent, {
       size: '300px',
       animation: true,
       centered: true,
     });
-    modalRef.componentInstance.inventarioId = item.id;
-    modalRef.componentInstance.onSaveComplete.subscribe(() => {
+    modalRef.componentInstance.inventarioId = item.id; 
+    modalRef.componentInstance.onRequestComplete.subscribe(() => {
       this.fetchInventario();
     });
   }
+
 
   ngOnDestroy(): void {
     // Llamar a un método en el caso de que necesite limpiar recursos

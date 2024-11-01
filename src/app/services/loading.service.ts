@@ -5,13 +5,11 @@ import { BehaviorSubject, delay, Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class LoadingService {
-  loadingSub: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
-  /**
-   * Contains in-progress loading requests
-   */
+  private loadingSub: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   loadingMap: Map<string, boolean> = new Map<string, boolean>();
 
   isLoading: Observable<boolean>;
+
   constructor() {
     this.isLoading = this.loadingSub.asObservable().pipe(delay(0));
   }
@@ -33,11 +31,12 @@ export class LoadingService {
     }
   }
 
-  // startLoading() {
-  //   this.loadingSubject.next(true);
-  // }
+  // Métodos para iniciar y detener la carga sin URL específica
+  startLoading() {
+    this.loadingSub.next(true);
+  }
 
-  // stopLoading() {
-  //   this.loadingSubject.next(false);
-  // }
+  stopLoading() {
+    this.loadingSub.next(false);
+  }
 }
