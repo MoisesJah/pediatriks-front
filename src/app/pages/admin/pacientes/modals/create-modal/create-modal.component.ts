@@ -19,6 +19,7 @@ import { UserService } from 'src/app/services/user/user.service';
 import { GeneroService } from 'src/app/services/genero/genero.service';
 import Spanish from 'flatpickr/dist/l10n/es.js';
 import { ParentescosService } from 'src/app/services/paciente/parentescos.service';
+import { ToastrService } from 'ngx-toastr';
 
 @UntilDestroy()
 @Component({
@@ -32,6 +33,7 @@ export class CreateModalComponent implements AfterViewInit, OnDestroy {
   isLoading = inject(LoadingService).isLoading;
   pacienteService = inject(PacienteService);
   userService = inject(UserService);
+  toast = inject(ToastrService)
   generoService = inject(GeneroService);
   parentescoService = inject(ParentescosService);
 
@@ -89,9 +91,21 @@ export class CreateModalComponent implements AfterViewInit, OnDestroy {
   save() {
     const submitData = this.pacienteForm.value;
 
-    this.pacienteService.create(submitData).subscribe(() => {
-      this.onSaveComplete.emit();
-      this.modal.close();
-    });
+    if (this.pacienteForm.valid) {
+      this.pacienteService.create(submitData).subscribe(({
+        next: () => {
+          this.onSaveComplete.emit();
+          this.modal.close();
+        },
+        error: (err) => {
+          if (err.error.errors) {
+            const errors = Object.values(err.error.errors).join('\n');
+            this.toast.error(errors, 'Error');
+          } else {
+            this.toast.error('Ocurrio un error al crear el paciente', 'Error');
+          }
+        },
+      }));
+    }
   }
 }

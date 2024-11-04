@@ -38,8 +38,12 @@ export class DashboardComponent implements OnInit {
   citas: Observable<Cita[]> = new Observable();
   user = this.authService.user();
 
+  public autoSizeStrategy = {
+    type: "fitCellContents",
+  };
+
   colDefs: ColDef[] = [
-    { field: 'title', headerName: 'Paciente', filter: true },
+    { field: 'title', headerName: 'Paciente', filter: true,minWidth: 250 },
     { field: 'tipocita', headerName: 'Tipo de Cita', filter: true },
     {
       field: 'date',

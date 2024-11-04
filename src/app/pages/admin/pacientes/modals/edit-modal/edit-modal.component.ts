@@ -19,6 +19,7 @@ import { IUser } from 'src/app/models/user';
 import { GeneroService } from 'src/app/services/genero/genero.service';
 import Spanish from 'flatpickr/dist/l10n/es.js';
 import { ParentescosService } from 'src/app/services/paciente/parentescos.service';
+import { ToastrService } from 'ngx-toastr';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -31,6 +32,7 @@ export class EditModalComponent implements AfterViewInit, OnDestroy, OnInit {
   pacienteForm: FormGroup;
   isLoading = inject(LoadingService).isLoading;
   pacienteService = inject(PacienteService);
+  toast = inject(ToastrService);
   userService = inject(UserService);
   generoService = inject(GeneroService);
   parentescoService = inject(ParentescosService);
@@ -98,11 +100,22 @@ export class EditModalComponent implements AfterViewInit, OnDestroy, OnInit {
     const submitData = this.pacienteForm.value;
     const id = this.paciente?.id_paciente!;
 
-    this.pacienteService.update(submitData, id).subscribe(() => {
-      this.onSaveComplete.emit();
-      this.modal.close();
-    });
+    if (this.pacienteForm.valid) {
+      this.pacienteService.update(submitData, id).subscribe({
+        next: () => {
+          this.onSaveComplete.emit();
+          this.modal.close();
+        },
+        error: (err) => {
+          if (err.error.errors) {
+            const errors = Object.values(err.error.errors).join('\n');
+            this.toast.error(errors, 'Error');
+          } else {
+            this.toast.error('Ocurrio un error al crear el paciente', 'Error');
+          }
+        },
+      });
+    }
 
-    // console.log(submitData);
   }
 }

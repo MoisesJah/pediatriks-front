@@ -26,6 +26,8 @@ export class HeaderComponent {
   solicitudInventarioService = inject(SolicitudInventarioService);
   isLoadingService = inject(LoadingService);
 
+  loading = false;
+
   user = this.authService.user();
   solicitudesPendientes: SolicitudInventario[] = [];
   totalsolicitudes : number=0;
@@ -35,17 +37,18 @@ export class HeaderComponent {
   }
 
   cargarSolicitudes() {
-    this.isLoadingService.startLoading();
+    this.loading = true;
     this.solicitudInventarioService.cargarSolicitudesPendientes().subscribe(
       (response) => {
         this.solicitudesPendientes = response.data;
         this.totalsolicitudes = response.total;
         console.log(this.solicitudesPendientes);
-        this.isLoadingService.stopLoading();
+
+        this.loading = false;
       },
       (error) => {
         console.error('Error al obtener las solicitudes pendientes:', error);
-        this.isLoadingService.stopLoading();
+        this.loading = false;
       }
     );
   }

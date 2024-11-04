@@ -40,11 +40,11 @@
             </div>
             <div class="notification-list scroll-y mh-325px my-5 ">
               <!-- Verificar si hay notificaciones pendientes -->
-              <div *ngIf="(isLoadingService.isLoading| async) === false && solicitudesPendientes.length === 0" class="text-center p-3">
+              <div *ngIf="!loading && solicitudesPendientes.length === 0" class="text-center p-3">
                 <span class="text-muted">No tienes ninguna notificación pendiente</span>
               </div>
 
-              <div class="text-center p-3" *ngIf="(isLoadingService.isLoading| async) === true">
+              <div class="text-center p-3" *ngIf="loading">
                 <span class="text-muted">Cargando...</span>
               </div>
 
