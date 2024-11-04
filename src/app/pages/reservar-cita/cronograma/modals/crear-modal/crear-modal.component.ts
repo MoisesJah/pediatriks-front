@@ -158,15 +158,25 @@ export class CrearModalComponent implements OnInit, AfterViewInit {
     horaFinControl.setValue(minEndDate.toTimeString().slice(0, 5));
   }
 
+  // changePaquete(event: any) {
+  //   const paquetesControl = this.createForm.get('id_paquete') as FormControl;
+  //   const sesionesControl = this.createForm.get('num_sesiones') as FormControl;
+  //   this.maxSesiones = event?.cantidadsesiones;
+  //   if (paquetesControl.value) {
+  //     sesionesControl.setValidators(Validators.required);
+  //   }
+  //   sesionesControl.setValue(null);
+  //   sesionesControl.updateValueAndValidity();
+  // }
+
   changePaquete(event: any) {
-    const paquetesControl = this.createForm.get('id_paquete') as FormControl;
+    const paqueteControl = this.createForm.get('id_paquete') as FormControl;
     const sesionesControl = this.createForm.get('num_sesiones') as FormControl;
-    this.maxSesiones = event?.cantidadsesiones;
-    if (paquetesControl.value) {
-        sesionesControl.setValidators(Validators.required);   
-      }
-      sesionesControl.setValue(null);
-      sesionesControl.updateValueAndValidity()
+
+    if (paqueteControl.value) {
+      sesionesControl.setValue(event.cantidadsesiones);
+    }
+    
   }
 
   toggleOption(option: { label: string; value: number }) {
@@ -208,22 +218,39 @@ export class CrearModalComponent implements OnInit, AfterViewInit {
     this.modal.dismissAll();
   }
 
+  // changeTipoCita(event: any) {
+  //   this.isRecurrente = event?.recurrente;
+  //   this.isCitaPaquete = event?.nombre === 'Paquete';
+
+  //   const id_paquete = this.createForm.get('id_paquete');
+  //   const num_sesiones = this.createForm.get('num_sesiones');
+  //   if (this.isCitaPaquete) {
+  //     id_paquete?.setValidators(Validators.required);
+  //   } else {
+  //     id_paquete?.clearValidators();
+  //     id_paquete?.setValue(null);
+  //     num_sesiones?.setValue(null);
+  //     num_sesiones?.clearValidators();
+  //   }
+  //   id_paquete?.updateValueAndValidity();
+  //   num_sesiones?.updateValueAndValidity();
+  // }
+
   changeTipoCita(event: any) {
     this.isRecurrente = event?.recurrente;
     this.isCitaPaquete = event?.nombre === 'Paquete';
 
     const id_paquete = this.createForm.get('id_paquete');
     const num_sesiones = this.createForm.get('num_sesiones');
+
     if (this.isCitaPaquete) {
       id_paquete?.setValidators(Validators.required);
     } else {
       id_paquete?.clearValidators();
       id_paquete?.setValue(null);
       num_sesiones?.setValue(null);
-      num_sesiones?.clearValidators();
     }
     id_paquete?.updateValueAndValidity();
-    num_sesiones?.updateValueAndValidity();
   }
 
   ngOnInit(): void {
@@ -233,7 +260,7 @@ export class CrearModalComponent implements OnInit, AfterViewInit {
     this.loadPaquetes();
   }
 
-  ngAfterViewInit(): void {   
+  ngAfterViewInit(): void {
     this.createForm.valueChanges
       .pipe(distinctUntilKeyChanged('id_sede'))
       .subscribe((value) => {
@@ -309,20 +336,23 @@ export class CrearModalComponent implements OnInit, AfterViewInit {
           id_terapia: this.terapia.id_terapia,
         })
         .subscribe({
-          next: (data) => {
+          next: (data:any) => {
             this.eventSubmitted.emit();
             this.closeModal();
-            console.log('Cita creada:', data);
+            if(data.message){
+              this.toast.info(data.message, 'Cita Creada',{
+                timeOut: 6500,
+                progressBar: true,
+                progressAnimation: 'increasing',
+              });
+            }
           },
           error: (err) => {
             if (err.error.errors) {
               const errors = Object.values(err.error.errors).join('\n');
               this.toast.error(errors, 'Error');
             } else {
-              this.toast.error(
-                'Ocurrió un error al crear la cita',
-                'Error'
-              );
+              this.toast.error('Ocurrió un error al crear la cita', 'Error');
             }
           },
         });

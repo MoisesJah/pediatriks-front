@@ -34,7 +34,7 @@
                   {{event?.paciente}} 
                 </span>
                 <div class="fs-6 d-flex justify-content-between align-items-center" data-kt-calendar="event_description">
-                  <span class="badge badge-light-primary">{{event?.terapia.nombre}}</span>
+                  <span class="badge badge-secondary" style="margin-left: -3px;">{{event?.terapia.nombre}}</span>
                   <span class="fw-bold">{{sessionInfo()}}</span>
                 </div>
               </div>
@@ -44,9 +44,9 @@
                   <span class="d-inline-block me-2" [ngClass]="sessionStatus(event?.sesion.status.nombre)"></span>
                   <span class="fw-medium">{{event?.sesion.status.nombre}} </span>
                 </div>
-                <!-- <div *ngIf="event?.paquete">
-                  <span class="text-sm" >{{event?.paquete.nombre}}</span>
-                </div> -->
+                <div *ngIf="event?.paquete">
+                  <span class="badge badge-info">{{event?.paquete.nombre}}</span>
+                </div>
               </div>
           </div>
           <section class="d-grid mt-6 gap-4">

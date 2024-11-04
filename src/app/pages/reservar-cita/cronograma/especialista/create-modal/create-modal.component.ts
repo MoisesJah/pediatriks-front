@@ -233,9 +233,16 @@ export class CreateModalComponent implements OnInit {
           id_personal: this.personal?.id_personal,
         })
         .subscribe({
-          next: () => {
+          next: (data:any) => {
             this.onSaveComplete.emit();
             this.closeModal();
+            if(data.message){
+              this.toast.info(data.message, 'Cita Creada',{
+                timeOut: 6500,
+                progressBar: true,
+                progressAnimation: 'increasing',
+              });
+            }
           },
           error: (err) => {
             if (err.error.errors) {

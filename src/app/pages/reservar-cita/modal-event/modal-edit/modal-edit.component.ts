@@ -94,6 +94,7 @@ export class ModalEditComponent implements OnInit, AfterViewInit {
   getIcon(status: string): string {
     switch (status) {
       case 'Programado':
+        return 'h-10px w-10px rounded-circle bg-primary';
       case 'Asistió':
         return 'h-10px w-10px rounded-circle bg-success';
       case 'No Asistió':
