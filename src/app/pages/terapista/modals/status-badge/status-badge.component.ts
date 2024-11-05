@@ -13,7 +13,7 @@ export class StatusBadgeComponent implements ICellRendererAngularComp {
   status!: string;
 
   agInit(params: ICellRendererParams) {
-    this.status = params.data.estado;
+    this.status = params.data.estado ?? params.data.status;
   }
 
   refresh() {

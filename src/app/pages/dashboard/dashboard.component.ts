@@ -15,6 +15,7 @@ import { Cita } from 'src/app/models/cita';
 import { CitaService } from 'src/app/services/citas/cita.service';
 import { LoadingService } from 'src/app/services/loading.service';
 import { AuthService } from 'src/app/services/auth.service';
+import { StatusBadgeComponent } from '../terapista/modals/status-badge/status-badge.component';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -45,7 +46,8 @@ export class DashboardComponent implements OnInit {
       headerName: 'Fecha de Cita',
       valueFormatter: (params) => formatDate(params.value, 'dd/MM/yyyy', 'en'),
       cellRenderer: (params: any) => {
-        return `<span class="d-flex gap-2 align-items-center"><i class="ki-outline ki-calendar text-gray-900 fs-2"></i>${params.value}</span>`;
+        console.log(params);
+        return `<span class="d-flex gap-2 align-items-center"><i class="ki-outline ki-calendar text-gray-900 fs-2"></i>${params.valueFormatted}</span>`;
       },
       filter: 'agDateColumnFilter',
     },
@@ -59,7 +61,12 @@ export class DashboardComponent implements OnInit {
     },
     { field: 'terapia', headerName: 'Terapia', filter: true },
     { field: 'terapista', headerName: 'Terapista', filter: true },
-    { field: 'status', headerName: 'Estado', filter: true },
+    {
+      field: 'status',
+      headerName: 'Estado',
+      filter: true,
+      cellRenderer: StatusBadgeComponent,
+    },
   ];
 
   constructor(
@@ -97,7 +104,6 @@ export class DashboardComponent implements OnInit {
 
   gridReady(params: GridReadyEvent) {
     this.gridApi = params.api;
-
   }
 
   sizeColumnsToFit(): void {
