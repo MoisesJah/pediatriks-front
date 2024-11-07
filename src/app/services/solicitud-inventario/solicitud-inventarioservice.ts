@@ -13,7 +13,7 @@ export class SolicitudInventarioService {
 
 
   aceptarSolicitud(idSolicitud: string, idPersonalAprueba: string): Observable<any> {
-    const data = { id_solicitud: idSolicitud, id_personal_aprueba: idPersonalAprueba };
+    const data = { id_solicitud: idSolicitud, id_admin: idPersonalAprueba };
     return this.http.post<any>(`${this.apiUrl}/aceptar`, data);
   }
 

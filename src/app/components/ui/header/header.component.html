@@ -63,8 +63,8 @@
 
                 <!-- Botones de acción -->
                 <div class="menu-item px-3 d-flex justify-content-between">
-                  <button (click)="aceptarSolicitud(solicitud.id_solicitud,user.personal?.id_personal)" class="btn btn-sm btn-success me-2">Aceptar</button>
-                  <button (click)="negarSolicitud(solicitud.id_solicitud,solicitud.id_personal_aprueba)" class="btn btn-sm btn-danger">Negar</button>
+                  <button (click)="aceptarSolicitud(solicitud.id_solicitud,user.id)" class="btn btn-sm btn-success me-2">Aceptar</button>
+                  <button (click)="negarSolicitud(solicitud.id_solicitud,user.id)" class="btn btn-sm btn-danger">Negar</button>
                 </div>
 
                 <div class="separator my-2"></div>

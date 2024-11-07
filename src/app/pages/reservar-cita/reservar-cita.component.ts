@@ -81,6 +81,7 @@ export class ReservarCitaComponent implements OnInit, OnDestroy, AfterViewInit {
       center: 'title',
       right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek',
     },
+    aspectRatio: 1,
     allDaySlot: false,
     expandRows: true,
     // slotEventOverlap: false,
