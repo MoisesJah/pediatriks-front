@@ -7,7 +7,7 @@ import { ThemeService } from 'src/app/services/theme.service';
 import { AgGridAngular } from 'ag-grid-angular';
 import { ColDef, GridReadyEvent, GridApi } from 'ag-grid-community';
 import { AG_GRID_LOCALE_ES } from '@ag-grid-community/locale';
-import { map, Observable } from 'rxjs';
+import { catchError, of, map, Observable } from 'rxjs';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { IPaciente } from '.././../../models/paciente';
 import { PacienteService } from 'src/app/services/paciente/paciente.service';
@@ -17,11 +17,14 @@ import { LoadingService } from 'src/app/services/loading.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { PersonalService } from 'src/app/services/personal/personal.service';
 import { StatusBadgeComponent } from '../modals/status-badge/status-badge.component';
+import flatpickr from 'flatpickr';
+import { BaseOptions } from 'flatpickr/dist/types/options';
+
 
 @UntilDestroy({ checkProperties: true })
 @Component({
   selector: 'app-dashboard',
-  imports: [CommonModule, HeaderComponent, RouterOutlet, AgGridAngular],
+  imports: [CommonModule, HeaderComponent, AgGridAngular],
   standalone: true,
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'],
@@ -43,7 +46,7 @@ export class DashboardComponent implements OnInit {
   };
 
   colDefs: ColDef[] = [
-    { field: 'title', headerName: 'Paciente', filter: true,minWidth: 250 },
+    { field: 'title', headerName: 'Paciente', filter: true, minWidth: 250 },
     { field: 'tipocita', headerName: 'Tipo de Cita', filter: true },
     {
       field: 'date',
@@ -70,7 +73,7 @@ export class DashboardComponent implements OnInit {
         return `<span class="d-flex gap-2 align-items-center"><i class="ki-outline ki-time text-gray-900 fs-2"></i>${this.datePipe.transform(new Date(params.value), 'hh:mm')}</span>`;
       },
     },
-    { field: 'estado', headerName: 'Estado', filter: true,cellRenderer: StatusBadgeComponent },
+    { field: 'estado', headerName: 'Estado', filter: true, cellRenderer: StatusBadgeComponent },
   ];
 
   constructor(
@@ -81,38 +84,71 @@ export class DashboardComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    // Inicializar el flatpickr para seleccionar el rango de fechas
+    flatpickr("#dateRangePicker", {
+      mode: "range",
+      dateFormat: "Y-m-d",
+      onClose: (selectedDates) => {
+        if (selectedDates.length === 2) {
+          const [startDate, endDate] = selectedDates;
+          this.filtrarCitasPorFechas(startDate.toISOString(), endDate.toISOString());
+        }
+      }
+    });
+
     // Llamar al método para cargar las citas
     this.loadCitas();
   }
 
-  loadCitas() {
+  filtrarCitasPorFechas(fechaInicio: string, fechaFin: string) {
+    const id_personal = this.user?.personal?.id_personal; // Asegúrate de que este campo esté disponible
 
-    if(!this.user?.personal){
+    if (!id_personal) {
+      console.error('ID del personal no disponible');
+      return;
+    }
+
+    this.citaService.getCitasByFecha(id_personal, fechaInicio, fechaFin).subscribe({
+      next: (response) => {
+        console.log("Citas filtradas:", response.data);
+        this.citas = response.data;
+      },
+      error: (error) => {
+        console.error('Error al filtrar citas:', error);
+      }
+    });
+  }
+
+  loadCitas() {
+    if (!this.user?.personal) {
       console.log('Mostrar aviso que no tiene personal asignado el usuario');
       return;
     }
 
-    // Obtener el id_personal del usuario y convertirlo a string
-    const id_personal = this.user?.personal?.id_personal; // Asegúrate de que tu AuthService devuelve el id
-
+    const id_personal = this.user?.personal?.id_personal;
     const startWeek = new Date();
     const endWeek = new Date();
     endWeek.setDate(startWeek.getDate() + 7); // Fin de la semana en 7 días
 
-    // Obtener las citas usando el método del servicio de Citas
-    if (id_personal) { // Verifica que id_personal no sea null o undefined
+    if (id_personal) {
       this.citas = this.citaService.getCitasByPersonal({
         id_personal,
-        startWeek: startWeek.toISOString(), // Convierte a string
-        endWeek: endWeek.toISOString() // Convierte a string
-      })
-      .pipe(
-        map(response => response.data),
+        startWeek: startWeek.toISOString(),
+        endWeek: endWeek.toISOString()
+      }).pipe(
+        map(response => {
+          console.log('Respuesta del backend:', response);
+          return response.data; // Verifica que 'data' sea un arreglo
+        }),
+        catchError(error => {
+          console.error('Error al cargar citas:', error);
+          return of([]); // Devuelve un array vacío si hay error
+        }),
         untilDestroyed(this)
       );
     } else {
       console.error('ID personal no disponible');
-      this.citas = new Observable(); // Maneja el caso de que no haya ID personal
+      this.citas = of([]); // Devuelve un observable con un array vacío
     }
   }
 

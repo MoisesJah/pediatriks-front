@@ -66,19 +66,17 @@ export class HeaderComponent {
    }
 
 
-  // negarSolicitud(solicitud: { user: IUser; item: Inventario; cantidad: number }) {
-  //   const idPersonalAprueba = 'id_personal_aprueba';
-
-  //   this.solicitudInventarioService.negarSolicitud(solicitud.user.id.toString(), idPersonalAprueba).subscribe({
-  //     next: () => {
-  //       console.log(`Solicitud negada de ${solicitud.user.personal?.nombre}`);
-  //       this.solicitudesPendientes = this.solicitudesPendientes.filter(s => s !== solicitud);
-  //     },
-  //     error: (error) => {
-  //       console.error('Error al negar solicitud:', error);
-  //     }
-  //   });
-  // }
+   negarSolicitud(id_solicitud: string, id_personal_aprueba: string) {
+    this.solicitudInventarioService.negarSolicitud(id_solicitud, id_personal_aprueba).subscribe({
+      next: () => {
+        console.log("Solicitud Negada");
+        this.solicitudesPendientes = this.solicitudesPendientes.filter(s => s.id_solicitud !== id_solicitud);
+      },
+      error: (error) => {
+        console.error('Error al negar solicitud:', error);
+      }
+    });
+  }
 
 
   removeCredentials() {

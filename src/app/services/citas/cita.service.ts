@@ -4,6 +4,7 @@ import { EventApi } from '@fullcalendar/core';
 import { Cita } from 'src/app/models/cita';
 import { environment } from 'src/environments/environment';
 import { Observable } from 'rxjs';
+import { catchError, of, map } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -54,6 +55,17 @@ export class CitaService {
 
   getCitasByPersonal(body: { id_personal: string; startWeek: string; endWeek: string }) {
     return this.http.post<{ data: any }>(`${this.apiUrl}/citas/personal`, body);
+  }
+
+
+  getCitasByFecha(id_personal: string, fecha_inicio: string, fecha_fin: string): Observable<any> {
+    const body = {
+      id_personal,
+      fecha_inicio,
+      fecha_fin
+    };
+
+    return this.http.post<{ data: any }>(`${this.apiUrl}/citas/filtrar-por-fechas`, body);
   }
 
 

@@ -18,7 +18,7 @@ import { SolicitarModalComponent } from './modales/solicitar-modal/solicitar-mod
 @Component({
   selector: 'app-inventario',
   standalone: true,
-  imports: [CommonModule, HeaderComponent, AgGridAngular],
+  imports: [CommonModule, HeaderComponent],
   templateUrl: './inventario.component.html',
   styleUrls: ['./inventario.component.scss'],
 })
@@ -67,7 +67,7 @@ export class InventarioComponent implements OnInit, OnDestroy {
       animation: true,
       centered: true,
     });
-    modalRef.componentInstance.inventarioId = item.id; 
+    modalRef.componentInstance.inventarioId = item.id;
     modalRef.componentInstance.onRequestComplete.subscribe(() => {
       this.fetchInventario();
     });
