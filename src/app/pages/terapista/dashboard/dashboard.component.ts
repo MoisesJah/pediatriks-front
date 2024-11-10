@@ -38,7 +38,7 @@ export class DashboardComponent implements OnInit {
   datePipe = inject(DatePipe);
   personalService = inject(PersonalService);
 
-  citas: Observable<Cita[]> = new Observable();
+  citas: Observable<any[]> = new Observable();
   user = this.authService.user();
 
   public autoSizeStrategy = {
@@ -108,15 +108,18 @@ export class DashboardComponent implements OnInit {
       return;
     }
 
-    this.citaService.getCitasByFecha(id_personal, fechaInicio, fechaFin).subscribe({
-      next: (response) => {
-        console.log("Citas filtradas:", response.data);
-        this.citas = response.data;
-      },
-      error: (error) => {
+    this.citas = this.citaService.getCitasByFecha(id_personal, fechaInicio, fechaFin).pipe(
+      map(response => {
+        console.log('Citas filtradas:', response.data);
+        return response.data; // Verifica que 'data' sea un arreglo
+      }),
+      catchError(error => {
         console.error('Error al filtrar citas:', error);
-      }
-    });
+        return of([]); // Devuelve un array vacío si hay error
+      }),
+      untilDestroyed(this)
+    );
+
   }
 
   loadCitas() {
