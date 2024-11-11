@@ -57,8 +57,8 @@
             </div>
 
             <!-- Contenedor de la imagen con sombra y borde -->
-            <div class="image-container" style="box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); border-radius: 8px; overflow: hidden;">
-              <img src="{{ item.banner_url }}" class="card-img-top" alt="{{ item.nombre }}" style="width: 100%; height: auto;">
+            <div class="image-container img-inventory" style="border-radius: 8px; overflow: hidden;">
+              <img src="{{ item.banner_url ?? banner_url }}" class="card-img-top" alt="{{ item.nombre }}" style="width: 100%; height: auto;">
             </div>
           </div>
 

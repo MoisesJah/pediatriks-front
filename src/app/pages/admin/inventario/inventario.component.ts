@@ -20,7 +20,7 @@ import { ThemeService } from 'src/app/services/theme.service';
 @Component({
   selector: 'app-inventario',
   standalone: true,
-  imports: [CommonModule, HeaderComponent, AgGridAngular],
+  imports: [CommonModule, HeaderComponent],
   templateUrl: './inventario.component.html',
   styleUrls: ['./inventario.component.scss'],
 })
@@ -29,6 +29,7 @@ export class InventarioComponent implements OnInit, OnDestroy {
   isLoading = inject(LoadingService).isLoading;
   theme = inject(ThemeService);
   modal = inject(NgbModal);
+  banner_url = 'https://cdn-icons-png.flaticon.com/512/9573/9573235.png'
 
   inventarioList: Observable<Inventario[]> = new Observable();
   localeText = AG_GRID_LOCALE_ES;

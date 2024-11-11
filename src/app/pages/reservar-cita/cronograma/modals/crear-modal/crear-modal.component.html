@@ -19,7 +19,7 @@
         <section class="row">
             <div class="form-group col-6">
                 <label class="form-label" for="kt_calendar_datepicker_date">Seleccionar Paciente</label>
-                <ng-select [items]="pacientesList | async" [loading]="loadingPacientes" [loadingText]="'Cargando...'"
+                <ng-select [items]="pacientesList | async" [loading]="loadingPacientes" (change)="changePaciente($event)" [loadingText]="'Cargando...'"
                     bindValue="id_paciente" placeholder="Seleccionar" bindLabel="nombre" formControlName="id_paciente">
                 </ng-select>
             </div>

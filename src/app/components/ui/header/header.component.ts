@@ -16,7 +16,7 @@ import { LoadingService } from 'src/app/services/loading.service';
   selector: 'app-header',
   templateUrl: './header.component.html',
   standalone: true,
-  imports: [DropdownComponent, CommonModule, PopoverComponent, RouterLink],
+  imports: [CommonModule, PopoverComponent],
   styleUrls: ['./header.component.scss'],
 })
 export class HeaderComponent {

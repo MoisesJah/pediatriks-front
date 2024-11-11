@@ -26,6 +26,7 @@ import {
   debounceTime,
   distinctUntilChanged,
   distinctUntilKeyChanged,
+  filter,
   finalize,
   interval,
   map,
@@ -82,6 +83,7 @@ export class CrearModalComponent implements OnInit, AfterViewInit {
   es = Spanish.es;
   isRecurrente = false;
   isCitaPaquete = false;
+  id_tipopaquete = '';
 
   sedesList: Observable<Sede[]> = new Observable();
   pacientesList: Observable<IPaciente[]> = new Observable();
@@ -176,7 +178,6 @@ export class CrearModalComponent implements OnInit, AfterViewInit {
     if (paqueteControl.value) {
       sesionesControl.setValue(event.cantidadsesiones);
     }
-    
   }
 
   toggleOption(option: { label: string; value: number }) {
@@ -202,7 +203,6 @@ export class CrearModalComponent implements OnInit, AfterViewInit {
     const recurrenciaControl = this.createForm.get('recurrencia') as FormArray;
 
     if (!recurrenciaControl.value.includes(dayOfWeek)) {
-      console.log(dayOfWeek);
       recurrenciaControl.push(this.fb.control(dayOfWeek));
     }
 
@@ -240,6 +240,8 @@ export class CrearModalComponent implements OnInit, AfterViewInit {
     this.isRecurrente = event?.recurrente;
     this.isCitaPaquete = event?.nombre === 'Paquete';
 
+    this.id_tipopaquete = this.isCitaPaquete && event?.id_tipocita;
+
     const id_paquete = this.createForm.get('id_paquete');
     const num_sesiones = this.createForm.get('num_sesiones');
 
@@ -257,10 +259,32 @@ export class CrearModalComponent implements OnInit, AfterViewInit {
     this.loadSedes();
     this.loadPacientes();
     this.loadTipoCitas();
-    this.loadPaquetes();
+  }
+
+  changePaciente(event: any) {
+    // if (this.isCitaPaquete && event) {
+    //   this.loadPaquetes(event.id_paciente);
+    // }
+  }
+
+  loadPaquetesPaciente() {
+    this.createForm.valueChanges
+      .pipe(
+        distinctUntilChanged(
+          (x, y) => x.id_paciente === y.id_paciente && y.id_tipocita === this.id_tipopaquete
+        )
+      )
+      .subscribe((value) => {
+        const { id_paciente } = value;
+
+        if (id_paciente) {
+          this.loadPaquetes(id_paciente);
+        }
+      });
   }
 
   ngAfterViewInit(): void {
+    this.loadPaquetesPaciente();
     this.createForm.valueChanges
       .pipe(distinctUntilKeyChanged('id_sede'))
       .subscribe((value) => {
@@ -308,15 +332,13 @@ export class CrearModalComponent implements OnInit, AfterViewInit {
     );
   }
 
-  loadPaquetes() {
+  loadPaquetes(id_paciente: string) {
     this.loadingPaquetes = true;
-    this.paquetesList = this.terapiaService
-      .getPaquetesByTerapia(this.terapia.id_terapia)
-      .pipe(
-        map((resp) => resp.data),
-        finalize(() => (this.loadingPaquetes = false)),
-        untilDestroyed(this)
-      );
+    this.paquetesList = this.paquetesService.getByPaciente(id_paciente).pipe(
+      map((resp) => resp.data),
+      finalize(() => (this.loadingPaquetes = false)),
+      untilDestroyed(this)
+    );
   }
 
   loadPacientes() {
@@ -336,11 +358,11 @@ export class CrearModalComponent implements OnInit, AfterViewInit {
           id_terapia: this.terapia.id_terapia,
         })
         .subscribe({
-          next: (data:any) => {
+          next: (data: any) => {
             this.eventSubmitted.emit();
             this.closeModal();
-            if(data.message){
-              this.toast.info(data.message, 'Cita Creada',{
+            if (data.message) {
+              this.toast.info(data.message, 'Cita Creada', {
                 timeOut: 6500,
                 progressBar: true,
                 progressAnimation: 'increasing',

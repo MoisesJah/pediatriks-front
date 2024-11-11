@@ -39,6 +39,9 @@ export class PaqueteService {
         usuarioId
     };
     return this.http.post(`${this.apiUrl}/purchase`, body);
-}
+  }
 
+  getByPaciente(id_paciente: string): Observable<{ data: Paquete[] }> {
+    return this.http.get<{ data: Paquete[] }>(`${this.apiUrl}/paciente/${id_paciente}`);
+  }
 }
