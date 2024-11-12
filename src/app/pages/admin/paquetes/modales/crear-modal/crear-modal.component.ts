@@ -54,6 +54,7 @@ export class CrearModalComponent implements AfterViewInit {
     this.paqueteForm = this.fb.group({
       nombre: ['', Validators.required],
       descripcion: [''],
+      num_cambios: [null, [Validators.required, Validators.min(1)]],
       cantidadsesiones: ['', [Validators.required, Validators.min(1)]],
       precioregular: [
         '',

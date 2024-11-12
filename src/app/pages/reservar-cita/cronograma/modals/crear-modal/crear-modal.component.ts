@@ -160,25 +160,27 @@ export class CrearModalComponent implements OnInit, AfterViewInit {
     horaFinControl.setValue(minEndDate.toTimeString().slice(0, 5));
   }
 
-  // changePaquete(event: any) {
-  //   const paquetesControl = this.createForm.get('id_paquete') as FormControl;
-  //   const sesionesControl = this.createForm.get('num_sesiones') as FormControl;
-  //   this.maxSesiones = event?.cantidadsesiones;
-  //   if (paquetesControl.value) {
-  //     sesionesControl.setValidators(Validators.required);
-  //   }
-  //   sesionesControl.setValue(null);
-  //   sesionesControl.updateValueAndValidity();
-  // }
-
   changePaquete(event: any) {
-    const paqueteControl = this.createForm.get('id_paquete') as FormControl;
+    const paquetesControl = this.createForm.get('id_paquete') as FormControl;
     const sesionesControl = this.createForm.get('num_sesiones') as FormControl;
-
-    if (paqueteControl.value) {
+    this.maxSesiones = event?.cantidadsesiones;
+    if (paquetesControl.value) {
       sesionesControl.setValue(event.cantidadsesiones);
+      sesionesControl.setValidators(Validators.required);
+    }else{
+      sesionesControl.setValue(null);
     }
+    sesionesControl.updateValueAndValidity();
   }
+
+  // changePaquete(event: any) {
+  //   const paqueteControl = this.createForm.get('id_paquete') as FormControl;
+  //   const sesionesControl = this.createForm.get('num_sesiones') as FormControl;
+
+  //   if (paqueteControl.value) {
+  //     sesionesControl.setValue(event.cantidadsesiones);
+  //   }
+  // }
 
   toggleOption(option: { label: string; value: number }) {
     const fecha_inicio = this.createForm.get('fecha_inicio')?.value;

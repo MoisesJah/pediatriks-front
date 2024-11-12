@@ -43,7 +43,7 @@
 
     <div class="row justify-content-center">
       <div class="col-md-4" *ngFor="let paquete of paquetesList | async">
-        <div class="card mb-4" style="width: 18rem; padding: 5px;">
+        <div class="card border-1 border-gray-300 mb-4" style="width: 22rem; padding: 5px;">
 
           <div class="position-relative" style="padding-top: 40px;">
 
@@ -58,7 +58,7 @@
 
 
             <div class="image-container" style=" border-radius: 8px; overflow: hidden;">
-              <img src="{{ paquete.banner_url ?? banner_url }}" class="card-img-top img-inventory" alt="{{ paquete.nombre }}" style="width: 100%; height: auto;">
+              <img src="{{ !paquete.banner_url?.includes('default.png') ?  paquete.banner_url : banner_url }}" class="card-img-top" [ngClass]="{ 'img-inventory': paquete.banner_url?.includes('default.png') }" alt="{{ paquete.nombre }}" style="width: 100%; height: auto;">
             </div>
           </div>
 
@@ -66,6 +66,7 @@
           <div class="card-body">
             <h5 class="card-title">{{ paquete.nombre }}</h5>
             <p class="card-text"><strong>Terapias:</strong> {{ getTerapiasNombres(paquete.terapias) }}</p>
+            <p class="card-text"><strong>N° de Sesiones:</strong> {{ paquete.cantidadsesiones }}</p>
             <p class="card-text">{{ paquete.descripcion }}</p>
             <p class="card-text"><strong>${{ paquete.preciopaquete }}</strong></p>
             <button type="button" (click)="openComprarModal(paquete)" class="btn btn-primary btn-lg w-100 d-flex justify-content-center align-items-center">
