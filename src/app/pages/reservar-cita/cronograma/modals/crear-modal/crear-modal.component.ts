@@ -83,6 +83,7 @@ export class CrearModalComponent implements OnInit, AfterViewInit {
   es = Spanish.es;
   isRecurrente = false;
   isCitaPaquete = false;
+  num_cambios = 0;
   id_tipopaquete = '';
 
   sedesList: Observable<Sede[]> = new Observable();
@@ -164,6 +165,7 @@ export class CrearModalComponent implements OnInit, AfterViewInit {
     const paquetesControl = this.createForm.get('id_paquete') as FormControl;
     const sesionesControl = this.createForm.get('num_sesiones') as FormControl;
     this.maxSesiones = event?.cantidadsesiones;
+    this.num_cambios = event?.num_cambios;
     if (paquetesControl.value) {
       sesionesControl.setValue(event.cantidadsesiones);
       sesionesControl.setValidators(Validators.required);
@@ -253,8 +255,10 @@ export class CrearModalComponent implements OnInit, AfterViewInit {
       id_paquete?.clearValidators();
       id_paquete?.setValue(null);
       num_sesiones?.setValue(null);
+      num_sesiones?.clearValidators();
     }
     id_paquete?.updateValueAndValidity();
+    num_sesiones?.updateValueAndValidity();
   }
 
   ngOnInit(): void {
@@ -264,6 +268,15 @@ export class CrearModalComponent implements OnInit, AfterViewInit {
   }
 
   changePaciente(event: any) {
+    const id_paquete = this.createForm.get('id_paquete');
+    // if (id_paquete?.value) {
+    //   id_paquete.setValue(null);
+    //   // id_paquete.clearValidators();
+    // }else{
+    //   id_paquete?.clearValidators();
+    // }
+    // id_paquete?.updateValueAndValidity();
+    
     // if (this.isCitaPaquete && event) {
     //   this.loadPaquetes(event.id_paciente);
     // }
@@ -357,6 +370,7 @@ export class CrearModalComponent implements OnInit, AfterViewInit {
       this.citaService
         .createForTherapy({
           ...this.createForm.value,
+          num_cambios: this.num_cambios || null,
           id_terapia: this.terapia.id_terapia,
         })
         .subscribe({

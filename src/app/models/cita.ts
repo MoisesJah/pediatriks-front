@@ -4,7 +4,6 @@ import { Personal } from './personal';
 import { Sede } from './sede';
 import { Terapia } from './terapia';
 
-
 export interface Cita {
   id_cita: string;
   paciente: IPaciente;
@@ -12,7 +11,8 @@ export interface Cita {
   tipo_cita: {
     nombre: string;
     recurrente: boolean;
-  }
+  };
+  num_cambios: number;
   terapia: Terapia;
   paquete?: Paquete;
   sesion: {

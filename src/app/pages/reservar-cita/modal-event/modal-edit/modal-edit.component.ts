@@ -82,13 +82,11 @@ export class ModalEditComponent implements OnInit, AfterViewInit {
   };
 
   getCambiosRestantes() {
-    return this.event?.sesion.num_cambios
-      ? 3 - this.event.sesion.num_cambios
-      : 3;
+    return this.event && this.event.num_cambios
   }
 
   canEditSession() {
-    return !this.event || this.event.sesion.num_cambios < 3;
+    return !this.event || this.event.num_cambios > 0;
   }
 
   getIcon(status: string): string {
