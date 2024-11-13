@@ -85,6 +85,9 @@ ng-select {
     --ag-background-color: color-mix(in srgb, #fff, #15171c 97%);
     --ag-header-background-color: color-mix(in srgb, #fff, #15171c 93%);
   }
+  .img-inventory{
+    filter: invert(100%);
+  }
 }
 
 ng-select.ng-invalid.ng-touched .ng-select-container {

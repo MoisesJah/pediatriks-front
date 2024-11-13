@@ -24,7 +24,7 @@ import { ImageDisplayComponent } from './modales/image-display/image-display.com
 @Component({
   selector: 'app-paquetes',
   standalone: true,
-  imports: [CommonModule, HeaderComponent, AgGridAngular],
+  imports: [CommonModule, HeaderComponent],
   templateUrl: './paquetes.component.html',
   styleUrls: ['./paquetes.component.scss'],
 })
@@ -33,6 +33,7 @@ export class PaquetesComponent implements OnInit, OnDestroy {
   isLoading = inject(LoadingService).isLoading;
   theme = inject(ThemeService);
   modal = inject(NgbModal);
+  banner_url = 'https://cdn-icons-png.flaticon.com/512/9573/9573235.png'
 
   paquetesList: Observable<Paquete[]> = new Observable();
   localeText = AG_GRID_LOCALE_ES;

@@ -56,7 +56,8 @@ export class EditarModalComponent implements OnInit {
     this.paqueteForm = this.fb.group({
       nombre: ['', Validators.required],
       descripcion: ['', Validators.required],
-      cantidadsesiones: [0, [Validators.required, Validators.min(0)]],
+      num_cambios: [null, [Validators.required, Validators.min(1)]],
+      cantidadsesiones: [0, [Validators.required, Validators.min(1)]],
       precioregular: [0, [Validators.required, Validators.min(0)]],
       descuento: [0, [Validators.required, Validators.min(0)]],
       preciopaquete: [0, [Validators.required, Validators.min(0)]],
@@ -122,6 +123,7 @@ export class EditarModalComponent implements OnInit {
       formData.append('nombre', this.paqueteForm.get('nombre')?.value || '');
       formData.append('descripcion', this.paqueteForm.get('descripcion')?.value || '');
       formData.append('cantidadsesiones', this.paqueteForm.get('cantidadsesiones')?.value || '');
+      formData.append('num_cambios', this.paqueteForm.get('num_cambios')?.value || '');
       formData.append('precioregular', this.paqueteForm.get('precioregular')?.value || '');
       formData.append('descuento', this.paqueteForm.get('descuento')?.value || '');
       formData.append('preciopaquete', this.paqueteForm.get('preciopaquete')?.value || '');
@@ -134,17 +136,6 @@ export class EditarModalComponent implements OnInit {
       if (bannerUrlFile) {
         formData.append('banner_url', bannerUrlFile);
       }
-
-      console.log('Datos enviados:', formData.get('nombre'), formData.get('descripcion'),
-      formData.get('cantidadsesiones'),
-      formData.get('precioregular'),
-      formData.get('descuento'),
-      formData.get('preciopaquete'),
-      formData.get('fechainicio'),
-      formData.get('fechafin'),
-      formData.get('terapias'),
-      formData.get('sesionesrestantes'),
-       formData.get('banner_url'));
 
       const id = typeof this.paqueteId === 'string' ? this.paqueteId : this.paqueteId.id_paquetes;
 
