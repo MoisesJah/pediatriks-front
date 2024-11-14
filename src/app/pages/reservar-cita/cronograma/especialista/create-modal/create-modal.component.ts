@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, inject, OnInit, Output } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, inject, OnInit, Output } from '@angular/core';
 import {
   FormArray,
   FormBuilder,
@@ -15,7 +15,7 @@ import {
   FlatpickrDefaultsInterface,
   FlatpickrModule,
 } from 'angularx-flatpickr';
-import { finalize, map, Observable } from 'rxjs';
+import { distinctUntilChanged, finalize, map, Observable } from 'rxjs';
 import { IPaciente } from 'src/app/models/paciente';
 import { Personal } from 'src/app/models/personal';
 import { TipoCita } from 'src/app/models/tipocita';
@@ -43,7 +43,7 @@ import { ToastrService } from 'ngx-toastr';
   templateUrl: './create-modal.component.html',
   styleUrl: './create-modal.component.scss',
 })
-export class CreateModalComponent implements OnInit {
+export class CreateModalComponent implements OnInit,AfterViewInit {
   personalService = inject(PersonalService);
   pacienteService = inject(PacienteService);
   tipoCitaService = inject(TipocitaService);
@@ -66,6 +66,8 @@ export class CreateModalComponent implements OnInit {
   maxSesiones = 0;
   isRecurrente = false;
   isCitaPaquete = false;
+  id_tipopaquete = '';
+  num_cambios = 0;
 
   loadingPacientes = false;
   loadingPaquetes = false;
@@ -99,7 +101,6 @@ export class CreateModalComponent implements OnInit {
   ngOnInit(): void {
     this.loadPacientes();
     this.loadTipoCitas();
-    this.loadPaquetes();
   }
 
   options = [
@@ -164,20 +165,26 @@ export class CreateModalComponent implements OnInit {
     const paquetesControl = this.createForm.get('id_paquete') as FormControl;
     const sesionesControl = this.createForm.get('num_sesiones') as FormControl;
     this.maxSesiones = event?.cantidadsesiones;
+    this.num_cambios = event?.num_cambios;
 
     if (paquetesControl.value) {
+      sesionesControl.setValue(event.cantidadsesiones);
       sesionesControl.setValidators(Validators.required);
+    }else{
+      sesionesControl.setValue(null);
+      sesionesControl.clearValidators();
     }
-    sesionesControl.setValue(null);
     sesionesControl.updateValueAndValidity();
   }
 
   changeTipoCita(event: any) {
     this.isRecurrente = event?.recurrente;
     this.isCitaPaquete = event?.nombre === 'Paquete';
+    this.id_tipopaquete = this.isCitaPaquete && event?.id_tipocita;
 
     const id_paquete = this.createForm.get('id_paquete');
     const num_sesiones = this.createForm.get('num_sesiones');
+    
     if (this.isCitaPaquete) {
       id_paquete?.setValidators(Validators.required);
     } else {
@@ -194,6 +201,22 @@ export class CreateModalComponent implements OnInit {
     this.modal.dismissAll();
   }
 
+  loadPaquetesPaciente() {
+    this.createForm.valueChanges
+      .pipe(
+        distinctUntilChanged(
+          (x, y) => x.id_paciente === y.id_paciente && y.id_tipocita === this.id_tipopaquete
+        )
+      )
+      .subscribe((value) => {
+        const { id_paciente } = value;
+
+        if (id_paciente) {
+          this.loadPaquetes(id_paciente);
+        }
+      });
+  }
+
   loadTipoCitas() {
     this.loadingTipoCitas = true;
     this.tipoCitasList = this.tipoCitaService.getAll().pipe(
@@ -203,17 +226,19 @@ export class CreateModalComponent implements OnInit {
     );
   }
 
-  loadPaquetes() {
+  loadPaquetes(id_paciente: string) {
     this.loadingPaquetes = true;
-    this.paquetesList = this.terapiaService
-      .getPaquetesByTerapia(this.personal?.terapia.id_terapia!)
-      .pipe(
-        map((resp) => resp.data),
-        finalize(() => (this.loadingPaquetes = false)),
-        untilDestroyed(this)
-      );
+    const body = {
+      id_paciente,
+      id_terapia: this.personal?.terapia.id_terapia,
+    }
+    this.paquetesList = this.paquetesService.getByPaciente(body).pipe(
+      map((resp) => resp.data),
+      finalize(() => (this.loadingPaquetes = false)),
+      untilDestroyed(this)
+    );
   }
-
+  
   loadPacientes() {
     this.loadingPacientes = true;
     this.pacientesList = this.pacienteService.getAll().pipe(
@@ -221,6 +246,10 @@ export class CreateModalComponent implements OnInit {
       finalize(() => (this.loadingPacientes = false)),
       untilDestroyed(this)
     );
+  }
+
+  ngAfterViewInit(): void {
+    this.loadPaquetesPaciente();
   }
 
   createCita() {

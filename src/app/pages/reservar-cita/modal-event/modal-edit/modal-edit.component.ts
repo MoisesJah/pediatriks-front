@@ -120,7 +120,6 @@ export class ModalEditComponent implements OnInit, AfterViewInit {
 
   constructor(private fb: FormBuilder, public activeModal: NgbActiveModal) {
     this.editEventForm = this.fb.group({
-      descripcion: [null],
       id_personal: [null],
       fecha_inicio: [null, Validators.required],
       hora_inicio: [null],

@@ -18,7 +18,7 @@ import { formatMoney } from 'src/app/utils/formatCurrency';
 @Component({
   selector: 'app-paquetes',
   standalone: true,
-  imports: [CommonModule, HeaderComponent, AgGridAngular],
+  imports: [CommonModule, HeaderComponent],
   templateUrl: './paquetes.component.html',
   styleUrls: ['./paquetes.component.scss'],
 })

@@ -349,7 +349,11 @@ export class CrearModalComponent implements OnInit, AfterViewInit {
 
   loadPaquetes(id_paciente: string) {
     this.loadingPaquetes = true;
-    this.paquetesList = this.paquetesService.getByPaciente(id_paciente).pipe(
+    const body = {
+      id_paciente,
+      id_terapia: this.terapia.id_terapia,
+    }
+    this.paquetesList = this.paquetesService.getByPaciente(body).pipe(
       map((resp) => resp.data),
       finalize(() => (this.loadingPaquetes = false)),
       untilDestroyed(this)
@@ -370,18 +374,19 @@ export class CrearModalComponent implements OnInit, AfterViewInit {
       this.citaService
         .createForTherapy({
           ...this.createForm.value,
-          num_cambios: this.num_cambios || null,
+          num_cambios: this.num_cambios || undefined,
           id_terapia: this.terapia.id_terapia,
         })
         .subscribe({
           next: (data: any) => {
             this.eventSubmitted.emit();
             this.closeModal();
-            if (data.message) {
+            if (!data.message.startsWith('Cita')) {
               this.toast.info(data.message, 'Cita Creada', {
-                timeOut: 6500,
-                progressBar: true,
-                progressAnimation: 'increasing',
+                timeOut: 0,
+                closeButton: true,
+                // progressBar: true,
+                // progressAnimation: 'increasing',
               });
             }
           },

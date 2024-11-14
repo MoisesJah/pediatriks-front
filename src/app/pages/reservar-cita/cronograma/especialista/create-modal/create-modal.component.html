@@ -59,8 +59,8 @@
             </div>
             <div class="form-group col mb-3">
                 @if(this.createForm.get('id_paquete')?.value){
-                    <label class="form-label" for="">N° de Sesiones</label>
-                    <input type="number" min="2" step="1" [attr.max]="maxSesiones" class="form-control" formControlName="num_sesiones">
+                    <label class="form-label" for="">N° de Sesiones ({{maxSesiones}})</label>
+                    <input type="number" min="1" step="1" [attr.max]="maxSesiones" class="form-control" formControlName="num_sesiones">
                 }@else {
                     <label class="form-label" for="kt_calendar_datepicker_end_time">Hora de Fin</label>
                     <input type="text" class="form-control" id="kt_calendar_datepicker_end_time" formControlName="hora_fin"

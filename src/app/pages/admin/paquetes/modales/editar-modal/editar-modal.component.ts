@@ -55,7 +55,7 @@ export class EditarModalComponent implements OnInit {
   constructor(private fb: FormBuilder) {
     this.paqueteForm = this.fb.group({
       nombre: ['', Validators.required],
-      descripcion: ['', Validators.required],
+      descripcion: [''],
       num_cambios: [null, [Validators.required, Validators.min(1)]],
       cantidadsesiones: [0, [Validators.required, Validators.min(1)]],
       precioregular: [0, [Validators.required, Validators.min(0)]],
