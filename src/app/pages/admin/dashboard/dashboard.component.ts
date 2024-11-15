@@ -9,11 +9,13 @@ import { ReportesService } from 'src/app/services/reportes/reportes.service';
 import { ExtrasModalComponent } from './Modales/extras-modal/extras-modal.component';
 import { LoadingService } from 'src/app/services/loading.service';
 import { DatePipe } from '@angular/common';
+import { TablaingresosModalComponent } from './Modales/tablaingresos-modal/tablaingresos-modal.component';
+import { TablaegresosModalComponent } from './Modales/tablaegresos-modal/tablaegresos-modal.component';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [RouterLink, HeaderComponent],
+  imports: [HeaderComponent],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'],
   providers: [ReportesService]
@@ -194,5 +196,23 @@ export class AdminDashboardComponent implements AfterViewInit {
     modalRef.componentInstance.onSaveComplete.subscribe(() => {
       this.loadChartData();
     });
+  }
+
+  openIngresosModal() {
+     this.modal.open(TablaingresosModalComponent, {
+      size: 'xl',
+      animation: true,
+      centered: true,
+    });
+
+  }
+
+  openEgresosModal() {
+      this.modal.open(TablaegresosModalComponent, {
+      size: 'xl',
+      animation: true,
+      centered: true,
+    });
+
   }
 }

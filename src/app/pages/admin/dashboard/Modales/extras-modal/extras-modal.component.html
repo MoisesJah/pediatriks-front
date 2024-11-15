@@ -23,6 +23,13 @@
   </div>
 
   <div class="form-group">
+    <label for="tipoEgreso" class="form-label">Tipo de Egreso</label>
+    <select id="tipoEgreso" class="form-select" formControlName="tipoEgreso">
+      <option *ngFor="let tipo of tipoEgreso" [value]="tipo">{{ tipo }}</option>
+    </select>
+  </div>
+
+  <div class="form-group">
     <label for="descripcion" class="form-label">Descripción</label>
     <textarea id="descripcion" class="form-control" formControlName="descripcion" placeholder="Ingrese la descripción"></textarea>
   </div>

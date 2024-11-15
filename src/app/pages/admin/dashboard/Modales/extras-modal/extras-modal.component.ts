@@ -20,6 +20,7 @@ export class ExtrasModalComponent {
   reportesService = inject(ReportesService);
   isLoading = this.loadingService.isLoading;
   metodosPago: string[] = ['Efectivo', 'Yape', 'BCP', 'Interbank', 'BBVA', 'Transferencia'];
+  tipoEgreso: string[] = ['uno', 'dos', 'tres', 'cuatro', 'cinco', 'seis'];
 
   @Output() onSaveComplete = new EventEmitter<void>();
 
@@ -30,6 +31,7 @@ export class ExtrasModalComponent {
       descripcion: ['', Validators.required],
       costo: [0, [Validators.required, Validators.min(0)]],
       metodoPago: ['', Validators.required],
+      tipoEgreso: ['', Validators.required],
     });
   }
 
@@ -56,7 +58,8 @@ export class ExtrasModalComponent {
         nombre: this.extrasForm.get('nombre')?.value,
         descripcion: this.extrasForm.get('descripcion')?.value,
         costo: this.extrasForm.get('costo')?.value,
-        metodoPago: this.extrasForm.get('metodoPago')?.value, 
+        metodoPago: this.extrasForm.get('metodoPago')?.value,
+        tipoEgreso: this.extrasForm.get('tipoEgreso')?.value,
     };
 
     console.log('Datos a enviar:', reportData);

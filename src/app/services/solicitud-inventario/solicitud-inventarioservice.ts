@@ -11,14 +11,18 @@ export class SolicitudInventarioService {
 
   constructor(private http: HttpClient) {}
 
-
   aceptarSolicitud(idSolicitud: string, idPersonalAprueba: string): Observable<any> {
     const data = { id_solicitud: idSolicitud, id_admin: idPersonalAprueba };
     return this.http.post<any>(`${this.apiUrl}/aceptar`, data);
   }
 
-  enviarSolicitud(idPersonalSolicita: string, idItem: string, cantidad: number): Observable<any> {
-    const data = { id_personal_solicita: idPersonalSolicita, id_item: idItem, cantidad: cantidad };
+  enviarSolicitud(idPersonalSolicita: string, idItem: string, cantidad: number, idTerapia: string): Observable<any> {
+    const data = {
+      id_personal_solicita: idPersonalSolicita,
+      id_item: idItem,
+      cantidad: cantidad,
+      id_terapia: idTerapia  
+    };
     return this.http.post<any>(`${this.apiUrl}/enviar`, data);
   }
 
@@ -29,5 +33,9 @@ export class SolicitudInventarioService {
 
   cargarSolicitudesPendientes(): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/pendientes`);
+  }
+
+  cargarTodasLasSolicitudes(): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/todas`);
   }
 }

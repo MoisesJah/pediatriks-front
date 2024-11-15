@@ -44,10 +44,11 @@ export class SolicitarModalComponent {
 
     const cantidad = this.solicitarForm.get('cantidad_solicitar')?.value;
 
-    // Obtén el id_personal del usuario logueado
+    // Obtén el id_personal y el id_terapia del usuario logueado
     const idPersonalSolicita = this.user?.personal?.id_personal;
+    const idTerapiaSolicita = this.user?.personal?.terapia?.id_terapia; // Acceder a id_terapia dentro de terapia
 
-    // Verifica que inventarioId y idPersonalSolicita estén definidos
+    // Verifica que inventarioId, idPersonalSolicita e idTerapiaSolicita estén definidos
     if (this.inventarioId === undefined) {
       console.error('inventarioId no está definido.');
       return; // Salir de la función si inventarioId no es válido
@@ -58,8 +59,15 @@ export class SolicitarModalComponent {
       return; // Salir si no hay un id_personal válido
     }
 
+    if (!idTerapiaSolicita) {
+      console.error('No se encontró el id_terapia del usuario logueado.');
+      return; // Salir si no hay un id_terapia válido
+    }
+
     this.loadingService.startLoading();
-    this.solicitudInventarioService.enviarSolicitud(idPersonalSolicita, this.inventarioId.toString(), cantidad).subscribe({
+
+    // Enviar la solicitud con id_terapia
+    this.solicitudInventarioService.enviarSolicitud(idPersonalSolicita, this.inventarioId.toString(), cantidad, idTerapiaSolicita).subscribe({
       next: () => {
         console.log('Solicitud de stock enviada exitosamente.');
         this.onRequestComplete.emit(); // Emitir el evento cuando la solicitud se complete
@@ -73,4 +81,5 @@ export class SolicitarModalComponent {
       }
     });
   }
+
 }

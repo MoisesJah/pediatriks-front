@@ -15,6 +15,7 @@ import { AgGridAngular } from 'ag-grid-angular';
 import { ColDef, GridReadyEvent, GridApi } from 'ag-grid-community';
 import { AG_GRID_LOCALE_ES } from '@ag-grid-community/locale';
 import { ThemeService } from 'src/app/services/theme.service';
+import { TablaInventarioComponent } from './modales/tabla-inventario/tabla-inventario.component';
 
 @UntilDestroy()
 @Component({
@@ -119,6 +120,15 @@ export class InventarioComponent implements OnInit, OnDestroy {
     modalRef.componentInstance.onSaveComplete.subscribe(() => {
       this.fetchInventario();
     });
+}
+
+  openTablaInventarioModal() {
+    this.modal.open(TablaInventarioComponent, {
+    size: 'xl',
+    animation: true,
+    centered: true,
+  });
+
 }
 
   ngOnDestroy(): void {

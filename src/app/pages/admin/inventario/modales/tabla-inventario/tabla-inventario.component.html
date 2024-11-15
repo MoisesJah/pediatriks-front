@@ -1,0 +1,62 @@
+<div class="content d-flex flex-column flex-column-fluid">
+  <div class="card shadow p-2 px-4">
+    <!-- Encabezado con botones -->
+    <div class="d-flex py-4 justify-content-between align-items-center">
+      <!-- Botón Actualizar -->
+      <div class="d-flex align-items-center gap-3">
+        <button type="button" class="btn btn-light-primary" (click)="loadTabla()">
+          <span class="d-flex align-items-center">
+            <span class="fa-solid fa-rotate-right"></span>
+            <span class="ms-2">Actualizar</span>
+          </span>
+        </button>
+      </div>
+
+      <!-- Botón Cerrar -->
+      <button
+        type="button"
+        class="btn btn-sm btn-icon btn-active-color-primary btn-color-gray-800"
+        aria-label="Close"
+        (click)="close()"
+      >
+        <i class="ki-duotone ki-cross-square fs-1">
+          <span class="path1"></span>
+          <span class="path2"></span>
+        </i>
+      </button>
+    </div>
+
+    <!-- Contenedor de la tabla -->
+    <div
+      style="height: calc(100dvh - 281px)"
+      id="myGrid"
+      [ngClass]="[theme.getThemeMode() === 'light' ? 'ag-theme-quartz' : 'ag-theme-quartz-dark']"
+    >
+      <!-- Tabla con ag-grid -->
+      @defer {
+        <ag-grid-angular
+          style="width: 100%; height: 100%"
+          [rowData]="solicitudesList | async"
+          [loading]="isLoading"
+          [columnDefs]="colDefs"
+          [enableCellTextSelection]="true"
+          [localeText]="localeText"
+          (gridReady)="gridReady($event)"
+          [pagination]="true"
+        >
+        </ag-grid-angular>
+      }
+      @loading {
+        <!-- Spinner de carga -->
+        <div
+          class="d-flex justify-content-center align-items-center"
+          style="height: 100%"
+        >
+          <div class="spinner-border" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+</div>
