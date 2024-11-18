@@ -81,8 +81,8 @@ export class CrearModalComponent implements AfterViewInit {
           Validators.pattern('^[0-9]+(\\.[0-9]{1,2})?$'),
         ],
       ],
-      fechainicio: ['', Validators.required],
-      fechafin: ['', Validators.required],
+      fechainicio: [''],
+      fechafin: [''],
       terapias: [null, Validators.required],
       banner_url: [''],
     });
