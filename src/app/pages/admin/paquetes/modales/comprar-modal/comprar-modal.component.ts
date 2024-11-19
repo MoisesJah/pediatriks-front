@@ -1,4 +1,12 @@
-import { Component, EventEmitter, Input, Output, inject,NO_ERRORS_SCHEMA,NgModule } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  inject,
+  NO_ERRORS_SCHEMA,
+  NgModule,
+} from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
@@ -13,6 +21,7 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { ToastrService } from 'ngx-toastr';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -21,12 +30,13 @@ import { NgSelectModule } from '@ng-select/ng-select';
   styleUrls: ['./comprar-modal.component.scss'],
   standalone: true,
   imports: [ReactiveFormsModule, FormsModule, CommonModule, NgSelectModule],
-  schemas: [NO_ERRORS_SCHEMA]
+  schemas: [NO_ERRORS_SCHEMA],
 })
 export class ComprarModalComponent {
   modal = inject(NgbModal);
   paqueteService = inject(PaqueteService);
   usuarioService = inject(UserService);
+  toast = inject(ToastrService);
   pacienteService = inject(PacienteService);
   isLoading = inject(LoadingService).isLoading;
   form: FormGroup;
@@ -42,7 +52,7 @@ export class ComprarModalComponent {
   constructor(private fb: FormBuilder) {
     this.form = this.fb.group({
       usuario: [null, Validators.required],
-      paciente: [null, Validators.required]
+      paciente: [null, Validators.required],
     });
   }
 
@@ -68,7 +78,10 @@ export class ComprarModalComponent {
     if (this.paqueteId) {
       if (typeof this.paqueteId === 'string') {
         id = this.paqueteId;
-      } else if (typeof this.paqueteId === 'object' && this.paqueteId.id_paquetes) {
+      } else if (
+        typeof this.paqueteId === 'object' &&
+        this.paqueteId.id_paquetes
+      ) {
         id = this.paqueteId.id_paquetes;
       }
     }
@@ -101,7 +114,7 @@ export class ComprarModalComponent {
 
   private loadPacientesByUser(userId: number) {
     this.pacientesList = this.pacienteService.getAll().pipe(
-      map((resp) => resp.data.filter(paciente => paciente.id === userId)),
+      map((resp) => resp.data.filter((paciente) => paciente.id === userId)),
       catchError((error) => {
         console.error('Error al cargar pacientes:', error);
         return of([]);
@@ -119,45 +132,51 @@ export class ComprarModalComponent {
 
   purchase() {
     if (this.paqueteId === null) {
-        console.error('ID del paquete no está disponible');
-        alert('Por favor, selecciona un paquete válido.');
-        return;
+      console.error('ID del paquete no está disponible');
+      alert('Por favor, selecciona un paquete válido.');
+      return;
     }
 
-    const id = typeof this.paqueteId === 'string' ? this.paqueteId : this.paqueteId.id_paquetes;
+    const id =
+      typeof this.paqueteId === 'string'
+        ? this.paqueteId
+        : this.paqueteId.id_paquetes;
 
     if (!id) {
-        console.error('ID del paquete no está disponible');
-        alert('Por favor, selecciona un paquete válido.');
-        return;
+      console.error('ID del paquete no está disponible');
+      alert('Por favor, selecciona un paquete válido.');
+      return;
     }
 
     if (!this.selectedUser) {
-        console.error('Usuario no seleccionado');
-        alert('Por favor, selecciona un usuario.');
-        return;
+      console.error('Usuario no seleccionado');
+      alert('Por favor, selecciona un usuario.');
+      return;
     }
 
     if (!this.selectedPaciente) {
-        console.error('Paciente no seleccionado');
-        alert('Por favor, selecciona un paciente.');
-        return;
+      console.error('Paciente no seleccionado');
+      alert('Por favor, selecciona un paciente.');
+      return;
     }
 
     const pacienteId = this.selectedPaciente.id_paciente;
     const usuarioId = this.selectedUser.id;
 
     this.paqueteService.purchase(id, pacienteId, usuarioId).subscribe({
-        next: () => {
-            console.log('Compra realizada con éxito');
-            this.onSaveComplete.emit();
-            this.modal.dismissAll();
-        },
-        error: (err) => {
-            console.error('Error al comprar paquete:', err);
-            alert('Ocurrió un error al realizar la compra. Inténtalo de nuevo.');
+      next: () => {
+        console.log('Compra realizada con éxito');
+        this.onSaveComplete.emit();
+        this.modal.dismissAll();
+      },
+      error: (err) => {
+        if (err.error.errors) {
+          const errors = Object.values(err.error.errors).join('\n');
+          this.toast.error(errors, 'Error');
+        } else {
+          this.toast.error('Ocurrió un error', 'Error ');
         }
+      },
     });
-}
-
+  }
 }
