@@ -269,17 +269,10 @@ export class CrearModalComponent implements OnInit, AfterViewInit {
 
   changePaciente(event: any) {
     const id_paquete = this.createForm.get('id_paquete');
-    // if (id_paquete?.value) {
-    //   id_paquete.setValue(null);
-    //   // id_paquete.clearValidators();
-    // }else{
-    //   id_paquete?.clearValidators();
-    // }
-    // id_paquete?.updateValueAndValidity();
-    
-    // if (this.isCitaPaquete && event) {
-    //   this.loadPaquetes(event.id_paciente);
-    // }
+    if(id_paquete){
+      id_paquete.setValue(null);
+      id_paquete.clearValidators();
+    }
   }
 
   loadPaquetesPaciente() {
@@ -383,7 +376,7 @@ export class CrearModalComponent implements OnInit, AfterViewInit {
             this.closeModal();
             if (!data.message.startsWith('Cita')) {
               this.toast.info(data.message, 'Cita Creada', {
-                timeOut: 0,
+                disableTimeOut: true,
                 closeButton: true,
                 // progressBar: true,
                 // progressAnimation: 'increasing',

@@ -169,7 +169,7 @@ export class CreateModalComponent implements OnInit,AfterViewInit {
 
     if (paquetesControl.value) {
       sesionesControl.setValue(event.cantidadsesiones);
-      sesionesControl.setValidators(Validators.required);
+      sesionesControl.setValidators([Validators.required, Validators.max(event.cantidadsesiones)]);
     }else{
       sesionesControl.setValue(null);
       sesionesControl.clearValidators();
@@ -195,6 +195,14 @@ export class CreateModalComponent implements OnInit,AfterViewInit {
     }
     id_paquete?.updateValueAndValidity();
     num_sesiones?.updateValueAndValidity();
+  }
+
+  changePaciente(event: any) {
+    const id_paquete = this.createForm.get('id_paquete');
+    if(id_paquete){
+      id_paquete.setValue(null);
+      id_paquete.clearValidators();
+    }
   }
 
   closeModal() {
@@ -265,11 +273,12 @@ export class CreateModalComponent implements OnInit,AfterViewInit {
           next: (data:any) => {
             this.onSaveComplete.emit();
             this.closeModal();
-            if(data.message){
-              this.toast.info(data.message, 'Cita Creada',{
-                timeOut: 6500,
-                progressBar: true,
-                progressAnimation: 'increasing',
+            if (!data.message.startsWith('Cita')) {
+              this.toast.info(data.message, 'Cita Creada', {
+                disableTimeOut: true,
+                closeButton: true,
+                // progressBar: true,
+                // progressAnimation: 'increasing',
               });
             }
           },
