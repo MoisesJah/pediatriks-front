@@ -16,7 +16,7 @@ import { AuthService } from '../../services/auth.service';
 @Component({
   selector: 'app-layout',
   standalone: true,
-  imports: [CommonModule, HeaderComponent, DrawerComponent, RouterLink,RouterLinkActive,NgOptimizedImage],
+  imports: [CommonModule,RouterLink,RouterLinkActive,NgOptimizedImage],
   templateUrl: './layout.component.html',
   styleUrl: './layout.component.scss',
 })
@@ -50,6 +50,10 @@ export class LayoutComponent {
     {
       nombre: 'Paquetes',
       link: '/admin/paquetes',
+    },
+    {
+      nombre: 'Fichas',
+      link: '/admin/fichas',
     },
   ];
 

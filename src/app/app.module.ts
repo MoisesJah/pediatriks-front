@@ -28,6 +28,7 @@ import { PaquetesComponent } from './pages/paquetes/paquetes.component';
 import { ToastrModule } from 'ngx-toastr';
 import { TerapistaModule } from './pages/terapista/terapista.module';
 import { ServiceWorkerModule } from '@angular/service-worker';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 registerLocaleData(localeEs);
 @NgModule({
@@ -60,6 +61,7 @@ registerLocaleData(localeEs);
     PacientesModalsModule,
     TerapistaModule,
     SedesModalsModule,
+    DragDropModule,
     PaquetesComponent,
     ServiceWorkerModule.register('ngsw-worker.js', {
       enabled: !isDevMode(),

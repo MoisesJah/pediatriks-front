@@ -201,3 +201,410 @@ ngb-popover-window .popover-body {
 }
 
 .float{position:fixed;width:55px;height:55px;bottom:40px;right:30px;background-color:#00bb2d;color:#fff;border-radius:50px;text-align:center;font-size:30px;box-shadow:2px 2px 3px #999;z-index:999999999;overflow:hidden}.my-float{display:block;position:absolute;width:50px;height:50px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' version='1.1' id='Layer_1' x='0px' y='0px' width='100px' height='100px' viewBox='0 0 100 100' style='enable-background:new 0 0 100 100;' xml:space='preserve'%3E%3Cpath id='WhatsApp' style='fill-rule:evenodd;clip-rule:evenodd;' fill='%23FFFFFF' d='M95,49.247c0,24.213-19.779,43.841-44.182,43.841 c-7.746,0-15.025-1.98-21.357-5.455L5,95.406l7.975-23.522c-4.023-6.607-6.34-14.355-6.34-22.637 c0-24.213,19.781-43.841,44.184-43.841S95,25.034,95,49.247z M50.818,12.388c-20.484,0-37.146,16.535-37.146,36.859 c0,8.065,2.629,15.534,7.076,21.611l-4.641,13.688l14.275-4.537c5.865,3.851,12.891,6.097,20.436,6.097 c20.482,0,37.146-16.534,37.146-36.858S71.301,12.388,50.818,12.388z M73.129,59.344c-0.273-0.447-0.994-0.717-2.076-1.254 c-1.084-0.537-6.41-3.138-7.4-3.495c-0.994-0.358-1.717-0.539-2.439,0.537c-0.721,1.076-2.797,3.495-3.43,4.212 c-0.631,0.718-1.262,0.808-2.346,0.27c-1.082-0.537-4.572-1.672-8.709-5.333c-3.219-2.848-5.393-6.364-6.025-7.441 c-0.631-1.075-0.066-1.656,0.475-2.191c0.488-0.482,1.084-1.255,1.625-1.882c0.543-0.628,0.723-1.075,1.082-1.793 c0.363-0.717,0.182-1.344-0.09-1.883c-0.27-0.537-2.438-5.825-3.34-7.977c-0.902-2.15-1.803-1.792-2.436-1.792 c-0.631,0-1.354-0.09-2.076-0.09s-1.896,0.269-2.889,1.344c-0.992,1.076-3.789,3.676-3.789,8.963c0,5.288,3.879,10.397,4.422,11.113 c0.541,0.716,7.49,11.92,18.5,16.223c11.012,4.302,11.012,2.867,12.998,2.688c1.984-0.179,6.406-2.599,7.311-5.108 C73.398,61.944,73.398,59.792,73.129,59.344z'/%3E%3C/svg%3E");background-size:contain;top:50%;left:50%;transform:translate(-50%,-50%);background-repeat:no-repeat}@media (max-width:850px){.float{width:45px;height:45px;bottom:40px;right:20px}}
+
+.ficha-creator-container {
+  display: flex;
+  gap: 20px;
+  padding: 20px;
+}
+
+.left-panel {
+  flex: 0.2;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 15px;
+  background-color: #26272f;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.right-panel {
+  flex: 0.2;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 15px;
+  background-color: #26272f;
+}
+
+.center-panel {
+  flex: 0.8;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 15px;
+  background-color: #26272f;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.left-panel h3, .right-panel h3, .center-panel h3 {
+  text-align: center;
+  color: #fff;
+}
+
+.item-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+.draggable-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: #3a3b42;
+  cursor: grab;
+  color: #fff;
+  width: 100%;
+}
+
+.draggable-item i {
+  font-size: 1.5rem;
+}
+
+.grid-container {
+  display: flex;
+  flex-direction: column;
+  //display: grid;
+  grid-template-columns: repeat(2, 1fr); /* Dos columnas */
+  gap: 16px;
+  padding: 16px;
+  border: 2px dashed #ccc;
+  min-height: 300px;
+  width: 100%;
+}
+
+/* Esto se puede agregar para pantallas más pequeñas */
+@media (max-width: 768px) {
+  .grid-container {
+    grid-template-columns: 1fr; /* Una columna en pantallas pequeñas */
+  }
+}
+
+
+.sub-grid-container {
+  //display: flex;
+  flex-direction: column;
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 16px;
+  padding: 16px;
+  border: 2px dashed #ccc;
+  min-height: 300px;
+  width: 100%;
+}
+
+.sub-grid-container .grid-cell {
+  margin: 5px;
+  padding: 10px;
+  background-color: #3a3b42;
+  border: 1px solid #ddd;
+  cursor: move;
+  transition: background-color 0.3s ease;
+}
+
+.sub-grid-container .grid-cell.cdk-drag-preview {
+  background-color: #4a4b52;
+}
+
+.sub-grid-container .grid-cell.cdk-drag-placeholder {
+  background-color: #f0f0f0;
+  border: 1px dashed #aaa;
+}
+
+
+
+.grid-cell {
+  border: 1px solid #444;
+  border-radius: 5px;
+  min-height: 60px;
+  display: block;
+  background-color: #3a3b42;
+  color: #fff;
+  padding: 10px;
+  padding-top: 25px;
+  transition: box-shadow 0.3s, border-color 0.3s;
+  position: relative; /* Para permitir la colocación del drag handle */
+  width: 100%; /* Cada celda ocupa el 50% de la fila */
+}
+
+
+.grid-cell:hover {
+  border-color: #3498db;
+  box-shadow: 0 0 5px 2px #3498db;
+}
+
+.grid-cell.selected {
+  box-shadow: 0 0 10px 3px #3498db;
+  border-color: #3498db;
+}
+
+.grid-cell .drag-handle {
+  width: 30px;
+  text-align: center;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
+  cursor: grab;
+  padding: 1px;
+  background-color: none;
+  z-index: 1; /* Asegura que el drag handle esté sobre el contenido */
+  border: 1px solid #ffffff !important;
+  border-bottom-left-radius: 7px !important;
+  border-bottom-right-radius: 7px !important;
+  border-top: none !important;
+}
+
+.grid-cell .drag-handle i {
+  color: #0a0a0a;
+}
+
+.grid-cell input,
+.grid-cell select {
+  width: 100%;
+  padding: 8px;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+}
+
+.grid-cell select {
+  background-color: #3a3b42;
+}
+
+.grid-cell input {
+  background-color: #3a3b42;
+  margin-bottom: 5px;
+  margin: 5px;
+}
+
+.element-buttons button{
+  margin: 10px;
+  width: 100%;
+}
+
+.element-buttons button span {
+  margin-left: 5px; /* Espaciado entre el icono y el texto */
+}
+
+.btn.btn-icon.btn-sm {
+  height: calc(1.5em + 1.55rem + 3px);
+  width: calc(1.5em + 1.55rem + 30px);
+}
+
+.checkbox-wrapper-4 * {
+  box-sizing: border-box;
+}
+.checkbox-wrapper-4 .cbx {
+  -webkit-user-select: none;
+  user-select: none;
+  cursor: pointer;
+  padding: 6px 8px;
+  border-radius: 6px;
+  overflow: hidden;
+  transition: all 0.2s ease;
+  display: inline-block;
+}
+.checkbox-wrapper-4 .cbx:not(:last-child) {
+  margin-right: 6px;
+}
+.checkbox-wrapper-4 .cbx:hover {
+  background: rgba(0,119,255,0.06);
+}
+.checkbox-wrapper-4 .cbx span {
+  float: left;
+  vertical-align: middle;
+  transform: translate3d(0, 0, 0);
+}
+.checkbox-wrapper-4 .cbx span:first-child {
+  position: relative;
+  width: 18px;
+  height: 18px;
+  border-radius: 4px;
+  transform: scale(1);
+  border: 1px solid #cccfdb;
+  transition: all 0.2s ease;
+  box-shadow: 0 1px 1px rgba(0,16,75,0.05);
+}
+.checkbox-wrapper-4 .cbx span:first-child svg {
+  position: absolute;
+  top: 3px;
+  left: 2px;
+  fill: none;
+  stroke: #fff;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 16px;
+  stroke-dashoffset: 16px;
+  transition: all 0.3s ease;
+  transition-delay: 0.1s;
+  transform: translate3d(0, 0, 0);
+}
+.checkbox-wrapper-4 .cbx span:last-child {
+  padding-left: 8px;
+  line-height: 18px;
+}
+.checkbox-wrapper-4 .cbx:hover span:first-child {
+  border-color: #07f;
+}
+.checkbox-wrapper-4 .inp-cbx {
+  position: absolute;
+  visibility: hidden;
+}
+.checkbox-wrapper-4 .inp-cbx:checked + .cbx span:first-child {
+  background: #07f;
+  border-color: #07f;
+  animation: wave-4 0.4s ease;
+}
+.checkbox-wrapper-4 .inp-cbx:checked + .cbx span:first-child svg {
+  stroke-dashoffset: 0;
+}
+.checkbox-wrapper-4 .inline-svg {
+  position: absolute;
+  width: 0;
+  height: 0;
+  pointer-events: none;
+  user-select: none;
+}
+@media screen and (max-width: 640px) {
+  .checkbox-wrapper-4 .cbx {
+    width: 100%;
+    display: inline-block;
+  }
+}
+@-moz-keyframes wave-4 {
+  50% {
+    transform: scale(0.9);
+  }
+}
+@-webkit-keyframes wave-4 {
+  50% {
+    transform: scale(0.9);
+  }
+}
+@-o-keyframes wave-4 {
+  50% {
+    transform: scale(0.9);
+  }
+}
+@keyframes wave-4 {
+  50% {
+    transform: scale(0.9);
+  }
+}
+
+.checkbox-container {
+  display: inline-flex;
+  margin-top: 5px;
+}
+
+/* Estilo para el título */
+.editable-title h2.title-display {
+  font-size: 3rem; /* Título mucho más grande */
+  font-weight: bold;
+  text-align: center;
+}
+
+/* Estilo para el input de edición del título */
+.editable-title input.title-input {
+  font-size: 3rem; /* Mantener el tamaño grande al editar */
+  font-weight: bold;
+  width: 100%; /* Ocupa todo el ancho disponible */
+  border: 2px solid #007bff; /* Borde azul para resaltar */
+  outline: none;
+  border-radius: 5px;
+  padding: 10px;
+}
+
+/* Estilo para la descripción */
+.description-container textarea.description-input {
+  width: 640px; /* Descripción más ancha */
+  min-height: 60px; /* Incrementar altura */
+  font-size: 1.2rem; /* Texto más grande */
+  padding: 10px;
+  border: 2px solid #ddd;
+  border-radius: 5px;
+  resize: horizontal; /* Permitir cambiar el tamaño solo verticalmente */
+}
+
+/* Contenedor de logo */
+.header-form {
+  display: flex;
+  align-items: center;
+  gap: 20px; /* Espacio entre el logo y el título editable */
+}
+
+.logo-container {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  border: 2px dashed #007bff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.logo-label {
+  cursor: pointer;
+}
+
+.logo-placeholder {
+  font-size: 3rem;
+  color: #007bff;
+  margin-bottom: 5px;
+}
+
+.logo-placeholder-text {
+  font-size: 0.8rem;
+  color: #007bff;
+  margin-top: 5px;
+}
+
+.logo-image {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: 5px;
+}
+
+.title-display {
+  font-size: 1.5rem;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.title-input {
+  width: 100%;
+  padding: 5px;
+  font-size: 1.2rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.editable-title {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 10px; /* Da un pequeño espacio entre el logo y el título editable */
+}
+
+.editable-header .editable-title {
+  flex-grow: 1;
+}
+
+.editable-header{
+flex-direction: row;
+gap: 15px;
+}
