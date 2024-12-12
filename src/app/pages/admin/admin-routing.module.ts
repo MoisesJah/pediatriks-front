@@ -60,6 +60,11 @@ const routes: Routes = [
     loadComponent: () =>
       import('./fichas/fichas.component').then((m) => m.FichasComponent),
   },
+  {
+    path: 'tabla-solicitudes',
+    loadComponent: () =>
+      import('./tabla-solicitudes/tabla-solicitudes.component').then((m) => m.TablaSolicitudesComponent),
+  },
 ];
 
 @NgModule({

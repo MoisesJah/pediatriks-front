@@ -18,24 +18,15 @@
   </div>
 
 <!-- Panel central -->
-<div class="center-panel">
+<div class="center-panel" >
   <!-- Sección editable -->
   <div class="header-form">
-    <div class="editable-header d-flex align-items-center mb-3">
-      <!-- Círculo para adjuntar logo -->
-      <div class="logo-container">
-        <label for="logoUpload" class="logo-label">
-          <div class="logo-placeholder" *ngIf="!logo">
-            <i class="fas fa-camera"></i>
-          </div>
-          <img *ngIf="logo" [src]="logo" alt="Logo" class="logo-image">
-          <p class="logo-placeholder-text" *ngIf="!logo">Ingresar imagen para el logo</p>
-        </label>
-        <input type="file" id="logoUpload" (change)="onLogoUpload($event)" accept="image/*" hidden>
-      </div>
-
+    <div class="logo-container">
+      <img alt="Logo" src="assets/media/logos/file.png" class="img-fluid h-35px" title="Pediatriks" />
+    </div>
+    <div class="editable-header d-flex align-items-center justify-content-between">
       <!-- Título editable -->
-      <div class="editable-title">
+      <div class="editable-title text-center flex-grow-1">
         <input
           *ngIf="isEditingTitle"
           [(ngModel)]="editableTitle"
@@ -93,22 +84,21 @@
           </label>
         </div>
         <div *ngSwitchCase="'block'" cdkDropList [cdkDropListData]="element.children" class="sub-grid-container" (cdkDropListDropped)="dropNested($event, element)">
-          <h4>{{ element.name }}</h4>
           <div *ngFor="let child of element.children; let j = index" class="grid-cell" [ngClass]="{ 'selected': selectedElement === child }" (click)="selectElement(child)" cdkDrag>
             <div cdkDragHandle class="drag-handle">
               <i class="fas fa-grip-horizontal text-white"></i>
             </div>
             <ng-container [ngSwitch]="child.type">
               <div *ngSwitchCase="'text'">
-                <h4>{{ child.name }}</h4>
-                <input type="text" placeholder="Escribe algo..." [name]="child.name">
-              </div>
-              <div *ngSwitchCase="'dropdown'">
-                <h4>{{ child.name }}</h4>
-                <select [name]="child.name">
-                  <option *ngFor="let choice of child.choices">{{ choice }}</option>
-                </select>
-              </div>
+          <h4>{{ element.name }}<span *ngIf="element.required" class="text-danger">*</span></h4>
+          <input type="text" placeholder="Escribe algo..." [name]="element.name">
+        </div>
+        <div *ngSwitchCase="'dropdown'">
+          <h4>{{ element.name }}<span *ngIf="element.required" class="text-danger">*</span></h4>
+          <select [name]="element.name">
+            <option *ngFor="let choice of element.choices">{{ choice }}</option>
+          </select>
+        </div>
               <!-- Otros tipos según sea necesario -->
             </ng-container>
           </div>
@@ -117,10 +107,10 @@
 
       <!-- Botones de eliminar y requerido -->
       <div class="element-buttons">
-        <button (click)="deleteElement(i)" class="btn btn-icon btn-sm btn-danger">
+        <button (click)="deleteElement(i)" id="btn-fichas" class="btn btn-icon btn-sm btn-danger">
           Eliminar <span class="ki-solid ki-trash text-white"></span>
         </button>
-        <button (click)="toggleRequired(element)" class="btn btn-icon btn-sm bg-success">Requerido *</button>
+        <button (click)="toggleRequired(element)" id="btn-fichas" class="btn btn-icon btn-sm bg-success">Requerido *</button>
       </div>
     </div>
   </div>

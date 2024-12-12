@@ -1,6 +1,14 @@
+<app-header>
+  <ng-container header-title>
+    <h1 class="d-flex flex-column text-gray-900 fw-bold my-1">
+      <span style="color: white">Solicitudes</span>
+    </h1>
+  </ng-container>
+</app-header>
+
 <div class="content d-flex flex-column flex-column-fluid">
-  <div class="card shadow p-2 px-4">
-    <div class="d-flex py-4 justify-content-between align-items-center">
+  <div class="card card-flush h-xl-50 scaled-container">
+    <div class="d-flex p-5 justify-content-between align-items-center">
       <div class="d-flex align-items-center gap-3">
         <button type="button" class="btn btn-light-primary" (click)="loadTabla()">
           <span class="d-flex align-items-center">
@@ -9,32 +17,24 @@
           </span>
         </button>
       </div>
-
-
-      <button
-        type="button"
-        class="btn btn-sm btn-icon btn-active-color-primary btn-color-gray-800"
-        aria-label="Close"
-        (click)="close()"
-      >
-        <i class="ki-duotone ki-cross-square fs-1">
-          <span class="path1"></span>
-          <span class="path2"></span>
-        </i>
-      </button>
     </div>
 
-    <div style="height: calc(100dvh - 281px)" id="myGrid" [ngClass]="[theme.getThemeMode() === 'light' ? 'ag-theme-quartz' : 'ag-theme-quartz-dark']">
-      @defer {
+    <div
+        style="height: calc(100dvh - 281px)"
+        id="myGrid"
+        [ngClass]="[theme.getThemeMode() === 'light' ? 'ag-theme-quartz' : 'ag-theme-quartz-dark']"
+      > @defer {
         <ag-grid-angular
         style="width: 100%; height: 100%"
-        [rowData]="reportesList | async"
-        [loading]="isLoading | async"
+        [rowData]="solicitudes | async"
         [columnDefs]="colDefs"
         [enableCellTextSelection]="true"
         [localeText]="localeText"
         (gridReady)="gridReady($event)"
-        [pagination]="true">
+        [pagination]="true"
+        [loading]="isLoading | async" loadingMessage="Cargando..."
+        (gridReady)="gridReady($event)"
+      >
       </ag-grid-angular>
       }@loading {
         <div
@@ -46,8 +46,7 @@
           </div>
         </div>
         }
-    </div>
+      </div>
     </div>
   </div>
-
 

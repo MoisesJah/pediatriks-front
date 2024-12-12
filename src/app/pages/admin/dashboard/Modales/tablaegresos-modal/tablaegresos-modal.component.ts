@@ -30,8 +30,8 @@ export class TablaegresosModalComponent implements OnInit, OnDestroy {
 
   // Columnas de la tabla
   colDefs: ColDef[] = [
-    { field: 'egresos', headerName: 'Egresos', filter: true },
     { field: 'nombre', headerName: 'Nombre', filter: true },
+    { field: 'egresos', headerName: 'Egresos', filter: true },
     { field: 'descripcion', headerName: 'Descripción', filter: true },
     { field: 'metodo_pago', headerName: 'Método de Pago', filter: true },
     { field: 'tipo_egreso', headerName: 'Tipo de Egreso', filter: true },
@@ -47,10 +47,9 @@ export class TablaegresosModalComponent implements OnInit, OnDestroy {
     this.loadTabla();
   }
 
-  // Función para obtener los datos de reportes
   private fetchReportes() {
     this.reportesList = this.reportesService.getReportes().pipe(
-      map((resp) => resp.data)
+      map((resp) => resp)
     );
   }
 
@@ -66,7 +65,7 @@ export class TablaegresosModalComponent implements OnInit, OnDestroy {
   // Este evento se dispara cuando la cuadrícula se ha inicializado
   gridReady(event: GridReadyEvent): void {
     this.gridApi = event.api;
-     // Inicializa el gridApi correctamente
+     this.gridApi.sizeColumnsToFit();
   }
 
   ngOnDestroy(): void {

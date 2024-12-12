@@ -33,7 +33,7 @@
             </div>
           </ng-container>
 
-          <ng-container popover-body>
+          <ng-container popover-body *ngIf="authService.isAdmin()">
             <div class="d-flex flex-column px-9 mt-10 mb-6">
               <h3 class="text-white fw-semibold">Notificaciones</h3>
               <span class="fs-8 opacity-75 "> Tienes {{totalsolicitudes}} solicitudes pendientes </span>
@@ -71,7 +71,7 @@
               </div>
             </div>
             <div class="py-3 text-center border-top">
-              <a href="" class="btn btn-color-gray-600 btn-active-color-primary">Ver todas las solicitudes ({{totalsolicitudes - solicitudesPendientes.length}})
+              <a (click)="navegarATablaSolicitudes()" class="btn btn-color-gray-600 btn-active-color-primary">Ver todas las solicitudes ({{totalsolicitudes - solicitudesPendientes.length}})
               <i class="ki-duotone ki-arrow-right fs-5">
                 <span class="path1"></span>
                 <span class="path2"></span>

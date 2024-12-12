@@ -30,8 +30,8 @@ export class TablaingresosModalComponent implements OnInit, OnDestroy {
 
   // Columnas de la tabla
   colDefs: ColDef[] = [
-    { field: 'ingresos', headerName: 'Ingresos', filter: true },
     { field: 'nombre', headerName: 'Nombre', filter: true },
+    { field: 'ingresos', headerName: 'Ingresos', filter: true },
     { field: 'descripcion', headerName: 'Descripción', filter: true },
     {
       field: 'created_at',
@@ -47,7 +47,7 @@ export class TablaingresosModalComponent implements OnInit, OnDestroy {
 
   private fetchReportes() {
     this.reportesList = this.reportesService.getReportes().pipe(
-      map((resp) => resp.data)
+      map((resp) => resp)
     );
   }
 
@@ -61,6 +61,7 @@ export class TablaingresosModalComponent implements OnInit, OnDestroy {
 
   gridReady(event: GridReadyEvent): void {
     this.gridApi = event.api;
+    this.gridApi.sizeColumnsToFit();
   }
 
   ngOnDestroy(): void {

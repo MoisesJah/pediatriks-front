@@ -12,7 +12,7 @@ export class ReportesService {
   constructor(private http: HttpClient) {}
 
   getReportes(): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/`);
+    return this.http.get<any>(`${this.apiUrl}/show`);
   }
 
   getReportesFiltrados(startDate: string, endDate: string, montoMin: number): Observable<any> {

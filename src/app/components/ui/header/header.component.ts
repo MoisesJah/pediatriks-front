@@ -78,6 +78,10 @@ export class HeaderComponent {
     });
   }
 
+  navegarATablaSolicitudes() {
+    this.router.navigate(['/admin/tabla-solicitudes']);
+  }
+
 
   removeCredentials() {
     localStorage.removeItem('token');
