@@ -29,6 +29,7 @@ import { ToastrModule } from 'ngx-toastr';
 import { TerapistaModule } from './pages/terapista/terapista.module';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { SurveysComponent } from './pages/admin/surveys/surveys.component';
 
 registerLocaleData(localeEs);
 @NgModule({
@@ -63,6 +64,7 @@ registerLocaleData(localeEs);
     SedesModalsModule,
     DragDropModule,
     PaquetesComponent,
+    SurveysComponent,
     ServiceWorkerModule.register('ngsw-worker.js', {
       enabled: !isDevMode(),
       // Register the ServiceWorker as soon as the application is stable

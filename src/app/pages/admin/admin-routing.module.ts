@@ -65,6 +65,11 @@ const routes: Routes = [
     loadComponent: () =>
       import('./tabla-solicitudes/tabla-solicitudes.component').then((m) => m.TablaSolicitudesComponent),
   },
+  {
+    path: 'surveys',
+    loadComponent: () =>
+      import('./surveys/surveys.component').then((m) => m.SurveysComponent),
+  }
 ];
 
 @NgModule({

@@ -41,7 +41,8 @@
               "public/assets/plugins/custom/fullcalendar/fullcalendar.bundle.css",
               "public/assets/plugins/custom/datatables/datatables.bundle.css",
               "public/assets/plugins/global/plugins.bundle.css",
-              "src/styles.scss"
+              "src/styles.scss",
+              "node_modules/survey-core/defaultV2.min.css"
             ],
             "scripts": [
               "public/assets/plugins/custom/fullcalendar/fullcalendar.bundle.js"
