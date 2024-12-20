@@ -48,7 +48,8 @@ const routes: Routes = [
     path: 'inventario',
     loadComponent: () =>
       import('./inventario/inventario.component').then(
-        (m) => m.InventarioComponent),
+        (m) => m.InventarioComponent
+      ),
   },
   {
     path: 'sedes',
@@ -63,13 +64,22 @@ const routes: Routes = [
   {
     path: 'tabla-solicitudes',
     loadComponent: () =>
-      import('./tabla-solicitudes/tabla-solicitudes.component').then((m) => m.TablaSolicitudesComponent),
+      import('./tabla-solicitudes/tabla-solicitudes.component').then(
+        (m) => m.TablaSolicitudesComponent
+      ),
   },
   {
     path: 'surveys',
     loadComponent: () =>
       import('./surveys/surveys.component').then((m) => m.SurveysComponent),
-  }
+  },
+  {
+    path: 'survey/:id',
+    loadComponent: () =>
+      import('./surveys/survey/survey.component').then(
+        (m) => m.SurveyComponent
+      ),
+  },
 ];
 
 @NgModule({

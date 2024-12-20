@@ -3,19 +3,19 @@ import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class FichasService {
-  private apiUrl = `${environment.apiUrl}/ficha`
+  private apiUrl = `${environment.apiUrl}/ficha`;
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   getAll() {
-    return this.http.get(`${this.apiUrl}/list`);
+    return this.http.get<{ data: any[] }>(`${this.apiUrl}/list`);
   }
 
   getById(id: string) {
-    return this.http.get(`${this.apiUrl}/list/${id}`);
+    return this.http.get<{ data: any }>(`${this.apiUrl}/list/${id}`);
   }
 
   create(ficha: any) {

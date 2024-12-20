@@ -1,1 +1,18 @@
-<survey [model]="surveyModel"/>
+<app-header>
+    <ng-container header-title>
+        <h1 class="d-flex flex-column text-gray-900 fw-bold my-1">
+            <span class="" style="color: white">Fichas</span>
+        </h1>
+    </ng-container>
+</app-header>
+
+<div class="content d-flex flex-column flex-column-fluid">
+    <div class="container-xxl">
+        <div class="card shadow p-2 px-4">
+            <ng-container *ngFor="let survey of fichasList | async">
+                <h1>{{ survey.nombre }}</h1>
+                <a [routerLink]="['/admin/survey', survey.id_ficha]">{{ survey.id_ficha }}</a>
+            </ng-container>
+        </div>
+    </div>
+</div>
