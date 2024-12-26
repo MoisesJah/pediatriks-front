@@ -40,12 +40,15 @@ import { CitaService } from 'src/app/services/citas/cita.service';
 import { Cita } from 'src/app/models/cita';
 import { ToastrService } from 'ngx-toastr';
 import { AuthService } from 'src/app/services/auth.service';
+import { FichasService } from 'src/app/services/fichas/fichas.service';
+import { EnterAnimation } from 'src/app/utils/animations';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
   selector: 'app-modal-edit',
   templateUrl: './modal-edit.component.html',
   styleUrls: ['./modal-edit.component.scss'],
+  animations: [EnterAnimation],
 })
 export class ModalEditComponent implements OnInit, AfterViewInit {
   @Output() eventUpdated = new EventEmitter<CalendarEvent>();
@@ -53,6 +56,7 @@ export class ModalEditComponent implements OnInit, AfterViewInit {
 
   personalService = inject(PersonalService);
   citaService = inject(CitaService);
+  fichasService = inject(FichasService);
   toast = inject(ToastrService);
   isTerapista = inject(AuthService).isTerapista();
   statusService = inject(SesionstatusService);
@@ -62,8 +66,12 @@ export class ModalEditComponent implements OnInit, AfterViewInit {
   editEventForm: FormGroup;
   horarios: number[] = [];
 
+  selectedStatus: any = null;
+  fichasLoading = false
+
   personalList: Observable<Personal[]> = new Observable();
   statusList: Observable<any[]> = new Observable();
+  fichasList: Observable<any[]> = new Observable();
 
   fechaOptions: FlatpickrDefaultsInterface = {
     locale: { ...Spanish },
@@ -74,7 +82,7 @@ export class ModalEditComponent implements OnInit, AfterViewInit {
     //     // if(this.horarios.length){
     //     //   console.log(this.horarios)
     //     //   return !this.horarios.includes(date.getDay());
-    //     // } 
+    //     // }
     //     // return false;
     //     return this.horarios.length > 0 && !this.horarios.includes(date.getDay());
     //   },
@@ -82,7 +90,7 @@ export class ModalEditComponent implements OnInit, AfterViewInit {
   };
 
   getCambiosRestantes() {
-    return this.event && this.event.num_cambios
+    return this.event && this.event.num_cambios;
   }
 
   canEditSession() {
@@ -154,9 +162,14 @@ export class ModalEditComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
-    if (!this.isTerapista){
+    if (!this.isTerapista) {
       this.loadPersonal();
     }
+    // if(this.selectedStatus !== null){
+    //   console.log(this.selectedStatus)
+    //   this.getFichas();
+    // }
+
     this.loadStatus();
     if (this.event) {
       this.loadCurrentSesion();
@@ -168,9 +181,9 @@ export class ModalEditComponent implements OnInit, AfterViewInit {
       this.personalService
         .getById(event.id_personal)
         .pipe(
-          map((resp) =>
-            [...new Set(resp.data.horarios.map((horario) => horario.dia_semana))]
-          ),
+          map((resp) => [
+            ...new Set(resp.data.horarios.map((horario) => horario.dia_semana)),
+          ]),
           tap((horarios) => {
             this.horarios = horarios;
             this.initFlatpickr(horarios);
@@ -179,10 +192,25 @@ export class ModalEditComponent implements OnInit, AfterViewInit {
         .subscribe();
     }
   }
+  changeStatus(event: any) {
+    this.selectedStatus =
+      event && event.nombre === 'Asistió' ? event.nombre : null;
+  }
+
+  getFichas() {
+    this.fichasLoading = true
+    this.fichasList = this.fichasService
+      .getByTerapia(this.event?.terapia.id_terapia!)
+      .pipe(
+        map((resp) => resp.data),
+        finalize(() => (this.fichasLoading = false)),
+        untilDestroyed(this)
+      );
+  }
 
   initFlatpickr(disabledDays: number[]) {
     if (this.fechaInicio) {
-      flatpickr(this.fechaInicio.nativeElement,{
+      flatpickr(this.fechaInicio.nativeElement, {
         locale: { ...Spanish },
         altInput: true,
         altFormat: 'd/m/Y',
@@ -190,13 +218,20 @@ export class ModalEditComponent implements OnInit, AfterViewInit {
         disable: [
           (date) => {
             return !disabledDays.includes(date.getDay());
-          }
-        ]
+          },
+        ],
       });
     }
   }
 
   ngAfterViewInit() {
+    this.editEventForm.valueChanges.pipe(
+      distinctUntilKeyChanged('id_status'),
+    ).subscribe((resp) => {
+      console.log(resp);
+      console.log(this.selectedStatus)
+      if (this.selectedStatus) this.getFichas();
+    })
     this.editEventForm.valueChanges.subscribe(() => this.endTimeValidation());
     this.editEventForm.valueChanges
       .pipe(distinctUntilKeyChanged('id_personal'))

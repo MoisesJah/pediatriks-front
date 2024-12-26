@@ -20,7 +20,6 @@ export class SurveyComponent implements OnInit {
   fichaId = this.route.snapshot.paramMap.get('id');
   fichaService = inject(FichasService)
 
-
   ngOnInit(): void {
     this.getFicha();
   }

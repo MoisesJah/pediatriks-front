@@ -25,12 +25,14 @@ import { FlatpickrDefaultsInterface } from 'angularx-flatpickr';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { generateColorPalette } from 'src/app/utils/colorPalette';
 import { ToastrService } from 'ngx-toastr';
+import { ListItemAnimation } from 'src/app/utils/animations';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
   selector: 'app-editar-modal',
   templateUrl: './editar-modal.component.html',
   styleUrls: ['./editar-modal.component.scss'],
+  animations: [ListItemAnimation],
 })
 export class EditarModalComponent implements OnInit, AfterViewInit {
   modal = inject(NgbModal);

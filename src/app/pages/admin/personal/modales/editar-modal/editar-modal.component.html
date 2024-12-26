@@ -149,7 +149,7 @@
         </div>
 
         <ng-container *ngFor="let horario of horarios.controls; let i = index">
-          <div class="form-group d-flex flex-column gap-3 position-relative p-4 border-2 mt-2 border-dashed border-gray-300 rounded"
+          <div @listItemAnimation class="form-group d-flex flex-column gap-3 position-relative p-4 border-2 mt-2 border-dashed border-gray-300 rounded"
           [formGroupName]="i">
           <div *ngIf="i > 0" class="position-absolute end-0" style="transform: translateY(-18px) translateX(12px);"><button
             class="btn btn-sm fs-10 btn-icon btn-active-color-danger btn-danger" (click)="removeHorario(i)">

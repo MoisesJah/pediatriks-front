@@ -35,25 +35,26 @@
       <section class="row">
         <div class="form-group col">
           <label class="form-label" for="edit_kt_calendar_datepicker_date">Fecha</label>
-          <input type="text" #fechaInicio [readOnly]="isTerapista" class="form-control" id="edit_kt_calendar_datepicker_date"
-            formControlName="fecha_inicio" placeholder="Seleccionar Fecha de Inicio" />
+          <input type="text" #fechaInicio [readOnly]="isTerapista" class="form-control"
+            id="edit_kt_calendar_datepicker_date" formControlName="fecha_inicio"
+            placeholder="Seleccionar Fecha de Inicio" />
         </div>
         <div class="form-group col">
           <label class="form-label" for="edit_kt_calendar_datepicker_start_time">Hora de Inicio</label>
-          <input type="text" class="form-control" mwlFlatpickr [readOnly]="isTerapista"  [minuteIncrement]="minutesTerapia"
-            [options]="horaInicioOptions" id="edit_kt_calendar_datepicker_start_time" formControlName="hora_inicio"
-            placeholder="Seleccionar Hora de Inicio" />
+          <input type="text" class="form-control" mwlFlatpickr [readOnly]="isTerapista"
+            [minuteIncrement]="minutesTerapia" [options]="horaInicioOptions" id="edit_kt_calendar_datepicker_start_time"
+            formControlName="hora_inicio" placeholder="Seleccionar Hora de Inicio" />
         </div>
         <div class="form-group col">
           <label class="form-label" for="edit_kt_calendar_datepicker_end_time">Hora de Fin</label>
-          <input type="text" class="form-control" mwlFlatpickr [readOnly]="isTerapista" [minuteIncrement]="minutesTerapia"
-            [options]="horaFinOptions" id="edit_kt_calendar_datepicker_end_time" formControlName="hora_fin"
-            placeholder="Seleccionar Hora de Fin" />
+          <input type="text" class="form-control" mwlFlatpickr [readOnly]="isTerapista"
+            [minuteIncrement]="minutesTerapia" [options]="horaFinOptions" id="edit_kt_calendar_datepicker_end_time"
+            formControlName="hora_fin" placeholder="Seleccionar Hora de Fin" />
         </div>
       </section>
 
       <section class="row">
-        <div *ngIf="!isTerapista"  class="d-flex col-7 flex-column gap-3">
+        <div *ngIf="!isTerapista" class="d-flex col-7 flex-column gap-3">
           <div class="form-group">
             <label class="form-label" for="edit_doctor_selection">Seleccionar Especialista</label>
             <ng-select [items]="personalList | async" [loading]="isLoading | async" [loadingText]="'Cargando...'"
@@ -68,8 +69,9 @@
 
         <div class="form-group col-5">
           <label class="form-label" for="edit_event_status">Status de la Sesión</label>
-          <ng-select [items]="statusList | async" [loading]="isLoading | async" [loadingText]="'Cargando...'"
-            bindValue="id_status" placeholder="Seleccionar Status" bindLabel="nombre" formControlName="id_status">
+          <ng-select [items]="statusList | async" (change)="changeStatus($event)" [loading]="isLoading | async"
+            [loadingText]="'Cargando...'" bindValue="id_status" placeholder="Seleccionar Status" bindLabel="nombre"
+            formControlName="id_status">
             <ng-template ng-option-tmp let-item="item" let-search="searchTerm">
               <div class="d-flex align-items-center gap-2">
                 <span [ngClass]="getIcon(item.nombre)"></span>
@@ -85,6 +87,19 @@
           </ng-select>
         </div>
       </section>
+      <div *ngIf="selectedStatus" @enterAnimation class="border p-3 border-2 border-dashed border-gray-300 rounded">
+        <h4>Fichas Disponibles</h4>
+        <div *ngIf="fichasLoading" class="row gap-2">
+          <span class="placeholder col-12 rounded-1"></span>
+          <span class="placeholder col-12 rounded-1"></span>
+        </div>
+        <div class="row" *ngFor="let ficha of fichasList | async">
+          <div class="border d-flex justify-content-between p-2">
+            <h5>{{ficha.nombre}}</h5>
+            <a href={{ficha.id_ficha}} class="btn btn-sm btn-success rounded-pill" target="_blank">Completar</a>
+          </div>
+        </div>
+      </div>
     </form>
   </div>
   <div class="modal-footer">

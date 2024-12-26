@@ -23,6 +23,7 @@ import { PersonalService } from 'src/app/services/personal/personal.service';
 import { SedesService } from 'src/app/services/sedes/sedes.service';
 import { TerapiaService } from 'src/app/services/terapia/terapia.service';
 import { TipoPersonalService } from 'src/app/services/tipopersonal/tipopersonal.service';
+import { ListItemAnimation } from 'src/app/utils/animations';
 import { generateColorPalette } from 'src/app/utils/colorPalette';
 
 @UntilDestroy({ checkProperties: true })
@@ -30,6 +31,7 @@ import { generateColorPalette } from 'src/app/utils/colorPalette';
   selector: 'app-crear-modal',
   templateUrl: './crear-modal.component.html',
   styleUrls: ['./crear-modal.component.scss'],
+  animations:[ListItemAnimation]
 })
 export class CrearModalComponent implements OnInit, AfterViewInit {
   modal = inject(NgbModal);

@@ -30,6 +30,7 @@ import { TerapistaModule } from './pages/terapista/terapista.module';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { SurveysComponent } from './pages/admin/surveys/surveys.component';
+import {provideAnimationsAsync} from '@angular/platform-browser/animations/async'
 
 registerLocaleData(localeEs);
 @NgModule({
@@ -74,6 +75,7 @@ registerLocaleData(localeEs);
   ],
   providers: [
     provideHttpClient(withInterceptors([tokenInterceptor, loadingInterceptor])),
+    provideAnimationsAsync(),
     { provide: LOCALE_ID, useValue: 'es' },
     { provide: 'localeData', useValue: localeEs },
     { provide: IMAGE_CONFIG, useValue: { disableImageSizeWarning: true, disableImageLazyLoadWarning: true } },
