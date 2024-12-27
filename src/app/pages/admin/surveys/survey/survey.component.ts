@@ -17,11 +17,13 @@ export class SurveyComponent implements OnInit {
   survey!: Model
   route = inject(ActivatedRoute)
   theme = inject(ThemeService)
-  fichaId = this.route.snapshot.paramMap.get('id');
+  fichaId = this.route.snapshot.paramMap.get('surveyId');
+  sesionId = this.route.snapshot.paramMap.get('sesionId');
   fichaService = inject(FichasService)
 
   ngOnInit(): void {
     this.getFicha();
+    console.log(this.sesionId);
   }
 
   getFicha() {

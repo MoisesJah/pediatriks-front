@@ -66,7 +66,7 @@ export class ModalEditComponent implements OnInit, AfterViewInit {
   editEventForm: FormGroup;
   horarios: number[] = [];
 
-  selectedStatus: any = null;
+  selectedStatus: any;
   fichasLoading = false
 
   personalList: Observable<Personal[]> = new Observable();
@@ -193,6 +193,7 @@ export class ModalEditComponent implements OnInit, AfterViewInit {
     }
   }
   changeStatus(event: any) {
+    console.log(event)
     this.selectedStatus =
       event && event.nombre === 'Asistió' ? event.nombre : null;
   }
@@ -225,13 +226,11 @@ export class ModalEditComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this.editEventForm.valueChanges.pipe(
-      distinctUntilKeyChanged('id_status'),
-    ).subscribe((resp) => {
-      console.log(resp);
-      console.log(this.selectedStatus)
-      if (this.selectedStatus) this.getFichas();
-    })
+    this.editEventForm.get('id_status')?.valueChanges.subscribe((value) => {
+      if(value === 2){
+        this.getFichas()
+      }
+    });
     this.editEventForm.valueChanges.subscribe(() => this.endTimeValidation());
     this.editEventForm.valueChanges
       .pipe(distinctUntilKeyChanged('id_personal'))

@@ -74,7 +74,7 @@ const routes: Routes = [
       import('./surveys/surveys.component').then((m) => m.SurveysComponent),
   },
   {
-    path: 'survey/:id',
+    path: ':sesionId/:surveyId',
     loadComponent: () =>
       import('./surveys/survey/survey.component').then(
         (m) => m.SurveyComponent
