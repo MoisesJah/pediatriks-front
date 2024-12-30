@@ -23,6 +23,13 @@ const routes: Routes = [
       import('./inventario/inventario.component').then(
         (m) => m.InventarioComponent),
   },
+  {
+    path: ':sesionId/:surveyId',
+    loadComponent: () =>
+      import('../admin/surveys/survey/survey.component').then(
+        (m) => m.SurveyComponent
+      ),
+  },
 ];
 
 @NgModule({

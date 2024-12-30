@@ -32,4 +32,17 @@ export class SurveyComponent implements OnInit {
       this.survey.applyTheme(this.theme.getThemeMode() === 'dark' ? DefaultDark : DefaultLight);
     })
   }
+
+  payloadSubmit(data:any) {
+    this.fichaService.create({
+      id_sesion: this.sesionId,
+      id_ficha: this.fichaId,
+      body: JSON.stringify(data)
+    }).subscribe()
+  }
+
+  complete() {
+    this.survey.onComplete.add((model)=>this.payloadSubmit(model.data));
+    this.survey.completeLastPage();
+  }
 }

@@ -201,7 +201,7 @@ export class ModalEditComponent implements OnInit, AfterViewInit {
   getFichas() {
     this.fichasLoading = true
     this.fichasList = this.fichasService
-      .getByTerapia(this.event?.terapia.id_terapia!)
+      .getBySesion(this.event?.sesion.id_sesion!)
       .pipe(
         map((resp) => resp.data),
         finalize(() => (this.fichasLoading = false)),

@@ -21,6 +21,11 @@ export class FichasService {
   getByTerapia(id: string) {
     return this.http.get<{ data: any }>(`${this.apiUrl}/terapia/${id}`);
   }
+
+  getBySesion(id: string) {
+    return this.http.get<{ data: any }>(`${this.apiUrl}/sesion/${id}`);
+  }
+
   create(ficha: any) {
     return this.http.post(`${this.apiUrl}/add`, ficha);
   }
