@@ -6,7 +6,7 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root',
 })
 export class FichaResultService {
-  private apiUrl = `${environment.apiUrl}/ficha`;
+  private apiUrl = `${environment.apiUrl}/ficha-result`;
 
   constructor(private http: HttpClient) {}
 
