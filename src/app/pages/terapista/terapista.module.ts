@@ -5,12 +5,12 @@ import { FormsModule } from '@angular/forms';
 import { TerapistaRoutingModule } from './terapista-routing.module';
 import { CitasComponent } from './citas/citas.component';
 import { SolicitarModalComponent } from './inventario/modales/solicitar-modal/solicitar-modal.component';
+import { FichasComponent } from './fichas/fichas.component';
 
 
 
 @NgModule({
   declarations: [
-
 
 
   ],
