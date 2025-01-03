@@ -41,6 +41,7 @@ export class FichasComponent implements OnInit {
     {
       headerName: 'Status',
       field: 'status',
+      
     },
     {
       headerName: 'Paciente',

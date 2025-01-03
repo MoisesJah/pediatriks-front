@@ -6,6 +6,7 @@ import { ThemeService } from 'src/app/services/theme.service';
 import { SurveyModule } from 'survey-angular-ui';
 import { Model } from 'survey-core';
 import { DefaultLight, DefaultDark } from 'survey-core/themes';
+import "survey-core/i18n/spanish";
 
 @Component({
   selector: 'app-survey',
@@ -30,6 +31,7 @@ export class SurveyComponent implements OnInit, AfterViewInit {
   getFicha() {
     this.fichaService.getById(this.fichaId!).subscribe((ficha) => {
       this.survey = new Model(ficha.data.body);
+      this.survey.locale = 'es';
       this.survey.applyTheme(
         this.theme.getThemeMode() === 'dark' ? DefaultDark : DefaultLight
       );

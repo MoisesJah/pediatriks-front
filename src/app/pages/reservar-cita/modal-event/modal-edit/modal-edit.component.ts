@@ -9,6 +9,7 @@ import {
   AfterViewInit,
   inject,
   viewChild,
+  OnDestroy,
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CalendarEvent } from 'src/app/models/calendar-event';
@@ -50,7 +51,7 @@ import { EnterAnimation } from 'src/app/utils/animations';
   styleUrls: ['./modal-edit.component.scss'],
   animations: [EnterAnimation],
 })
-export class ModalEditComponent implements OnInit, AfterViewInit {
+export class ModalEditComponent implements OnInit, AfterViewInit, OnDestroy {
   @Output() eventUpdated = new EventEmitter<CalendarEvent>();
   @ViewChild('fechaInicio') fechaInicio!: ElementRef;
 
@@ -239,6 +240,16 @@ export class ModalEditComponent implements OnInit, AfterViewInit {
           this.onChangePersonal(resp);
         }
       });
+
+      window.addEventListener('focus', () => {
+        this.getFichas()
+      })
+  }
+
+  ngOnDestroy(): void {
+    window.removeEventListener('focus', () => {
+      this.getFichas()
+    })
   }
 
   loadPersonal() {
