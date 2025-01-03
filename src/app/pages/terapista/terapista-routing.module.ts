@@ -13,15 +13,14 @@ const routes: Routes = [
   {
     path: 'citas',
     loadComponent: () =>
-      import('./citas/citas.component').then(
-        (m) => m.CitasComponent
-      ),
+      import('./citas/citas.component').then((m) => m.CitasComponent),
   },
   {
     path: 'inventario',
     loadComponent: () =>
       import('./inventario/inventario.component').then(
-        (m) => m.InventarioComponent),
+        (m) => m.InventarioComponent
+      ),
   },
   {
     path: ':sesionId/:surveyId',
@@ -29,6 +28,11 @@ const routes: Routes = [
       import('../admin/surveys/survey/survey.component').then(
         (m) => m.SurveyComponent
       ),
+  },
+  {
+    path: 'fichas',
+    loadComponent: () =>
+      import('./fichas/fichas.component').then((m) => m.FichasComponent),
   },
 ];
 

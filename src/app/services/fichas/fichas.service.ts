@@ -26,6 +26,10 @@ export class FichasService {
     return this.http.get<{ data: any }>(`${this.apiUrl}/sesion/${id}`);
   }
 
+  getByPersonal(id: string) {
+    return this.http.get<{ data: any }>(`${this.apiUrl}/personal/${id}`);
+  }
+
   create(ficha: any) {
     return this.http.post(`${this.apiUrl}/add`, ficha);
   }
