@@ -23,13 +23,6 @@ const routes: Routes = [
       ),
   },
   {
-    path: 'ficha-result/:resultId',
-    loadComponent: () =>
-      import('./fichas/fichas-result/fichas-result.component').then(
-        (m) => m.FichasResultComponent
-      ),
-  },
-  {
     path: ':sesionId/:surveyId',
     pathMatch: 'full',
     loadComponent: () =>

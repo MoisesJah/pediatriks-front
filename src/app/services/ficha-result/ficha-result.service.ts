@@ -18,6 +18,10 @@ export class FichaResultService {
     return this.http.get<{ data: any }>(`${this.apiUrl}/all`);
   }
 
+  getByPacientes(id: number) {
+    return this.http.get<{ data: any }>(`${this.apiUrl}/user/${id}`);
+  }
+
   create(body: any) {
     return this.http.post(`${this.apiUrl}/add`, body);
   }

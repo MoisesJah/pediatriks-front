@@ -44,7 +44,7 @@ export class FichasComponent implements OnInit {
     },
     {
       headerName: 'Paciente',
-      field: 'paciente.nombre',
+      field: 'paciente',
       flex: 2,
       filter: true,
       // minWidth: 200,
@@ -107,7 +107,7 @@ export class FichasComponent implements OnInit {
       autoHeight: true,
       flex: 2,
       cellRenderer: (data: any) => {
-        const url = `/terapista/ficha-result/${data.data.id_resultado}`;
+        const url = `/ficha-result/${data.data.id_resultado}`;
         const url2 = `/terapista/${data.data.id_sesion}/${data.data.id_ficha}`;
         if (data.value) {
           return `<a href="${url}" target="_blank" class="btn btn-light-info btn-sm btn-active-icon-white rounded-pill"><i class="ki-outline ki-eye fs-4"></i>Ver Contenido</a>`;

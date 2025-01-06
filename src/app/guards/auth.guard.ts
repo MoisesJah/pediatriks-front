@@ -34,7 +34,7 @@ export const authGuard: CanActivateFn = (route, state) => {
     return false;
   }
 
-  if (authService.isAdmin() && !isAdminRoute) {
+  if (authService.isAdmin() && !isAdminRoute && !state.url.includes('ficha-result')) {
     router.navigateByUrl('/admin/dashboard');
     return false;
   }

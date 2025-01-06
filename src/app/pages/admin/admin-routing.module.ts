@@ -59,7 +59,7 @@ const routes: Routes = [
   {
     path: 'fichas',
     loadComponent: () =>
-      import('./fichas/fichas.component').then((m) => m.FichasComponent),
+      import('./surveys/surveys.component').then((m) => m.SurveysComponent),
   },
   {
     path: 'tabla-solicitudes',
@@ -68,11 +68,11 @@ const routes: Routes = [
         (m) => m.TablaSolicitudesComponent
       ),
   },
-  {
-    path: 'surveys',
-    loadComponent: () =>
-      import('./surveys/surveys.component').then((m) => m.SurveysComponent),
-  },
+  // {
+  //   path: 'surveys',
+  //   loadComponent: () =>
+  //     import('./surveys/surveys.component').then((m) => m.SurveysComponent),
+  // },
   {
     path: ':sesionId/:surveyId',
     loadComponent: () =>

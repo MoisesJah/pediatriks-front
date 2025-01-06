@@ -50,6 +50,22 @@ const routes: Routes = [
         (m) => m.PaquetesModule
       ),
   },
+  {
+    path: 'fichas',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('./pages/ficha-paciente/ficha-paciente.component').then(
+        (m) => m.FichaPacienteComponent
+      ),
+  },
+  {
+    path: 'ficha-result/:resultId',
+    canActivate: [authGuard],
+    loadComponent: () =>
+      import('../app/pages/terapista/fichas/fichas-result/fichas-result.component').then(
+        (m) => m.FichasResultComponent
+      ),
+  },
   { path: '**', redirectTo: 'login', pathMatch: 'full' },
 ];
 

@@ -36,15 +36,23 @@ export class SurveysComponent implements OnInit {
       field: 'nombre',
       cellClass: 'fw-bold',
       filter: 'agTextColumnFilter',
-      flex: 2,
-      // minWidth: 250,
+      minWidth: 250,
     },
     {
       headerName: 'Paciente',
       field: 'paciente',
-      flex: 2,
       filter: true,
-      // minWidth: 200,
+      minWidth: 200,
+    },
+    {
+      headerName: 'Personal',
+      field: 'personal',
+      filter: true,
+    },
+    {
+      headerName: 'Terapia',
+      field: 'terapia',
+      filter: true,
     },
     {
       headerName: 'Fecha',
@@ -55,7 +63,6 @@ export class SurveysComponent implements OnInit {
     {
       headerName: 'Status',
       field: 'status',
-      flex: 1.5,
       filter: 'agTextColumnFilter',
       cellRenderer: (data: any) => {
         if (data.value === 'pendiente') {
@@ -99,17 +106,14 @@ export class SurveysComponent implements OnInit {
     {
       headerName: 'Acciones',
       filter: false,
-      field: 'completado',
+      field: 'id_resultado',
       // cellClass:'my-5',
       autoHeight: true,
-      flex: 2,
+      // flex: 2,
       cellRenderer: (data: any) => {
-        const url = `/terapista/ficha-result/${data.data.id_resultado}`;
-        const url2 = `/terapista/${data.data.id_sesion}/${data.data.id_ficha}`;
+        const url = `/ficha-result/${data.data.id_resultado}`;
         if (data.value) {
           return `<a href="${url}" target="_blank" class="btn btn-light-info btn-sm btn-active-icon-white rounded-pill"><i class="ki-outline ki-eye fs-4"></i>Ver Contenido</a>`;
-        } else {
-          return `<a href="${url2}" target="_blank" class="btn btn-light-primary btn-sm btn-active-icon-white rounded-pill"><i class="ki-outline ki-check-circle fs-4"></i>Completar</a>`;
         }
       },
     },
@@ -123,8 +127,8 @@ export class SurveysComponent implements OnInit {
     this.gridApi = params.api;
   }
 
-  loadTabla(){
-    this.getFichas()
+  loadTabla() {
+    this.getFichas();
   }
 
   onFilterTextBoxChanged() {
