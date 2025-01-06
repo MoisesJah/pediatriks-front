@@ -23,7 +23,15 @@ const routes: Routes = [
       ),
   },
   {
+    path: 'ficha-result/:resultId',
+    loadComponent: () =>
+      import('./fichas/fichas-result/fichas-result.component').then(
+        (m) => m.FichasResultComponent
+      ),
+  },
+  {
     path: ':sesionId/:surveyId',
+    pathMatch: 'full',
     loadComponent: () =>
       import('../admin/surveys/survey/survey.component').then(
         (m) => m.SurveyComponent
@@ -31,6 +39,7 @@ const routes: Routes = [
   },
   {
     path: 'fichas',
+    // pathMatch: 'full',
     loadComponent: () =>
       import('./fichas/fichas.component').then((m) => m.FichasComponent),
   },

@@ -89,13 +89,16 @@
       </section>
       <div *ngIf="selectedStatus" @enterAnimation class="border p-3 border-2 border-dashed border-gray-300 rounded">
         <h4>Fichas Disponibles</h4>
-        <div *ngIf="fichasLoading" class="row gap-2">
-          <span class="placeholder col-12 rounded-1"></span>
-          <span class="placeholder col-12 rounded-1"></span>
+        <div *ngIf="fichasLoading" class="row mx-2 gap-2">
+          <span style="height:23.9px;" class="placeholder col-12 rounded-1"></span>
+          <span style="height:23.9px" class="placeholder col-12 rounded-1"></span>
         </div>
-        <div class="row" *ngFor="let ficha of fichasList | async">
+        <div class="" *ngFor="let ficha of fichasList | async">
           <div class="border d-flex align-items-center justify-content-between p-2">
-            <h5 class="card-title">{{ficha.nombre}}</h5>
+            <div class="d-flex align-items-center gap-2">
+              <i class="ki-duotone ki-document text-gray-900 fs-2"><span class="path1"></span><span class="path2"></span></i>
+              <h5 class="card-title">{{ficha.nombre}}</h5>
+            </div>
             <a href="terapista/{{event.sesion.id_sesion}}/{{ficha.id_ficha}}" class="btn btn-sm btn-success rounded-pill" target="_blank">Completar</a>
           </div>
         </div>

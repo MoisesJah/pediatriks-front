@@ -7,7 +7,9 @@ import { SurveyModule } from 'survey-angular-ui';
 import { Model } from 'survey-core';
 import { DefaultLight, DefaultDark } from 'survey-core/themes';
 import "survey-core/i18n/spanish";
+import { UntilDestroy } from '@ngneat/until-destroy';
 
+@UntilDestroy()
 @Component({
   selector: 'app-survey',
   standalone: true,
@@ -35,6 +37,8 @@ export class SurveyComponent implements OnInit, AfterViewInit {
       this.survey.applyTheme(
         this.theme.getThemeMode() === 'dark' ? DefaultDark : DefaultLight
       );
+      this.survey.completedHtml = '<h3>Ficha Completada!</h3>';
+
 
       this.survey.onComplete.add((model, options) => {
         options.showSaveInProgress();
@@ -47,7 +51,7 @@ export class SurveyComponent implements OnInit, AfterViewInit {
           })
           .subscribe({
             next: () => {
-              options.showSaveSuccess();
+              options.showSaveSuccess('Ficha Completada!');
             },
             error: () => {
               options.showSaveError();
