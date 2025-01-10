@@ -70,6 +70,10 @@ export class PersonalService {
     });
   }
 
+  getAvailable() {
+    return this.http.get<{ data: Personal[] }>(`${this.apiUrl}/personal/available`);
+  }
+
   delete(id: string) {
     return this.http.delete(`${this.apiUrl}/personal/delete/${id}`);
   }

@@ -111,7 +111,7 @@ export class CreateModalComponent implements OnInit {
   }
 
   loadPersonal() {
-   this.personalList = this.personalService.getAll().pipe(
+   this.personalList = this.personalService.getAvailable().pipe(
       map((resp) => resp.data),
       untilDestroyed(this)
     )}
