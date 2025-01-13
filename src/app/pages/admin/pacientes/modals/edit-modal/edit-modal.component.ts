@@ -54,6 +54,7 @@ export class EditModalComponent implements AfterViewInit, OnDestroy, OnInit {
       id_genero: [null, Validators.required],
       id_parentesco: [null, Validators.required],
       pos_hijo: [''],
+      diagnostico: [''],
       colegio: [''],
     });
   }

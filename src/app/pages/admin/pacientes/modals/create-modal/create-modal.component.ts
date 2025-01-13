@@ -55,6 +55,7 @@ export class CreateModalComponent implements AfterViewInit, OnDestroy {
       id_parentesco: [null, Validators.required],
       id_genero: [null, Validators.required],
       pos_hijo: [''],
+      diagnostico: [''],
       colegio: [''],
     });
   }
