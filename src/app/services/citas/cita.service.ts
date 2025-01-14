@@ -53,6 +53,10 @@ export class CitaService {
     return this.http.post<{ data: any }>(`${this.apiUrl}/citas/personal`, body);
   }
 
+  getPacienteInfo(id: string) {
+    return this.http.get<{ data: any }>(`${this.apiUrl}/citas/paciente/${id}`);
+  }
+
   getCitasByPersonal(body: { id_personal: string; startWeek: string; endWeek: string }) {
     return this.http.post<{ data: any }>(`${this.apiUrl}/citas/personal`, body);
   }

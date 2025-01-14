@@ -8,6 +8,7 @@ import { Model } from 'survey-core';
 import { DefaultLight, DefaultDark } from 'survey-core/themes';
 import "survey-core/i18n/spanish";
 import { UntilDestroy } from '@ngneat/until-destroy';
+import { CitaService } from 'src/app/services/citas/cita.service';
 
 @UntilDestroy()
 @Component({
@@ -24,10 +25,19 @@ export class SurveyComponent implements OnInit, AfterViewInit {
   fichaId = this.route.snapshot.paramMap.get('surveyId');
   sesionId = this.route.snapshot.paramMap.get('sesionId');
   fichaService = inject(FichasService);
+  citaService = inject(CitaService);  
   fichaResult = inject(FichaResultService);
 
   ngOnInit(): void {
     this.getFicha();
+  }
+
+  mergePaciente(survey: Model) {
+    this.citaService.getPacienteInfo(this.sesionId!).subscribe((paciente) => {
+      survey.mergeData({
+        nombres: paciente.data.nombres,
+      });
+    })
   }
 
   getFicha() {
@@ -39,6 +49,7 @@ export class SurveyComponent implements OnInit, AfterViewInit {
       );
       this.survey.completedHtml = '<h3>Ficha Completada!</h3>';
 
+      this.mergePaciente(this.survey);
 
       this.survey.onComplete.add((model, options) => {
         options.showSaveInProgress();
