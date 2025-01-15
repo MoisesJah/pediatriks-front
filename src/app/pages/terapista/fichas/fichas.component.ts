@@ -39,15 +39,25 @@ export class FichasComponent implements OnInit {
       field: 'nombre',
       cellClass: 'fw-bold',
       filter: 'agTextColumnFilter',
-      flex: 2,
-      // minWidth: 250,
+      minWidth: 250,
     },
     {
       headerName: 'Paciente',
       field: 'paciente',
-      flex: 2,
       filter: true,
-      // minWidth: 200,
+      minWidth: 200,
+    },
+    {
+      headerName: 'Personal',
+      field: 'personal',
+      filter: true,
+      minWidth: 200,
+    },
+    {
+      headerName: 'Terapia',
+      field: 'terapia',
+      filter: true,
+      minWidth: 200,
     },
     {
       headerName: 'Fecha',
@@ -58,7 +68,7 @@ export class FichasComponent implements OnInit {
     {
       headerName: 'Status',
       field: 'status',
-      flex: 1.5,
+      // flex: 1.5,
       filter: 'agTextColumnFilter',
       cellRenderer: (data: any) => {
         if (data.value === 'pendiente') {
@@ -105,7 +115,7 @@ export class FichasComponent implements OnInit {
       field: 'completado',
       // cellClass:'my-5',
       autoHeight: true,
-      flex: 2,
+      // flex: 2,
       cellRenderer: (data: any) => {
         const url = `/ficha-result/${data.data.id_resultado}`;
         const url2 = `/terapista/${data.data.id_sesion}/${data.data.id_ficha}`;
