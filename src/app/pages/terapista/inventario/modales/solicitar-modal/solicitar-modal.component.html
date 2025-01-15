@@ -24,6 +24,13 @@
         <small class="text-danger">La cantidad debe ser mayor que 0.</small>
       </div>
     </div>
+    <div class="form-group">
+      <label for="stock_actual" class="form-label">Stock que Posee Actualmente</label>
+      <input id="stock_actual" formControlName="stock_actual" type="number" class="form-control" placeholder="Ingresa el stock actual" min="0" />
+      <div *ngIf="solicitarForm.get('stock_actual')?.invalid && (solicitarForm.get('stock_actual')?.touched || solicitarForm.get('stock_actual')?.dirty)">
+        <small class="text-danger">El stock debe ser 0 o mayor.</small>
+      </div>
+    </div>
   </form>
 </div>
 

@@ -52,6 +52,13 @@ export class TablaSolicitudesComponent implements OnInit {
       filter: true,
     },
     {
+      headerName: 'Stock Terapista',
+      field: 'stock_terapista',
+      sortable: true,
+      filter: true,
+      valueGetter: (params) => params.data.stock_terapista || '0',
+    },
+    {
       headerName: 'Estado de la Solicitud',
       valueGetter: (params) => params.data.estado?.nombre || 'N/A',
       sortable: true,
@@ -74,17 +81,22 @@ export class TablaSolicitudesComponent implements OnInit {
     {
       headerName: 'Acciones',
       cellRenderer: ActionButtonsComponent,
-      cellRendererParams: {
-        onAcepted: (data: any) => {
-          const id_solicitud = data.id_solicitud;
-          const id_personal_aprueba = 'personal_id';
-          this.aceptarSolicitud(id_solicitud, id_personal_aprueba);
-        },
-        onDenied: (data: any) => {
-          const id_solicitud = data.id_solicitud;
-          const id_personal_aprueba = 'personal_id';
-          this.negarSolicitud(id_solicitud, id_personal_aprueba);
-        },
+      cellRendererParams: (params: any) => {
+        const estado = params.data.estado?.nombre || '';
+        const habilitado = estado.toLowerCase() === 'pendiente';
+        return {
+          habilitado,
+          onAcepted: (data: any) => {
+            const id_solicitud = data.id_solicitud;
+            const id_personal_aprueba = 'personal_id';
+            this.aceptarSolicitud(id_solicitud, id_personal_aprueba);
+          },
+          onDenied: (data: any) => {
+            const id_solicitud = data.id_solicitud;
+            const id_personal_aprueba = 'personal_id';
+            this.negarSolicitud(id_solicitud, id_personal_aprueba);
+          },
+        };
       },
       maxWidth: 200,
       resizable: false,

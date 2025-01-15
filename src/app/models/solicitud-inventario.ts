@@ -1,6 +1,7 @@
 export interface SolicitudInventario {
   id_solicitud: string;
   cantidad: number;
+  stock_terapista: number;
   personal_solicita: {
     id_personal: string;
     nombre: string;
