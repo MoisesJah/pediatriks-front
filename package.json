@@ -14,7 +14,7 @@
     "@angular/animations": "^18.2.10",
     "@angular/cdk": "^18.2.11",
     "@angular/common": "^18.2.10",
-    "@angular/compiler": "^18.2.10",
+    "@angular/compiler": "^18.2.11",
     "@angular/core": "^18.2.10",
     "@angular/forms": "^18.2.10",
     "@angular/platform-browser": "^18.2.10",
@@ -39,7 +39,8 @@
     "ngx-colors": "^3.6.0",
     "ngx-toastr": "^19.0.0",
     "rxjs": "~7.8.0",
-    "survey-angular-ui": "^1.12.15",
+    "survey-angular-ui": "^1.12.18",
+    "survey-pdf": "^1.12.18",
     "tslib": "^2.3.0",
     "zone.js": "~0.14.3"
   },
