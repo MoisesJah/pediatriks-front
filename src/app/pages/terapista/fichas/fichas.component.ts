@@ -50,6 +50,7 @@ export class FichasComponent implements OnInit {
     {
       headerName: 'Personal',
       field: 'personal',
+      cellClass: (d) => (d.data.can_edit ? 'fw-bold' : ''),
       filter: true,
       minWidth: 200,
     },
@@ -58,6 +59,9 @@ export class FichasComponent implements OnInit {
       field: 'terapia',
       filter: true,
       minWidth: 200,
+      cellRenderer: (data: any) => {
+        return `<span class="d-flex align-items-center gap-2"><span class="h-5px w-5px rounded-circle" style="background-color: ${data.data.color}"></span>${data.value}</span>`;
+      }
     },
     {
       headerName: 'Fecha',

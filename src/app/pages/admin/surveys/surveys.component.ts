@@ -53,6 +53,9 @@ export class SurveysComponent implements OnInit {
       headerName: 'Terapia',
       field: 'terapia',
       filter: true,
+      cellRenderer: (data: any) => {
+        return `<span class="d-flex align-items-center gap-2"><span class="h-5px w-5px rounded-circle" style="background-color: ${data.data.color}"></span>${data.value}</span>`;
+      }
     },
     {
       headerName: 'Fecha',
