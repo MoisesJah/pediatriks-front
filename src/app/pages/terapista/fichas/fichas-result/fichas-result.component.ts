@@ -111,70 +111,6 @@ export class FichasResultComponent implements OnInit {
         id: 'pdf',
         title: 'Guardar como PDF',
         action: () => this.generatePDF(),
-        // action: () => {
-        //   const pdfData = [];
-        //   console.log(JSON.parse(res.data.body));
-        //   Object.keys(JSON.parse(res.data.body)).forEach((key) => {
-        //     const question = this.survey.getQuestionByName(key);
-
-        //     const answer = this.survey.data[key];
-
-        //     if (question?.getType() === 'matrix') {
-        //       const matrixAnswer = [];
-        //       const rows = question?.rows.filter(
-        //         (row) => typeof row === 'object'
-        //       );
-        //       console.log('rows', rows);
-        //       rows.forEach((row, rowIndex) => {
-        //         const rowAnswer = [];
-        //         console.log(question?.columns);
-        //         question?.columns.forEach((column, columnIndex) => {
-        //           const cellAnswer = answer[rowIndex][columnIndex];
-        //           rowAnswer.push(cellAnswer);
-        //         });
-        //         matrixAnswer.push(rowAnswer);
-        //       });
-        //       pdfData.push({
-        //         question: question?.title,
-        //         answer: matrixAnswer,
-        //       });
-        //     } else {
-        //       pdfData.push({
-        //         question: question?.title,
-        //         answer: answer,
-        //       });
-        //     }
-        //   });
-
-        //   const docDefinition = {
-        //     content: pdfContent.map((item) => {
-        //       if (Array.isArray(item.answer)) {
-        //         const matrixTable = {
-        //           table: {
-        //             headerRows: 1,
-        //             widths: ['*', '*', '*', '*', '*'],
-        //             body: [question.columns.map((column) => column.text)],
-        //           },
-        //         };
-        //         item.answer.forEach((row) => {
-        //           matrixTable.table.body.push(row);
-        //         });
-        //         return matrixTable;
-        //       } else {
-        //         return { text: `${item.question}: ${item.answer}` };
-        //       }
-        //     }),
-        //   };
-
-        //   const newPdfMake = Object.assign({}, pdfMake);
-        //   newPdfMake.vfs = pdfFonts;
-
-        //   // Create the PDF document
-        //   const pdfDocGenerator = newPdfMake.createPdf(docDefinition);
-
-        //   // Download the PDF document
-        //   pdfDocGenerator.download();
-        // },
       });
 
       this.survey.mergeData(res.data.body);
@@ -208,8 +144,8 @@ export class FichasResultComponent implements OnInit {
             {
               image: logo,
               width: 180,
-              height: 45,
-              margin: [10, 10, 10, 0],
+              height: 25,
+              margin: [10, 10, 10, 10],
             },
             {
               text: '',
@@ -220,70 +156,63 @@ export class FichasResultComponent implements OnInit {
               text: this.survey.title,
               fontSize: 11,
               alignment: 'right',
-              width: 100, // sets the maximum width to 100px equivalent
+              width: 180, // sets the maximum width to 100px equivalent
               margin: [10, 10, 10, 0],
             },
           ],
           columnGap: 10,
           width: '100%',
         },
-        {
-          canvas: [
-            {
-              type: 'line',
-              x1: 0,
-              y1: 0,
-              x2: '100%',
-              y2: 0,
-              lineWidth: 2,
-              color: '#ADD8E6', // light blue
-              lineDashPattern: [70, 30], // 70% light blue, 30% purple
-              lineDashColor: '#7A288A', // purple
-            },
-          ],
-          margin: [0, -5, 0, 0], // adjust the margin to position the line under the logo and title
-        },
+        
       ],
-      footer: function(currentPage, pageCount) {
+      footer: function (currentPage, pageCount) {
         return {
-          canvas: [
-            {
-              type: 'rect',
-              x: 0,
-              y: 0,
-              w: '100%',
-              h: 100,
-              color: '#f7f7f7' // background color
-            }
-          ],
-          columns: [
-            {
-              text: [
-                'Text 1',
-                'Text 2',
-                'Text 3'
-              ].join('\n'),
-              fontSize: 12,
-              margin: [10, 20, 0, 0]
-            },
-            {
-              text: `Page ${currentPage} of ${pageCount}`,
-              fontSize: 12,
-              alignment: 'right',
-              margin: [0, 20, 10, 0]
-            }
-          ],
-          columnGap: 10,
-          width: '100%'
+          layout: 'noBorders',
+          table: {
+            widths: ['*'],
+            body: [
+              [
+                {
+                  fillColor: '#1e88e5',
+                  columns: [
+                    {
+                      width: '70%',
+                      stack: [
+                        { text: '(01) 632-8556', color: 'white', fontSize: 9 },
+                        {
+                          text: 'info.pediatriks@gmail.com',
+                          color: 'white',
+                          fontSize: 9,
+                        },
+                        {
+                          text: 'Av. Universitaria 6604 - Comas',
+                          color: 'white',
+                          fontSize: 9,
+                        },
+                      ],
+                      margin: [10, 10, 0, 0], // left, top, right, bottom
+                    },
+                    {
+                      width: '30%',
+                      text: `Página ${currentPage} de ${pageCount}`,
+                      color: 'white',
+                      fontSize: 12,
+                      alignment: 'right',
+                      margin: [0, 18, 10, 0], // Centered vertically with the left text
+                    },
+                  ],
+                },
+              ],
+            ],
+          },
         };
       },
+      pageMargins: [40, 80, 40, 47],
       content: [
-        // { text: this.survey.title, style: 'header' },
-        // // { text: `Generated on: ${timestamp}`, style: 'subheader' },
-        // { text: '\n' },
         {
-          text: this.survey.title,
+          text: this.survey.pages[0].title,
           style: 'header',
+          fontSize: 18,
         },
         {
           text: this.survey.description,
@@ -293,7 +222,8 @@ export class FichasResultComponent implements OnInit {
       ],
       styles: {
         header: {
-          fontSize: 22,
+          fontSize: 20,
+          alignment: 'center',
           bold: true,
           margin: [0, 0, 0, 10],
         },
@@ -313,13 +243,14 @@ export class FichasResultComponent implements OnInit {
         },
       },
     };
+
+    // itera sobre las preguntas y sus respuestas y las agrega al docDefinition
+    // diferentes tipos de pregunta checkbox, radiogroup, matrix
     this.survey.getAllQuestions().forEach((question) => {
       docDefinition.content.push({
         text: question.title,
         style: 'question',
       });
-
-      console.log(question.type);
 
       switch (question.getType()) {
         case 'text':
@@ -407,8 +338,4 @@ export class FichasResultComponent implements OnInit {
 
     return content;
   }
-  // savePdf(body: any) {
-  //   console.log(body);
-  //   createSurveyPdfModel(body, this.survey).save('ficha.pdf');
-  // }
 }
