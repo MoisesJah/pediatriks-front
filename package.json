@@ -40,7 +40,7 @@
     "ngx-toastr": "^19.0.0",
     "pdfmake": "^0.2.18",
     "rxjs": "~7.8.0",
-    "survey-angular-ui": "^1.12.18",
+    "survey-angular-ui": "^1.12.15",
     "survey-pdf": "^1.12.18",
     "tslib": "^2.3.0",
     "zone.js": "~0.14.3"

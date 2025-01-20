@@ -15,68 +15,6 @@ import * as pdfFonts from 'pdfmake/build/vfs_fonts';
 import { vfs } from 'pdfmake/build/vfs_fonts';
 import { TDocumentDefinitions } from 'pdfmake/interfaces';
 
-function createSurveyPdfModel(body: any, survey: Model) {
-  const pdfWidth = !!survey && survey.pdfWidth ? survey.pdfWidth : 210;
-  const pdfHeight = !!survey && survey.pdfHeight ? survey.pdfHeight : 297;
-  const options = {
-    fontSize: 14,
-    margins: {
-      left: 10,
-      right: 10,
-      top: 10,
-      bot: 10,
-    },
-    format: [pdfWidth, pdfHeight],
-  };
-
-  const surveyPDF = new SurveyPDF(body, options);
-  if (survey) {
-    surveyPDF.data = survey.data;
-    surveyPDF.locale = survey.locale;
-  }
-  surveyPDF.onRenderHeader.add(async (_, canvas) => {
-    await canvas.drawImage({
-      base64: logo,
-      width: 100,
-
-      // horizontalAlign: 'left',
-      // width: (canvas.rect.yBot - canvas.rect.yTop) * 3,
-      // height: (canvas.rect.yBot - canvas.rect.yTop) * 1.5,
-      // margins: { left: (canvas.rect.yBot - canvas.rect.yTop) * 0.2 },
-    });
-  });
-
-  surveyPDF.onRenderFooter.add(async (_, canvas) => {
-    canvas.drawText({
-      text: '632-8556',
-      fontSize: 10,
-    });
-    await canvas.drawImage({
-      base64: footer1,
-      height: 520,
-      width: 210,
-
-      rect: {
-        // xLeft: 0,
-        // yTop: 0,
-        // xRight: canvas.rect.xRight,
-        // yBot: canvas.rect.yBot
-      },
-    });
-    canvas.drawText({
-      text: 'Pagina ' + canvas.pageNumber + ' de ' + canvas.pageCount,
-      fontSize: 10,
-      horizontalAlign: 'right',
-      verticalAlign: 'bottom',
-      margins: {
-        right: 12,
-      },
-    });
-  });
-
-  return surveyPDF;
-}
-
 @Component({
   selector: 'app-fichas-result',
   standalone: true,
@@ -124,7 +62,7 @@ export class FichasResultComponent implements OnInit {
           .update(this.resultId!, { body: JSON.stringify(model.data) })
           .subscribe({
             next: () => {
-              options.showSaveSuccess('Ficha Actualizada!');
+              options.showSaveSuccess('Ficha Actualizada Correctamente!');
             },
             error: () => {
               options.showSaveError();
@@ -143,7 +81,7 @@ export class FichasResultComponent implements OnInit {
           columns: [
             {
               image: logo,
-              width: 180,
+              width: 145,
               height: 25,
               margin: [10, 10, 10, 10],
             },
@@ -163,8 +101,8 @@ export class FichasResultComponent implements OnInit {
           columnGap: 10,
           width: '100%',
         },
-        
       ],
+
       footer: function (currentPage, pageCount) {
         return {
           layout: 'noBorders',
@@ -215,11 +153,45 @@ export class FichasResultComponent implements OnInit {
           fontSize: 18,
         },
         {
-          text: this.survey.description,
+          text: this.survey.pages[0].description,
           style: 'subheader',
         },
         // ...this.generatePDFContent(surveyData)
       ],
+      background: function () {
+        return [
+          // Light blue line (70%)
+          {
+            columns: [
+              // {
+              //   canvas: [
+              //     {
+              //       type: 'rect',
+              //       x: 20,
+              //       y: 40, // Adjust this value to position the line below your header
+              //       w: 380, // Width for 70%
+              //       h: 4, // Height of the line
+              //       color: '#87CEFA',
+              //     },
+              //   ],
+              // },
+              // Purple line (30%)
+              {
+                canvas: [
+                  {
+                    type: 'rect',
+                    x: 400, // Starts where the blue line ends
+                    y: 90, // Same y position as blue line
+                    w: 160, // Width for remaining 30%
+                    h: 4, // Same height
+                    color: '#800080',
+                  },
+                ],
+              },
+            ],
+          },
+        ];
+      },
       styles: {
         header: {
           fontSize: 20,
@@ -229,7 +201,8 @@ export class FichasResultComponent implements OnInit {
         },
         subheader: {
           fontSize: 14,
-          bold: true,
+          // bold: true,
+          alignment: 'center',
           margin: [0, 0, 0, 20],
         },
         questionTitle: {
@@ -306,36 +279,5 @@ export class FichasResultComponent implements OnInit {
     const newPdfMake = Object.assign({}, pdfMake);
     newPdfMake.vfs = pdfFonts;
     newPdfMake.createPdf(docDefinition).download('survey-responses.pdf');
-  }
-  generatePDFContent(data: any) {
-    const content: any[] = [];
-
-    Object.entries(data).forEach(([key, value]) => {
-      const question = this.survey.getQuestionByName(key);
-      if (question) {
-        content.push({ text: question.title, style: 'questionTitle' });
-
-        if (Array.isArray(value)) {
-          content.push({
-            text: value.join(', '),
-            style: 'answer',
-          });
-        } else if (typeof value === 'object') {
-          Object.entries(value).forEach(([rowKey, rowValue]) => {
-            content.push({
-              text: `${rowKey}: ${rowValue}`,
-              style: 'answer',
-            });
-          });
-        } else {
-          content.push({
-            text: value.toString(),
-            style: 'answer',
-          });
-        }
-      }
-    });
-
-    return content;
   }
 }

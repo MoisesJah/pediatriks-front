@@ -69,7 +69,15 @@ ng-select {
   pointer-events: initial;
 }
 
+.ficha-container{
+  background-color: var(243, 243, 243, 1);
+  min-height: 100dvh;
+}
+
 [data-bs-theme="dark"] {
+  .ficha-container{
+    background-color: rgba(36, 36, 36, 1);
+  }
   .ng-select > .ng-select-container {
     background-color: var(--bs-body-bg);
     border-color: var(--bs-gray-300);

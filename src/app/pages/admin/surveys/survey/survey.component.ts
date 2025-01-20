@@ -36,6 +36,10 @@ export class SurveyComponent implements OnInit, AfterViewInit {
     this.citaService.getPacienteInfo(this.sesionId!).subscribe((paciente) => {
       survey.mergeData({
         nombres: paciente.data.nombres,
+        diagnostico: paciente.data.diagnostico,
+        apoderado: paciente.data.apoderado,
+        fecha_nacimiento: paciente.data.fecha_nacimiento,
+        edad: paciente.data.edad,
       });
     })
   }
@@ -62,7 +66,7 @@ export class SurveyComponent implements OnInit, AfterViewInit {
           })
           .subscribe({
             next: () => {
-              options.showSaveSuccess('Ficha Completada!');
+              options.showSaveSuccess('Ficha Guardada Correctamente!');
             },
             error: () => {
               options.showSaveError();
