@@ -81,9 +81,9 @@ export class FichasResultComponent implements OnInit {
           columns: [
             {
               image: logo,
-              width: 145,
-              height: 25,
-              margin: [10, 10, 10, 10],
+              width: 190,
+              height: 41,
+              margin: [20, 10, 10, 10],
             },
             {
               text: '',
@@ -93,9 +93,11 @@ export class FichasResultComponent implements OnInit {
             {
               text: this.survey.title,
               fontSize: 11,
+              bold: true,
+              color: '#fbb506',
               alignment: 'right',
               width: 180, // sets the maximum width to 100px equivalent
-              margin: [10, 10, 10, 0],
+              margin: [20, 20, 20, 0],
             },
           ],
           columnGap: 10,
@@ -111,7 +113,7 @@ export class FichasResultComponent implements OnInit {
             body: [
               [
                 {
-                  fillColor: '#1e88e5',
+                  fillColor: '#15c4c5',
                   columns: [
                     {
                       width: '70%',
@@ -128,15 +130,15 @@ export class FichasResultComponent implements OnInit {
                           fontSize: 9,
                         },
                       ],
-                      margin: [10, 10, 0, 0], // left, top, right, bottom
+                      margin: [40, 10, 0, 0], // left, top, right, bottom
                     },
                     {
                       width: '30%',
                       text: `Página ${currentPage} de ${pageCount}`,
                       color: 'white',
-                      fontSize: 12,
+                      fontSize: 11,
                       alignment: 'right',
-                      margin: [0, 18, 10, 0], // Centered vertically with the left text
+                      margin: [0, 18, 40, 0], // Centered vertically with the left text
                     },
                   ],
                 },
@@ -163,18 +165,18 @@ export class FichasResultComponent implements OnInit {
           // Light blue line (70%)
           {
             columns: [
-              // {
-              //   canvas: [
-              //     {
-              //       type: 'rect',
-              //       x: 20,
-              //       y: 40, // Adjust this value to position the line below your header
-              //       w: 380, // Width for 70%
-              //       h: 4, // Height of the line
-              //       color: '#87CEFA',
-              //     },
-              //   ],
-              // },
+              {
+                canvas: [
+                  {
+                    type: 'rect',
+                    x: 25,
+                    y: 50, // Adjust this value to position the line below your header
+                    w: 500, // Width for 70%
+                    h: 4, // Height of the line
+                    color: '#15c4c5',
+                  },
+                ],
+              },
               // Purple line (30%)
               {
                 canvas: [
