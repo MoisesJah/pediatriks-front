@@ -40,6 +40,9 @@ export class SurveyComponent implements OnInit, AfterViewInit {
         apoderado: paciente.data.apoderado,
         fecha_nacimiento: paciente.data.fecha_nacimiento,
         edad: paciente.data.edad,
+        personal: paciente.data.personal,
+        telefono:paciente.data.telefono,
+        colegio:paciente.data.colegio
       });
     })
   }

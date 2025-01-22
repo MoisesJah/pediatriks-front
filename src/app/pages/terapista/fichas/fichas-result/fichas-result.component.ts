@@ -210,12 +210,13 @@ export class FichasResultComponent implements OnInit {
         questionTitle: {
           fontSize: 12,
           bold: true,
-          margin: [0, 10, 0, 5],
+          // margin: [0, 10, 0, 5],
         },
         answer: {
           fontSize: 11,
           margin: [0, 0, 0, 10],
         },
+        
       },
     };
 
@@ -224,8 +225,10 @@ export class FichasResultComponent implements OnInit {
     this.survey.getAllQuestions().forEach((question) => {
       docDefinition.content.push({
         text: question.title,
-        style: 'question',
+        style: 'questionTitle',
       });
+
+      console.log(question.parent);
 
       switch (question.getType()) {
         case 'text':
@@ -249,33 +252,58 @@ export class FichasResultComponent implements OnInit {
             style: 'answer',
           });
           break;
-        case 'matrix':
-          if (this.survey.data[question.name]) {
-            const table = {
-              table: {
-                headerRows: 1,
-                widths: ['*', ...Array(question.columns.length).fill('*')],
-                body: [
-                  [''].concat(question.columns.map((column) => column.text)),
-                ],
-              },
-            };
-            question.rows.forEach((row) => {
-              const rowData = [row.text];
-              question.columns.forEach((column) => {
-                rowData.push(
-                  this.survey.data[question.name][row.value] === column.value
-                    ? '•'
-                    : ''
-                );
-              });
-              table.table.body.push(rowData);
-            });
-            docDefinition.content.push(table);
-          }
-          break;
+          case 'matrix':
+  if (this.survey.data[question.name]) {
+    const tableHeaders = [''].concat(
+      question.columns.map((column) => column.text)
+    );
+
+    const tableRows = question.rows.map((row) => {
+      const rowData = [{ text: row.text, wordWrap: true }];
+      question.columns.forEach((column) => {
+        rowData.push({
+          text: this.survey.data[question.name][row.value] === column.value ? '•' : '',
+          wordWrap: true,
+          minHeight: 20,
+        });
+      });
+      return rowData;
+    });
+
+    const table = {
+      table: {
+        headerRows: 1,
+        widths: [
+          'auto',
+          ...Array(question.columns.length).fill('auto'),
+        ],
+        body: [tableHeaders, ...tableRows],
+        layout: {
+          dontBreakRows: true,
+          keepWithHeader: true,
+        },
+      },
+    };
+
+    if (!docDefinition.content.find(item => item.text === question.title)) {
+      docDefinition.content.push({
+        text: question.title,
+        style: 'questionTitle',
+        margin: [0, 0, 0, 5],
+      });
+    }
+
+    docDefinition.content.push(table);
+
+    // Add a spacer element
+    docDefinition.content.push({
+      text: '',
+      margin: [0, 10, 0, 0],
+    });
+  }
+  break;
         default:
-          console.log(`Unsupported question type: ${question.type}`);
+          console.log(`Unsupported question type: ${question.getType()}`);
       }
     });
     const newPdfMake = Object.assign({}, pdfMake);
