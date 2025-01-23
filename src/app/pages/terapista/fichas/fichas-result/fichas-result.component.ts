@@ -97,7 +97,7 @@ export class FichasResultComponent implements OnInit {
               bold: true,
               color: '#fbb506',
               alignment: 'right',
-              width: 180, // sets the maximum width to 100px equivalent
+              width: 250, // sets the maximum width to 100px equivalent
               margin: [20, 20, 20, 0],
             },
           ],
@@ -159,7 +159,6 @@ export class FichasResultComponent implements OnInit {
           text: this.survey.pages[0].description,
           style: 'subheader',
         },
-        // ...this.generatePDFContent(surveyData)
       ],
       background: function () {
         return [
@@ -172,7 +171,7 @@ export class FichasResultComponent implements OnInit {
                     type: 'rect',
                     x: 25,
                     y: 50, // Adjust this value to position the line below your header
-                    w: 500, // Width for 70%
+                    w: 550, // Width for 70%
                     h: 4, // Height of the line
                     color: '#15c4c5',
                   },
@@ -211,7 +210,7 @@ export class FichasResultComponent implements OnInit {
         questionTitle: {
           fontSize: 12,
           bold: true,
-          // margin: [0, 10, 0, 5],
+          margin: [0, 10, 0, 5],
         },
         answer: {
           fontSize: 11,
@@ -220,95 +219,81 @@ export class FichasResultComponent implements OnInit {
       },
     };
 
+    const data = [];
+
+    docDefinition.content.splice(2, 0,{
+      columns: [
+        {
+          table: {
+            widths: ['auto', '*'],
+            body: data,
+            layout:{
+              defaultBorder: false
+            }
+          },
+          margin: [0, 5, 0, 20], // top, right, bottom, left
+        },
+      ],
+    })
+
     this.survey.getAllQuestions().forEach((question) => {
-      const isBold = this.survey.getAllPanels()[0].elements.includes(question);
+      const firstPanel = this.survey
+        .getAllPanels()[0]
+        .elements.includes(question);
       const value = question.value ? question.value : '';
 
-      // if (isBold) {
-      //  docDefinition.content.push({
-      //           columns: [
-      //               {
-      //                   text: `${question.title}:`,
-      //                   width: 'auto',
-      //                   margin: [0, 5, 5, 0]  // Add spacing for question title
-      //               },
-      //               {
-      //                   stack: [
-      //                       {
-      //                           text: value || '',
-      //                           margin: [0, 0, 0, value ? 2 : 7] // Ensure no overlap with the line
-      //                       },
-      //                       {
-      //                           canvas: [
-      //                               {
-      //                                   type: 'line',
-      //                                   x1: 0,
-      //                                   y1: value ? 0 : -5,
-      //                                   x2: (question.title.length * 5) - 595 - 50, // Adjust line length
-      //                                   y2: value ? 0 : -5,
-      //                                   lineWidth: 1
-      //                               }
-      //                           ]
-      //                       }
-      //                   ],
-      //                   width: '*', // Fills remaining space for answer and line
-      //                   margin: [0, 5, 0, 5], // Adjust spacing
-
-      //               }
-      //           ],
-      //           alignment: 'left',
-      //           columnGap: 10 // Space between question and answer columns
-      //         })
-      // }
-      if (isBold) {
-        docDefinition.content.push({
-          table: {
-            widths: ['auto', '*', '*'],
-            body: [
-              ['', '', ''],
-              [
-                `${question.title}:`,
-                {
-                  text: `${question.value ? question.value : ''}`,
-                  border: [false, false, false, true],
-                  colSpan:2,
-                  fontSize: 12,
-                },
-                // {
-                //   // text: value || '',
-                //   border: [false, false, false, true],
-                //   fontSize: 12,
-                // },
-              ],
-            ],
-            
-          },
-          layout: {
-              defaultBorder: false,
-            },
-        });
-      } else {
-        docDefinition.content.push({
-          text: question.title,
-          style: 'questionTitle',
-        });
+      if (firstPanel) {
+        data.push([
+          { text: `${question.title}:`,border: [false, false, false, false] },
+          { text: `${value}`, border: [false, false, false, true] },
+        ]);
       }
-
+      else {docDefinition.content.push({
+        text: question.title,
+        style: 'questionTitle',
+      });
+    }
       switch (question.getType()) {
         case 'text':
+         if(!firstPanel){
           docDefinition.content.push({
             text: this.survey.data[question.name],
             style: 'answer',
           });
+         }
           break;
         case 'checkbox':
-          const checkboxAnswers = this.survey.data[question.name];
-          checkboxAnswers.forEach((answer) => {
-            docDefinition.content.push({
-              text: answer,
-              style: 'answer',
+          if (
+            this.survey.data[question.name] &&
+            question.choices &&
+            Array.isArray(question.choices)
+          ) {
+            const checkboxValues = this.survey.data[question.name];
+            const options = question.choices;
+
+            options.forEach((option, index) => {
+              const row = [];
+              if (checkboxValues.includes(option.value)) {
+                row.push('[X]'); // Checked mark  character
+              } else {
+                row.push('[ ]'); // Unchecked mark  character
+              }
+              row.push(option.text);
+
+              docDefinition.content.push({
+                text: row.join(' '),
+                margin: [20, 10, 0, 0],
+                fontSize: 12,
+              });
             });
-          });
+            if (checkboxValues.includes('other')) {
+              const otherValue = question.commentElements[0].value;
+              docDefinition.content.push({
+                text: '[X] Otro: ' + otherValue,
+                margin: [20, 10, 0, 0],
+              });
+            }
+          }
           break;
         case 'radiogroup':
           docDefinition.content.push({
@@ -328,7 +313,7 @@ export class FichasResultComponent implements OnInit {
                 rowData.push({
                   text:
                     this.survey.data[question.name][row.value] === column.value
-                      ? '•'
+                      ? 'X'
                       : '',
                   wordWrap: true,
                   minHeight: 20,
@@ -360,7 +345,55 @@ export class FichasResultComponent implements OnInit {
               docDefinition.content.push({
                 text: question.title,
                 style: 'questionTitle',
-                margin: [0, 0, 0, 5],
+                margin: [0, 100, 0, 5],
+              });
+            }
+
+            docDefinition.content.push(table);
+
+            // Add a spacer element
+          }
+          break;
+        case 'comment':
+          if (this.survey.data[question.name]) {
+            docDefinition.content.push({
+              text: this.survey.data[question.name],
+              style: 'answer',
+            });
+          }
+          break;
+        case 'matrixdynamic':
+          if (this.survey.data[question.name]) {
+            const maxColumns = Math.max(
+              ...this.survey.data[question.name].map(
+                (row) => Object.values(row).length
+              )
+            );
+            const tableRows = this.survey.data[question.name].map((row) => {
+              const values = Object.values(row);
+              return [...values, ...Array(maxColumns - values.length).fill('')];
+            });
+
+            const table = {
+              table: {
+                widths: ['auto', ...Array(maxColumns - 1).fill('auto')],
+                body: tableRows,
+                dontBreakRows: true,
+                layout: {
+                  keepWithHeader: true,
+                },
+              },
+            };
+
+            if (
+              !docDefinition.content.find(
+                (item) => item.text === question.title
+              )
+            ) {
+              docDefinition.content.push({
+                text: question.title,
+                style: 'questionTitle',
+                margin: [0, 100, 0, 5],
               });
             }
 
@@ -369,7 +402,7 @@ export class FichasResultComponent implements OnInit {
             // Add a spacer element
             docDefinition.content.push({
               text: '',
-              margin: [0, 10, 0, 0],
+              margin: [0, 20, 0, 0],
             });
           }
           break;
@@ -377,6 +410,7 @@ export class FichasResultComponent implements OnInit {
           console.log(`Unsupported question type: ${question.getType()}`);
       }
     });
+
     const newPdfMake = Object.assign({}, pdfMake);
     newPdfMake.vfs = pdfFonts;
     newPdfMake.createPdf(docDefinition).download('survey-responses.pdf');
