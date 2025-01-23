@@ -14,6 +14,7 @@ import * as pdfMake from 'pdfmake/build/pdfmake';
 import * as pdfFonts from 'pdfmake/build/vfs_fonts';
 import { vfs } from 'pdfmake/build/vfs_fonts';
 import { TDocumentDefinitions } from 'pdfmake/interfaces';
+import { style } from '@angular/animations';
 
 @Component({
   selector: 'app-fichas-result',
@@ -216,19 +217,82 @@ export class FichasResultComponent implements OnInit {
           fontSize: 11,
           margin: [0, 0, 0, 10],
         },
-        
       },
     };
 
-    // itera sobre las preguntas y sus respuestas y las agrega al docDefinition
-    // diferentes tipos de pregunta checkbox, radiogroup, matrix
     this.survey.getAllQuestions().forEach((question) => {
-      docDefinition.content.push({
-        text: question.title,
-        style: 'questionTitle',
-      });
+      const isBold = this.survey.getAllPanels()[0].elements.includes(question);
+      const value = question.value ? question.value : '';
 
-      console.log(question.parent);
+      // if (isBold) {
+      //  docDefinition.content.push({
+      //           columns: [
+      //               {
+      //                   text: `${question.title}:`,
+      //                   width: 'auto',
+      //                   margin: [0, 5, 5, 0]  // Add spacing for question title
+      //               },
+      //               {
+      //                   stack: [
+      //                       {
+      //                           text: value || '',
+      //                           margin: [0, 0, 0, value ? 2 : 7] // Ensure no overlap with the line
+      //                       },
+      //                       {
+      //                           canvas: [
+      //                               {
+      //                                   type: 'line',
+      //                                   x1: 0,
+      //                                   y1: value ? 0 : -5,
+      //                                   x2: (question.title.length * 5) - 595 - 50, // Adjust line length
+      //                                   y2: value ? 0 : -5,
+      //                                   lineWidth: 1
+      //                               }
+      //                           ]
+      //                       }
+      //                   ],
+      //                   width: '*', // Fills remaining space for answer and line
+      //                   margin: [0, 5, 0, 5], // Adjust spacing
+
+      //               }
+      //           ],
+      //           alignment: 'left',
+      //           columnGap: 10 // Space between question and answer columns
+      //         })
+      // }
+      if (isBold) {
+        docDefinition.content.push({
+          table: {
+            widths: ['auto', '*', '*'],
+            body: [
+              ['', '', ''],
+              [
+                `${question.title}:`,
+                {
+                  text: `${question.value ? question.value : ''}`,
+                  border: [false, false, false, true],
+                  colSpan:2,
+                  fontSize: 12,
+                },
+                // {
+                //   // text: value || '',
+                //   border: [false, false, false, true],
+                //   fontSize: 12,
+                // },
+              ],
+            ],
+            
+          },
+          layout: {
+              defaultBorder: false,
+            },
+        });
+      } else {
+        docDefinition.content.push({
+          text: question.title,
+          style: 'questionTitle',
+        });
+      }
 
       switch (question.getType()) {
         case 'text':
@@ -252,56 +316,63 @@ export class FichasResultComponent implements OnInit {
             style: 'answer',
           });
           break;
-          case 'matrix':
-  if (this.survey.data[question.name]) {
-    const tableHeaders = [''].concat(
-      question.columns.map((column) => column.text)
-    );
+        case 'matrix':
+          if (this.survey.data[question.name]) {
+            const tableHeaders = [''].concat(
+              question.columns.map((column) => column.text)
+            );
 
-    const tableRows = question.rows.map((row) => {
-      const rowData = [{ text: row.text, wordWrap: true }];
-      question.columns.forEach((column) => {
-        rowData.push({
-          text: this.survey.data[question.name][row.value] === column.value ? '•' : '',
-          wordWrap: true,
-          minHeight: 20,
-        });
-      });
-      return rowData;
-    });
+            const tableRows = question.rows.map((row) => {
+              const rowData = [{ text: row.text, wordWrap: true }];
+              question.columns.forEach((column) => {
+                rowData.push({
+                  text:
+                    this.survey.data[question.name][row.value] === column.value
+                      ? '•'
+                      : '',
+                  wordWrap: true,
+                  minHeight: 20,
+                });
+              });
+              return rowData;
+            });
 
-    const table = {
-      table: {
-        headerRows: 1,
-        widths: [
-          'auto',
-          ...Array(question.columns.length).fill('auto'),
-        ],
-        body: [tableHeaders, ...tableRows],
-        layout: {
-          dontBreakRows: true,
-          keepWithHeader: true,
-        },
-      },
-    };
+            const table = {
+              table: {
+                headerRows: 1,
+                widths: [
+                  'auto',
+                  ...Array(question.columns.length).fill('auto'),
+                ],
+                body: [tableHeaders, ...tableRows],
+                dontBreakRows: true,
+                layout: {
+                  keepWithHeader: true,
+                },
+              },
+            };
 
-    if (!docDefinition.content.find(item => item.text === question.title)) {
-      docDefinition.content.push({
-        text: question.title,
-        style: 'questionTitle',
-        margin: [0, 0, 0, 5],
-      });
-    }
+            if (
+              !docDefinition.content.find(
+                (item) => item.text === question.title
+              )
+            ) {
+              docDefinition.content.push({
+                text: question.title,
+                style: 'questionTitle',
+                margin: [0, 0, 0, 5],
+              });
+            }
 
-    docDefinition.content.push(table);
+            docDefinition.content.push(table);
 
-    // Add a spacer element
-    docDefinition.content.push({
-      text: '',
-      margin: [0, 10, 0, 0],
-    });
-  }
-  break;
+            // Add a spacer element
+            docDefinition.content.push({
+              text: '',
+              margin: [0, 10, 0, 0],
+            });
+          }
+          break;
         default:
           console.log(`Unsupported question type: ${question.getType()}`);
       }
