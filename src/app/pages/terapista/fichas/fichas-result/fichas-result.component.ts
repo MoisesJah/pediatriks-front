@@ -220,12 +220,13 @@ export class FichasResultComponent implements OnInit {
     };
 
     const data = [];
+    this.rendrCustomQuestions(this.survey, docDefinition);
 
     docDefinition.content.splice(2, 0, {
       columns: [
         {
           table: {
-            widths: ['auto', '*'],
+            widths: [175, '*'],
             body: data,
             layout: {
               defaultBorder: false,
@@ -417,5 +418,63 @@ export class FichasResultComponent implements OnInit {
     const newPdfMake = Object.assign({}, pdfMake);
     newPdfMake.vfs = pdfFonts;
     newPdfMake.createPdf(docDefinition).download('survey-responses.pdf');
+  }
+
+  rendrCustomQuestions(survey: Model, docDefinition: TDocumentDefinitions) {
+    this.customTableSilabas(survey, docDefinition);
+  }
+
+  customTableSilabas(survey: Model, docDefinition: TDocumentDefinitions) {
+    const mainPanel = survey
+      .getAllPanels()
+      .find((panel) => panel.name === 'panel_silabas1');
+
+    if (mainPanel) {
+      const panels = mainPanel.elements;
+      const tables = [];
+      panels.forEach((panel) => {
+        const headers = [];
+        const data = [];
+
+        headers.push([
+          {
+            text: panel.title,
+            alignment: 'center',
+            colSpan: panels.length,
+          },
+          '',
+          '',
+        ]);
+
+        panel.elements.forEach((question) => {
+          data.push([
+            {
+              text: question.title,
+              // width: '*',
+            },
+            {
+              text: survey.data[question.name] || '',
+              colSpan: 2,
+              // width: '*',
+            },
+          ]);
+        });
+
+        tables.push({
+          table: {
+            // headerRows: 1,
+            // widths: [...Array(panels.length).fill('auto')], // Set a single width for all columns
+            body: [
+              ...headers,
+              ...data, // Use spread operator to flatten the array
+            ],
+          },
+        });
+      });
+
+      docDefinition.content.push({
+        columns: tables,
+      });
+    }
   }
 }
