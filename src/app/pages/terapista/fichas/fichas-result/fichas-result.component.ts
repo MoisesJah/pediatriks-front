@@ -221,20 +221,20 @@ export class FichasResultComponent implements OnInit {
 
     const data = [];
 
-    docDefinition.content.splice(2, 0,{
+    docDefinition.content.splice(2, 0, {
       columns: [
         {
           table: {
             widths: ['auto', '*'],
             body: data,
-            layout:{
-              defaultBorder: false
-            }
+            layout: {
+              defaultBorder: false,
+            },
           },
           margin: [0, 5, 0, 20], // top, right, bottom, left
         },
       ],
-    })
+    });
 
     this.survey.getAllQuestions().forEach((question) => {
       const firstPanel = this.survey
@@ -244,23 +244,26 @@ export class FichasResultComponent implements OnInit {
 
       if (firstPanel) {
         data.push([
-          { text: `${question.title}:`,border: [false, false, false, false] },
+          { text: `${question.title}:`, border: [false] },
           { text: `${value}`, border: [false, false, false, true] },
         ]);
+      } else {
+        docDefinition.content.push({
+          text: question.title,
+          style: 'questionTitle',
+        });
       }
-      else {docDefinition.content.push({
-        text: question.title,
-        style: 'questionTitle',
-      });
-    }
       switch (question.getType()) {
         case 'text':
-         if(!firstPanel){
-          docDefinition.content.push({
-            text: this.survey.data[question.name],
-            style: 'answer',
-          });
-         }
+          if (!firstPanel) {
+            docDefinition.content.push({
+              text:
+                question.getTitleLocation() === 'left'
+                  ? `${question.title}: ${this.survey.data[question.name]}`
+                  : this.survey.data[question.name],
+              style: 'answer',
+            });
+          }
           break;
         case 'checkbox':
           if (
