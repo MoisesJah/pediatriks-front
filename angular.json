@@ -24,10 +24,19 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
+            "allowedCommonJsDependencies": [        
+              "survey-core",
+              "survey-core/themes",
+              "survey-core/i18n/spanish",
+              "survey-core/icons/iconsV1",
+              "survey-core/icons/iconsV2",
+              "flatpickr/dist/l10n/es.js",
+              "survey-core"
+            ],
             "outputPath": "dist/public",
             "index": "src/index.html",
             "browser": "src/main.ts",
-            "polyfills": ["zone.js"],
+            "polyfills": ["zone.js", "@angular/localize/init"],
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
             "assets": [
@@ -97,7 +106,7 @@
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
-            "polyfills": ["zone.js", "zone.js/testing"],
+            "polyfills": ["zone.js", "zone.js/testing", "@angular/localize/init"],
             "tsConfig": "tsconfig.spec.json",
             "inlineStyleLanguage": "scss",
             "assets": [
