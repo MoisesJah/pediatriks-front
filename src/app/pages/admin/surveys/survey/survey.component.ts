@@ -6,7 +6,7 @@ import { ThemeService } from 'src/app/services/theme.service';
 import { SurveyModule } from 'survey-angular-ui';
 import { Model } from 'survey-core';
 import { DefaultLight, DefaultDark } from 'survey-core/themes';
-import "survey-core/i18n/spanish";
+import 'survey-core/i18n/spanish';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { CitaService } from 'src/app/services/citas/cita.service';
 
@@ -25,8 +25,10 @@ export class SurveyComponent implements OnInit, AfterViewInit {
   fichaId = this.route.snapshot.paramMap.get('surveyId');
   sesionId = this.route.snapshot.paramMap.get('sesionId');
   fichaService = inject(FichasService);
-  citaService = inject(CitaService);  
+  citaService = inject(CitaService);
   fichaResult = inject(FichaResultService);
+
+  showCloseMg: boolean = false;
 
   ngOnInit(): void {
     this.getFicha();
@@ -41,10 +43,10 @@ export class SurveyComponent implements OnInit, AfterViewInit {
         fecha_nacimiento: paciente.data.fecha_nacimiento,
         edad: paciente.data.edad,
         personal: paciente.data.personal,
-        telefono:paciente.data.telefono,
-        colegio:paciente.data.colegio
+        telefono: paciente.data.telefono,
+        colegio: paciente.data.colegio,
       });
-    })
+    });
   }
 
   getFicha() {
@@ -54,7 +56,10 @@ export class SurveyComponent implements OnInit, AfterViewInit {
       this.survey.applyTheme(
         this.theme.getThemeMode() === 'dark' ? DefaultDark : DefaultLight
       );
-      this.survey.completedHtml = '<h3>Ficha Completada!</h3>';
+      let message = `<h3>Ficha Completada!</h3>`;
+      this.survey.completedHtml = message
+
+      if(this.showCloseMg) message += '<a href="javascript:window.close();">Ya puede cerrar esta ventana</a>';
 
       this.mergePaciente(this.survey);
 
@@ -69,9 +74,12 @@ export class SurveyComponent implements OnInit, AfterViewInit {
           })
           .subscribe({
             next: () => {
+              this.showCloseMg = true;
+              console.log(this.showCloseMg)
               options.showSaveSuccess('Ficha Guardada Correctamente!');
             },
             error: () => {
+              this.showCloseMg = false;
               options.showSaveError();
             },
           });

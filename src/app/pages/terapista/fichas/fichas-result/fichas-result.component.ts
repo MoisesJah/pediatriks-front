@@ -214,7 +214,7 @@ export class FichasResultComponent implements OnInit {
         },
         answer: {
           fontSize: 11,
-          margin: [0, 0, 0, 10],
+          // margin: [0, 0, 0, 10],
         },
       },
     };
@@ -248,22 +248,43 @@ export class FichasResultComponent implements OnInit {
           { text: `${question.title}:`, border: [false] },
           { text: `${value}`, border: [false, false, false, true] },
         ]);
-      } else {
+        return;
+      }
+
+      const shouldShowTitle =
+        question.titleLocation !== 'hidden' && question.getType() !== 'html';
+      const isTitleLeft = question.getTitleLocation() === 'left';
+
+      // Add title (if needed) before question content
+      if (shouldShowTitle && !isTitleLeft) {
         docDefinition.content.push({
           text: question.title,
           style: 'questionTitle',
         });
       }
+
       switch (question.getType()) {
         case 'text':
+          const answer = this.survey.data[question.name];
           if (!firstPanel) {
-            docDefinition.content.push({
-              text:
-                question.getTitleLocation() === 'left'
-                  ? `${question.title}: ${this.survey.data[question.name]}`
-                  : this.survey.data[question.name],
-              style: 'answer',
-            });
+            if (isTitleLeft) {
+              docDefinition.content.push({
+                columns: [
+                  {
+                    text: `${question.title}:`,
+                    bold: true,
+                    fillColor:'#f1f1f1',
+                    margin: [10,20,50,10]
+                  }, 
+                  { text: answer,margin:[10,20,10,10],fillColor:'blue' },
+                ],
+              });
+            } else {
+              docDefinition.content.push({
+                title: answer,
+                style: 'answer',
+              });
+            }
           }
           break;
         case 'checkbox':
@@ -359,7 +380,7 @@ export class FichasResultComponent implements OnInit {
           }
           break;
         case 'comment':
-          if (this.survey.data[question.name]) {
+          if (this.survey.data[question.name] && !firstPanel) {
             docDefinition.content.push({
               text: this.survey.data[question.name],
               style: 'answer',
