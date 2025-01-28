@@ -33,7 +33,6 @@ export class FichasResultComponent implements OnInit {
 
   ngOnInit(): void {
     this.getResult();
-    console.log(this.resultId);
   }
 
   getResult() {
@@ -75,6 +74,9 @@ export class FichasResultComponent implements OnInit {
 
   generatePDF() {
     const surveyData = this.survey.data;
+
+    const customPanels = new Set<string>(['d_spino', 'd_prono', 'sedente','pie_postura']);
+    const allPanels = this.survey.getAllPanels().map((panel) => panel.name);
 
     const docDefinition: TDocumentDefinitions = {
       header: [
@@ -220,8 +222,7 @@ export class FichasResultComponent implements OnInit {
     };
 
     const data = [];
-    this.rendrCustomQuestions(this.survey, docDefinition);
-
+    
     docDefinition.content.splice(2, 0, {
       columns: [
         {
@@ -238,6 +239,8 @@ export class FichasResultComponent implements OnInit {
     });
 
     this.survey.getAllQuestions().forEach((question) => {
+      if (question.parent && customPanels.has(question.parent.name)) return;
+
       const firstPanel = this.survey
         .getAllPanels()[0]
         .elements.includes(question);
@@ -263,6 +266,8 @@ export class FichasResultComponent implements OnInit {
         });
       }
 
+      console.log(question.parent.name)
+
       switch (question.getType()) {
         case 'text':
           const answer = this.survey.data[question.name];
@@ -273,15 +278,15 @@ export class FichasResultComponent implements OnInit {
                   {
                     text: `${question.title}:`,
                     bold: true,
-                    fillColor:'#f1f1f1',
-                    margin: [10,20,50,10]
-                  }, 
-                  { text: answer,margin:[10,20,10,10],fillColor:'blue' },
+                    fillColor: '#f1f1f1',
+                    margin: [10, 20, 50, 10],
+                  },
+                  { text: answer, margin: [10, 20, 10, 10], fillColor: 'blue' },
                 ],
               });
             } else {
               docDefinition.content.push({
-                title: answer,
+                text: answer,
                 style: 'answer',
               });
             }
@@ -435,6 +440,7 @@ export class FichasResultComponent implements OnInit {
           console.log(`Unsupported question type: ${question.getType()}`);
       }
     });
+    this.rendrCustomQuestions(this.survey, docDefinition);
 
     const newPdfMake = Object.assign({}, pdfMake);
     newPdfMake.vfs = pdfFonts;
@@ -443,6 +449,7 @@ export class FichasResultComponent implements OnInit {
 
   rendrCustomQuestions(survey: Model, docDefinition: TDocumentDefinitions) {
     this.customTableSilabas(survey, docDefinition);
+    this.tableEscalaMotor(survey, docDefinition);
   }
 
   customTableSilabas(survey: Model, docDefinition: TDocumentDefinitions) {
@@ -496,6 +503,51 @@ export class FichasResultComponent implements OnInit {
       docDefinition.content.push({
         columns: tables,
       });
+    }
+  }
+
+  tableEscalaMotor(survey: Model, docDefinition: TDocumentDefinitions) {
+    const mainPanel = survey
+      .getAllPanels()
+      .find((panel) => panel.name === 'escala_motora');
+
+    if (mainPanel) {
+      const content = [];
+
+      content.push({
+        text: mainPanel.title.toUpperCase(),
+        bold:true,
+        margin: [0, 20, 0, 10],
+      });
+
+      const panels = mainPanel.elements;
+
+      panels.forEach((panel) => {
+        content.push({
+          text: panel.title.toUpperCase(),
+          bold: true,
+          margin: [0, 20, 0, 5],
+        });
+
+        panel.elements.forEach((question) => {
+          content.push({
+            columns: [
+              { text: question.title, bold: true, width: '20%' }, // e.g., "P:"
+              { text: survey.data[question.name] || '-', width: '80%' }, // Answer or placeholder
+            ],
+            margin: [0, 0, 0, 5],
+          });
+        });
+      });
+
+      const targetQuestionIndex = docDefinition.content.findIndex(
+        (item) => item.text === 'IMPRESIÓN GENERAL (comportamiento social, visión, audición, lenguaje, etc.)'
+      )
+
+      if (targetQuestionIndex !== -1) {
+        console.log(targetQuestionIndex);
+        docDefinition.content.splice(targetQuestionIndex + 2, 0, ...content);
+      }
     }
   }
 }
