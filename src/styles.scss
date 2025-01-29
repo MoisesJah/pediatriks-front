@@ -69,7 +69,15 @@ ng-select {
   pointer-events: initial;
 }
 
+.ficha-container{
+  background-color: var(243, 243, 243, 1);
+  min-height: 100dvh;
+}
+
 [data-bs-theme="dark"] {
+  .ficha-container{
+    background-color: rgba(36, 36, 36, 1);
+  }
   .ng-select > .ng-select-container {
     background-color: var(--bs-body-bg);
     border-color: var(--bs-gray-300);
@@ -121,6 +129,20 @@ ng-select.ng-invalid.ng-touched .ng-select-container {
 .ng-select.ng-select-bottom > .ng-select-container {
   border-top-left-radius: 0.95rem !important;
   border-top-right-radius: 0.95rem !important;
+}
+
+.sd-title.sd-container-modern__title{
+  justify-content: space-between !important; 
+}
+
+.sd-header__text{
+  max-width: 200px !important;   
+}
+
+h3.sd-title{
+  text-align: right !important;
+  font-size: 16px !important;
+  line-height: 1.5 !important;
 }
 
 body {

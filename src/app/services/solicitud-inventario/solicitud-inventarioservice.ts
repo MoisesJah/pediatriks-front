@@ -16,12 +16,13 @@ export class SolicitudInventarioService {
     return this.http.post<any>(`${this.apiUrl}/aceptar`, data);
   }
 
-  enviarSolicitud(idPersonalSolicita: string, idItem: string, cantidad: number, idTerapia: string): Observable<any> {
+  enviarSolicitud(idPersonalSolicita: string, idItem: string, cantidad: number, idTerapia: string,stockActual: number): Observable<any> {
     const data = {
       id_personal_solicita: idPersonalSolicita,
       id_item: idItem,
       cantidad: cantidad,
-      id_terapia: idTerapia  
+      id_terapia: idTerapia,
+      stock_terapista: stockActual
     };
     return this.http.post<any>(`${this.apiUrl}/enviar`, data);
   }

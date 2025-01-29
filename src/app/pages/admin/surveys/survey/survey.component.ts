@@ -8,6 +8,7 @@ import { Model } from 'survey-core';
 import { DefaultLight, DefaultDark } from 'survey-core/themes';
 import "survey-core/i18n/spanish";
 import { UntilDestroy } from '@ngneat/until-destroy';
+import { CitaService } from 'src/app/services/citas/cita.service';
 
 @UntilDestroy()
 @Component({
@@ -24,10 +25,26 @@ export class SurveyComponent implements OnInit, AfterViewInit {
   fichaId = this.route.snapshot.paramMap.get('surveyId');
   sesionId = this.route.snapshot.paramMap.get('sesionId');
   fichaService = inject(FichasService);
+  citaService = inject(CitaService);  
   fichaResult = inject(FichaResultService);
 
   ngOnInit(): void {
     this.getFicha();
+  }
+
+  mergePaciente(survey: Model) {
+    this.citaService.getPacienteInfo(this.sesionId!).subscribe((paciente) => {
+      survey.mergeData({
+        nombres: paciente.data.nombres,
+        diagnostico: paciente.data.diagnostico,
+        apoderado: paciente.data.apoderado,
+        fecha_nacimiento: paciente.data.fecha_nacimiento,
+        edad: paciente.data.edad,
+        personal: paciente.data.personal,
+        telefono:paciente.data.telefono,
+        colegio:paciente.data.colegio
+      });
+    })
   }
 
   getFicha() {
@@ -39,6 +56,7 @@ export class SurveyComponent implements OnInit, AfterViewInit {
       );
       this.survey.completedHtml = '<h3>Ficha Completada!</h3>';
 
+      this.mergePaciente(this.survey);
 
       this.survey.onComplete.add((model, options) => {
         options.showSaveInProgress();
@@ -51,7 +69,7 @@ export class SurveyComponent implements OnInit, AfterViewInit {
           })
           .subscribe({
             next: () => {
-              options.showSaveSuccess('Ficha Completada!');
+              options.showSaveSuccess('Ficha Guardada Correctamente!');
             },
             error: () => {
               options.showSaveError();

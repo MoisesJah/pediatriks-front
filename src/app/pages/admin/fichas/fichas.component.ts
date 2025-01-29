@@ -19,7 +19,6 @@ interface FormColumn{
   imports: [DragDropModule, CommonModule,HeaderComponent,FormsModule],
 })
 export class FichasComponent {
-  logo: string | null = null; // Ruta del logo cargado
   editableTitle: string = '';
   description: string = '';
   isEditingTitle: boolean = false;
@@ -69,18 +68,6 @@ export class FichasComponent {
 
   constructor(private cd: ChangeDetectorRef) {}
 
-
-  onLogoUpload(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    if (input.files && input.files[0]) {
-      const file = input.files[0];
-      const reader = new FileReader();
-      reader.onload = () => {
-        this.logo = reader.result as string; // Convertir a base64
-      };
-      reader.readAsDataURL(file);
-    }
-  }
 
   editTitle(): void {
     this.isEditingTitle = true;

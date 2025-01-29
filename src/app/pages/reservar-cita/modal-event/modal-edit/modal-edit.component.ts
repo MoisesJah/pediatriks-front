@@ -194,7 +194,6 @@ export class ModalEditComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
   changeStatus(event: any) {
-    console.log(event)
     this.selectedStatus =
       event && event.nombre === 'Asistió' ? event.nombre : null;
   }
@@ -228,7 +227,7 @@ export class ModalEditComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngAfterViewInit() {
     this.editEventForm.get('id_status')?.valueChanges.subscribe((value) => {
-      if(value === 2){
+      if(value === 2){ //Asistió
         this.getFichas()
       }
     });

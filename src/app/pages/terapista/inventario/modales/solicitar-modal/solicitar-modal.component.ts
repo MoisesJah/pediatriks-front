@@ -29,6 +29,7 @@ export class SolicitarModalComponent {
   constructor(private fb: FormBuilder) {
     this.solicitarForm = this.fb.group({
       cantidad_solicitar: ['', [Validators.required, Validators.min(1)]],
+      stock_actual: ['', [Validators.required, Validators.min(0)]],
     });
   }
 
@@ -43,43 +44,34 @@ export class SolicitarModalComponent {
     }
 
     const cantidad = this.solicitarForm.get('cantidad_solicitar')?.value;
+    const stockActual = this.solicitarForm.get('stock_actual')?.value;
 
-    // Obtén el id_personal y el id_terapia del usuario logueado
     const idPersonalSolicita = this.user?.personal?.id_personal;
-    const idTerapiaSolicita = this.user?.personal?.terapia?.id_terapia; // Acceder a id_terapia dentro de terapia
+    const idTerapiaSolicita = this.user?.personal?.terapia?.id_terapia;
 
-    // Verifica que inventarioId, idPersonalSolicita e idTerapiaSolicita estén definidos
-    if (this.inventarioId === undefined) {
-      console.error('inventarioId no está definido.');
-      return; // Salir de la función si inventarioId no es válido
-    }
-
-    if (!idPersonalSolicita) {
-      console.error('No se encontró el id_personal del usuario logueado.');
-      return; // Salir si no hay un id_personal válido
-    }
-
-    if (!idTerapiaSolicita) {
-      console.error('No se encontró el id_terapia del usuario logueado.');
-      return; // Salir si no hay un id_terapia válido
+    if (this.inventarioId === undefined || !idPersonalSolicita || !idTerapiaSolicita) {
+      console.error('Faltan datos necesarios para enviar la solicitud.');
+      return;
     }
 
     this.loadingService.startLoading();
 
-    // Enviar la solicitud con id_terapia
-    this.solicitudInventarioService.enviarSolicitud(idPersonalSolicita, this.inventarioId.toString(), cantidad, idTerapiaSolicita).subscribe({
-      next: () => {
-        console.log('Solicitud de stock enviada exitosamente.');
-        this.onRequestComplete.emit(); // Emitir el evento cuando la solicitud se complete
-      },
-      error: (error) => {
-        console.error('Error al enviar la solicitud:', error);
-      },
-      complete: () => {
-        this.loadingService.stopLoading();
-        this.close();
-      }
-    });
+    // Enviar la solicitud incluyendo el stock_actual
+    this.solicitudInventarioService
+      .enviarSolicitud(idPersonalSolicita, this.inventarioId.toString(), cantidad, idTerapiaSolicita, stockActual)
+      .subscribe({
+        next: () => {
+          console.log('Solicitud de stock enviada exitosamente.');
+          this.onRequestComplete.emit();
+        },
+        error: (error) => {
+          console.error('Error al enviar la solicitud:', error);
+        },
+        complete: () => {
+          this.loadingService.stopLoading();
+          this.close();
+        }
+      });
   }
 
 }

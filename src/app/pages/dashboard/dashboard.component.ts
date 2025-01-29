@@ -46,7 +46,6 @@ export class DashboardComponent implements OnInit {
       headerName: 'Fecha de Cita',
       valueFormatter: (params) => formatDate(params.value, 'dd/MM/yyyy', 'en'),
       cellRenderer: (params: any) => {
-        console.log(params);
         return `<span class="d-flex gap-2 align-items-center"><i class="ki-outline ki-calendar text-gray-900 fs-2"></i>${params.valueFormatted}</span>`;
       },
       filter: 'agDateColumnFilter',

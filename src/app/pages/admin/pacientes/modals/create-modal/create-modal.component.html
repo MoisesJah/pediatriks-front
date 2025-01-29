@@ -20,7 +20,7 @@
 </div>
 <div class="modal-body">
   <form [formGroup]="pacienteForm" class="form d-flex flex-column gap-4">
-    <div class="d-flex flex-column gap-3">
+    <div class="d-flex flex-column gap-1">
       <label for="name" class="required form-label">Nombres</label>
       <input
         type="text"
@@ -93,6 +93,16 @@
           placeholder="Ingresar N° de Hermano"
         />
       </div>
+    </div>
+
+    <div class="d-flex flex-column gap-1">
+      <label for="name" class=" form-label">Diagnóstico</label>
+      <input
+        type="text"
+        id=""
+        class="form-control"
+        formControlName="diagnostico"
+      />
     </div>
 
     <div class="row">
