@@ -75,7 +75,14 @@ export class FichasResultComponent implements OnInit {
   generatePDF() {
     const surveyData = this.survey.data;
 
-    const customPanels = new Set<string>(['d_spino', 'd_prono', 'sedente','pie_postura']);
+    const customPanels = new Set<string>([
+      'd_spino',
+      'a_oro',
+      'd_prono',
+      'sedente',
+      'pie_postura',
+      'anamnesis',
+    ]);
     const allPanels = this.survey.getAllPanels().map((panel) => panel.name);
 
     const docDefinition: TDocumentDefinitions = {
@@ -222,7 +229,7 @@ export class FichasResultComponent implements OnInit {
     };
 
     const data = [];
-    
+
     docDefinition.content.splice(2, 0, {
       columns: [
         {
@@ -240,7 +247,6 @@ export class FichasResultComponent implements OnInit {
 
     this.survey.getAllQuestions().forEach((question) => {
       if (question.parent && customPanels.has(question.parent.name)) return;
-
       const firstPanel = this.survey
         .getAllPanels()[0]
         .elements.includes(question);
@@ -265,8 +271,6 @@ export class FichasResultComponent implements OnInit {
           style: 'questionTitle',
         });
       }
-
-      console.log(question.parent.name)
 
       switch (question.getType()) {
         case 'text':
@@ -450,6 +454,7 @@ export class FichasResultComponent implements OnInit {
   rendrCustomQuestions(survey: Model, docDefinition: TDocumentDefinitions) {
     this.customTableSilabas(survey, docDefinition);
     this.tableEscalaMotor(survey, docDefinition);
+    this.fichaEvaluacion(survey, docDefinition);
   }
 
   customTableSilabas(survey: Model, docDefinition: TDocumentDefinitions) {
@@ -516,7 +521,7 @@ export class FichasResultComponent implements OnInit {
 
       content.push({
         text: mainPanel.title.toUpperCase(),
-        bold:true,
+        bold: true,
         margin: [0, 20, 0, 10],
       });
 
@@ -541,13 +546,89 @@ export class FichasResultComponent implements OnInit {
       });
 
       const targetQuestionIndex = docDefinition.content.findIndex(
-        (item) => item.text === 'IMPRESIÓN GENERAL (comportamiento social, visión, audición, lenguaje, etc.)'
-      )
+        (item) =>
+          item.text ===
+          'IMPRESIÓN GENERAL (comportamiento social, visión, audición, lenguaje, etc.)'
+      );
 
       if (targetQuestionIndex !== -1) {
         console.log(targetQuestionIndex);
         docDefinition.content.splice(targetQuestionIndex + 2, 0, ...content);
       }
+    }
+  }
+
+  fichaEvaluacion(survey: Model, docDefinition: TDocumentDefinitions) {
+    const title = survey.title === 'FICHA DE EVALUACION DE TERAPIA DE LENGUAJE';
+
+    const panel1 = survey
+      .getAllPanels()
+      .find((panel) => panel.name === 'anamnesis');
+    const panel2 = survey
+      .getAllPanels()
+      .find((panel) => panel.name === 'a_oro');
+    const panel3 = survey
+      .getAllPanels()
+      .find((panel) => panel.name === 'f_estg');
+    const panel4 = survey
+      .getAllPanels()
+      .find((panel) => panel.name === 'e_nleng');
+    const panel5 = survey
+      .getAllPanels()
+      .find((panel) => panel.name === 'articulacion_table');
+
+    const content = [];
+
+    if (title) {
+      content.push({
+        text: panel1.title.toUpperCase(),
+        bold: true,
+        margin: [0, 20, 0, 10],
+      });
+      panel1.elements.forEach((question) => {
+        content.push({
+          columns: [
+            { text: question.title, bold: true, width: '20%' }, // e.g., "P:"
+            { text: survey.data[question.name] || '-', width: '80%' }, // Answer or placeholder
+          ],
+          margin: [0, 0, 0, 5],
+        });
+      });
+
+      content.push({
+        text: panel2.title.toUpperCase(),
+        bold: true,
+        margin: [0, 20, 0, 10],
+      });
+
+      panel2?.elements.forEach((question) => {
+        const options = question.choices;
+
+        content.push({
+          text: question.title.toUpperCase(),
+          bold: true,
+          margin: [0, 20, 0, 5],
+        });
+
+        options.forEach((option, index) => {
+          const row = [];
+          if (survey.data[question.name].includes(option.value)) {
+            row.push('[X]'); // Checked mark  character
+          } else {
+            row.push('[ ]'); // Unchecked mark  character
+          }
+          row.push(option.text);
+
+          content.push({
+            text: row.join(' '),
+            margin: [20, 10, 0, 0],
+            fontSize: 12,
+          });
+        });
+      });
+
+      console.log(panel3)
+      docDefinition.content.push(content);
     }
   }
 }
