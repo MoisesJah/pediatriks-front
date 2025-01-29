@@ -31,7 +31,9 @@
               "survey-core/icons/iconsV1",
               "survey-core/icons/iconsV2",
               "flatpickr/dist/l10n/es.js",
-              "survey-core"
+              "survey-core",
+              "pdfmake/build/pdfmake",
+              "pdfmake/build/vfs_fonts"
             ],
             "outputPath": "dist/public",
             "index": "src/index.html",
