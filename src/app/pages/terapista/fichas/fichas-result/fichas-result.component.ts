@@ -15,6 +15,7 @@ import * as pdfFonts from 'pdfmake/build/vfs_fonts';
 import { vfs } from 'pdfmake/build/vfs_fonts';
 import { TDocumentDefinitions } from 'pdfmake/interfaces';
 import { style } from '@angular/animations';
+import { EventManagerPlugin } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-fichas-result',
@@ -82,6 +83,9 @@ export class FichasResultComponent implements OnInit {
       'sedente',
       'pie_postura',
       'anamnesis',
+      'f_estg',
+      'e_nleng',
+      'articulacion_table',
     ]);
     const allPanels = this.survey.getAllPanels().map((panel) => panel.name);
 
@@ -246,6 +250,7 @@ export class FichasResultComponent implements OnInit {
     });
 
     this.survey.getAllQuestions().forEach((question) => {
+      console.log(question.title, question.parent.name);
       if (question.parent && customPanels.has(question.parent.name)) return;
       const firstPanel = this.survey
         .getAllPanels()[0]
@@ -335,6 +340,17 @@ export class FichasResultComponent implements OnInit {
             style: 'answer',
           });
           break;
+          case 'boolean':
+            const value = this.survey.data[question.name];
+            docDefinition.content.push({
+              text: [
+                value ? '[X] Si' : '[ ] Si',
+                value ? '[ ] No' : '[X] No',
+              ].join('          '),
+              margin: [20, 10, 0, 0],
+              fontSize: 12,
+            });
+            break
         case 'matrix':
           if (this.survey.data[question.name]) {
             const tableHeaders = [''].concat(
@@ -588,10 +604,10 @@ export class FichasResultComponent implements OnInit {
       panel1.elements.forEach((question) => {
         content.push({
           columns: [
-            { text: question.title, bold: true, width: '20%' }, // e.g., "P:"
-            { text: survey.data[question.name] || '-', width: '80%' }, // Answer or placeholder
+            { text: question.title, bold: true, width: '40%' }, // e.g., "P:"
+            { text: survey.data[question.name] || '-', width: '60%' }, // Answer or placeholder
           ],
-          margin: [0, 0, 0, 5],
+          margin: [0, 5, 0, 5],
         });
       });
 
@@ -627,8 +643,100 @@ export class FichasResultComponent implements OnInit {
         });
       });
 
-      console.log(panel3)
-      docDefinition.content.push(content);
+      content.push({
+        text: panel3.title.toUpperCase(),
+        bold: true,
+        margin: [0, 20, 0, 10],
+      });
+
+      content.push({
+        columns: [
+          {
+            width: '50%',
+            stack: panel3.elements.slice(0, 3).map((q) => [
+              { text: q.title, bold: true, margin: [15, 0, 0, 0] },
+              { text: survey.data[q.name] || '', margin: [15, 15, 0, 15] },
+            ]),
+          },
+          {
+            width: '50%',
+            stack: panel3.elements.slice(3).map((q) => [
+              { text: q.title, bold: true },
+              { text: survey.data[q.name] || '', margin: [0, 15] },
+            ]),
+          },
+        ],
+      });
+
+      const targetIndex = survey
+        .getAllQuestions()
+        .findIndex((q) => q.title === 'MOTIVO DE CONSULTA:');
+
+      content.push({
+        text: panel4.title.toUpperCase(),
+        bold: true,
+        margin: [0, 20, 0, 10],
+      });
+
+      panel4.elements.forEach((question) => {
+        content.push({
+          text: question.title,
+          bold: true,
+          margin: [15, 0, 0, 0],
+        });
+
+        content.push({
+          text: survey.data[question.name],
+          margin: [15, 10, 0, 20],
+        });
+      });
+
+      content.push({
+        text: panel5.title.toUpperCase(),
+        bold: true,
+        margin: [0, 20, 0, 10],
+      });
+
+      const columns = [[], []];
+
+      panel5.elements.forEach((question, index) => {
+        const column = columns[index % 2];
+        const options = question.choices;
+
+        column.push({
+          text: question.title.toUpperCase(),
+          bold: true,
+          margin: [0, 20, 0, 5],
+        });
+
+        if (options) {
+          options.forEach((option) => {
+            const row = [
+              survey.data[question.name]?.includes(option.value)
+                ? '[X]'
+                : '[ ]',
+              option.text,
+            ];
+
+            column.push({
+              text: row.join(' '),
+              margin: [20, 10, 0, 0],
+              fontSize: 12,
+            });
+          });
+        }
+      });
+
+      content.push({
+        columns: [
+          { width: '50%', stack: columns[0] },
+          { width: '50%', stack: columns[1] },
+        ],
+      });
+
+      if (targetIndex !== -1) {
+        docDefinition.content.splice(4 + 1, 0, ...content);
+      }
     }
   }
 }
