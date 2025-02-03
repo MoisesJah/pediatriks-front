@@ -85,6 +85,21 @@ export class FichasResultComponent implements OnInit {
       'anamnesis',
       'f_estg',
       'e_nleng',
+      'c_sensorial',
+      'c_motor',
+      'c_ctivo',
+      'percep',
+      'p_com',
+      'p_vidad',
+      'p_juego',
+      'p_juegopsico',
+      'p_rgpc',
+      'p_em',
+      'p_escol',
+      'p_trans',
+      'panel_silabas2',
+      'panel_silabas1',
+      'p_cond',
       'articulacion_table',
     ]);
     const allPanels = this.survey.getAllPanels().map((panel) => panel.name);
@@ -250,7 +265,7 @@ export class FichasResultComponent implements OnInit {
     });
 
     this.survey.getAllQuestions().forEach((question) => {
-      console.log(question.title, question.parent.name);
+      // console.log(question.title, this.survey.title);
       if (question.parent && customPanels.has(question.parent.name)) return;
       const firstPanel = this.survey
         .getAllPanels()[0]
@@ -280,7 +295,10 @@ export class FichasResultComponent implements OnInit {
       switch (question.getType()) {
         case 'text':
           const answer = this.survey.data[question.name];
-          if (!firstPanel) {
+          if (
+            !firstPanel &&
+            this.survey.title !== 'CUADERNILLO PRO ESC PSICOLOGIA'
+          ) {
             if (isTitleLeft) {
               docDefinition.content.push({
                 columns: [
@@ -295,7 +313,7 @@ export class FichasResultComponent implements OnInit {
               });
             } else {
               docDefinition.content.push({
-                text: answer,
+                text: answer || '\n',
                 style: 'answer',
               });
             }
@@ -340,69 +358,19 @@ export class FichasResultComponent implements OnInit {
             style: 'answer',
           });
           break;
-          case 'boolean':
-            const value = this.survey.data[question.name];
-            docDefinition.content.push({
-              text: [
-                value ? '[X] Si' : '[ ] Si',
-                value ? '[ ] No' : '[X] No',
-              ].join('          '),
-              margin: [20, 10, 0, 0],
-              fontSize: 12,
-            });
-            break
+        case 'boolean':
+          const value = this.survey.data[question.name];
+          docDefinition.content.push({
+            text: [
+              value ? '[X] Si' : '[ ] Si',
+              value ? '[ ] No' : '[X] No',
+            ].join('          '),
+            margin: [20, 10, 0, 0],
+            fontSize: 12,
+          });
+          break;
         case 'matrix':
-          if (this.survey.data[question.name]) {
-            const tableHeaders = [''].concat(
-              question.columns.map((column) => column.text)
-            );
-
-            const tableRows = question.rows.map((row) => {
-              const rowData = [{ text: row.text, wordWrap: true }];
-              question.columns.forEach((column) => {
-                rowData.push({
-                  text:
-                    this.survey.data[question.name][row.value] === column.value
-                      ? 'X'
-                      : '',
-                  wordWrap: true,
-                  minHeight: 20,
-                });
-              });
-              return rowData;
-            });
-
-            const table = {
-              table: {
-                headerRows: 1,
-                widths: [
-                  'auto',
-                  ...Array(question.columns.length).fill('auto'),
-                ],
-                body: [tableHeaders, ...tableRows],
-                dontBreakRows: true,
-                layout: {
-                  keepWithHeader: true,
-                },
-              },
-            };
-
-            if (
-              !docDefinition.content.find(
-                (item) => item.text === question.title
-              )
-            ) {
-              docDefinition.content.push({
-                text: question.title,
-                style: 'questionTitle',
-                margin: [0, 100, 0, 5],
-              });
-            }
-
-            docDefinition.content.push(table);
-
-            // Add a spacer element
-          }
+          this.handleMatrix(this.survey,docDefinition,question);
           break;
         case 'comment':
           if (this.survey.data[question.name] && !firstPanel) {
@@ -459,6 +427,7 @@ export class FichasResultComponent implements OnInit {
         default:
           console.log(`Unsupported question type: ${question.getType()}`);
       }
+
     });
     this.rendrCustomQuestions(this.survey, docDefinition);
 
@@ -467,64 +436,137 @@ export class FichasResultComponent implements OnInit {
     newPdfMake.createPdf(docDefinition).download('survey-responses.pdf');
   }
 
+   handleMatrix(survey: Model,docDefinition: TDocumentDefinitions,question:any) {
+    if (this.survey.data[question.name]) {
+      const tableHeaders = [''].concat(
+        question.columns.map((column) => column.text)
+      );
+
+      const tableRows = question.rows.map((row) => {
+        const rowData = [{ text: row.text, wordWrap: true }];
+        question.columns.forEach((column) => {
+          rowData.push({
+            text: this.survey.data[question.name][row.value] === column.value
+              ? 'X'
+              : '',
+            wordWrap: true,
+            minHeight: 20,
+          });
+        });
+        return rowData;
+      });
+
+      const table = {
+        table: {
+          headerRows: 1,
+          widths: [
+            'auto',
+            ...Array(question.columns.length).fill('auto'),
+          ],
+          body: [tableHeaders, ...tableRows],
+          dontBreakRows: true,
+          layout: {
+            keepWithHeader: true,
+          },
+        },
+      };
+
+      if (!docDefinition.content.find(
+        (item) => item.text === question.title
+      )) {
+        docDefinition.content.push({
+          text: question.title,
+          style: 'questionTitle',
+          margin: [0, 100, 0, 5],
+        });
+      }
+
+     
+        docDefinition.content.push(table);
+            // Add a spacer element
+    }
+  }
+
   rendrCustomQuestions(survey: Model, docDefinition: TDocumentDefinitions) {
     this.customTableSilabas(survey, docDefinition);
     this.tableEscalaMotor(survey, docDefinition);
     this.fichaEvaluacion(survey, docDefinition);
+    this.fichaOcupacional(survey, docDefinition);
+    this.fichaEPsico(survey, docDefinition);
   }
 
-  customTableSilabas(survey: Model, docDefinition: TDocumentDefinitions) {
-    const mainPanel = survey
-      .getAllPanels()
-      .find((panel) => panel.name === 'panel_silabas1');
+  customTableSilabas(survey, docDefinition) {
+    const panelNames = ['panel_silabas1', 'panel_silabas2'];
+    const tables1 = [];
+    const tables2 = [];
 
-    if (mainPanel) {
-      const panels = mainPanel.elements;
-      const tables = [];
-      panels.forEach((panel) => {
-        const headers = [];
-        const data = [];
+    panelNames.forEach((panelName) => {
+      const panel = survey.getAllPanels().find((p) => p.name === panelName);
 
-        headers.push([
-          {
-            text: panel.title,
-            alignment: 'center',
-            colSpan: panels.length,
-          },
-          '',
-          '',
-        ]);
+      if (panel) {
+        const panels = panel.elements;
 
-        panel.elements.forEach((question) => {
-          data.push([
+        panels.forEach((panelElement) => {
+          const headers = [];
+          const data = [];
+
+          headers.push([
             {
-              text: question.title,
-              // width: '*',
+              text: panelElement.title,
+              alignment: 'center',
+              colSpan: panels.length,
             },
-            {
-              text: survey.data[question.name] || '',
-              colSpan: 2,
-              // width: '*',
-            },
+            '',
+            '',
           ]);
+
+          panelElement.elements.forEach((question) => {
+            data.push([
+              {
+                text: question.title,
+              },
+              {
+                text: survey.data[question.name] || '',
+                colSpan: 2,
+              },
+            ]);
+          });
+
+          const table = {
+            table: {
+              body: [...headers, ...data],
+            },
+          };
+
+          if (panelName === 'panel_silabas1') {
+            tables1.push(table);
+          } else {
+            tables2.push(table);
+          }
         });
 
-        tables.push({
-          table: {
-            // headerRows: 1,
-            // widths: [...Array(panels.length).fill('auto')], // Set a single width for all columns
-            body: [
-              ...headers,
-              ...data, // Use spread operator to flatten the array
-            ],
-          },
+        docDefinition.content.splice(5, 0, {
+          columns: [
+            {
+              width: '*',
+              columns: tables1,
+            },
+          ],
+          margin: [0,20,0,0]
         });
-      });
+    
+        docDefinition.content.splice(6, 0, {
+          columns: [
+            {
+              width: '*',
+              columns: tables2,
+            },
+          ],
+          margin: [0, 20, 0, 20],
+        });
+      }
+    });
 
-      docDefinition.content.push({
-        columns: tables,
-      });
-    }
   }
 
   tableEscalaMotor(survey: Model, docDefinition: TDocumentDefinitions) {
@@ -738,5 +780,123 @@ export class FichasResultComponent implements OnInit {
         docDefinition.content.splice(4 + 1, 0, ...content);
       }
     }
+  }
+
+  fichaEPsico(survey: Model, docDefinition: TDocumentDefinitions) {
+    const panels = ['p_juegopsico', 'p_rgpc', 'p_em'].map((name) =>
+      survey.getAllPanels().find((panel) => panel.name === name)
+    );
+
+    const content = panels.reduce((acc, panel) => {
+      if (!panel) return acc;
+
+      acc.push({
+        text: panel.title.toUpperCase(),
+        bold: true,
+        margin: [0, 20, 0, 10],
+      });
+
+      panel.elements.forEach((question) => {
+        acc.push({
+          text: question.title,
+          bold: true,
+          margin: [20, 20, 0, 5],
+        });
+
+        acc.push({
+          text: survey.data[question.name],
+          margin: [20, 10, 0, 0],
+          fontSize: 12,
+        });
+      });
+      return acc;
+    }, []);
+
+    console.log(docDefinition.content);
+
+    docDefinition.content.splice(11, 0, ...content);
+  }
+
+  fichaOcupacional(survey: Model, docDefinition: TDocumentDefinitions) {
+    const panels = [
+      'c_sensorial',
+      'c_motor',
+      'c_ctivo',
+      'percep',
+      'p_com',
+      'p_vidad',
+      'p_juego',
+      'p_cond',
+      'p_escol',
+      'p_trans',
+    ].map((name) => survey.getAllPanels().find((panel) => panel.name === name));
+
+    const p_matrix = survey.getAllPanels().find(p=>p.name === 'p_matrix')
+
+    const content = panels.reduce((acc, panel) => {
+      if (!panel) return acc;
+
+      acc.push({
+        text: panel.title.toUpperCase(),
+        bold: true,
+        margin: [0, 20, 0, 10],
+      });
+
+      panel.elements.forEach((question) => {
+        const isExpression = question.getType() === 'expression';
+        const isCheckbox = question.getType() === 'checkbox';
+
+        const checkquestion =
+          (isCheckbox || isExpression) && !question.name.startsWith('q-');
+        acc.push({
+          text: checkquestion
+            ? `• ${question.title.toUpperCase()}`
+            : question.title,
+          bold: true,
+          margin: [
+            (!isExpression && !isCheckbox) || question.name.startsWith('q-')
+              ? 20
+              : 0,
+            20,
+            0,
+            isExpression ? -10 : 5,
+          ],
+        });
+
+        const options = question.choices;
+        if (options) {
+          options.forEach((option) => {
+            acc.push({
+              text: `${
+                survey.data[question.name]?.includes(option.value)
+                  ? '[X]'
+                  : '[ ]'
+              } ${option.text}`,
+              margin: [20, 10, 0, 0],
+              fontSize: 12,
+            });
+          });
+        } else {
+          acc.push({
+            text:
+              question.getType() !== 'expression'
+                ? survey.data[question.name]
+                : '\n',
+            margin: [20, 10, 0, 0],
+            fontSize: 12,
+          });
+        }
+      });
+
+      return acc;
+    }, []);
+
+    // if(p_matrix){
+    //   docDefinition.content.splice(255, 0, ...content);
+    // }else{
+    //   docDefinition.content.splice(26, 0, ...content);
+    // }
+
+    docDefinition.content.splice(26, 0, ...content)
   }
 }
