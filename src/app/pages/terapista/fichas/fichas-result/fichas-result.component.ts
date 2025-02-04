@@ -176,7 +176,7 @@ export class FichasResultComponent implements OnInit {
           },
         };
       },
-      pageMargins: [40, 80, 40, 47],
+      pageMargins: [40, 90, 40, 47],
       content: [
         {
           text: this.survey.pages[0].title,
@@ -272,7 +272,7 @@ export class FichasResultComponent implements OnInit {
         .elements.includes(question);
       const value = question.value ? question.value : '';
 
-      if (firstPanel) {
+      if (firstPanel && question.visible) {
         data.push([
           { text: `${question.title}:`, border: [false] },
           { text: `${value}`, border: [false, false, false, true] },
@@ -281,7 +281,7 @@ export class FichasResultComponent implements OnInit {
       }
 
       const shouldShowTitle =
-        question.titleLocation !== 'hidden' && question.getType() !== 'html';
+        question.titleLocation !== 'hidden' && question.getType() !== 'html' && question.visible;
       const isTitleLeft = question.getTitleLocation() === 'left';
 
       // Add title (if needed) before question content
@@ -373,11 +373,18 @@ export class FichasResultComponent implements OnInit {
           this.handleMatrix(this.survey,docDefinition,question);
           break;
         case 'comment':
-          if (this.survey.data[question.name] && !firstPanel) {
-            docDefinition.content.push({
-              text: this.survey.data[question.name],
-              style: 'answer',
-            });
+          if (!firstPanel) {
+            if(this.survey.getValue(question.name)){
+              docDefinition.content.push({
+                text: this.survey.data[question.name],
+                style: 'answer',
+              });
+            }else{
+              docDefinition.content.push({
+                text: 'Sin Respuesta',
+                style: 'answer',
+              });
+            }
           }
           break;
         case 'matrixdynamic':
@@ -545,28 +552,30 @@ export class FichasResultComponent implements OnInit {
           }
         });
 
-        docDefinition.content.splice(5, 0, {
-          columns: [
-            {
-              width: '*',
-              columns: tables1,
-            },
-          ],
-          margin: [0,20,0,0]
-        });
-    
-        docDefinition.content.splice(6, 0, {
-          columns: [
-            {
+      }
+      
+    });
+    docDefinition.content.splice(5, 0, {
+      columns: [
+        {
+          width: '*',
+          columns: tables1,
+        },
+      ],
+      margin: [0,20,0,0]
+    });
+
+
+    docDefinition.content.splice(6, 0, {
+      columns: [
+          {
               width: '*',
               columns: tables2,
             },
-          ],
-          margin: [0, 20, 0, 20],
-        });
-      }
-    });
-
+    ],
+    margin: [0, 20, 0, 20],
+  });
+    console.log(docDefinition.content)
   }
 
   tableEscalaMotor(survey: Model, docDefinition: TDocumentDefinitions) {
@@ -890,12 +899,6 @@ export class FichasResultComponent implements OnInit {
 
       return acc;
     }, []);
-
-    // if(p_matrix){
-    //   docDefinition.content.splice(255, 0, ...content);
-    // }else{
-    //   docDefinition.content.splice(26, 0, ...content);
-    // }
 
     docDefinition.content.splice(26, 0, ...content)
   }
