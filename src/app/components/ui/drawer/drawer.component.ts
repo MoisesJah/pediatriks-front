@@ -40,6 +40,10 @@ export class DrawerComponent {
       nombre: 'Paquetes',
       link: '/admin/paquetes',
     },
+    {
+      nombre: 'Fichas',
+      link: '/admin/fichas',
+    }
   ];
 
   isAdmin(): boolean {

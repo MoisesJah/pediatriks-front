@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { ToastrService } from 'ngx-toastr';
-import { map, Observable } from 'rxjs';
+import { filter, map, Observable } from 'rxjs';
 import { IUser } from 'src/app/models/user';
 import { LoadingService } from 'src/app/services/loading.service';
 import { TipouserService } from 'src/app/services/tipouser/tipouser.service';
@@ -58,7 +58,7 @@ export class EditModalComponent implements OnInit {
 
   loadTipousers() {
     this.tipoUserList = this.tipouserService.getAll().pipe(
-      map((response: any) => response.data),
+      map((response: any) => response.data.filter((item: any) => item.nombre !== 'terapista')),
       untilDestroyed(this)
     );
   }

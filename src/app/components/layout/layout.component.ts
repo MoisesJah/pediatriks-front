@@ -3,11 +3,12 @@ import {
   Component,
   ElementRef,
   inject,
+  OnInit,
   TemplateRef,
   ViewChild,
 } from '@angular/core';
 import { HeaderComponent } from '../ui/header/header.component';
-import { Router, RouterLink, RouterLinkActive } from '@angular/router';
+import { NavigationEnd, Router, RouterLink, RouterLinkActive } from '@angular/router';
 import { NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { DrawerComponent } from '../ui/drawer/drawer.component';
@@ -20,7 +21,7 @@ import { AuthService } from '../../services/auth.service';
   templateUrl: './layout.component.html',
   styleUrl: './layout.component.scss',
 })
-export class LayoutComponent {
+export class LayoutComponent implements OnInit {
   offcanvas = inject(NgbOffcanvas);
   open: boolean = false;
   authService = inject(AuthService);
@@ -58,6 +59,14 @@ export class LayoutComponent {
   ];
 
   constructor(private router: Router) {}
+
+  ngOnInit() {
+    this.router.events.subscribe((e) => {
+      if (e instanceof NavigationEnd) {
+        this.offcanvas.dismiss();
+      }
+    });
+  }
 
   openOffcanvas() {
     this.open = true;

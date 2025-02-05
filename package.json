@@ -33,6 +33,7 @@
     "@popperjs/core": "^2.11.8",
     "@types/bootstrap": "^5.2.10",
     "ag-grid-angular": "^32.1.0",
+    "ag-grid-community": "^32.3.3",
     "angularx-flatpickr": "^7.0.0",
     "chart.js": "^4.4.4",
     "ng2-pdf-viewer": "^10.2.2",

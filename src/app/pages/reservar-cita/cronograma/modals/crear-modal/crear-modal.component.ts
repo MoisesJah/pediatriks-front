@@ -31,6 +31,7 @@ import {
   interval,
   map,
   Observable,
+  tap,
 } from 'rxjs';
 import { IPaciente } from 'src/app/models/paciente';
 import { Personal } from 'src/app/models/personal';
@@ -83,6 +84,7 @@ export class CrearModalComponent implements OnInit, AfterViewInit {
   es = Spanish.es;
   isRecurrente = false;
   isCitaPaquete = false;
+  sedeComas = ''
   num_cambios = 0;
   id_tipopaquete = '';
 
@@ -151,6 +153,10 @@ export class CrearModalComponent implements OnInit, AfterViewInit {
 
   onChangeSede(event: any) {
     this.createForm.get('id_personal')?.setValue(null);
+
+    if(event && event.nombre === 'Sede Comas'){
+      this.sedeComas = event.id_sede
+    }
   }
 
   onStartTimeChange(event: any): void {
@@ -248,15 +254,19 @@ export class CrearModalComponent implements OnInit, AfterViewInit {
 
     const id_paquete = this.createForm.get('id_paquete');
     const num_sesiones = this.createForm.get('num_sesiones');
+    const id_sede = this.createForm.get('id_sede');
 
     if (this.isCitaPaquete) {
       id_paquete?.setValidators(Validators.required);
+      id_sede?.setValue(this.sedeComas);
     } else {
       id_paquete?.clearValidators();
       id_paquete?.setValue(null);
+      id_sede?.setValue(null);
       num_sesiones?.setValue(null);
       num_sesiones?.clearValidators();
     }
+    id_sede?.updateValueAndValidity();
     id_paquete?.updateValueAndValidity();
     num_sesiones?.updateValueAndValidity();
   }
@@ -326,6 +336,7 @@ export class CrearModalComponent implements OnInit, AfterViewInit {
     this.loadingSedes = true;
     this.sedesList = this.sedesService.getAll().pipe(
       map((resp) => resp.data),
+      tap((resp) => (this.sedeComas = resp.filter((sede) => sede.nombre === 'Sede Comas')[0].id_sede)),
       finalize(() => (this.loadingSedes = false)),
       untilDestroyed(this)
     );

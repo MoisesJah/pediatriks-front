@@ -1,5 +1,5 @@
 export interface Sede {
-  id_sede: number;               // Clave primaria de la sede
+  id_sede: string;               // Clave primaria de la sede
   nombre: string;                // Nombre de la sede
   direccion: string;             // Dirección de la sede
   distrito: string;              // Distrito donde se ubica la sede
