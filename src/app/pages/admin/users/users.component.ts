@@ -49,7 +49,21 @@ export class UsersComponent implements OnInit, OnDestroy {
     { field: 'direccion', headerName: 'Dirección', filter: true },
     { field: 'telefono', headerName: 'Teléfono', filter: true },
     { field: 'email', headerName: 'Correo', filter: true },
-    { field: 'tipo_user.nombre', headerName: 'Tipo de Usuario', filter: true },
+    {
+      field: 'tipo_user.nombre',
+      headerName: 'Tipo de Usuario',
+      filter: true,
+      cellRenderer: (params: any) => {
+        switch (params.value) {
+          case 'administrador':
+            return `<span class="badge badge-light-primary badge-lg">${params.value}</span>`;
+          case 'terapista':
+            return `<span class="badge badge-light-success badge-lg">${params.value}</span>`;
+          case 'paciente':
+            return `<span class="badge badge-light-secondary badge-lg">${params.value}</span>`;
+        }
+      },
+    },
     {
       headerName: 'Acciones',
       cellRenderer: ActionButtonsComponent,
