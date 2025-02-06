@@ -9,6 +9,7 @@ import { ModalEditComponent } from '../modal-edit/modal-edit.component';
 import { BorrarModalComponent } from '../../cronograma/modals/borrar-modal/borrar-modal.component';
 import { Router } from '@angular/router';
 import { EditCitaComponent } from 'src/app/pages/terapista/modals/edit-cita/edit-cita.component';
+import { AuthService } from 'src/app/services/auth.service';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -23,6 +24,7 @@ export class ModalViewEventComponent implements OnInit {
   modal = inject(NgbModal);
   citaService = inject(CitaService);
   router = inject(Router);
+  isAdmin = inject(AuthService).isAdmin();
   isLoading = inject(LoadingService).isLoading;
 
   @Output() eventUpdated = new EventEmitter<CalendarEvent>();

@@ -117,11 +117,9 @@ export class CronogramaComponent implements OnInit {
       meridiem: 'narrow',
     },
     selectAllow: (selectInfo) => {
-      // const now = new Date();
       const isTimeGrid = this.calendar?.getApi()?.view.type == 'timeGridWeek';
-      const currentStartWeek = new Date()
-      currentStartWeek.setHours(0, 0, 0, 0);
-      return selectInfo.start >= currentStartWeek && isTimeGrid;
+      const now = new Date()
+      return selectInfo.end > now && isTimeGrid;
     },
     selectable: true,
     selectLongPressDelay: 10,
@@ -199,7 +197,8 @@ export class CronogramaComponent implements OnInit {
         distinctUntilChanged(
           (prev, curr) => JSON.stringify(prev) === JSON.stringify(curr)
         ),
-        map((resp) => resp.data)
+        map((resp) => resp.data),
+        untilDestroyed(this)
       ));
     }
   }

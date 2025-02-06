@@ -64,9 +64,9 @@
                 <!--end:Menu sub-->
               </a>
 
-              <a *ngIf="!isAdmin()" [routerLink]="[isTerapista() ? '/terapista/fichas' : '/fichas']" routerLinkActive="here" data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-placement="right-start"
+              <a *ngIf="isTerapista()" [routerLink]="['/terapista/fichas']" routerLinkActive="here" data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-placement="right-start"
                 class="menu-item py-2" style="transition: background-color 0.3s; border-radius: 15px"
-                onmouseout="this.style.backgroundColor='';">
+              >
                 <!--begin:Menu link-->
                 <span class="menu-link menu-center">
                   <div class="menu-icon-text-container">

@@ -7,7 +7,7 @@
       </div>
       <!--end::Edit-->
       <!--begin::Delete-->
-      <div class="btn btn-icon btn-sm btn-color-gray-500 btn-active-icon-danger" data-bs-toggle="tooltip" title="Delete Event" id="kt_modal_view_event_delete" (click)="deleteEvent()">
+      <div *ngIf="isAdmin" class="btn btn-icon btn-sm btn-color-gray-500 btn-active-icon-danger" data-bs-toggle="tooltip" title="Delete Event" id="kt_modal_view_event_delete" (click)="deleteEvent()">
         <i class="ki ki-solid ki-trash fs-1"></i>
       </div>
       <!--end::Delete-->

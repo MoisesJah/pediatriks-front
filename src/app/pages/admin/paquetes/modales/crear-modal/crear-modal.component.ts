@@ -65,7 +65,7 @@ export class CrearModalComponent implements AfterViewInit {
         ],
       ],
       descuento: [
-        '',
+        0,
         [
           Validators.required,
           Validators.min(0),

@@ -116,9 +116,8 @@ export class EspecialistaComponent implements OnInit {
     eventClick: this.handleEventClick.bind(this),
     selectAllow: (selectInfo) => {
       const isTimeGrid = this.calendar?.getApi()?.view.type == 'timeGridWeek';
-      const currentStartWeek = new Date();
-      currentStartWeek.setHours(0, 0, 0, 0);
-      return selectInfo.start >= currentStartWeek && isTimeGrid;
+      const now = new Date()
+      return selectInfo.end > now && isTimeGrid;
     },
     selectable: true,
     selectMirror: true,
