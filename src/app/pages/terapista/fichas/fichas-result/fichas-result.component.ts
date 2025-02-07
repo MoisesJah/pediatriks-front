@@ -32,6 +32,8 @@ export class FichasResultComponent implements OnInit {
   survey!: Model;
   theme = inject(ThemeService);
 
+  personalId = this.authService.user()?.personal?.id_personal
+
   ngOnInit(): void {
     this.getResult();
   }
@@ -39,7 +41,12 @@ export class FichasResultComponent implements OnInit {
   getResult() {
     this.fichaResultService.getOne(this.resultId!).subscribe((res) => {
       const data = JSON.parse(res.data.ficha.body);
-      data.mode = !this.authService.isTerapista() ? 'display' : undefined;
+      const isFichaPersonal = res.data.sesion.personal.id_personal === this.personalId;
+
+      data.mode = !this.authService.isTerapista() || !isFichaPersonal ? 'display' : undefined;
+
+      console.log(this.personalId, res.data.sesion.personal.id_personal);
+      console.log(this.authService.isTerapista(), isFichaPersonal);
 
       this.survey = new Model(JSON.stringify(data));
       this.survey.locale = 'es';
