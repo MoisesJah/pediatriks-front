@@ -19,7 +19,10 @@ import { PersonalService } from 'src/app/services/personal/personal.service';
 import { StatusBadgeComponent } from '../modals/status-badge/status-badge.component';
 import flatpickr from 'flatpickr';
 import { BaseOptions } from 'flatpickr/dist/types/options';
-
+import { getWeekStartEndDates } from 'src/app/utils/getdatesFromWeek';
+import { ConfirmAsistioComponent } from '../modals/confirm-asistio/confirm-asistio.component';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { BtnAssitsComponent } from '../modals/btn-assits/btn-assits.component';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -35,14 +38,18 @@ export class DashboardComponent implements OnInit {
   isLoading = inject(LoadingService).isLoading;
   theme = inject(ThemeService);
   authService = inject(AuthService);
+  modal = inject(NgbModal);
   datePipe = inject(DatePipe);
   personalService = inject(PersonalService);
 
   citas: Observable<any[]> = new Observable();
   user = this.authService.user();
 
+  startWeek = getWeekStartEndDates().startOfWeek;
+  endWeek = getWeekStartEndDates().endOfWeek;
+
   public autoSizeStrategy = {
-    type: "fitCellContents",
+    type: 'fitCellContents',
   };
 
   colDefs: ColDef[] = [
@@ -62,7 +69,10 @@ export class DashboardComponent implements OnInit {
       headerName: 'Hora de Inicio',
       filter: true,
       cellRenderer: (params: any) => {
-        return `<span class="d-flex gap-2 align-items-center"><i class="ki-outline ki-time text-gray-900 fs-2"></i>${this.datePipe.transform(new Date(params.value), 'hh:mm')}</span>`;
+        return `<span class="d-flex gap-2 align-items-center"><i class="ki-outline ki-time text-gray-900 fs-2"></i>${this.datePipe.transform(
+          new Date(params.value),
+          'hh:mm'
+        )}</span>`;
       },
     },
     {
@@ -70,10 +80,27 @@ export class DashboardComponent implements OnInit {
       headerName: 'Hora de Fin',
       filter: true,
       cellRenderer: (params: any) => {
-        return `<span class="d-flex gap-2 align-items-center"><i class="ki-outline ki-time text-gray-900 fs-2"></i>${this.datePipe.transform(new Date(params.value), 'hh:mm')}</span>`;
+        return `<span class="d-flex gap-2 align-items-center"><i class="ki-outline ki-time text-gray-900 fs-2"></i>${this.datePipe.transform(
+          new Date(params.value),
+          'hh:mm'
+        )}</span>`;
       },
     },
-    { field: 'estado', headerName: 'Estado', filter: true, cellRenderer: StatusBadgeComponent },
+    {
+      field: 'estado',
+      headerName: 'Estado',
+      filter: true,
+      cellRenderer: StatusBadgeComponent,
+    },
+    {
+      field: 'id',
+      headerName: 'Acciones',
+      filter: false,
+      cellRenderer: BtnAssitsComponent,
+      cellRendererParams: {
+        openModal: (params:any) => this.openConfirmModal(params),
+      },
+    }
   ];
 
   constructor(
@@ -85,79 +112,90 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit() {
     // Inicializar el flatpickr para seleccionar el rango de fechas
-    flatpickr("#dateRangePicker", {
-      mode: "range",
-      dateFormat: "Y-m-d",
+    flatpickr('#dateRangePicker', {
+      mode: 'range',
+      dateFormat: 'Y-m-d',
       onClose: (selectedDates) => {
         if (selectedDates.length === 2) {
           const [startDate, endDate] = selectedDates;
-          this.filtrarCitasPorFechas(startDate.toISOString(), endDate.toISOString());
+          this.startWeek = startDate
+          this.endWeek = endDate
+
+          this.loadCitas()
+         
         }
-      }
+      },
     });
 
     // Llamar al método para cargar las citas
     this.loadCitas();
   }
 
+  openConfirmModal(id_cita: string) {
+    const modalRef = this.modal.open(ConfirmAsistioComponent, {
+      centered: true,
+      scrollable: true,
+      backdrop: 'static',
+    });
+
+    modalRef.componentInstance.id_sesion = id_cita
+
+    modalRef.componentInstance.citaUpdated.subscribe(() => {
+      this.loadCitas();
+    })
+  }
+
   filtrarCitasPorFechas(fechaInicio: string, fechaFin: string) {
     const id_personal = this.user?.personal?.id_personal; // Asegúrate de que este campo esté disponible
 
     if (!id_personal) {
-      console.error('ID del personal no disponible');
       return;
     }
 
-    this.citas = this.citaService.getCitasByFecha(id_personal, fechaInicio, fechaFin).pipe(
-      map(response => {
-        console.log('Citas filtradas:', response.data);
-        return response.data; // Verifica que 'data' sea un arreglo
-      }),
-      catchError(error => {
-        console.error('Error al filtrar citas:', error);
-        return of([]); // Devuelve un array vacío si hay error
-      }),
-      untilDestroyed(this)
-    );
-
-  }
-
-  loadCitas() {
-    if (!this.user?.personal) {
-      console.log('Mostrar aviso que no tiene personal asignado el usuario');
-      return;
-    }
-
-    const id_personal = this.user?.personal?.id_personal;
-    const startWeek = new Date();
-    const endWeek = new Date();
-    endWeek.setDate(startWeek.getDate() + 7); // Fin de la semana en 7 días
-
-    if (id_personal) {
-      this.citas = this.citaService.getCitasByPersonal({
-        id_personal,
-        startWeek: startWeek.toISOString(),
-        endWeek: endWeek.toISOString()
-      }).pipe(
-        map(response => {
-          console.log('Respuesta del backend:', response);
+    this.citas = this.citaService
+      .getCitasByFecha(id_personal, fechaInicio, fechaFin)
+      .pipe(
+        map((response) => {
           return response.data; // Verifica que 'data' sea un arreglo
         }),
-        catchError(error => {
-          console.error('Error al cargar citas:', error);
+        catchError((error) => {
           return of([]); // Devuelve un array vacío si hay error
         }),
         untilDestroyed(this)
       );
+  }
+
+  loadCitas() {
+    if (!this.user?.personal) {
+      return;
+    }
+
+    const id_personal = this.user?.personal?.id_personal;
+
+    if (id_personal) {
+      this.citas = this.citaService
+        .getCitasByPersonal({
+          id_personal,
+          startWeek: this.startWeek.toISOString(),
+          endWeek: this.endWeek.toISOString()
+        })
+        .pipe(
+          map((response) => {
+            return response.data; // Verifica que 'data' sea un arreglo
+          }),
+          catchError((error) => {
+            return of([]); // Devuelve un array vacío si hay error
+          }),
+          untilDestroyed(this)
+        );
     } else {
-      console.error('ID personal no disponible');
       this.citas = of([]); // Devuelve un observable con un array vacío
     }
   }
 
   gridReady(params: GridReadyEvent) {
     this.gridApi = params.api;
-    this.sizeColumnsToFit();
+    // this.sizeColumnsToFit();
   }
 
   sizeColumnsToFit(): void {

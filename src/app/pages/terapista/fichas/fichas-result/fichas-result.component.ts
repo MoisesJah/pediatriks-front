@@ -45,9 +45,6 @@ export class FichasResultComponent implements OnInit {
 
       data.mode = !this.authService.isTerapista() || !isFichaPersonal ? 'display' : undefined;
 
-      console.log(this.personalId, res.data.sesion.personal.id_personal);
-      console.log(this.authService.isTerapista(), isFichaPersonal);
-
       this.survey = new Model(JSON.stringify(data));
       this.survey.locale = 'es';
       this.survey.applyTheme(

@@ -1,0 +1,44 @@
+<div class="modal-header">
+    <h4 class="modal-title d-flex align-items-center gap-1" id="modal-basic-title">
+        <span class="text-primary">
+            <i style="vertical-align: text-top;" class="ki-duotone ki-add-files text-gray-900 fs-1">
+                <span class="path1"></span><span class="path2"></span><span class="path3"></span>
+            </i>
+        </span>
+        Confirmar Asistencia
+    </h4>
+    <button type="button" class="btn btn-sm btn-icon btn-active-color-primary btn-color-gray-800" aria-label="Close"
+        (click)="close()">
+        <i class="ki-duotone ki-cross-square fs-1">
+            <span class="path1"></span><span class="path2"></span>
+        </i>
+    </button>
+</div>
+
+<div class="modal-body">
+    <form class="d-flex flex-column gap-3" [formGroup]="confirmForm">
+        <div class="form-check form-check-custom form-check-danger form-check-solid">
+            <input class="form-check-input" formControlName="id_status" type="radio" value="2" id="flexCheckboxLg" />
+            <label class="form-check-label text-gray-900" for="flexCheckboxLg">
+               Asistió
+            </label>
+        </div>
+
+        <div class="form-check form-check-custom form-check-danger form-check-solid">
+            <input class="form-check-input" type="radio" formControlName="id_status" value="3" id="flexCheckboxSm" />
+            <label class="form-check-label text-gray-900" for="flexCheckboxSm">
+                No Asistió
+            </label>
+        </div>
+    </form>
+</div>
+
+<div class="modal-footer">
+    <button type="button" class="btn btn-light" (click)="close()">
+        Cancelar
+    </button>
+    <button type="button" class="btn btn-primary" (click)="confirm()" [disabled]="confirmForm.invalid || (isLoading | async)">
+        <span *ngIf="isLoading | async" class="spinner-border spinner-border-sm align-middle ms-2"></span>
+        Confirmar
+    </button>
+</div>

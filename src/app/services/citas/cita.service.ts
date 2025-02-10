@@ -84,6 +84,10 @@ export class CitaService {
     return this.http.put(`${this.apiUrl}/citas/edit/${id_cita}`, cita);
   }
 
+  updateStatus(body: any) {
+    return this.http.put(`${this.apiUrl}/citas/update-status`, body);
+  }
+
   delete(body: any) {
     // return this.http.delete(`${this.apiUrl}/citas/delete`, body);
     return this.http.delete(`${this.apiUrl}/citas/delete`, {
