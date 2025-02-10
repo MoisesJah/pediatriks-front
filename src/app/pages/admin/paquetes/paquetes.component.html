@@ -10,7 +10,6 @@
   <div class="container-xxl">
     <div class="d-flex py-4 justify-content-between align-items-center">
       <form data-kt-search-element="form" class="position-relative" autocomplete="off">
-        <input type="hidden">
         <i class="ki-duotone ki-magnifier fs-2 search-icon position-absolute top-50 translate-middle-y ms-4"></i>
         <input type="search" (input)="onFilterTextBoxChanged()" id="paquete-search"
           class="form-control custom-form-control ps-13" name="search" placeholder="Búsqueda"
@@ -22,6 +21,10 @@
             <span class="fa-solid fa-rotate-right"></span>
             <span class="ms-2">Actualizar</span>
           </span>
+        </button>
+        <button class="btn btn-secondary" (click)="openPacientesTable()">
+          <span class="ki-solid ki-abstract-28 fs-4"></span>
+          <span class="ms-2">Pacientes</span>
         </button>
         <button type="button" class="btn btn-primary" (click)="openCrearModal()">
           <span class="d-flex align-items-center">
@@ -41,14 +44,15 @@
 
 
 
-    <div class="row justify-content-center">
+    <div class="row my-4 justify-content-center">
       <div class="col-md-4" *ngFor="let paquete of paquetesList | async">
-        <div class="card border-1 border-gray-300 mb-4" style="width: 22rem; padding: 5px;">
+        <div class="card border-1 border-gray-300 mb-4">
 
-          <div class="position-relative" style="padding-top: 40px;">
+          <div class="position-relative">
 
             <div class="action-buttons" style="position: absolute; top: 0; right: 10px; z-index: 1;">
-              <button type="button" (click)="openEditarModal(paquete)" class="btn btn-icon btn-sm bg-success" style="margin-right: 5px;">
+              <button type="button" (click)="openEditarModal(paquete)" class="btn btn-icon btn-sm bg-success"
+                style="margin-right: 5px;">
                 <span class="ki-solid ki-pencil text-white"></span>
               </button>
               <button type="button" (click)="openBorrarModal(paquete)" class="btn btn-icon btn-sm btn-danger">
@@ -58,20 +62,34 @@
 
 
             <div class="image-container" style=" border-radius: 8px; overflow: hidden;">
-              <img src="{{ !paquete.banner_url?.includes('default.png') ?  paquete.banner_url : banner_url }}" class="card-img-top" [ngClass]="{ 'img-inventory': paquete.banner_url?.includes('default.png') }" alt="{{ paquete.nombre }}" style="width: 100%; height: auto;">
+              <img src="{{ !paquete.banner_url?.includes('default.png') ?  paquete.banner_url : banner_url }}"
+                class="card-img-top" [ngClass]="{ 'img-inventory': paquete.banner_url?.includes('default.png') }"
+                alt="{{ paquete.nombre }}" style="width: 100%; height: auto;">
             </div>
           </div>
 
 
           <div class="card-body">
-            <h5 class="card-title">{{ paquete.nombre }}</h5>
-            <p class="card-text"><strong>Terapias:</strong> {{ getTerapiasNombres(paquete.terapias) }}</p>
+            <h5 class="card-title fs-2">{{ paquete.nombre }}</h5>
+            <p class="card-text"><strong>Terapias:</strong></p>
+
+            <div class="d-flex my-2 gap-3 flex-wrap">
+              @for (item of paquete.terapias; track $index) {
+                <span class="badge rounded-pill bg-secondary me-2">{{ item.nombre }}</span>
+              }
+            </div>
+
             <p class="card-text"><strong>N° de Sesiones:</strong> {{ paquete.cantidadsesiones }}</p>
             <p class="card-text">{{ paquete.descripcion }}</p>
-            <p class="card-text"><strong>${{ paquete.preciopaquete }}</strong></p>
-            <button type="button" (click)="openComprarModal(paquete)" class="btn btn-primary btn-lg w-100 d-flex justify-content-center align-items-center">
-              <span class="ki-duotone ki-handcart text-white me-2"></span> Vender
-            </button>
+
+            <div class="d-flex justify-content-between align-items-center">
+
+              <p class="card-text fs-2"><strong>S/{{ paquete.preciopaquete }}</strong></p>
+              <button type="button" (click)="openComprarModal(paquete)"
+                class="btn btn-primary d-flex justify-content-center align-items-center">
+                <span class="ki-duotone ki-handcart text-white me-2"></span> Vender
+              </button>
+            </div>
           </div>
 
         </div>

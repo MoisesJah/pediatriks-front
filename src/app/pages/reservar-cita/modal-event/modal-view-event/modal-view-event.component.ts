@@ -41,8 +41,11 @@ export class ModalViewEventComponent implements OnInit {
     const tipocita = this.event?.tipo_cita.nombre;
     const sesion = this.event?.sesion.num_sesion!;
 
-    if (tipocita === 'Evaluación' && sesion <= 1) {
+    if (tipocita === 'Evaluación') {
       return `Evaluación`;
+    }
+    if(!this.event?.tipo_cita.recurrente) {
+      return 'Sesión'
     }
     return `# Sesión ${sesion}`;
   }

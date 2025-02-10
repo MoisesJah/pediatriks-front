@@ -299,6 +299,7 @@ export class ModalEditComponent implements OnInit, AfterViewInit, OnDestroy {
           ...this.editEventForm.value,
           id_cita: this.event?.id_cita!,
           id_sesion: this.event?.sesion.id_sesion!,
+          id_terapia: this.event?.terapia.id_terapia
         })
         .subscribe({
           next: () => {

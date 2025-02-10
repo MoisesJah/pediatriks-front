@@ -19,6 +19,7 @@ import { ThemeService } from 'src/app/services/theme.service';
 import { Terapia } from 'src/app/models/terapia';
 import { formatMoney } from 'src/app/utils/formatCurrency';
 import { ImageDisplayComponent } from './modales/image-display/image-display.component';
+import { PacientesListaComponent } from './modales/pacientes-lista/pacientes-lista.component';
 
 @UntilDestroy()
 @Component({
@@ -47,11 +48,17 @@ export class PaquetesComponent implements OnInit, OnDestroy {
   private fetchPaquetes(): void {
     this.paquetesList = this.paquetesService.getAll().pipe(
       map((resp) => {
-        console.log('Paquetes recibidos:', resp.data);
         return resp.data;
       }),
       untilDestroyed(this)
     );
+  }
+
+  openPacientesTable(){
+    this.modal.open(PacientesListaComponent, {
+      centered:true,
+      size: 'lg'
+    })
   }
 
   loadTabla() {

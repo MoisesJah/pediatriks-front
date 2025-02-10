@@ -32,16 +32,24 @@ export class PaqueteService {
     return this.http.delete<void>(`${this.apiUrl}/delete/${id}`);
   }
 
-  purchase(paqueteId:string,pacienteId: string, usuarioId: number): Observable<any> {
+  purchase(
+    paqueteId: string,
+    pacienteId: string,
+    usuarioId: number
+  ): Observable<any> {
     const body = {
-        paqueteId,
-        pacienteId,
-        usuarioId
+      paqueteId,
+      pacienteId,
+      usuarioId,
     };
     return this.http.post(`${this.apiUrl}/purchase`, body);
   }
 
-  getByPaciente(body:any): Observable<{ data: Paquete[] }> {
+  getByPaciente(body: any): Observable<{ data: Paquete[] }> {
     return this.http.post<{ data: Paquete[] }>(`${this.apiUrl}/paciente`, body);
+  }
+
+  getListPacientes() {
+    return this.http.get<{ data: any }>(`${this.apiUrl}/list/paciente`);
   }
 }
