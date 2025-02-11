@@ -94,8 +94,9 @@ export class DashboardComponent implements OnInit {
     },
     {
       field: 'id',
-      headerName: 'Acciones',
+      headerName: 'Asistencia',
       filter: false,
+      resizable: false,
       cellRenderer: BtnAssitsComponent,
       cellRendererParams: {
         openModal: (params:any) => this.openConfirmModal(params),

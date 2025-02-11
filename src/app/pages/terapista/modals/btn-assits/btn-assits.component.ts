@@ -9,7 +9,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
   standalone: true,
   imports: [],
   template: `
-    <button type="button" (click)="openModal()" class="btn btn-sm btn-icon btn-active-color-primary btn-color-gray-800">
+    <button type="button" (click)="openModal()" class="btn btn-sm btn-active-color-primary btn-color-gray-800">
       <i class="fa-solid fa-file-lines text-gray-900 fs-1"></i>
       <span>Confirmar</span>
     </button>
