@@ -1,6 +1,5 @@
 import {
   Component,
-  Input,
   OnInit,
   EventEmitter,
   Output,
@@ -263,7 +262,7 @@ export class ModalEditComponent implements OnInit, AfterViewInit, OnDestroy {
 
   loadStatus() {
     this.statusList = this.statusService.getAll().pipe(
-      map((resp) => resp.data),
+      map((resp) => resp.data.filter((status) => status.id_status !== 1)),
       untilDestroyed(this)
     );
   }
@@ -280,11 +279,13 @@ export class ModalEditComponent implements OnInit, AfterViewInit, OnDestroy {
       .getById(id_cita, id_sesion)
       .pipe(untilDestroyed(this))
       .subscribe((resp) => {
+        const id_status = resp.data.sesion.status.id_status
+
         this.editEventForm.patchValue({
           id_cita: resp.data.id_cita,
           id_sesion: resp.data.sesion.id_sesion,
           id_personal: resp.data.sesion.personal.id_personal,
-          id_status: resp.data.sesion.status.id_status,
+          id_status: id_status === 1 ? null : id_status,
           fecha_inicio: resp.data.sesion.fecha_inicio,
           hora_inicio: resp.data.sesion.hora_inicio,
           hora_fin: resp.data.sesion.hora_fin,

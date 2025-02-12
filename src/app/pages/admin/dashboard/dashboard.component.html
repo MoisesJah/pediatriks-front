@@ -23,9 +23,19 @@
 </div>
 
 <div class="card-footer text-center">
-  <button class="btn btn-primary me-2" (click)="openExtrasModal()">Egresos Extras</button>
-  <button class="btn btn-primary me-2" (click)="openIngresosModal()">Tabla de Ingresos</button>
-  <button class="btn btn-primary" (click)="openEgresosModal()">Tabla de Egresos</button>
+  <button class="btn btn-info me-2" (click)="openExtrasModal()">
+    <i class="ki-duotone ki-bill fs-2x"><span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span><span class="path5"></span><span class="path6"></span></i>
+    <span>Egresos Extras</span>
+  </button>
+  <button class="btn btn-success me-2" (click)="openIngresosModal()">
+    <i class="ki-duotone ki-arrow-up-refraction fs-2x"><span class="path1"></span><span class="path2"></span></i>
+    <span>Tabla de Ingresos</span>
+  </button>
+  <button class="btn btn-danger" (click)="openEgresosModal()">
+    <i class="ki-duotone ki-arrow-down-refraction fs-2x"><span class="path1"></span><span class="path2"></span></i>
+
+    <span>Tabla de Egresos</span>
+  </button>
 </div>
 
 

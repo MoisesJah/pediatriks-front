@@ -107,14 +107,14 @@ export class AdminDashboardComponent implements AfterViewInit {
             {
               label: 'Ingresos',
               data: this.showIngresos ? ingresos : Array(ingresos.length).fill(null),
-              borderColor: 'rgba(0, 0, 255, 1)',
+              borderColor: 'rgb(23, 198, 83)',
               borderWidth: 2,
               fill: false,
             },
             {
               label: 'Egresos',
               data: this.showEgresos ? egresos : Array(egresos.length).fill(null),
-              borderColor: 'rgba(255, 0, 0, 1)',
+              borderColor: 'rgba(228, 40, 85, 1)',
               borderWidth: 2,
               fill: false,
             },

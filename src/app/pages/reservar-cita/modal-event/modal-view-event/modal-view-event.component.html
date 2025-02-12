@@ -2,12 +2,12 @@
 
     <div *ngIf="event" class="modal-header border-0 justify-content-end">
       <!--begin::Edit-->
-      <div class="btn btn-icon btn-sm btn-color-gray-500 btn-active-icon-success" data-bs-toggle="tooltip" title="Edit Event" id="kt_modal_view_event_edit" (click)="openEditModal()">
+      <div class="btn btn-icon btn-sm btn-color-gray-500 btn-active-icon-success" ngbTooltip="Editar cita" id="kt_modal_view_event_edit" (click)="openEditModal()">
         <i class="ki ki-solid ki-pencil fs-1"></i>
       </div>
       <!--end::Edit-->
       <!--begin::Delete-->
-      <div *ngIf="isAdmin" class="btn btn-icon btn-sm btn-color-gray-500 btn-active-icon-danger" data-bs-toggle="tooltip" title="Delete Event" id="kt_modal_view_event_delete" (click)="deleteEvent()">
+      <div *ngIf="isAdmin" class="btn btn-icon btn-sm btn-color-gray-500 btn-active-icon-danger" ngbTooltip="Eliminar cita" id="kt_modal_view_event_delete" (click)="deleteEvent()">
         <i class="ki ki-solid ki-trash fs-1"></i>
       </div>
       <!--end::Delete-->
