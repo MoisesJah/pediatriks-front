@@ -1,1 +1,32 @@
-<p>stock-terapistas works!</p>
+<div class="d-flex flex-column py-3 flex-column-fluid">
+    <div
+      style="height: calc(100dvh - 281px)"
+      id="myGrid"
+      [ngClass]="[theme.getThemeMode() === 'light' ? 'ag-theme-quartz' : 'ag-theme-quartz-dark']"
+    >
+      <!-- Tabla con ag-grid -->
+      @defer {
+        <ag-grid-angular
+          style="width: 100%; height: 100%"
+          [rowData]="stockTerapistas | async"
+          [loading]="isLoading | async"
+          [columnDefs]="colDefs"
+          [enableCellTextSelection]="true"
+          [localeText]="localeText"
+          [pagination]="true"
+        >
+        </ag-grid-angular>
+      }
+      @loading {
+        <!-- Spinner de carga -->
+        <div
+          class="d-flex justify-content-center align-items-center"
+          style="height: 100%"
+        >
+          <div class="spinner-border" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+        </div>
+      }
+    </div>
+</div>  

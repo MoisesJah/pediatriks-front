@@ -39,4 +39,8 @@ export class SolicitudInventarioService {
   cargarTodasLasSolicitudes(): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/todas`);
   }
+
+  stockTerapista(body:any){
+    return this.http.post<any>(`${this.apiUrl}/stock`, body);
+  }
 }
