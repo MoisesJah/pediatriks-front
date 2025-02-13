@@ -8,10 +8,11 @@
 
 <div class="content d-flex flex-column flex-column-fluid">
   <div class="container-xxl">
-    <div class="d-flex py-4 justify-content-between align-items-center">
-      <form data-kt-search-element="form" class="position-relative" autocomplete="off">
-        <i class="ki-duotone ki-magnifier fs-2 search-icon position-absolute top-50 translate-middle-y ms-4"></i>
-        <input type="search" (input)="onFilterTextBoxChanged()" id="paquete-search"
+    <div class="d-flex flex-wrap gap-3  py-4 justify-content-between align-items-center">
+      <form data-kt-search-element="form" class="position-relative flex-grow-1 flex-md-grow-0" autocomplete="off">
+        <i class="ki-duotone ki-magnifier fs-2 search-icon position-absolute top-50 translate-middle-y ms-4"><span
+          class="path1"></span><span class="path2"></span></i>
+        <input type="search" [formControl]="searchControl" id="paquete-search"
           class="form-control custom-form-control ps-13" name="search" placeholder="Búsqueda"
           data-kt-search-element="input">
       </form>
@@ -45,12 +46,12 @@
 
 
     <div class="row my-4 justify-content-center">
-      <div class="col-md-4" *ngFor="let paquete of paquetesList | async">
-        <div class="card border-1 border-gray-300 mb-4">
+      <div class="col-md-4" @paquetesListAnimation *ngFor="let paquete of paquetesList | async; trackBy: trackByFn">
+        <div class="paquete-item card border-1 border-gray-300 mb-4" style="transition: all cubic-bezier(0.165, 0.84, 0.44, 1) 0.5s;">
 
           <div class="position-relative">
 
-            <div class="action-buttons" style="position: absolute; top: 0; right: 10px; z-index: 1;">
+            <div class="action-buttons" style="position: absolute; top: 0.445rem; right: 10px; z-index: 1;">
               <button type="button" (click)="openEditarModal(paquete)" class="btn btn-icon btn-sm bg-success"
                 style="margin-right: 5px;">
                 <span class="ki-solid ki-pencil text-white"></span>
@@ -71,12 +72,15 @@
 
           <div class="card-body">
             <h5 class="card-title fs-2">{{ paquete.nombre }}</h5>
-            <p class="card-text"><strong>Terapias:</strong></p>
+           
+            <div class="d-flex flex-column my-4 gap-2">
+              <span class="card-text"><strong>Terapias:</strong></span>
 
-            <div class="d-flex my-2 gap-3 flex-wrap">
-              @for (item of paquete.terapias; track $index) {
-                <span class="badge rounded-pill bg-secondary me-2">{{ item.nombre }}</span>
-              }
+              <div class="d-flex gap-3 flex-wrap">
+                @for (item of paquete.terapias; track $index) {
+                  <span class="badge bg-secondary">{{ item.nombre }}</span>
+                }
+              </div>
             </div>
 
             <p class="card-text"><strong>N° de Sesiones:</strong> {{ paquete.cantidadsesiones }}</p>
@@ -84,9 +88,9 @@
 
             <div class="d-flex justify-content-between align-items-center">
 
-              <p class="card-text fs-2"><strong>S/{{ paquete.preciopaquete }}</strong></p>
+              <span class="card-text fs-2"><strong>S/{{ paquete.preciopaquete }}</strong></span>
               <button type="button" (click)="openComprarModal(paquete)"
-                class="btn btn-primary d-flex justify-content-center align-items-center">
+                class="btn btn-primary btn-sm d-flex justify-content-center align-items-center">
                 <span class="ki-duotone ki-handcart text-white me-2"></span> Vender
               </button>
             </div>

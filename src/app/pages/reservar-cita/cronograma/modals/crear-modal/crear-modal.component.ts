@@ -247,10 +247,15 @@ export class CrearModalComponent implements OnInit, AfterViewInit {
   // }
 
   changeTipoCita(event: any) {
+    const isContinua = event?.nombre === 'Continua'
+
     this.isRecurrente = event?.recurrente;
     this.isCitaPaquete = event?.nombre === 'Paquete';
 
     this.id_tipopaquete = this.isCitaPaquete && event?.id_tipocita;
+
+    if(!isContinua) this.createForm.get('recurrencia')?.reset()
+    console.log(this.createForm.get('recurrencia')?.value)
 
     const id_paquete = this.createForm.get('id_paquete');
     const num_sesiones = this.createForm.get('num_sesiones');

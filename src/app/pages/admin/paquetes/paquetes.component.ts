@@ -4,7 +4,19 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { PaqueteService } from 'src/app/services/paquetes/paquete.service';
 import { LoadingService } from 'src/app/services/loading.service';
 import { Paquete } from 'src/app/models/paquetes';
-import { Observable, map } from 'rxjs';
+import {
+  Observable,
+  Subject,
+  combineLatest,
+  debounceTime,
+  distinctUntilChanged,
+  identity,
+  iif,
+  map,
+  of,
+  startWith,
+  switchMap,
+} from 'rxjs';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { HeaderComponent } from 'src/app/components/ui/header/header.component';
 import { CrearModalComponent } from './modales/crear-modal/crear-modal.component';
@@ -20,13 +32,23 @@ import { Terapia } from 'src/app/models/terapia';
 import { formatMoney } from 'src/app/utils/formatCurrency';
 import { ImageDisplayComponent } from './modales/image-display/image-display.component';
 import { PacientesListaComponent } from './modales/pacientes-lista/pacientes-lista.component';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { animate, query, stagger, style, transition, trigger } from '@angular/animations';
 
 @UntilDestroy()
 @Component({
   selector: 'app-paquetes',
   standalone: true,
-  imports: [CommonModule, HeaderComponent],
+  imports: [CommonModule, HeaderComponent, ReactiveFormsModule],
   templateUrl: './paquetes.component.html',
+  animations: [
+    trigger('paquetesListAnimation', [
+      transition(':enter', [
+        style({ opacity: 0 }),
+        animate('300ms', style({ opacity: 1 })),
+      ]),
+    ]),
+  ],
   styleUrls: ['./paquetes.component.scss'],
 })
 export class PaquetesComponent implements OnInit, OnDestroy {
@@ -34,46 +56,44 @@ export class PaquetesComponent implements OnInit, OnDestroy {
   isLoading = inject(LoadingService).isLoading;
   theme = inject(ThemeService);
   modal = inject(NgbModal);
-  banner_url = 'https://cdn-icons-png.flaticon.com/512/9573/9573235.png'
+  banner_url = 'https://cdn-icons-png.flaticon.com/512/9573/9573235.png';
 
   paquetesList: Observable<Paquete[]> = new Observable();
   localeText = AG_GRID_LOCALE_ES;
-  private gridApi!: GridApi;
-
+  searchControl = new FormControl('');
 
   ngOnInit(): void {
     this.fetchPaquetes();
   }
 
   private fetchPaquetes(): void {
-    this.paquetesList = this.paquetesService.getAll().pipe(
-      map((resp) => {
-        return resp.data;
-      }),
+    const value = this.searchControl.valueChanges.pipe(startWith(''));
+
+    this.paquetesList = combineLatest([this.paquetesService.getAll().pipe(
+      map((resp) => resp.data),
       untilDestroyed(this)
+    ), value]).pipe(
+      map(([paquetes, searchTerm]) => 
+        searchTerm ? paquetes.filter(paquete => 
+          paquete.nombre.toLowerCase().includes(searchTerm.toLowerCase())
+        ) : paquetes
+      )
     );
   }
 
-  openPacientesTable(){
+  trackByFn(index: number, item: any) {
+    return item.id_paquetes; // or any other unique identifier
+  }
+
+  openPacientesTable() {
     this.modal.open(PacientesListaComponent, {
-      centered:true,
-      size: 'lg'
-    })
+      centered: true,
+      size: 'lg',
+    });
   }
 
   loadTabla() {
     this.fetchPaquetes();
-  }
-
-  gridReady(params: GridReadyEvent) {
-    this.gridApi = params.api;
-  }
-
-  onFilterTextBoxChanged() {
-    this.gridApi.setGridOption(
-      'quickFilterText',
-      (document.getElementById('paquete-search') as HTMLInputElement).value
-    );
   }
 
   openCrearModal() {
@@ -103,7 +123,6 @@ export class PaquetesComponent implements OnInit, OnDestroy {
 
   openBorrarModal(paquete: Paquete) {
     if (!paquete.id_paquetes) {
-      console.error('El paquete no tiene un id_paquete definido.');
       return;
     }
 
@@ -120,8 +139,6 @@ export class PaquetesComponent implements OnInit, OnDestroy {
   }
 
   openComprarModal(paquete: Paquete) {
-
-    console.log('Paquete seleccionado:', paquete);
 
     const modalRef = this.modal.open(ComprarModalComponent, {
       size: '300px',
