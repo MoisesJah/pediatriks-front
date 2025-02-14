@@ -90,11 +90,11 @@ export class ModalEditComponent implements OnInit, AfterViewInit, OnDestroy {
   };
 
   getCambiosRestantes() {
-    return this.event && this.event.num_cambios;
+    return this.event && this.event.sesion.num_cambios;
   }
 
   canEditSession() {
-    return !this.event || this.event.num_cambios > 0;
+    return !this.event || this.event.sesion.num_cambios > 0;
   }
 
   getIcon(status: string): string {
@@ -113,13 +113,13 @@ export class ModalEditComponent implements OnInit, AfterViewInit, OnDestroy {
   horaInicioOptions: FlatpickrDefaultsInterface = {
     enableTime: !this.isTerapista,
     noCalendar: true,
-    minTime: '08:00',
+    minTime: this.event?.sesion.hora_inicio.split(':')[0] + ':00',
     maxTime: '20:00',
     dateFormat: 'H:i',
   };
 
   horaFinOptions: FlatpickrDefaultsInterface = {
-    enableTime: !this.isTerapista,
+    enableTime: false,
     noCalendar: true,
     minTime: '08:00',
     maxTime: '20:00',
