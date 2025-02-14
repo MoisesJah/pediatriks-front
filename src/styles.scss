@@ -64,6 +64,10 @@ ng-select {
   transform: rotate(90deg);
 }
 
+.ag-paging-row-summary-panel{
+  min-width: fit-content !important;
+}
+
 .btn:disabled {
   cursor: not-allowed;
   pointer-events: initial;

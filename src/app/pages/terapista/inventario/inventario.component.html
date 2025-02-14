@@ -14,11 +14,16 @@
         <i class="ki-duotone ki-magnifier fs-2 search-icon position-absolute top-50 translate-middle-y ms-4">
           <span class="path1"></span><span class="path2"></span>
         </i>
-        <input type="search" (input)="onFilterTextBoxChanged()" id="item-search"
+        <input type="search" [formControl]="searchControl" id="item-search"
           class="form-control custom-form-control ps-13" name="search" placeholder="Búsqueda"
           data-kt-search-element="input">
       </form>
+
       <div class="d-flex align-items-center gap-3">
+        <button class="btn btn-secondary" (click)="openStockModal()">
+          <span class="ki-solid ki-abstract-28 fs-4"></span>
+          <span class="ms-2">Mi Stock</span>
+        </button>
         <button type="button" class="btn btn-light-primary" (click)="loadTabla()">
           <span class="d-flex align-items-center">
             <span class="fa-solid fa-rotate-right"></span>
