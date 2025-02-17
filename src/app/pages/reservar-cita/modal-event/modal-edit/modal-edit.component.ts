@@ -113,7 +113,7 @@ export class ModalEditComponent implements OnInit, AfterViewInit, OnDestroy {
   horaInicioOptions: FlatpickrDefaultsInterface = {
     enableTime: !this.isTerapista,
     noCalendar: true,
-    minTime: this.event?.sesion.hora_inicio.split(':')[0] + ':00',
+    minTime: '08:00',
     maxTime: '20:00',
     dateFormat: 'H:i',
   };
@@ -262,7 +262,7 @@ export class ModalEditComponent implements OnInit, AfterViewInit, OnDestroy {
 
   loadStatus() {
     this.statusList = this.statusService.getAll().pipe(
-      map((resp) => resp.data.filter((status) => status.id_status !== 1)),
+      map((resp) => resp.data),
       untilDestroyed(this)
     );
   }
@@ -285,7 +285,8 @@ export class ModalEditComponent implements OnInit, AfterViewInit, OnDestroy {
           id_cita: resp.data.id_cita,
           id_sesion: resp.data.sesion.id_sesion,
           id_personal: resp.data.sesion.personal.id_personal,
-          id_status: id_status === 1 ? null : id_status,
+          // id_status: id_status === 1 ? null : id_status,
+          id_status: (this.isTerapista && id_status === 1) ? null : id_status,
           fecha_inicio: resp.data.sesion.fecha_inicio,
           hora_inicio: resp.data.sesion.hora_inicio,
           hora_fin: resp.data.sesion.hora_fin,

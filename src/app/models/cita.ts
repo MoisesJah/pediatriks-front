@@ -21,6 +21,7 @@ export interface Cita {
     fecha_inicio: string;
     hora_inicio: string;
     hora_fin: string;
+    fecha_repro?: string;
     status: SesionStatus;
     num_sesion: number;
     num_cambios: number;

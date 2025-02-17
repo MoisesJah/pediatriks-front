@@ -5,6 +5,7 @@ import { PaqueteService } from 'src/app/services/paquetes/paquete.service';
 import { LoadingService } from 'src/app/services/loading.service';
 import { Paquete } from 'src/app/models/paquetes';
 import {
+  BehaviorSubject,
   Observable,
   Subject,
   combineLatest,
@@ -58,27 +59,27 @@ export class PaquetesComponent implements OnInit, OnDestroy {
   modal = inject(NgbModal);
   banner_url = 'https://cdn-icons-png.flaticon.com/512/9573/9573235.png';
 
-  paquetesList: Observable<Paquete[]> = new Observable();
   localeText = AG_GRID_LOCALE_ES;
   searchControl = new FormControl('');
+  private paquetesSubject = new BehaviorSubject<Paquete[]>([]);
+
+  public paquetesList = combineLatest([
+    this.paquetesSubject.asObservable(),
+    this.searchControl.valueChanges.pipe(
+      startWith(this.searchControl.value)
+    )
+  ]).pipe(
+    map(([paquetes, searchTerm]) =>
+      searchTerm 
+        ? paquetes.filter(paquete =>
+            paquete.nombre.toLowerCase().includes(searchTerm.toLowerCase())
+          )
+        : paquetes
+    )
+  );
 
   ngOnInit(): void {
-    this.fetchPaquetes();
-  }
-
-  private fetchPaquetes(): void {
-    const value = this.searchControl.valueChanges.pipe(startWith(''));
-
-    this.paquetesList = combineLatest([this.paquetesService.getAll().pipe(
-      map((resp) => resp.data),
-      untilDestroyed(this)
-    ), value]).pipe(
-      map(([paquetes, searchTerm]) => 
-        searchTerm ? paquetes.filter(paquete => 
-          paquete.nombre.toLowerCase().includes(searchTerm.toLowerCase())
-        ) : paquetes
-      )
-    );
+    this.loadTabla()
   }
 
   trackByFn(index: number, item: any) {
@@ -93,7 +94,12 @@ export class PaquetesComponent implements OnInit, OnDestroy {
   }
 
   loadTabla() {
-    this.fetchPaquetes();
+    this.paquetesService.getAll().pipe(
+      map(resp => resp.data),
+      untilDestroyed(this)
+    ).subscribe(paquetes => {
+      this.paquetesSubject.next(paquetes);
+    });
   }
 
   openCrearModal() {
@@ -104,7 +110,7 @@ export class PaquetesComponent implements OnInit, OnDestroy {
     });
 
     modalRef.componentInstance.onSaveComplete.subscribe(() => {
-      this.fetchPaquetes();
+      this.loadTabla()
     });
   }
 
@@ -117,7 +123,7 @@ export class PaquetesComponent implements OnInit, OnDestroy {
     modalRef.componentInstance.paqueteId = paquete.id_paquetes; // Asegúrate que esto se esté pasando correctamente
 
     modalRef.componentInstance.onSaveComplete.subscribe(() => {
-      this.fetchPaquetes();
+      this.loadTabla()
     });
   }
 
@@ -134,7 +140,7 @@ export class PaquetesComponent implements OnInit, OnDestroy {
     modalRef.componentInstance.paqueteId = paquete.id_paquetes;
 
     modalRef.componentInstance.onSaveComplete.subscribe(() => {
-      this.fetchPaquetes();
+      this.loadTabla()
     });
   }
 

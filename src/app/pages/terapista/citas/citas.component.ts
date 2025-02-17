@@ -22,7 +22,9 @@ import { UserService } from 'src/app/services/user/user.service';
 import { ModalViewEventComponent } from '../../reservar-cita/modal-event/modal-view-event/modal-view-event.component';
 import { AuthService } from 'src/app/services/auth.service';
 import { CommonModule } from '@angular/common';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
+@UntilDestroy()
 @Component({
   selector: 'app-citas',
   standalone: true,
@@ -111,13 +113,12 @@ export class CitasComponent implements OnInit {
     },
   };
 
-  
-
   getPersonalId(){
     this.personalService.getPersonalByUser(this.userService.user()?.id!).pipe(
       map((resp: any) => resp.data.id_personal),
       tap((id) => this.personalId = id),
       tap(() => this.loadCitas(this.bodyParams)),
+      untilDestroyed(this)
     ).subscribe();
   }
 
@@ -125,7 +126,8 @@ export class CitasComponent implements OnInit {
     if (this.personalId) {
       return (this.citasEvent = this.citasService
         .getByPersonal(params)
-        .pipe(map((resp) => resp.data)));
+        .pipe(map((resp) => resp.data),
+          untilDestroyed(this)));
     }
   }
 

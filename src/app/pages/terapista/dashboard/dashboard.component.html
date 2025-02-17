@@ -22,7 +22,7 @@
           <input id="dateRangePicker" class="btn btn-sm btn-light d-flex ms-auto px-4" placeholder="Selecciona un rango de Fechas" />
         </div>
       </div>
-      <div style="height: 350px"
+      <div style="height: calc(100dvh - 281px)"
         [ngClass]="[theme.getThemeMode() === 'light' ? 'ag-theme-quartz' : 'ag-theme-quartz-dark']">
         @defer {
           <ag-grid-angular

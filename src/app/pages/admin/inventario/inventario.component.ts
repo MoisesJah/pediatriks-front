@@ -4,7 +4,13 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { InventarioService } from 'src/app/services/inventario/inventario.service';
 import { LoadingService } from 'src/app/services/loading.service';
 import { Inventario } from 'src/app/models/inventario';
-import { Observable, combineLatest, map, startWith } from 'rxjs';
+import {
+  BehaviorSubject,
+  Observable,
+  combineLatest,
+  map,
+  startWith,
+} from 'rxjs';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { HeaderComponent } from 'src/app/components/ui/header/header.component';
 import { CrearModalComponent } from './modales/crear-modal/crear-modal.component';
@@ -32,36 +38,37 @@ export class InventarioComponent implements OnInit, OnDestroy {
   modal = inject(NgbModal);
   banner_url = 'https://cdn-icons-png.flaticon.com/512/9573/9573235.png';
 
-  inventarioList: Observable<Inventario[]> = new Observable();
   localeText = AG_GRID_LOCALE_ES;
   searchControl = new FormControl('');
+  private inventarioSubject = new BehaviorSubject<Inventario[]>([]);
 
   ngOnInit(): void {
-    this.fetchInventario();
+    this.loadTabla();
   }
 
-  private fetchInventario(): void {
-    const value = this.searchControl.valueChanges.pipe(startWith(''));
-
-    this.inventarioList = combineLatest([
-      this.inventarioService.getAll().pipe(
-        map((resp) => resp.data),
-        untilDestroyed(this)
-      ),
-      value,
-    ]).pipe(
-      map(([inventarios, searchTerm]) =>
-        searchTerm
-          ? inventarios.filter((int) =>
-              int.nombre.toLowerCase().includes(searchTerm.toLowerCase())
-            )
-          : inventarios
-      )
-    );
-  }
+  public inventarioList = combineLatest([
+    this.inventarioSubject.asObservable(),
+    this.searchControl.valueChanges.pipe(startWith(this.searchControl.value)),
+  ]).pipe(
+    map(([inventario, searchTerm]) =>
+      searchTerm
+        ? inventario.filter((invent) =>
+            invent.nombre.toLowerCase().includes(searchTerm.toLowerCase())
+          )
+        : inventario
+    )
+  );
 
   loadTabla() {
-    this.fetchInventario();
+    this.inventarioService
+      .getAll()
+      .pipe(
+        map((resp) => resp.data),
+        untilDestroyed(this)
+      )
+      .subscribe((invt) => {
+        this.inventarioSubject.next(invt);
+      });
   }
 
   openCrearModal() {
@@ -72,16 +79,18 @@ export class InventarioComponent implements OnInit, OnDestroy {
     });
 
     modalRef.componentInstance.onSaveComplete.subscribe(() => {
-      this.fetchInventario();
+      this.loadTabla();
     });
   }
 
   openEditarModal(item: Inventario) {
-    const modalRef = this.modal.open(EditarModalComponent);
+    const modalRef = this.modal.open(EditarModalComponent, {
+      centered: true,
+    });
     modalRef.componentInstance.inventarioId = item.id;
 
     modalRef.componentInstance.onSaveComplete.subscribe(() => {
-      this.fetchInventario();
+      this.loadTabla();
     });
   }
 
@@ -98,7 +107,7 @@ export class InventarioComponent implements OnInit, OnDestroy {
     modalRef.componentInstance.inventarioId = item.id;
 
     modalRef.componentInstance.onSaveComplete.subscribe(() => {
-      this.fetchInventario();
+      this.loadTabla();
     });
   }
 
@@ -115,7 +124,7 @@ export class InventarioComponent implements OnInit, OnDestroy {
     modalRef.componentInstance.inventarioId = item.id;
 
     modalRef.componentInstance.onSaveComplete.subscribe(() => {
-      this.fetchInventario();
+      this.loadTabla();
     });
   }
 

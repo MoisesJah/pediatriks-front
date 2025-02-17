@@ -10,6 +10,7 @@ import { BorrarModalComponent } from '../../cronograma/modals/borrar-modal/borra
 import { Router } from '@angular/router';
 import { EditCitaComponent } from 'src/app/pages/terapista/modals/edit-cita/edit-cita.component';
 import { AuthService } from 'src/app/services/auth.service';
+import { formatDate } from '@angular/common';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -30,6 +31,8 @@ export class ModalViewEventComponent implements OnInit {
   @Output() eventUpdated = new EventEmitter<CalendarEvent>();
   event: Cita | null = null;
   horarios: any[] = [];
+
+  fecha_repro = this.event?.sesion?.fecha_repro && formatDate(this.event?.sesion?.fecha_repro!, 'dd/MM/yyyy', 'en-US');
 
   constructor() {}
 

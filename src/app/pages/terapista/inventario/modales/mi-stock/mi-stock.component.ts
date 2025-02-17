@@ -24,15 +24,20 @@ export class MiStockComponent implements OnInit {
   solicitudService = inject(SolicitudInventarioService);
   auth = inject(AuthService);
   theme = inject(ThemeService);
-  isLoading = inject(LoadingService).isLoading
+  isLoading = inject(LoadingService).isLoading;
 
   stockTerapista: Observable<any> = new Observable();
 
-  localeText = AG_GRID_LOCALE_ES
+  localeText = AG_GRID_LOCALE_ES;
 
   colDefs: ColDef[] = [
     { field: 'item', headerName: 'Item', filter: true },
     { field: 'stock', headerName: 'Stock', filter: 'agNumberColumnFilter' },
+    {
+      field: 'created_at',
+      headerName: 'Última Solictud Aprobada',
+      filter: 'agDateColumnFilter',
+    },
   ];
 
   ngOnInit(): void {
@@ -42,8 +47,10 @@ export class MiStockComponent implements OnInit {
   getStock() {
     this.stockTerapista = this.solicitudService
       .stockTerapista({ id_personal: this.auth.user()?.personal?.id_personal! })
-      .pipe(map((resp) => resp.data),
-        untilDestroyed(this));
+      .pipe(
+        map((resp) => resp.data),
+        untilDestroyed(this)
+      );
   }
 
   close() {
