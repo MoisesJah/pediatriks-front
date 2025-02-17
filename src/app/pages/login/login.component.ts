@@ -1,8 +1,10 @@
 import { Component, inject } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AuthService } from 'src/app/services/auth.service';
 import { LoadingService } from 'src/app/services/loading.service';
+import { ResetPasswordComponent } from './reset-password/reset-password.component';
 
 @Component({
   selector: 'app-login',
@@ -13,6 +15,7 @@ export class LoginComponent {
   authService = inject(AuthService);
   isLoading = inject(LoadingService).isLoading;
   router = inject(Router);
+  modal = inject(NgbModal);
 
   errors: Record<string,string> = {"error":""};
 
@@ -48,6 +51,12 @@ export class LoginComponent {
       default:
         break;
     }
+  }
+
+  openSendLinkModal() {
+    this.modal.open(ResetPasswordComponent, {
+      centered: true,
+    })
   }
 
   handleSubmit() {

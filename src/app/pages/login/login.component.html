@@ -62,6 +62,8 @@
                 <!--begin::Password-->
                 <input type="password" formControlName="password" placeholder="Contraseña" name="password" autocomplete="off" class="form-control bg-transparent" />
                 <!--end::Password-->
+                <div (click)="openSendLinkModal()" class="text-gray-700 link-primary text-end mt-3 fw-semibold fs-6 cursor-pointer">¿Olvidaste tu contraseña?</div>
+
               </div>
               <!--end::Input group=-->
 
@@ -83,6 +85,8 @@
               <div class="text-gray-700 text-center fw-semibold fs-6">¿No eres un miembro todavía?
                 <a routerLink="/registrate" class="link-primary">Regístrate</a>
               </div>
+              
+                
               <!--end::Sign up-->
             </form>
             <!--end::Form-->

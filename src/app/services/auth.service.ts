@@ -53,6 +53,10 @@ export class AuthService {
     );
   }
 
+  sentResetLink(email: string): Observable<any> {
+    return this.http.post(`${this.apiUrl}/reset-link`, { email })
+  }
+
   user(): IUser | null {
     const user = localStorage.getItem('user');
     return user ? JSON.parse(user) : null;
