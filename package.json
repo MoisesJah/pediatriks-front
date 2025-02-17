@@ -5,6 +5,7 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
+    "build:prod": "ng build --configuration production --output-hashing none",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },
@@ -48,7 +49,7 @@
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^18.2.11",
-    "@angular/cli": "^18.2.11",
+    "@angular/cli": "^18.2.14",
     "@angular/compiler-cli": "^18.2.10",
     "@types/chart.js": "^2.9.41",
     "@types/jasmine": "~5.1.0",
