@@ -18,7 +18,9 @@ const routes: Routes = [
     canMatch: [terapistaGuard],
     canActivate: [authGuard],
     loadChildren: () =>
-      import('./pages/terapista/terapista.module').then((m) => m.TerapistaModule),
+      import('./pages/terapista/terapista.module').then(
+        (m) => m.TerapistaModule
+      ),
   },
   {
     path: 'login',
@@ -46,8 +48,13 @@ const routes: Routes = [
     path: 'paquetes',
     canActivate: [authGuard],
     loadChildren: () =>
-      import('./pages/paquetes/paquetes.module').then(
-        (m) => m.PaquetesModule
+      import('./pages/paquetes/paquetes.module').then((m) => m.PaquetesModule),
+  },
+  {
+    path: 'reset-password/:token',
+    loadComponent: () =>
+      import('./pages/password-reset/password-reset.component').then(
+        (m) => m.PasswordResetComponent
       ),
   },
   // {
@@ -62,13 +69,12 @@ const routes: Routes = [
     path: 'ficha-result/:resultId',
     canActivate: [authGuard],
     loadComponent: () =>
-      import('../app/pages/terapista/fichas/fichas-result/fichas-result.component').then(
-        (m) => m.FichasResultComponent
-      ),
+      import(
+        '../app/pages/terapista/fichas/fichas-result/fichas-result.component'
+      ).then((m) => m.FichasResultComponent),
   },
   { path: '**', redirectTo: 'login', pathMatch: 'full' },
 ];
-
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],

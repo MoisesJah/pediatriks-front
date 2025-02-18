@@ -16,7 +16,7 @@ import { LoadingService } from 'src/app/services/loading.service';
 export class ResetPasswordComponent implements OnInit {
   auth = inject(AuthService)
   modal = inject(NgbModal)
-  toastService = inject(ToastrService)
+  toast = inject(ToastrService)
   isLoading = inject(LoadingService).isLoading
 
   error : Record<string, string> = {'message': ''}
@@ -43,7 +43,8 @@ export class ResetPasswordComponent implements OnInit {
     this.error = {}
 
     this.auth.sentResetLink(this.form.get('email')?.value).subscribe({
-      next: () => {
+      next: (data) => {
+        this.toast.success(data.message, 'Exito');
         this.modal.dismissAll();
       },
       error: (err) => {

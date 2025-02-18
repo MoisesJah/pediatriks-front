@@ -1,9 +1,5 @@
 <div id="body" class="min-vh-100 d-flex align-items-center auth-bg bgi-size-cover bgi-attachment-fixed bgi-position-center bgi-no-repeat " >
-  <!--begin::Theme mode setup on page load-->
-  <script>var defaultThemeMode = "light"; var themeMode; if ( document.documentElement ) { if ( document.documentElement.hasAttribute("data-bs-theme-mode")) { themeMode = document.documentElement.getAttribute("data-bs-theme-mode"); } else { if ( localStorage.getItem("data-bs-theme") !== null ) { themeMode = localStorage.getItem("data-bs-theme"); } else { themeMode = defaultThemeMode; } } if (themeMode === "system") { themeMode = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"; } document.documentElement.setAttribute("data-bs-theme", themeMode); }</script>
-  <!--end::Theme mode setup on page load-->
-  <!--begin::Main-->
-  <!--begin::Root-->
+  
   <div class="d-flex flex-column flex-root">
     <!--begin::Page bg image-->
     <style>#body { background-image: url('assets/media/auth/bg4.jpg'); } [data-bs-theme="dark"] #body { background-image: url('assets/media/auth/bg4-dark.jpg'); }</style>
@@ -62,7 +58,7 @@
                 <!--begin::Password-->
                 <input type="password" formControlName="password" placeholder="Contraseña" name="password" autocomplete="off" class="form-control bg-transparent" />
                 <!--end::Password-->
-                <div (click)="openSendLinkModal()" class="text-gray-700 link-primary text-end mt-3 fw-semibold fs-6 cursor-pointer">¿Olvidaste tu contraseña?</div>
+                <div (click)="openSendLinkModal()" class="text-gray-700 link-primary text-end mt-3 fw-semibold fs-6 cursor-pointer">¿Olvidó su contraseña?</div>
 
               </div>
               <!--end::Input group=-->

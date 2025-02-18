@@ -57,6 +57,10 @@ export class AuthService {
     return this.http.post(`${this.apiUrl}/reset-link`, { email })
   }
 
+  resetPassword(body: any): Observable<any> {
+    return this.http.post(`${this.apiUrl}/reset-password`, body)
+  }
+
   user(): IUser | null {
     const user = localStorage.getItem('user');
     return user ? JSON.parse(user) : null;
