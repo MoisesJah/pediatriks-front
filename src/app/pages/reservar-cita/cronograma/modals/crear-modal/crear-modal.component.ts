@@ -171,8 +171,9 @@ export class CrearModalComponent implements OnInit, AfterViewInit {
   changePaquete(event: any) {
     const paquetesControl = this.createForm.get('id_paquete') as FormControl;
     const sesionesControl = this.createForm.get('num_sesiones') as FormControl;
-    this.maxSesiones = event?.cantidadsesiones;
+    this.maxSesiones = event?.num_sesiones;
     this.num_cambios = event?.num_cambios;
+    
     if (paquetesControl.value) {
       sesionesControl.setValue(event.cantidadsesiones);
       sesionesControl.setValidators(Validators.required);
@@ -381,6 +382,7 @@ export class CrearModalComponent implements OnInit, AfterViewInit {
 
   createCita() {
     if (this.createForm.valid) {
+      console.log('yooo',this.num_cambios)
       this.citaService
         .createForTherapy({
           ...this.createForm.value,

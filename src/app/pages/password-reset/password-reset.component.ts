@@ -6,7 +6,8 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { AuthService } from 'src/app/services/auth.service';
 import { LoadingService } from 'src/app/services/loading.service';
 
@@ -21,6 +22,8 @@ export class PasswordResetComponent implements OnInit {
   auth = inject(AuthService);
   activeRoute = inject(ActivatedRoute);
   isLoading = inject(LoadingService).isLoading;
+  toast = inject(ToastrService);
+  router = inject(Router);
 
   token = this.activeRoute.snapshot.paramMap.get('token');
   email = this.activeRoute.snapshot.queryParamMap.get('email');
@@ -45,10 +48,11 @@ export class PasswordResetComponent implements OnInit {
         })
         .subscribe({
           next: (data) => {
-            console.log(data);
+            this.router.navigate(['/login']);
+            this.toast.success('Ya puede iniciar sesión', 'Contraseña Restablecida', {closeButton: true});
           },
           error: (err) => {
-            console.log(err);
+            this.toast.error('Inténtelo de nuevo', 'Ocurrió un error');
           },
         });
     }

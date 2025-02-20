@@ -8,8 +8,8 @@
 
 <div class="content d-flex flex-column flex-column-fluid">
   <div class="container-xxl">
-    <div class="d-flex py-4 justify-content-between align-items-center">
-      <form data-kt-search-element="form" class="position-relative" autocomplete="off">
+    <div class="d-flex flex-wrap gap-3 py-4 justify-content-between align-items-center">
+      <form data-kt-search-element="form" class="position-relative flex-grow-1 flex-md-grow-0" autocomplete="off">
         <input type="hidden">
         <i class="ki-duotone ki-magnifier fs-2 search-icon position-absolute top-50 translate-middle-y ms-4"><span
             class="path1"></span><span class="path2"></span></i>
@@ -18,7 +18,7 @@
           class="form-control custom-form-control ps-13" name="search" placeholder="Búsqueda"
           data-kt-search-element="input">
       </form>
-      <div class="d-flex align-items-center gap-3">
+      <div class="d-flex flex-grow-1 flex-md-grow-0 justify-content-between align-items-center gap-3">
         <button type="button" class="btn btn-light-primary" (click)="loadTabla()">
           <span class="d-flex align-items-center">
             <span class="fa-solid fa-rotate-right"></span>
@@ -54,7 +54,7 @@
             <!-- Contenedor de la imagen con sombra y borde -->
             <div class="image-container" [ngClass]="{ 'img-inventory': item.banner_url?.includes('default.png') }"
               style="overflow: hidden;">
-              <img src="{{ item.banner_url ?? banner_url }}" class="card-img-top" alt="{{ item.nombre }}"
+              <img src="{{ !item.banner_url?.includes('default.png') ?  item.banner_url : banner_url }}" class="card-img-top" alt="{{ item.nombre }}"
                 style="width: 100%; height: auto;">
             </div>
           </div>
