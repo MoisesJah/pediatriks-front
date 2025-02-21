@@ -118,8 +118,12 @@ export class CronogramaComponent implements OnInit {
     },
     selectAllow: (selectInfo) => {
       const isTimeGrid = this.calendar?.getApi()?.view.type == 'timeGridWeek';
-      const now = new Date()
-      return selectInfo.end > now && isTimeGrid;
+      const now = new Date();
+      return (
+        selectInfo.end > now &&
+        isTimeGrid &&
+        (now < selectInfo.start || now >= selectInfo.end)
+      );
     },
     selectable: true,
     selectLongPressDelay: 10,
@@ -130,7 +134,7 @@ export class CronogramaComponent implements OnInit {
     eventTimeFormat: {
       hour: 'numeric',
       minute: '2-digit',
-      meridiem: 'short'
+      meridiem: 'short',
     },
     eventClick: this.handleEventClick.bind(this),
     loading: (isLoading) => {

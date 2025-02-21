@@ -10,8 +10,9 @@ import { SolicitudInventario } from '../../../models/solicitud-inventario';
 import { IUser } from 'src/app/models/user';
 import { Inventario } from 'src/app/models/inventario';
 import { LoadingService } from 'src/app/services/loading.service';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
-
+@UntilDestroy({ checkProperties: true })
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
@@ -30,58 +31,62 @@ export class HeaderComponent {
 
   user = this.authService.user();
   solicitudesPendientes: SolicitudInventario[] = [];
-  totalsolicitudes : number=0;
+  totalsolicitudes: number = 0;
   constructor() {
-
     this.cargarSolicitudes();
   }
 
   cargarSolicitudes() {
     this.loading = true;
-    this.solicitudInventarioService.cargarSolicitudesPendientes().subscribe(
-      (response) => {
-        this.solicitudesPendientes = response.data;
-        this.totalsolicitudes = response.total;
-        console.log(this.solicitudesPendientes);
-
-        this.loading = false;
-      },
-      (error) => {
-        console.error('Error al obtener las solicitudes pendientes:', error);
-        this.loading = false;
-      }
-    );
+    this.solicitudInventarioService
+      .cargarSolicitudesPendientes()
+      .pipe(untilDestroyed(this))
+      .subscribe({
+        next: ({ data, total }) => {
+          this.solicitudesPendientes = data;
+          this.totalsolicitudes = total;
+        },
+        error: (error) =>
+          console.error('Error al obtener las solicitudes pendientes:', error),
+        complete: () => (this.loading = false),
+      });
   }
 
-   aceptarSolicitud(id_solicitud:string,id_personal_aprueba:string) {
-    this.solicitudInventarioService.aceptarSolicitud(id_solicitud,id_personal_aprueba).subscribe({
-      next: () => {
-        console.log("Solicitud Aceptada")
-         this.solicitudesPendientes = this.solicitudesPendientes.filter(s => s.id_solicitud  !== id_solicitud);
-       },
-       error: (error) => {
-         console.error('Error al aceptar solicitud:', error);
-       }
-     });
-   }
+  aceptarSolicitud(id_solicitud: string, id_personal_aprueba: string) {
+    this.solicitudInventarioService
+      .aceptarSolicitud(id_solicitud, id_personal_aprueba)
+      .subscribe({
+        next: () => {
+          console.log('Solicitud Aceptada');
+          this.solicitudesPendientes = this.solicitudesPendientes.filter(
+            (s) => s.id_solicitud !== id_solicitud
+          );
+        },
+        error: (error) => {
+          console.error('Error al aceptar solicitud:', error);
+        },
+      });
+  }
 
-
-   negarSolicitud(id_solicitud: string, id_personal_aprueba: string) {
-    this.solicitudInventarioService.negarSolicitud(id_solicitud, id_personal_aprueba).subscribe({
-      next: () => {
-        console.log("Solicitud Negada");
-        this.solicitudesPendientes = this.solicitudesPendientes.filter(s => s.id_solicitud !== id_solicitud);
-      },
-      error: (error) => {
-        console.error('Error al negar solicitud:', error);
-      }
-    });
+  negarSolicitud(id_solicitud: string, id_personal_aprueba: string) {
+    this.solicitudInventarioService
+      .negarSolicitud(id_solicitud, id_personal_aprueba)
+      .subscribe({
+        next: () => {
+          console.log('Solicitud Negada');
+          this.solicitudesPendientes = this.solicitudesPendientes.filter(
+            (s) => s.id_solicitud !== id_solicitud
+          );
+        },
+        error: (error) => {
+          console.error('Error al negar solicitud:', error);
+        },
+      });
   }
 
   navegarATablaSolicitudes() {
     this.router.navigate(['/admin/tabla-solicitudes']);
   }
-
 
   removeCredentials() {
     localStorage.removeItem('token');

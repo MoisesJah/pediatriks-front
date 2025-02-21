@@ -20,36 +20,49 @@
         <!--begin::Item-->
         <app-popover>
           <ng-container popover-toggle>
-            <div id="notifications" >
+            <div id="notifications">
               <a class="btn btn-icon btn-custom btn-active-color-primary position-relative" data-kt-menu-trigger="click"
-                 data-kt-menu-attach="parent" data-kt-menu-placement="bottom-end">
+                data-kt-menu-attach="parent" data-kt-menu-placement="bottom-end">
                 <i class="ki-duotone ki-notification-bing fs-1" style="color: #ffffff">
                   <span class="path1"></span>
                   <span class="path2"></span>
                   <span class="path3"></span>
                 </i>
-                <span class="bullet bullet-dot bg-success h-6px w-6px position-absolute translate-middle top-0 start-50 animation-blink"></span>
+                <span
+                  class="bullet bullet-dot bg-success h-6px w-6px position-absolute translate-middle top-0 start-50 animation-blink"></span>
               </a>
             </div>
           </ng-container>
 
           <ng-container popover-body *ngIf="authService.isAdmin()">
-            <div class="d-flex flex-column px-9 mt-10 mb-6">
-              <h3 class="text-white fw-semibold">Notificaciones</h3>
+            <div class="d-flex flex-column px-6 py-4">
+              <div class="d-flex justify-content-between align-items-center">
+                <h3 class="fw-semibold">Notificaciones</h3>
+                <button (click)="cargarSolicitudes()" class="btn btn-icon btn-sm btn-secondary">
+                  <i class="ki-duotone ki-arrows-circle">
+                    <span class="path1"></span>
+                    <span class="path2"></span>
+                  </i>
+                </button>
+              </div>
               <span class="fs-8 opacity-75 "> Tienes {{totalsolicitudes}} solicitudes pendientes </span>
             </div>
             <div class="notification-list scroll-y mh-325px my-5 ">
               <!-- Verificar si hay notificaciones pendientes -->
-              <div *ngIf="!loading && solicitudesPendientes.length === 0" class="text-center p-3">
+              <div *ngIf="!loading && solicitudesPendientes.length === 0" class="text-center">
                 <span class="text-muted">No tienes ninguna notificación pendiente</span>
               </div>
 
-              <div class="text-center p-3" *ngIf="loading">
-                <span class="text-muted">Cargando...</span>
+              <div *ngIf="loading" class="row mx-2 gap-2">
+                <span class="placeholder col-12 rounded-1 h-5px"></span>
+                <span class="placeholder col-12 rounded-1 h-5px"></span>
+                <span class="placeholder col-12 rounded-1 h-5px"></span>
               </div>
 
               <!-- Mostrar la lista de notificaciones si existen -->
-              <div *ngFor="let solicitud of solicitudesPendientes" class="menu menu-column menu-rounded menu-gray-800 menu-state-bg menu-state-color fw-semibold fs-6" style="width: 250px">
+              <div *ngFor="let solicitud of solicitudesPendientes"
+                class="menu menu-column menu-rounded menu-gray-800 menu-state-bg menu-state-color fw-semibold fs-6"
+                style="width: 250px">
                 <div class="menu-item px-3 py-2">
                   <div class="d-flex align-items-center">
                     <div class="d-flex flex-column">
@@ -64,19 +77,22 @@
 
                 <!-- Botones de acción -->
                 <div class="menu-item px-3 d-flex justify-content-between">
-                  <button (click)="aceptarSolicitud(solicitud.id_solicitud,user.id)" class="btn btn-sm btn-success me-2">Aceptar</button>
-                  <button (click)="negarSolicitud(solicitud.id_solicitud,user.id)" class="btn btn-sm btn-danger me-2">Negar</button>
+                  <button (click)="aceptarSolicitud(solicitud.id_solicitud,user.id)"
+                    class="btn btn-sm btn-success me-2">Aceptar</button>
+                  <button (click)="negarSolicitud(solicitud.id_solicitud,user.id)"
+                    class="btn btn-sm btn-danger me-2">Negar</button>
                 </div>
 
                 <div class="separator my-2"></div>
               </div>
             </div>
             <div class="py-3 text-center border-top">
-              <a (click)="navegarATablaSolicitudes()" class="btn btn-color-gray-600 btn-active-color-primary">Ver todas las solicitudes ({{totalsolicitudes - solicitudesPendientes.length}})
-              <i class="ki-duotone ki-arrow-right fs-5">
-                <span class="path1"></span>
-                <span class="path2"></span>
-              </i></a>
+              <a (click)="navegarATablaSolicitudes()" class="btn btn-color-gray-600 btn-active-color-primary">Ver todas
+                las solicitudes ({{totalsolicitudes - solicitudesPendientes.length}})
+                <i class="ki-duotone ki-arrow-right fs-5">
+                  <span class="path1"></span>
+                  <span class="path2"></span>
+                </i></a>
             </div>
           </ng-container>
         </app-popover>
@@ -98,7 +114,8 @@
           <ng-container popover-body>
             <div class="me-3">
               <!--begin::User account menu-->
-              <div style="width: 250px" class="menu menu-column menu-rounded menu-gray-800 menu-state-bg menu-state-color fw-semibold fs-6 "
+              <div style="width: 250px"
+                class="menu menu-column menu-rounded menu-gray-800 menu-state-bg menu-state-color fw-semibold fs-6 "
                 data-kt-menu="true">
                 <!--begin::Menu item-->
                 <div class="menu-item px-3">
@@ -178,7 +195,8 @@
                 data-kt-menu="true" data-kt-element="theme-mode-menu">
                 <!--begin::Menu item-->
                 <div class="menu-item px-3 my-0">
-                  <a (click)="setLightTheme()" class="menu-link px-3 py-2" [ngClass]="{ 'active': theme.getThemeMode() == 'light' }" data-kt-element="mode"
+                  <a (click)="setLightTheme()" class="menu-link px-3 py-2"
+                    [ngClass]="{ 'active': theme.getThemeMode() == 'light' }" data-kt-element="mode"
                     data-kt-value="light">
                     <span class="menu-icon" data-kt-element="icon">
                       <i class="ki-duotone ki-night-day fs-2">
@@ -200,7 +218,8 @@
                 <!--end::Menu item-->
                 <!--begin::Menu item-->
                 <div class="menu-item px-3 my-0">
-                  <a (click)="setDarkTheme()" class="menu-link px-3 py-2" [ngClass]="{ 'active': theme.getThemeMode() == 'dark' }" data-kt-element="mode"
+                  <a (click)="setDarkTheme()" class="menu-link px-3 py-2"
+                    [ngClass]="{ 'active': theme.getThemeMode() == 'dark' }" data-kt-element="mode"
                     data-kt-value="dark">
                     <span class="menu-icon" data-kt-element="icon">
                       <i class="ki-duotone ki-moon fs-2">
@@ -214,7 +233,9 @@
                 <!--end::Menu item-->
                 <!--begin::Menu item-->
                 <div class="menu-item px-3 my-0">
-                  <a (click)="setSystemTheme()" class="menu-link px-3 py-2" [ngClass]="{ 'active': theme.getThemeMode() == 'system' }" data-kt-element="mode" data-kt-value="system">
+                  <a (click)="setSystemTheme()" class="menu-link px-3 py-2"
+                    [ngClass]="{ 'active': theme.getThemeMode() == 'system' }" data-kt-element="mode"
+                    data-kt-value="system">
                     <span class="menu-icon" data-kt-element="icon">
                       <i class="ki-duotone ki-screen fs-2">
                         <span class="path1"></span>
