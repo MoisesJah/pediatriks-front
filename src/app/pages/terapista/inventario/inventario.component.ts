@@ -34,6 +34,7 @@ export class InventarioComponent implements OnInit, OnDestroy {
   localeText = AG_GRID_LOCALE_ES;
   private gridApi!: GridApi;
   searchControl = new FormControl('');
+  banner_url = 'https://cdn-icons-png.flaticon.com/512/9573/9573235.png';
 
   ngOnInit(): void {
     this.fetchInventario();
@@ -89,6 +90,7 @@ export class InventarioComponent implements OnInit, OnDestroy {
   openStockModal() {
     this.modal.open(MiStockComponent, {
       centered: true,
+      size: 'lg'
     });
   }
 

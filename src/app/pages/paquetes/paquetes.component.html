@@ -9,11 +9,11 @@
 <div class="content d-flex flex-column flex-column-fluid">
   <div class="container-xxl">
     <div class="d-flex py-4 justify-content-between align-items-center">
-      <form data-kt-search-element="form" class="position-relative" autocomplete="off">
+      <form class="position-relative" autocomplete="off">
         <input type="hidden">
         <i class="ki-duotone ki-magnifier fs-2 search-icon position-absolute top-50 translate-middle-y ms-4"><span
-          class="path1"></span><span class="path2"></span></i>
-        <input type="search" (input)="onFilterTextBoxChanged()" id="paquete-search"
+            class="path1"></span><span class="path2"></span></i>
+        <input type="search" [formControl]="searchControl" id="paquete-search"
           class="form-control custom-form-control ps-13" name="search" placeholder="Búsqueda"
           data-kt-search-element="input">
       </form>
@@ -34,17 +34,19 @@
     </div>
 
 
-    <div class="row">
+    <div class="row my-6">
       <div class="col-md-4" *ngFor="let paquete of paquetesList | async">
-        <div class="card mb-4" style="width: 18rem;">
-          <div class="position-relative" style="padding-top: 40px;">
-            <img src="{{ paquete.banner_url }}" class="card-img-top" alt="{{ paquete.nombre }}">
+        <div class="card mb-4">
+          <div class="position-relative">
+            <img src="{{ !paquete.banner_url?.includes('default.png') ?  paquete.banner_url : banner_url }}"
+              class="card-img-top" [ngClass]="{ 'img-inventory': paquete.banner_url?.includes('default.png') }"
+              alt="{{ paquete.nombre }}" style="width: 100%; height: auto;">
           </div>
           <div class="card-body">
-            <h5 class="card-title">{{ paquete.nombre }}</h5>
+            <h5 class="card-title fs-2">{{ paquete.nombre }}</h5>
             <p class="card-text"><strong>Terapias:</strong> {{ getTerapiasNombres(paquete.terapias) }}</p>
             <p class="card-text">{{ paquete.descripcion }}</p>
-            <p class="card-text"><strong>${{ paquete.preciopaquete }}</strong></p>
+            <p class="card-text fw-bold fs-2"><strong>S/{{ paquete.preciopaquete }}</strong></p>
           </div>
         </div>
       </div>

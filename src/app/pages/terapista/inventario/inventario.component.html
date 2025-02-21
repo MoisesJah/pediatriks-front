@@ -39,17 +39,17 @@
       </div>
     </div>
 
-    <div class="row">
+    <div class="row gap-4 my-5">
       <div class="col-md-4" *ngFor="let item of inventarioList | async">
-        <div class="card mb-4" style="width: 18rem; padding: 5px;">
+        <div class="card mb-4">
           <!-- Contenedor de la imagen con sombra y borde -->
-          <div class="image-container" style="box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); border-radius: 8px; overflow: hidden;">
-            <img src="{{ item.banner_url }}" class="card-img-top" alt="{{ item.nombre }}" style="width: 100%; height: auto;">
+          <div class="image-container" [ngClass]="{ 'img-inventory': item.banner_url?.includes('default.png') }">
+            <img src="{{ !item.banner_url?.includes('default.png') ?  item.banner_url : banner_url }}"class="card-img-top" alt="{{ item.nombre }}" style="width: 100%; height: auto;">
           </div>
 
           <!-- Información del inventario -->
           <div class="card-body">
-            <h5 class="card-title">{{ item.nombre }}</h5>
+            <h5 class="card-title fs-2">{{ item.nombre }}</h5>
             <p class="card-text">{{ item.descripcion }}</p>
             <p class="card-text"><strong>Stock:</strong> {{ item.stock }}</p>
             <button type="button" (click)="openSolicitarModal(item)" class="btn btn-primary btn-lg w-100 d-flex justify-content-center align-items-center">
