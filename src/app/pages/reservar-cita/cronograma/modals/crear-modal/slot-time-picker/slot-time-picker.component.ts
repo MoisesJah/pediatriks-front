@@ -4,17 +4,21 @@ import { NgbPopoverModule } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-slot-time-picker',
-  standalone:true,
-  imports: [NgbPopoverModule,CommonModule],
+  standalone: true,
+  imports: [NgbPopoverModule, CommonModule],
   templateUrl: './slot-time-picker.component.html',
-  styleUrl: './slot-time-picker.component.scss'
+  styleUrl: './slot-time-picker.component.scss',
 })
 export class SlotTimePickerComponent {
   @Output() selectedSlot = new EventEmitter();
-  @Input() slotTimes:Array<{dia_semana:number,time_slots:[]}> = [];
+  @Output() deleselected = new EventEmitter();
+  @Input() slotTimes: Array<{ dia_semana: number; time_slots: [] }> = [];
 
   selectTime(time: string) {
     this.selectedSlot.emit(time);
-    
+  }
+
+  onDeselect() {
+    this.deleselected.emit();
   }
 }

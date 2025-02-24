@@ -94,7 +94,7 @@
         </div>
 
         <ng-template #slot let-slots="slots" let-index="index">
-            <app-slot-time-picker (selectedSlot)="onSlotSelected(index, $event)" [slotTimes]="slots" />
+            <app-slot-time-picker (deleselected)="onDeselect(index)" (selectedSlot)="onSlotSelected(index, $event)" [slotTimes]="slots" />
         </ng-template>
 
         <div *ngIf="createForm.get('id_personal')?.value && isRecurrente" class="row">
@@ -107,21 +107,14 @@
                             [disableTooltip]="isEnabledDay(day.value.dia_semana)" class="btn btn-outline"
                             [ngbPopover]="slot"
                             [popoverContext]="{ slots: getTimeSlots(day.value.dia_semana), index: i }"
-                            [ngClass]="{ 'btn-active-success active': isOptionSelected(day.value.dia_semana) && day.value.selectedTimeSlot, 'btn-active-primary active': isCurrentDayOfWeek(day.value.dia_semana), 'cursor-not-allowed': !isEnabledDay(day.value.dia_semana) }">
-                            {{ getDayLabel(day.value.dia_semana) }}
+                            [ngClass]="{ 'btn-active-success active': (isOptionSelected(day.value.dia_semana) && day.value.selectedTimeSlot) && !isCurrentDayOfWeek(day.value.dia_semana), 'btn-active-primary active': isCurrentDayOfWeek(day.value.dia_semana), 'cursor-not-allowed': !isEnabledDay(day.value.dia_semana) }">
+                            <!-- {{ getDayLabel(day.value.dia_semana) }} -->
+                            <span>{{day.value.dia_semana}}</span>
                         </button>
-                        <span *ngIf="day.value.selectedTimeSlot">{{day.value.selectedTimeSlot}}</span>
+                        <span *ngIf="day.value.selectedTimeSlot && !isCurrentDayOfWeek(day.value.dia_semana)">{{day.value.selectedTimeSlot}}</span>
                     </div>
                 </div>
-                <!-- <div class="btn-group">
-                    <button [ngbPopover]="slot" 
-                    [popoverContext]="{slots: getTimeSlots(option.value)}"
-                    [disableTooltip]="isEnabledDay(option)" ngbTooltip="No Disponible" placement="bottom" [disabled]="!isEnabledDay(option)" *ngFor="let option of options" class="btn btn-outline"
-                        [ngClass]="{ 'btn-active-primary active': isOptionSelected(option), 'cursor-not-allowed': !isEnabledDay(option) }"
-                        (click)="toggleOption(option)">
-                        {{ option.label }}
-                    </button>
-                </div> -->
+              
             </div>
         </div>
     </form>

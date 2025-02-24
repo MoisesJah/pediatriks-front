@@ -145,14 +145,21 @@ export class CrearModalComponent implements OnInit, AfterViewInit {
   }
 
   getDayLabel(diaSemana: number): string {
+    console.log(this.options);
+    console.log(diaSemana);
     const option = this.options.find((o) => o.value === diaSemana);
-    return option ? option.label : '';
+    return option!.label || ''
   }
 
   // Handle time slot selection
   onSlotSelected(index: number, timeSlot: string): void {
     const dayGroup = this.days.at(index) as FormGroup;
     dayGroup.patchValue({ selectedTimeSlot: timeSlot });
+  }
+
+  onDeselect(index: number) {
+    const dayGroup = this.days.at(index) as FormGroup;
+    dayGroup.patchValue({ selectedTimeSlot: null });
   }
 
   options = [
@@ -233,28 +240,6 @@ export class CrearModalComponent implements OnInit, AfterViewInit {
   //   }
   // }
 
-  
-
-  // toggleOption(value:number,index:number) {
-  //   const fecha_inicio = this.createForm.get('fecha_inicio')?.value;
-
-  //   const recurrenciaControl = this.createForm.get('recurrencia') as FormArray;
-  //   const dayOfWeek = new Date(fecha_inicio).getDay() + 1;
-
-  //   if (value === dayOfWeek) return;
-
-  //   if (recurrenciaControl.value.includes(option.value)) {
-  //     recurrenciaControl.removeAt(
-  //       recurrenciaControl.value.indexOf(option.value)
-  //     );
-  //   } else {
-  //     recurrenciaControl.push(this.fb.control({
-  //       dia_semana: value,
-
-  //     }));
-  //   }
-  // }
-
   toggleOption(value: number): void {
     const recurrenciaControl = this.createForm.get('recurrencia') as FormArray;
     const fecha_inicio = this.createForm.get('fecha_inicio')?.value;
@@ -284,11 +269,12 @@ export class CrearModalComponent implements OnInit, AfterViewInit {
     const dayOfWeek = new Date(fecha_inicio).getDay() + 1;
     const recurrenciaControl = this.createForm.get('recurrencia') as FormArray;
 
-    // if (!recurrenciaControl.value.includes(dayOfWeek)) {
-    //   recurrenciaControl.push(this.fb.control(dayOfWeek));
-    // }
+    const selectedTimeSlot = `${this.createForm.get('hora_inicio')?.value} - ${this.createForm.get('hora_fin')?.value}`
 
-    if (value === dayOfWeek) return true;
+    if (value === dayOfWeek) {
+      recurrenciaControl.controls.find((c) => c.value.dia_semana === value)?.setValue({ dia_semana: value, selectedTimeSlot });
+      return true;
+    }
 
     return (
       recurrenciaControl.controls.find(f=>f.value.dia_semana === value && f.value.selectedTimeSlot) &&
@@ -451,13 +437,14 @@ export class CrearModalComponent implements OnInit, AfterViewInit {
   }
 
   createCita() {
+    
     if (this.createForm.valid) {
-      console.log('yooo',this.num_cambios)
       this.citaService
         .createForTherapy({
           ...this.createForm.value,
           num_cambios: this.num_cambios || undefined,
           id_terapia: this.terapia.id_terapia,
+          recurrencia: this.days.value.filter((day: any) => day.selectedTimeSlot),
         })
         .subscribe({
           next: (data: any) => {
