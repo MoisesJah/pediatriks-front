@@ -1,0 +1,10 @@
+<div class="d-flex flex-column gap-3 px-4 py-2">
+        <ul>
+
+            @for (item of slotTimes; track $index) {
+                <li>
+                    <button (click)="selectTime(item)">{{item}}</button>
+                </li>
+            }
+        </ul>
+</div>

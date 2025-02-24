@@ -48,6 +48,8 @@ import { TerapiaService } from 'src/app/services/terapia/terapia.service';
 import { TipocitaService } from 'src/app/services/tipocita/tipocita.service';
 import Spanish from 'flatpickr/dist/l10n/es.js';
 import { ToastrService } from 'ngx-toastr';
+import { SlotTimePickerComponent } from './slot-time-picker/slot-time-picker.component';
+import { generateTimeSlots } from 'src/app/utils/slotTimes';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -59,6 +61,7 @@ import { ToastrService } from 'ngx-toastr';
     CommonModule,
     ReactiveFormsModule,
     FlatpickrModule,
+    SlotTimePickerComponent,
     NgbPopoverModule
   ],
   templateUrl: './crear-modal.component.html',
@@ -100,6 +103,9 @@ export class CrearModalComponent implements OnInit, AfterViewInit {
   loadingPaquetes = false;
   loadingTipoCitas = false;
 
+  activePersonal: Personal | null = null
+  slotTimeList: ReturnType<typeof generateTimeSlots> = []
+
   createForm: FormGroup;
 
   timeOptions: FlatpickrDefaultsInterface = {
@@ -123,8 +129,30 @@ export class CrearModalComponent implements OnInit, AfterViewInit {
       descripcion: [null],
       paquete: [null],
       num_sesiones: [null],
-      recurrencia: this.fb.array([]),
+      recurrencia: this.fb.array(this.options.map((option) => this.createDayGroup(option.value))),
     });
+  }
+
+  createDayGroup(diaSemana: number): FormGroup {
+    return this.fb.group({
+      dia_semana: [diaSemana],
+      selectedTimeSlot: [null], // FormControl for the selected time slot
+    });
+  }
+
+  get days(): FormArray {
+    return this.createForm.get('recurrencia') as FormArray;
+  }
+
+  getDayLabel(diaSemana: number): string {
+    const option = this.options.find((o) => o.value === diaSemana);
+    return option ? option.label : '';
+  }
+
+  // Handle time slot selection
+  onSlotSelected(index: number, timeSlot: string): void {
+    const dayGroup = this.days.at(index) as FormGroup;
+    dayGroup.patchValue({ selectedTimeSlot: timeSlot });
   }
 
   options = [
@@ -136,7 +164,7 @@ export class CrearModalComponent implements OnInit, AfterViewInit {
     { label: 'S', value: 6 },
   ];
 
-  isEnabledDay = (option: { label: string; value: number }) => {
+  isEnabledDay = (value:number) => {
     const id_personal = this.createForm.get('id_personal')?.value;
     const hora_inicio = this.createForm.get('hora_inicio')?.value;
     const hora_fin = this.createForm.get('hora_fin')?.value;
@@ -146,7 +174,7 @@ export class CrearModalComponent implements OnInit, AfterViewInit {
         (horario) =>
           horario.hora_inicio.substring(0, 5) <= hora_inicio &&
           horario.hora_fin.substring(0, 5) >= hora_fin &&
-          horario.dia_semana === option.value &&
+          horario.dia_semana === value &&
           personal.id_personal === id_personal
       )
     );
@@ -158,6 +186,19 @@ export class CrearModalComponent implements OnInit, AfterViewInit {
     if(event && event.nombre === 'Sede Comas'){
       this.sedeComas = event.id_sede
     }
+  }
+
+  changePersonal(event:any){
+    this.activePersonal = event
+
+    if(this.activePersonal){
+      this.slotTimeList = generateTimeSlots(this.activePersonal.horarios, this.activePersonal.terapia.duracion)
+    }
+  }
+
+  getTimeSlots(diaSemana: number): string[] {
+    const day = this.slotTimeList?.find((d) => d.dia_semana === diaSemana);
+    return day ? day.time_slots : [];
   }
 
   onStartTimeChange(event: any): void {
@@ -192,37 +233,66 @@ export class CrearModalComponent implements OnInit, AfterViewInit {
   //   }
   // }
 
-  toggleOption(option: { label: string; value: number }) {
-    const fecha_inicio = this.createForm.get('fecha_inicio')?.value;
+  
 
+  // toggleOption(value:number,index:number) {
+  //   const fecha_inicio = this.createForm.get('fecha_inicio')?.value;
+
+  //   const recurrenciaControl = this.createForm.get('recurrencia') as FormArray;
+  //   const dayOfWeek = new Date(fecha_inicio).getDay() + 1;
+
+  //   if (value === dayOfWeek) return;
+
+  //   if (recurrenciaControl.value.includes(option.value)) {
+  //     recurrenciaControl.removeAt(
+  //       recurrenciaControl.value.indexOf(option.value)
+  //     );
+  //   } else {
+  //     recurrenciaControl.push(this.fb.control({
+  //       dia_semana: value,
+
+  //     }));
+  //   }
+  // }
+
+  toggleOption(value: number): void {
     const recurrenciaControl = this.createForm.get('recurrencia') as FormArray;
+    const fecha_inicio = this.createForm.get('fecha_inicio')?.value;
     const dayOfWeek = new Date(fecha_inicio).getDay() + 1;
 
-    if (option.value === dayOfWeek) return;
-
-    if (recurrenciaControl.value.includes(option.value)) {
-      recurrenciaControl.removeAt(
-        recurrenciaControl.value.indexOf(option.value)
-      );
+    const selectedTimeSlot = `${this.createForm.get('hora_inicio')?.value} - ${this.createForm.get('hora_fin')?.value}`
+  
+    if (value === dayOfWeek) {
+      recurrenciaControl.controls.find((c) => c.value.dia_semana === value)?.setValue({ dia_semana: value, selectedTimeSlot });
     } else {
-      recurrenciaControl.push(this.fb.control(option.value));
+      const index = recurrenciaControl.value.indexOf(value);
+      index !== -1 ? recurrenciaControl.removeAt(index) : recurrenciaControl.push(this.fb.control({ dia_semana: value }));
     }
   }
 
-  isOptionSelected = (option: { label: string; value: number }) => {
+  isCurrentDayOfWeek(value:number){
+    const fecha_inicio = this.createForm.get('fecha_inicio')?.value;
+    const dayOfWeek = new Date(fecha_inicio).getDay() + 1;
+
+    if(value === dayOfWeek) return true
+
+    return false
+  }
+
+  isOptionSelected = (value:number) => {
     const fecha_inicio = this.createForm.get('fecha_inicio')?.value;
     const dayOfWeek = new Date(fecha_inicio).getDay() + 1;
     const recurrenciaControl = this.createForm.get('recurrencia') as FormArray;
 
-    if (!recurrenciaControl.value.includes(dayOfWeek)) {
-      recurrenciaControl.push(this.fb.control(dayOfWeek));
-    }
+    // if (!recurrenciaControl.value.includes(dayOfWeek)) {
+    //   recurrenciaControl.push(this.fb.control(dayOfWeek));
+    // }
 
-    if (option.value === dayOfWeek) return true;
+    if (value === dayOfWeek) return true;
 
     return (
-      recurrenciaControl.value.includes(option.value) &&
-      this.isEnabledDay(option)
+      recurrenciaControl.controls.find(f=>f.value.dia_semana === value && f.value.selectedTimeSlot) &&
+      this.isEnabledDay(value)
     );
   };
 
@@ -343,7 +413,7 @@ export class CrearModalComponent implements OnInit, AfterViewInit {
     this.loadingSedes = true;
     this.sedesList = this.sedesService.getAll().pipe(
       map((resp) => resp.data),
-      tap((resp) => (this.sedeComas = resp.filter((sede) => sede.nombre === 'Sede Comas')[0].id_sede)),
+      // tap((resp) => (this.sedeComas = resp.filter((sede) => sede.nombre === 'Sede Comas')[0].id_sede)),
       finalize(() => (this.loadingSedes = false)),
       untilDestroyed(this)
     );

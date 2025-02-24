@@ -19,8 +19,9 @@
         <section class="row">
             <div class="form-group col-6">
                 <label class="form-label" for="kt_calendar_datepicker_date">Seleccionar Paciente</label>
-                <ng-select [items]="pacientesList | async" [loading]="loadingPacientes" (change)="changePaciente($event)" [loadingText]="'Cargando...'"
-                    bindValue="id_paciente" placeholder="Seleccionar" bindLabel="nombre" formControlName="id_paciente">
+                <ng-select [items]="pacientesList | async" [loading]="loadingPacientes"
+                    (change)="changePaciente($event)" [loadingText]="'Cargando...'" bindValue="id_paciente"
+                    placeholder="Seleccionar" bindLabel="nombre" formControlName="id_paciente">
                 </ng-select>
             </div>
             <div class="form-group col-6">
@@ -35,7 +36,8 @@
             <div class="form-group col-6">
                 <label class="form-label" for="">Seleccionar Sede</label>
                 <ng-select [items]="sedesList | async" [loading]="loadingSedes" [loadingText]="'Cargando...'"
-                    bindValue="id_sede" (change)="onChangeSede($event)" placeholder="Seleccionar Sede" bindLabel="nombre" formControlName="id_sede">
+                    bindValue="id_sede" (change)="onChangeSede($event)" placeholder="Seleccionar Sede"
+                    bindLabel="nombre" formControlName="id_sede">
                 </ng-select>
             </div>
             <div *ngIf="isCitaPaquete" class="form-group col-6">
@@ -44,12 +46,11 @@
                     <label class="form-check-label" for="">Tiene Paquete</label>
                 </div> -->
                 <label class="form-label" for="">Seleccionar Paquete</label>
-                <ng-select [items]="paquetesList | async"
-                    (change)="changePaquete($event)"
-                    [loading]="loadingPaquetes" [loadingText]="'Cargando...'" bindValue="paquete.id_paquetes"
-                    placeholder="Seleccionar Paquete" bindLabel="paquete.nombre" formControlName="id_paquete">
+                <ng-select [items]="paquetesList | async" (change)="changePaquete($event)" [loading]="loadingPaquetes"
+                    [loadingText]="'Cargando...'" bindValue="paquete.id_paquetes" placeholder="Seleccionar Paquete"
+                    bindLabel="paquete.nombre" formControlName="id_paquete">
                 </ng-select>
-            </div> 
+            </div>
         </section>
         <div class="row">
             <div class="form-group col mb-3">
@@ -64,15 +65,16 @@
                     formControlName="hora_inicio" readonly placeholder="Seleccionar Hora de Inicio" />
             </div>
             <div class="form-group col mb-3">
-                 <!--  <label class="form-label" for="kt_calendar_datepicker_end_time">Hora de Fin</label>
+                <!--  <label class="form-label" for="kt_calendar_datepicker_end_time">Hora de Fin</label>
                   <input type="text" class="form-control" id="kt_calendar_datepicker_end_time" formControlName="hora_fin"
                     readonly placeholder="Seleccionar Hora de Fin" /> -->
                 @if(this.createForm.get('id_paquete')?.value){
-                    <label class="form-label" for="">N° de Sesiones ({{maxSesiones}})</label>
-                    <input type="number" min="1" step="1" [attr.max]="maxSesiones" class="form-control" formControlName="num_sesiones">
+                <label class="form-label" for="">N° de Sesiones ({{maxSesiones}})</label>
+                <input type="number" min="1" step="1" [attr.max]="maxSesiones" class="form-control"
+                    formControlName="num_sesiones">
                 }@else {
-                    <label class="form-label" for="kt_calendar_datepicker_end_time">Hora de Fin</label>
-                    <input type="text" class="form-control" id="kt_calendar_datepicker_end_time" formControlName="hora_fin"
+                <label class="form-label" for="kt_calendar_datepicker_end_time">Hora de Fin</label>
+                <input type="text" class="form-control" id="kt_calendar_datepicker_end_time" formControlName="hora_fin"
                     readonly placeholder="Seleccionar Hora de Fin" />
                 }
             </div>
@@ -84,22 +86,42 @@
             </div>
             <div class="form-group col-6">
                 <label class="form-label" for="">Seleccionar Terapista Disponible</label>
-                <ng-select [items]="personalList" [loading]="isLoading | async" [loadingText]="'Cargando...'"
-                    bindValue="id_personal" placeholder="Seleccionar" bindLabel="nombre" formControlName="id_personal">
+                <ng-select [items]="personalList" (change)="changePersonal($event)" [loading]="isLoading | async"
+                    [loadingText]="'Cargando...'" bindValue="id_personal" placeholder="Seleccionar" bindLabel="nombre"
+                    formControlName="id_personal">
                 </ng-select>
             </div>
         </div>
 
+        <ng-template #slot let-slots="slots" let-index="index">
+            <app-slot-time-picker (selectedSlot)="onSlotSelected(index, $event)" [slotTimes]="slots" />
+        </ng-template>
+
         <div *ngIf="createForm.get('id_personal')?.value && isRecurrente" class="row">
             <div class="form-group d-flex flex-column col mb-3">
                 <label class="form-label" for="kt_calendar_datepicker_end_date">Dias Disponibles</label>
-                <div class="btn-group">
-                    <button [disableTooltip]="isEnabledDay(option)" ngbTooltip="No Disponible" placement="bottom" [disabled]="!isEnabledDay(option)" *ngFor="let option of options" class="btn btn-outline"
+                <div formArrayName="recurrencia" class="btn-group">
+                    <div *ngFor="let day of days.controls; let i = index" [formGroupName]="i">
+                        <button type="button" ngbTooltip="No Disponible" placement="bottom"
+                            [disablePopover]="!isEnabledDay(day.value.dia_semana) || isCurrentDayOfWeek(day.value.dia_semana)"
+                            [disableTooltip]="isEnabledDay(day.value.dia_semana)" class="btn btn-outline"
+                            [ngbPopover]="slot"
+                            [popoverContext]="{ slots: getTimeSlots(day.value.dia_semana), index: i }"
+                            [ngClass]="{ 'btn-active-success active': isOptionSelected(day.value.dia_semana) && day.value.selectedTimeSlot, 'btn-active-primary active': isCurrentDayOfWeek(day.value.dia_semana), 'cursor-not-allowed': !isEnabledDay(day.value.dia_semana) }">
+                            {{ getDayLabel(day.value.dia_semana) }}
+                        </button>
+                        <span *ngIf="day.value.selectedTimeSlot">{{day.value.selectedTimeSlot}}</span>
+                    </div>
+                </div>
+                <!-- <div class="btn-group">
+                    <button [ngbPopover]="slot" 
+                    [popoverContext]="{slots: getTimeSlots(option.value)}"
+                    [disableTooltip]="isEnabledDay(option)" ngbTooltip="No Disponible" placement="bottom" [disabled]="!isEnabledDay(option)" *ngFor="let option of options" class="btn btn-outline"
                         [ngClass]="{ 'btn-active-primary active': isOptionSelected(option), 'cursor-not-allowed': !isEnabledDay(option) }"
                         (click)="toggleOption(option)">
                         {{ option.label }}
                     </button>
-                </div>
+                </div> -->
             </div>
         </div>
     </form>
@@ -107,5 +129,6 @@
 
 <div class="modal-footer">
     <button type="button" class="btn btn-light" (click)="closeModal()">Cancelar</button>
-    <button [disabled]="createForm.invalid || (isLoading | async)" type="button" class="btn btn-primary" (click)="createCita()">Registrar</button>
+    <button [disabled]="createForm.invalid || (isLoading | async)" type="button" class="btn btn-primary"
+        (click)="createCita()">Registrar</button>
 </div>
