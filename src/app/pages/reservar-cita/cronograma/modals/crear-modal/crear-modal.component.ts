@@ -140,6 +140,13 @@ export class CrearModalComponent implements OnInit, AfterViewInit {
     });
   }
 
+  diferentSlots() {
+    const dayOfWeeks = new Date(this.createForm.get('fecha_inicio')?.value).getDay() + 1;
+    const recurrenciaControl = this.createForm.get('recurrencia') as FormArray;
+
+    return recurrenciaControl.value.some((dayGroup: any) => dayGroup.dia_semana !== dayOfWeeks && dayGroup.selectedTimeSlot !== null);
+  }
+
   get days(): FormArray {
     return this.createForm.get('recurrencia') as FormArray;
   }
@@ -173,14 +180,10 @@ export class CrearModalComponent implements OnInit, AfterViewInit {
 
   isEnabledDay = (value:number) => {
     const id_personal = this.createForm.get('id_personal')?.value;
-    const hora_inicio = this.createForm.get('hora_inicio')?.value;
-    const hora_fin = this.createForm.get('hora_fin')?.value;
 
     return this.personalList.some((personal: Personal) =>
       personal.horarios?.some(
         (horario) =>
-          horario.hora_inicio.substring(0, 5) <= hora_inicio &&
-          horario.hora_fin.substring(0, 5) >= hora_fin &&
           horario.dia_semana === value &&
           personal.id_personal === id_personal
       )
@@ -206,14 +209,6 @@ export class CrearModalComponent implements OnInit, AfterViewInit {
   getTimeSlots(diaSemana: number): string[] {
     const day = this.slotTimeList?.find((d) => d.dia_semana === diaSemana);
     return day ? day.time_slots : [];
-  }
-
-  onStartTimeChange(event: any): void {
-    const [hours, minutes] = event.dateString.split(':').map(Number);
-    const minEndDate = new Date();
-    minEndDate.setHours(hours, minutes + 5);
-    const horaFinControl = this.createForm.get('hora_fin') as FormControl;
-    horaFinControl.setValue(minEndDate.toTimeString().slice(0, 5));
   }
 
   changePaquete(event: any) {
