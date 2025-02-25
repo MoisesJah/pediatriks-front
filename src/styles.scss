@@ -30,6 +30,24 @@
   }
 }
 
+@media only screen and (max-width: 570px) {
+  .fc-toolbar-chunk{
+    display: inline-flex;
+    width: 100%;
+  }
+  .fc-toolbar-chunk:nth-child(3){
+    .fc-button-group{
+      flex-grow: 1;
+    }
+  }
+  .fc-toolbar-chunk:nth-child(2){
+    justify-content: center;
+  }
+  .fc-toolbar-chunk:nth-child(1){
+   justify-content: space-between; 
+  }
+}
+
 ::-webkit-scrollbar {
   width: 6px; /* Adjust width as needed */
 }
@@ -51,6 +69,12 @@ ng-select {
   font-size: 1.1rem;
   font-weight: 500;
   line-height: 1.5;
+}
+
+.btn-check:active+.btn.btn-active-success,.btn-check:checked+.btn.btn-active-success,.btn.btn-active-success.mactive,.btn.btn-active-success.show,.btn.btn-active-success:active:not(.btn-active),.btn.btn-active-success:focus:not(.btn-active),.btn.btn-active-success:hover:not(.btn-active),.show>.btn.btn-active-success {
+  color: var(--bs-success-inverse);
+  border-color: var(--bs-success);
+  background-color: var(--bs-success)!important
 }
 
 .dropdown-content:hover {

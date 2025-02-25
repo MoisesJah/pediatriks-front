@@ -102,14 +102,13 @@
                 <label class="form-label" for="kt_calendar_datepicker_end_date">Dias Disponibles</label>
                 <div formArrayName="recurrencia" [ngClass]="{ 'mb-4': diferentSlots()}" class="btn-group">
                     <div class="btn-group flex-grow-1" *ngFor="let day of days.controls; let i = index" [formGroupName]="i">
-                        <button class="position-relative" type="button" ngbTooltip="No Disponible" placement="bottom"
+                        <button class="btn btn-outline mactive position-relative" type="button" ngbTooltip="No Disponible" placement="bottom"
                             [disablePopover]="!isEnabledDay(day.value.dia_semana) || isCurrentDayOfWeek(day.value.dia_semana)"
-                            [disableTooltip]="isEnabledDay(day.value.dia_semana)" class="btn btn-outline"
+                            [disableTooltip]="isEnabledDay(day.value.dia_semana)"
                             [ngbPopover]="slot"
                             [popoverContext]="{ slots: getTimeSlots(day.value.dia_semana), index: i }"
-                            [ngClass]="{ 'btn-active-success active': (isOptionSelected(day.value.dia_semana) && day.value.selectedTimeSlot) && !isCurrentDayOfWeek(day.value.dia_semana), 'btn-active-primary active': isCurrentDayOfWeek(day.value.dia_semana), 'cursor-not-allowed': !isEnabledDay(day.value.dia_semana) }">
+                            [ngClass]="{ 'btn-active-success active': isOptionSelected(day.value.dia_semana) && day.value.selectedTimeSlot && !isCurrentDayOfWeek(day.value.dia_semana), 'btn-active-primary active': isCurrentDayOfWeek(day.value.dia_semana), 'cursor-not-allowed': !isEnabledDay(day.value.dia_semana) }">
                             {{ getDayLabel(day.value.dia_semana) }}
-                            
                         </button>
                         <span class="position-absolute badge mt-1 rounded-pill bg-success" style="width: max-content;top:50px" *ngIf="day.value.selectedTimeSlot && !isCurrentDayOfWeek(day.value.dia_semana)">{{day.value.selectedTimeSlot}}</span>
                     </div>
