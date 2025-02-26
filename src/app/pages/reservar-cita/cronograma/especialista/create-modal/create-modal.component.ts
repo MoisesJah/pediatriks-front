@@ -1,5 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, EventEmitter, inject, OnInit, Output } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  EventEmitter,
+  inject,
+  OnInit,
+  Output,
+} from '@angular/core';
 import {
   FormArray,
   FormBuilder,
@@ -8,7 +15,11 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { NgbModal, NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
+import {
+  NgbModal,
+  NgbPopoverModule,
+  NgbTooltipModule,
+} from '@ng-bootstrap/ng-bootstrap';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import {
@@ -28,6 +39,8 @@ import { TerapiaService } from 'src/app/services/terapia/terapia.service';
 import { TipocitaService } from 'src/app/services/tipocita/tipocita.service';
 import { CurrentPersonal } from '../especialista.component';
 import { ToastrService } from 'ngx-toastr';
+import { generateTimeSlots } from 'src/app/utils/slotTimes';
+import { SlotTimePickerComponent } from '../../modals/crear-modal/slot-time-picker/slot-time-picker.component';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -38,12 +51,14 @@ import { ToastrService } from 'ngx-toastr';
     FlatpickrModule,
     NgSelectModule,
     CommonModule,
+    SlotTimePickerComponent,
+    NgbPopoverModule,
     NgbTooltipModule,
   ],
   templateUrl: './create-modal.component.html',
   styleUrl: './create-modal.component.scss',
 })
-export class CreateModalComponent implements OnInit,AfterViewInit {
+export class CreateModalComponent implements OnInit, AfterViewInit {
   personalService = inject(PersonalService);
   pacienteService = inject(PacienteService);
   tipoCitaService = inject(TipocitaService);
@@ -73,6 +88,8 @@ export class CreateModalComponent implements OnInit,AfterViewInit {
   loadingPaquetes = false;
   loadingTipoCitas = false;
 
+  slotTimeList: ReturnType<typeof generateTimeSlots> = [];
+
   timeOptions: FlatpickrDefaultsInterface = {
     enableTime: true,
     noCalendar: true,
@@ -94,8 +111,48 @@ export class CreateModalComponent implements OnInit,AfterViewInit {
       descripcion: [null],
       paquete: [null],
       num_sesiones: [null],
-      recurrencia: this.fb.array([]),
+      recurrencia: this.fb.array(
+        this.options.map((option) => this.createDayGroup(option.value))
+      ),
     });
+  }
+
+  createDayGroup(diaSemana: number): FormGroup {
+    return this.fb.group({
+      dia_semana: [diaSemana],
+      selectedTimeSlot: [null], // FormControl for the selected time slot
+    });
+  }
+
+  diferentSlots() {
+    const dayOfWeeks =
+      new Date(this.createForm.get('fecha_inicio')?.value).getDay() + 1;
+    const recurrenciaControl = this.createForm.get('recurrencia') as FormArray;
+
+    return recurrenciaControl.value.some(
+      (dayGroup: any) =>
+        dayGroup.dia_semana !== dayOfWeeks && dayGroup.selectedTimeSlot !== null
+    );
+  }
+
+  get days(): FormArray {
+    return this.createForm.get('recurrencia') as FormArray;
+  }
+
+  getDayLabel(diaSemana: number): string {
+    const option = this.options.find((o) => o.value === diaSemana);
+    return option!.label || '';
+  }
+
+  // Handle time slot selection
+  onSlotSelected(index: number, timeSlot: string): void {
+    const dayGroup = this.days.at(index) as FormGroup;
+    dayGroup.patchValue({ selectedTimeSlot: timeSlot });
+  }
+
+  onDeselect(index: number) {
+    const dayGroup = this.days.at(index) as FormGroup;
+    dayGroup.patchValue({ selectedTimeSlot: null });
   }
 
   ngOnInit(): void {
@@ -112,65 +169,28 @@ export class CreateModalComponent implements OnInit,AfterViewInit {
     { label: 'S', value: 6 },
   ];
 
-  isEnabledDay = (option: { label: string; value: number }) => {
-    const hora_inicio = this.createForm.get('hora_inicio')?.value;
-    const hora_fin = this.createForm.get('hora_fin')?.value;
-
+  isEnabledDay = (value: number) => {
     const horarios = this.personal?.horarios as any[];
 
-    return horarios.some(
-      (horario) =>
-        horario.startTime.substring(0, 5) <= hora_inicio &&
-        horario.endTime.substring(0, 5) >= hora_fin &&
-        horario.daysOfWeek.includes(option.value)
-    );
-  };
-
-  toggleOption(option: { label: string; value: number }) {
-    const fecha_inicio = this.createForm.get('fecha_inicio')?.value;
-
-    const recurrenciaControl = this.createForm.get('recurrencia') as FormArray;
-    const dayOfWeek = new Date(fecha_inicio).getDay() + 1;
-
-    if (option.value === dayOfWeek) return;
-
-    if (recurrenciaControl.value.includes(option.value)) {
-      recurrenciaControl.removeAt(
-        recurrenciaControl.value.indexOf(option.value)
-      );
-    } else {
-      recurrenciaControl.push(this.fb.control(option.value));
-    }
-  }
-
-  isOptionSelected = (option: { label: string; value: number }) => {
-    const fecha_inicio = this.createForm.get('fecha_inicio')?.value;
-    const dayOfWeek = new Date(fecha_inicio).getDay() + 1;
-    const recurrenciaControl = this.createForm.get('recurrencia') as FormArray;
-
-    if (!recurrenciaControl.value.includes(dayOfWeek)) {
-      // console.log(dayOfWeek);
-      recurrenciaControl.push(this.fb.control(dayOfWeek));
-    }
-
-    if (option.value === dayOfWeek) return true;
-
-    return (
-      recurrenciaControl.value.includes(option.value) &&
-      this.isEnabledDay(option)
+    return horarios.some((horario) =>
+      // horario.dia_semana === option.value
+      horario.dayOfWeek.includes(value)
     );
   };
 
   changePaquete(event: any) {
     const paquetesControl = this.createForm.get('id_paquete') as FormControl;
     const sesionesControl = this.createForm.get('num_sesiones') as FormControl;
-    this.maxSesiones = event?.cantidadsesiones;
+    this.maxSesiones = event?.num_sesiones;
     this.num_cambios = event?.num_cambios;
 
     if (paquetesControl.value) {
-      sesionesControl.setValue(event.cantidadsesiones);
-      sesionesControl.setValidators([Validators.required, Validators.max(event.cantidadsesiones)]);
-    }else{
+      sesionesControl.setValue(event.num_sesiones);
+      sesionesControl.setValidators([
+        Validators.required,
+        Validators.max(event.num_sesiones),
+      ]);
+    } else {
       sesionesControl.setValue(null);
       sesionesControl.clearValidators();
     }
@@ -184,7 +204,7 @@ export class CreateModalComponent implements OnInit,AfterViewInit {
 
     const id_paquete = this.createForm.get('id_paquete');
     const num_sesiones = this.createForm.get('num_sesiones');
-    
+
     if (this.isCitaPaquete) {
       id_paquete?.setValidators(Validators.required);
     } else {
@@ -199,7 +219,7 @@ export class CreateModalComponent implements OnInit,AfterViewInit {
 
   changePaciente(event: any) {
     const id_paquete = this.createForm.get('id_paquete');
-    if(id_paquete){
+    if (id_paquete) {
       id_paquete.setValue(null);
       id_paquete.clearValidators();
     }
@@ -213,7 +233,9 @@ export class CreateModalComponent implements OnInit,AfterViewInit {
     this.createForm.valueChanges
       .pipe(
         distinctUntilChanged(
-          (x, y) => x.id_paciente === y.id_paciente && y.id_tipocita === this.id_tipopaquete
+          (x, y) =>
+            x.id_paciente === y.id_paciente &&
+            y.id_tipocita === this.id_tipopaquete
         )
       )
       .subscribe((value) => {
@@ -239,14 +261,14 @@ export class CreateModalComponent implements OnInit,AfterViewInit {
     const body = {
       id_paciente,
       id_terapia: this.personal?.terapia.id_terapia,
-    }
+    };
     this.paquetesList = this.paquetesService.getByPaciente(body).pipe(
       map((resp) => resp.data),
       finalize(() => (this.loadingPaquetes = false)),
       untilDestroyed(this)
     );
   }
-  
+
   loadPacientes() {
     this.loadingPacientes = true;
     this.pacientesList = this.pacienteService.getAll().pipe(
@@ -256,8 +278,70 @@ export class CreateModalComponent implements OnInit,AfterViewInit {
     );
   }
 
+  getTimeSlots(diaSemana: number): string[] {
+    const day = this.slotTimeList?.find((d) => d.dia_semana === diaSemana);
+    return day ? day.time_slots : [];
+  }
+
+  toggleOption(value: number): void {
+    const recurrenciaControl = this.createForm.get('recurrencia') as FormArray;
+    const fecha_inicio = this.createForm.get('fecha_inicio')?.value;
+    const dayOfWeek = new Date(fecha_inicio).getDay() + 1;
+
+    const selectedTimeSlot = `${this.createForm.get('hora_inicio')?.value} - ${
+      this.createForm.get('hora_fin')?.value
+    }`;
+
+    if (value === dayOfWeek) {
+      recurrenciaControl.controls
+        .find((c) => c.value.dia_semana === value)
+        ?.setValue({ dia_semana: value, selectedTimeSlot });
+    } else {
+      const index = recurrenciaControl.value.indexOf(value);
+      index !== -1
+        ? recurrenciaControl.removeAt(index)
+        : recurrenciaControl.push(this.fb.control({ dia_semana: value }));
+    }
+  }
+
+  isCurrentDayOfWeek(value: number) {
+    const fecha_inicio = this.createForm.get('fecha_inicio')?.value;
+    const dayOfWeek = new Date(fecha_inicio).getDay() + 1;
+
+    if (value === dayOfWeek) return true;
+
+    return false;
+  }
+
+  isOptionSelected = (value: number) => {
+    const fecha_inicio = this.createForm.get('fecha_inicio')?.value;
+    const dayOfWeek = new Date(fecha_inicio).getDay() + 1;
+    const recurrenciaControl = this.createForm.get('recurrencia') as FormArray;
+
+    const selectedTimeSlot = `${this.createForm.get('hora_inicio')?.value} - ${
+      this.createForm.get('hora_fin')?.value
+    }`;
+
+    if (value === dayOfWeek) {
+      recurrenciaControl.controls
+        .find((c) => c.value.dia_semana === value)
+        ?.setValue({ dia_semana: value, selectedTimeSlot });
+      return true;
+    }
+
+    return (
+      recurrenciaControl.controls.find(
+        (f) => f.value.dia_semana === value && f.value.selectedTimeSlot
+      ) && this.isEnabledDay(value)
+    );
+  };
+
   ngAfterViewInit(): void {
     this.loadPaquetesPaciente();
+    this.slotTimeList = generateTimeSlots(
+      this.personal?.horarios as any,
+      this.personal?.terapia.duracion
+    );
   }
 
   createCita() {
@@ -270,7 +354,7 @@ export class CreateModalComponent implements OnInit,AfterViewInit {
           id_personal: this.personal?.id_personal,
         })
         .subscribe({
-          next: (data:any) => {
+          next: (data: any) => {
             this.onSaveComplete.emit();
             this.closeModal();
             if (!data.message.startsWith('Cita')) {

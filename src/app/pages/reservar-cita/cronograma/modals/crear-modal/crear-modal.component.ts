@@ -152,8 +152,6 @@ export class CrearModalComponent implements OnInit, AfterViewInit {
   }
 
   getDayLabel(diaSemana: number): string {
-    console.log(this.options);
-    console.log(diaSemana);
     const option = this.options.find((o) => o.value === diaSemana);
     return option!.label || ''
   }
@@ -218,8 +216,11 @@ export class CrearModalComponent implements OnInit, AfterViewInit {
     this.num_cambios = event?.num_cambios;
     
     if (paquetesControl.value) {
-      sesionesControl.setValue(event.cantidadsesiones);
-      sesionesControl.setValidators(Validators.required);
+      sesionesControl.setValue(event.num_sesiones);
+      sesionesControl.setValidators([
+        Validators.required,
+        Validators.max(event.num_sesiones),
+      ]);
     }else{
       sesionesControl.setValue(null);
     }
@@ -308,7 +309,7 @@ export class CrearModalComponent implements OnInit, AfterViewInit {
     this.id_tipopaquete = this.isCitaPaquete && event?.id_tipocita;
 
     if(!isContinua) this.createForm.get('recurrencia')?.reset()
-    console.log(this.createForm.get('recurrencia')?.value)
+   
 
     const id_paquete = this.createForm.get('id_paquete');
     const num_sesiones = this.createForm.get('num_sesiones');
@@ -394,7 +395,7 @@ export class CrearModalComponent implements OnInit, AfterViewInit {
     this.loadingSedes = true;
     this.sedesList = this.sedesService.getAll().pipe(
       map((resp) => resp.data),
-      // tap((resp) => (this.sedeComas = resp.filter((sede) => sede.nombre === 'Sede Comas')[0].id_sede)),
+      tap((resp) => (this.sedeComas = resp.filter((sede) => sede.nombre === 'Sede Comas')[0].id_sede)),
       finalize(() => (this.loadingSedes = false)),
       untilDestroyed(this)
     );
