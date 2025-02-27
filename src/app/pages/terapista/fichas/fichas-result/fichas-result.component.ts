@@ -32,7 +32,7 @@ export class FichasResultComponent implements OnInit {
   survey!: Model;
   theme = inject(ThemeService);
 
-  personalId = this.authService.user()?.personal?.id_personal
+  personalId = this.authService.user()?.personal?.id_personal;
 
   ngOnInit(): void {
     this.getResult();
@@ -41,9 +41,13 @@ export class FichasResultComponent implements OnInit {
   getResult() {
     this.fichaResultService.getOne(this.resultId!).subscribe((res) => {
       const data = JSON.parse(res.data.ficha.body);
-      const isFichaPersonal = res.data.sesion.personal.id_personal === this.personalId;
+      const isFichaPersonal =
+        res.data.sesion.personal.id_personal === this.personalId;
 
-      data.mode = !this.authService.isTerapista() || !isFichaPersonal ? 'display' : undefined;
+      data.mode =
+        !this.authService.isTerapista() || !isFichaPersonal
+          ? 'display'
+          : undefined;
 
       this.survey = new Model(JSON.stringify(data));
       this.survey.locale = 'es';
@@ -285,7 +289,9 @@ export class FichasResultComponent implements OnInit {
       }
 
       const shouldShowTitle =
-        question.titleLocation !== 'hidden' && question.getType() !== 'html' && question.visible;
+        question.titleLocation !== 'hidden' &&
+        question.getType() !== 'html' &&
+        question.visible;
       const isTitleLeft = question.getTitleLocation() === 'left';
 
       // Add title (if needed) before question content
@@ -374,16 +380,16 @@ export class FichasResultComponent implements OnInit {
           });
           break;
         case 'matrix':
-          this.handleMatrix(this.survey,docDefinition,question);
+          this.handleMatrix(this.survey, docDefinition, question);
           break;
         case 'comment':
           if (!firstPanel) {
-            if(this.survey.getValue(question.name)){
+            if (this.survey.getValue(question.name)) {
               docDefinition.content.push({
                 text: this.survey.data[question.name],
                 style: 'answer',
               });
-            }else{
+            } else {
               docDefinition.content.push({
                 text: 'Sin Respuesta',
                 style: 'answer',
@@ -417,7 +423,7 @@ export class FichasResultComponent implements OnInit {
             if (
               !docDefinition.content.find(
                 (item) => item.text === question.title
-              )
+              ) && question.titleLocation !== 'hidden'
             ) {
               docDefinition.content.push({
                 text: question.title,
@@ -438,16 +444,20 @@ export class FichasResultComponent implements OnInit {
         default:
           console.log(`Unsupported question type: ${question.getType()}`);
       }
-
     });
     this.rendrCustomQuestions(this.survey, docDefinition);
+    console.log(docDefinition);
 
     const newPdfMake = Object.assign({}, pdfMake);
     newPdfMake.vfs = pdfFonts;
     newPdfMake.createPdf(docDefinition).download('survey-responses.pdf');
   }
 
-   handleMatrix(survey: Model,docDefinition: TDocumentDefinitions,question:any) {
+  handleMatrix(
+    survey: Model,
+    docDefinition: TDocumentDefinitions,
+    question: any
+  ) {
     if (this.survey.data[question.name]) {
       const tableHeaders = [''].concat(
         question.columns.map((column) => column.text)
@@ -457,9 +467,10 @@ export class FichasResultComponent implements OnInit {
         const rowData = [{ text: row.text, wordWrap: true }];
         question.columns.forEach((column) => {
           rowData.push({
-            text: this.survey.data[question.name][row.value] === column.value
-              ? 'X'
-              : '',
+            text:
+              this.survey.data[question.name][row.value] === column.value
+                ? 'X'
+                : '',
             wordWrap: true,
             minHeight: 20,
           });
@@ -470,10 +481,7 @@ export class FichasResultComponent implements OnInit {
       const table = {
         table: {
           headerRows: 1,
-          widths: [
-            'auto',
-            ...Array(question.columns.length).fill('auto'),
-          ],
+          widths: ['auto', ...Array(question.columns.length).fill('auto')],
           body: [tableHeaders, ...tableRows],
           dontBreakRows: true,
           layout: {
@@ -482,19 +490,16 @@ export class FichasResultComponent implements OnInit {
         },
       };
 
-      if (!docDefinition.content.find(
-        (item) => item.text === question.title
-      )) {
+      if (!docDefinition.content.find((item) => item.text === question.title) && question.titleLocation !== 'hidden') {
         docDefinition.content.push({
           text: question.title,
           style: 'questionTitle',
-          margin: [0, 100, 0, 5],
+          margin: [0, 1, 0, 5],
         });
       }
 
-     
-        docDefinition.content.push(table);
-            // Add a spacer element
+      docDefinition.content.push(table);
+      // Add a spacer element
     }
   }
 
@@ -506,7 +511,7 @@ export class FichasResultComponent implements OnInit {
     this.fichaEPsico(survey, docDefinition);
   }
 
-  customTableSilabas(survey, docDefinition) {
+  customTableSilabas(survey: Model, docDefinition: TDocumentDefinitions) {
     const panelNames = ['panel_silabas1', 'panel_silabas2'];
     const tables1 = [];
     const tables2 = [];
@@ -555,31 +560,31 @@ export class FichasResultComponent implements OnInit {
             tables2.push(table);
           }
         });
-
       }
-      
-    });
-    docDefinition.content.splice(5, 0, {
-      columns: [
-        {
-          width: '*',
-          columns: tables1,
-        },
-      ],
-      margin: [0,20,0,0]
     });
 
 
-    docDefinition.content.splice(6, 0, {
-      columns: [
+    if(panelNames.every(p => survey.getAllPanels().some(pa => pa.name === p))) {
+      docDefinition.content.splice(5, 0, {
+        columns: [
           {
-              width: '*',
-              columns: tables2,
-            },
-    ],
-    margin: [0, 20, 0, 20],
-  });
-    console.log(docDefinition.content)
+            width: '*',
+            columns: tables1,
+          },
+        ],
+        margin: [0, 20, 0, 0],
+      });
+
+      docDefinition.content.splice(6, 0, {
+        columns: [
+          {
+            width: '*',
+            columns: tables2,
+          },
+        ],
+        margin: [0, 20, 0, 20],
+      });
+    }
   }
 
   tableEscalaMotor(survey: Model, docDefinition: TDocumentDefinitions) {
@@ -844,7 +849,7 @@ export class FichasResultComponent implements OnInit {
       'p_trans',
     ].map((name) => survey.getAllPanels().find((panel) => panel.name === name));
 
-    const p_matrix = survey.getAllPanels().find(p=>p.name === 'p_matrix')
+    const p_matrix = survey.getAllPanels().find((p) => p.name === 'p_matrix');
 
     const content = panels.reduce((acc, panel) => {
       if (!panel) return acc;
@@ -904,6 +909,6 @@ export class FichasResultComponent implements OnInit {
       return acc;
     }, []);
 
-    docDefinition.content.splice(26, 0, ...content)
+    docDefinition.content.splice(26, 0, ...content);
   }
 }

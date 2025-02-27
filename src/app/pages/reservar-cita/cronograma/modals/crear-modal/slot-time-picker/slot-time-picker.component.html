@@ -1,9 +1,9 @@
-<div class="d-flex flex-column gap-3 px-4 py-2">
-    <ul class="d-flex flex-column list-unstyled gap-2">
-        <div class="d-flex justify-content-between align-items-center">
-            <h1>Horarios</h1>
-            <button class="btn btn-sm" (click)="onDeselect()">Borrar</button>
-        </div>
+<div class="d-flex flex-column gap-3 px-4 py-2" style="min-width: 200px">
+    <div class="d-flex justify-content-between align-items-center">
+        <h5>Horarios</h5>
+        <button class="btn btn-sm btn-outline-danger" (click)="onDeselect()">Borrar</button>
+    </div>
+    <ul class="d-flex flex-column h-175px scroll-y list-unstyled gap-2">
         @for (item of slotTimes; track $index) {
         <li>
             <button class="btn btn-sm btn-outline-primary w-100" (click)="selectTime(item)">{{item}}</button>

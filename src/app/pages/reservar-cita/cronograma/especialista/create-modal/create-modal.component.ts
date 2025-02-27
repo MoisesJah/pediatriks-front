@@ -39,7 +39,7 @@ import { TerapiaService } from 'src/app/services/terapia/terapia.service';
 import { TipocitaService } from 'src/app/services/tipocita/tipocita.service';
 import { CurrentPersonal } from '../especialista.component';
 import { ToastrService } from 'ngx-toastr';
-import { generateTimeSlots } from 'src/app/utils/slotTimes';
+import { generateTimeSlots, generateTimeSlotsEsp } from 'src/app/utils/slotTimes';
 import { SlotTimePickerComponent } from '../../modals/crear-modal/slot-time-picker/slot-time-picker.component';
 
 @UntilDestroy({ checkProperties: true })
@@ -172,9 +172,11 @@ export class CreateModalComponent implements OnInit, AfterViewInit {
   isEnabledDay = (value: number) => {
     const horarios = this.personal?.horarios as any[];
 
+    console.log(horarios);
+
     return horarios.some((horario) =>
-      // horario.dia_semana === option.value
-      horario.dayOfWeek.includes(value)
+      // horario.dia_semana === value
+      horario.daysOfWeek.includes(value)
     );
   };
 
@@ -338,9 +340,9 @@ export class CreateModalComponent implements OnInit, AfterViewInit {
 
   ngAfterViewInit(): void {
     this.loadPaquetesPaciente();
-    this.slotTimeList = generateTimeSlots(
+    this.slotTimeList = generateTimeSlotsEsp(
       this.personal?.horarios as any,
-      this.personal?.terapia.duracion
+      this.personal?.terapia.duracion!
     );
   }
 

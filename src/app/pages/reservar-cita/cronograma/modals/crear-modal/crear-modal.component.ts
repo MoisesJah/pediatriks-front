@@ -438,7 +438,7 @@ export class CrearModalComponent implements OnInit, AfterViewInit {
       this.citaService
         .createForTherapy({
           ...this.createForm.value,
-          num_cambios: this.num_cambios || undefined,
+          num_cambios: this.num_cambios || 2,
           id_terapia: this.terapia.id_terapia,
           recurrencia: this.days.value.filter((day: any) => day.selectedTimeSlot),
         })
