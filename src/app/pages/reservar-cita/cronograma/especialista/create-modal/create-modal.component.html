@@ -86,7 +86,7 @@
                             [ngClass]="{ 'btn-active-success active': isOptionSelected(day.value.dia_semana) && day.value.selectedTimeSlot && !isCurrentDayOfWeek(day.value.dia_semana), 'btn-active-primary active': isCurrentDayOfWeek(day.value.dia_semana), 'cursor-not-allowed': !isEnabledDay(day.value.dia_semana) }">
                             {{ getDayLabel(day.value.dia_semana) }}
                         </button>
-                        <span class="position-absolute badge mt-1 rounded-pill bg-success" style="width: max-content;top:50px" *ngIf="day.value.selectedTimeSlot && !isCurrentDayOfWeek(day.value.dia_semana)">{{day.value.selectedTimeSlot}}</span>
+                        <span class="position-absolute fs-10 fs-sm-8 badge mt-1 rounded-pill bg-success slot-time" *ngIf="day.value.selectedTimeSlot && !isCurrentDayOfWeek(day.value.dia_semana)">{{day.value.selectedTimeSlot}}</span>
                     </div>
                 </div>
               
