@@ -354,6 +354,7 @@ export class CreateModalComponent implements OnInit, AfterViewInit {
           id_sede: this.personal?.sede.id_sede,
           id_terapia: this.personal?.terapia.id_terapia,
           id_personal: this.personal?.id_personal,
+          recurrencia: this.days.value.filter((day: any) => day.selectedTimeSlot),
         })
         .subscribe({
           next: (data: any) => {

@@ -8,6 +8,7 @@ import { AG_GRID_LOCALE_ES } from '@ag-grid-community/locale';
 import { ThemeService } from 'src/app/services/theme.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ReportesService } from 'src/app/services/reportes/reportes.service';
+import { formatMoney } from 'src/app/utils/formatCurrency';
 
 @Component({
   selector: 'app-tablaingresos-modal',
@@ -30,13 +31,18 @@ export class TablaingresosModalComponent implements OnInit, OnDestroy {
 
   // Columnas de la tabla
   colDefs: ColDef[] = [
-    { field: 'nombre', headerName: 'Nombre', filter: true },
-    { field: 'ingresos', headerName: 'Ingresos', filter: true },
+    { field: 'nombre', minWidth: 250, headerName: 'Nombre', filter: true },
+    {
+      field: 'ingresos',
+      headerName: 'Ingresos',
+      valueFormatter: (params) => formatMoney(params.value),
+      filter: 'agNumberColumnFilter',
+    },
     { field: 'descripcion', headerName: 'Descripción', filter: true },
     {
       field: 'created_at',
       headerName: 'Fecha',
-      filter: true,
+      filter: 'agDateColumnFilter',
       cellRenderer: (data: any) => new Date(data.value).toLocaleDateString(),
     },
   ];
@@ -46,9 +52,9 @@ export class TablaingresosModalComponent implements OnInit, OnDestroy {
   }
 
   private fetchReportes() {
-    this.reportesList = this.reportesService.getReportes().pipe(
-      map((resp) => resp)
-    );
+    this.reportesList = this.reportesService
+      .getReportes('ingresos')
+      .pipe(map((resp) => resp));
   }
 
   loadTabla() {
@@ -61,7 +67,7 @@ export class TablaingresosModalComponent implements OnInit, OnDestroy {
 
   gridReady(event: GridReadyEvent): void {
     this.gridApi = event.api;
-    this.gridApi.sizeColumnsToFit();
+    // this.gridApi.sizeColumnsToFit();
   }
 
   ngOnDestroy(): void {
