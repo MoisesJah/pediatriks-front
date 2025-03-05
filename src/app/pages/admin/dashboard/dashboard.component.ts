@@ -88,10 +88,6 @@ export class AdminDashboardComponent implements AfterViewInit {
     const egresos = allData.map((reporte: any) => reporte.egresos || 0);
     const labels = allData.map((reporte: any) => reporte.created_at);
 
-    console.log('Ingresos:', ingresos);
-    console.log('Egresos:', egresos);
-    console.log('Labels:', labels);
-
     if (this.chart) {
       this.chart.destroy();
     }

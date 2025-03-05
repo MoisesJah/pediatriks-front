@@ -40,8 +40,8 @@
             <label class="form-label" for="">Seleccionar Paquete</label>
             <ng-select [items]="paquetesList | async"
                 (change)="changePaquete($event)"
-                [loading]="loadingPaquetes" [loadingText]="'Cargando...'" bindValue="id_paquetes"
-                placeholder="Seleccionar Paquete" bindLabel="nombre" formControlName="id_paquete">
+                [loading]="loadingPaquetes" [loadingText]="'Cargando...'" bindValue="paquete.id_paquetes"
+                placeholder="Seleccionar Paquete" bindLabel="paquete.nombre" formControlName="id_paquete">
             </ng-select>
         </div>
        
@@ -86,7 +86,7 @@
                             [ngClass]="{ 'btn-active-success active': isOptionSelected(day.value.dia_semana) && day.value.selectedTimeSlot && !isCurrentDayOfWeek(day.value.dia_semana), 'btn-active-primary active': isCurrentDayOfWeek(day.value.dia_semana), 'cursor-not-allowed': !isEnabledDay(day.value.dia_semana) }">
                             {{ getDayLabel(day.value.dia_semana) }}
                         </button>
-                        <span class="position-absolute badge mt-1 rounded-pill bg-success" style="width: max-content;top:50px" *ngIf="day.value.selectedTimeSlot && !isCurrentDayOfWeek(day.value.dia_semana)">{{day.value.selectedTimeSlot}}</span>
+                        <span class="position-absolute fs-10 fs-sm-8 badge mt-1 rounded-pill bg-success slot-time" *ngIf="day.value.selectedTimeSlot && !isCurrentDayOfWeek(day.value.dia_semana)">{{day.value.selectedTimeSlot}}</span>
                     </div>
                 </div>
               

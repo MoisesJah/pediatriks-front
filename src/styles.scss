@@ -77,6 +77,13 @@ ng-select {
   background-color: var(--bs-success)!important
 }
 
+.slot-time{
+  width: max-content;
+  top: 130%;
+  left: 50%;
+  transform: translate(-50%, -50%) !important;
+}
+
 .dropdown-content:hover {
   color: var(--bs-dropdown-link-hover-color);
   // background-color: var(--bs-gray-700);

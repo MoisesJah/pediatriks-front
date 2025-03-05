@@ -172,8 +172,6 @@ export class CreateModalComponent implements OnInit, AfterViewInit {
   isEnabledDay = (value: number) => {
     const horarios = this.personal?.horarios as any[];
 
-    console.log(horarios);
-
     return horarios.some((horario) =>
       // horario.dia_semana === value
       horario.daysOfWeek.includes(value)
@@ -354,6 +352,7 @@ export class CreateModalComponent implements OnInit, AfterViewInit {
           id_sede: this.personal?.sede.id_sede,
           id_terapia: this.personal?.terapia.id_terapia,
           id_personal: this.personal?.id_personal,
+          recurrencia: this.days.value.filter((day: any) => day.selectedTimeSlot),
         })
         .subscribe({
           next: (data: any) => {

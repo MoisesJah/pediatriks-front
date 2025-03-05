@@ -57,7 +57,6 @@ export class HeaderComponent {
       .aceptarSolicitud(id_solicitud, id_personal_aprueba)
       .subscribe({
         next: () => {
-          console.log('Solicitud Aceptada');
           this.solicitudesPendientes = this.solicitudesPendientes.filter(
             (s) => s.id_solicitud !== id_solicitud
           );
@@ -73,7 +72,6 @@ export class HeaderComponent {
       .negarSolicitud(id_solicitud, id_personal_aprueba)
       .subscribe({
         next: () => {
-          console.log('Solicitud Negada');
           this.solicitudesPendientes = this.solicitudesPendientes.filter(
             (s) => s.id_solicitud !== id_solicitud
           );
