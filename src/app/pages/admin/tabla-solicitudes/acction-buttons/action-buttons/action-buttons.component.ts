@@ -5,18 +5,20 @@ import { AuthService } from 'src/app/services/auth.service';
 import { SolicitudInventarioService } from 'src/app/services/solicitud-inventario/solicitud-inventarioservice';
 
 type ActionButtonProps = {
-  onAcepted: (data: any) => void;
-  onDenied: (data: any) => void;
+  onAcepted: (id_solicitud: any, id_personal_aprueba: any) => void;
+  onDenied: (id_solicitud: any, id_personal_aprueba: any) => void;
 };
 
 @Component({
   selector: 'app-solicitudes-action-buttons',
   template: `
     <div class="d-flex align-items-center gap-2" style="padding-block: 0.15rem">
-      <button
-        (click)="aceptarSolicitud(solicitud?.id_solicitud, user?.id)" class="btn btn-sm btn-success me-2">Aceptar</button>
-      <button
-        (click)="negarSolicitud(solicitud?.id_solicitud, user?.id)" class="btn btn-sm btn-danger me-2">Negar</button>
+      <button (click)="aceptarSolicitud()" class="btn btn-sm btn-success me-2">
+        Aceptar
+      </button>
+      <button (click)="negarSolicitud()" class="btn btn-sm btn-danger me-2">
+        Negar
+      </button>
     </div>
   `,
   styles: ``,
@@ -39,46 +41,12 @@ export class ActionButtonsComponent
     this.solicitud = params.data; // Accede a los datos de la fila actual
   }
 
-  aceptarSolicitud(id_solicitud: string, id_personal_aprueba: string) {
-    if (!id_solicitud || !id_personal_aprueba) {
-      console.error('Faltan datos para aceptar la solicitud.');
-      return;
-    }
-
-    this.solicitudInventarioService
-      .aceptarSolicitud(id_solicitud, id_personal_aprueba)
-      .subscribe({
-        next: () => {
-          console.log('Solicitud Aceptada');
-          if (this.params?.onAcepted) {
-            this.params.onAcepted(this.solicitud);
-          }
-        },
-        error: (error) => {
-          console.error('Error al aceptar solicitud:', error);
-        },
-      });
+  aceptarSolicitud() {
+    this.params?.onAcepted(this.solicitud.id_solicitud, this.user!.id);
   }
 
-  negarSolicitud(id_solicitud: string, id_personal_aprueba: string) {
-    if (!id_solicitud || !id_personal_aprueba) {
-      console.error('Faltan datos para negar la solicitud.');
-      return;
-    }
-
-    this.solicitudInventarioService
-      .negarSolicitud(id_solicitud, id_personal_aprueba)
-      .subscribe({
-        next: () => {
-          console.log('Solicitud Negada');
-          if (this.params?.onDenied) {
-            this.params.onDenied(this.solicitud);
-          }
-        },
-        error: (error) => {
-          console.error('Error al negar solicitud:', error);
-        },
-      });
+  negarSolicitud() {
+    this.params?.onDenied(this.solicitud.id_solicitud, this.user!.id);
   }
 
   refresh(params: ICellRendererParams): boolean {

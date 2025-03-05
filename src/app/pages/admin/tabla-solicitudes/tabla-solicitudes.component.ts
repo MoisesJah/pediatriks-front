@@ -59,8 +59,19 @@ export class TablaSolicitudesComponent implements OnInit {
       valueGetter: (params) => params.data.stock_terapista || '0',
     },
     {
-      headerName: 'Estado de la Solicitud',
+      headerName: 'Estado',
       valueGetter: (params) => params.data.estado?.nombre || 'N/A',
+      cellRenderer: (params:any) =>{
+        const estado = params.value;
+        switch (estado) {
+          case 'aceptado':
+            return '<span class="badge badge-lg badge-light-success">' + estado + '</span>';
+          case 'negado':
+            return '<span class="badge badge-lg badge-light-danger">' + estado + '</span>';
+          case 'pendiente':
+            return '<span class="badge badge-lg badge-light-warning">' + estado + '</span>';
+        }
+      },
       sortable: true,
       filter: true,
     },
@@ -70,30 +81,30 @@ export class TablaSolicitudesComponent implements OnInit {
       sortable: true,
       filter: true,
       valueFormatter: (params) =>
-        new Date(params.value).toLocaleString('es-ES', {
+        new Date(params.value).toLocaleString('es-PE', {
           year: 'numeric',
           month: '2-digit',
           day: '2-digit',
           hour: '2-digit',
           minute: '2-digit',
+          timeZone: 'America/Lima',
         }),
     },
     {
       headerName: 'Acciones',
-      cellRenderer: ActionButtonsComponent,
+      cellRendererSelector: (params: any) => {
+        const estado = params.data.estado?.nombre.toLowerCase() === 'pendiente';
+        return estado ? { component: ActionButtonsComponent } : undefined;
+      },
       cellRendererParams: (params: any) => {
         const estado = params.data.estado?.nombre || '';
         const habilitado = estado.toLowerCase() === 'pendiente';
         return {
           habilitado,
-          onAcepted: (data: any) => {
-            const id_solicitud = data.id_solicitud;
-            const id_personal_aprueba = 'personal_id';
+          onAcepted: (id_solicitud: any, id_personal_aprueba: any) => {
             this.aceptarSolicitud(id_solicitud, id_personal_aprueba);
           },
-          onDenied: (data: any) => {
-            const id_solicitud = data.id_solicitud;
-            const id_personal_aprueba = 'personal_id';
+          onDenied: (id_solicitud: any, id_personal_aprueba: any) => {
             this.negarSolicitud(id_solicitud, id_personal_aprueba);
           },
         };
@@ -115,15 +126,15 @@ export class TablaSolicitudesComponent implements OnInit {
 
 
   gridReady(params: any): void {
-    params.api.sizeColumnsToFit();
+    // params.api.sizeColumnsToFit();
   }
 
   aceptarSolicitud(id_solicitud:string,id_personal_aprueba:string) {
     this.solicitudInventarioService.aceptarSolicitud(id_solicitud,id_personal_aprueba).subscribe({
       next: () => {
-        console.log("Solicitud Aceptada")
          this.solicitudesPendientes = this.solicitudesPendientes.filter(s => s.id_solicitud  !== id_solicitud);
-       },
+          this.fetchSolicitudes();
+        },
        error: (error) => {
          console.error('Error al aceptar solicitud:', error);
        }
@@ -134,8 +145,8 @@ export class TablaSolicitudesComponent implements OnInit {
    negarSolicitud(id_solicitud: string, id_personal_aprueba: string) {
     this.solicitudInventarioService.negarSolicitud(id_solicitud, id_personal_aprueba).subscribe({
       next: () => {
-        console.log("Solicitud Negada");
         this.solicitudesPendientes = this.solicitudesPendientes.filter(s => s.id_solicitud !== id_solicitud);
+        this.fetchSolicitudes();
       },
       error: (error) => {
         console.error('Error al negar solicitud:', error);
