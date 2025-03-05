@@ -44,7 +44,19 @@ export class TablaInventarioComponent implements OnInit, OnDestroy {
         return date.toLocaleDateString('es-ES');
       }
     },
-    { field: 'estado.nombre', headerName: 'Estado', filter: true }
+    { field: 'estado.nombre', headerName: 'Estado', filter: true,
+      cellRenderer: (params: any) => {
+        const estado = params.value;
+        switch (estado) {
+          case 'aceptado':
+            return '<span class="badge badge-lg badge-light-success">' + estado + '</span>';
+          case 'negado':
+            return '<span class="badge badge-lg badge-light-danger">' + estado + '</span>';
+          case 'pendiente':
+            return '<span class="badge badge-lg badge-light-warning">' + estado + '</span>';
+        }
+      }
+     }
   ];
 
 

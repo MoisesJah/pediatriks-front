@@ -11,8 +11,8 @@ export class ReportesService {
 
   constructor(private http: HttpClient) {}
 
-  getReportes(): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/show`);
+  getReportes(type: string): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/show?type=${type}`);
   }
 
   getReportesFiltrados(startDate: string, endDate: string, montoMin: number): Observable<any> {

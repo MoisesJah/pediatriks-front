@@ -8,6 +8,7 @@ import { AG_GRID_LOCALE_ES } from '@ag-grid-community/locale';
 import { ThemeService } from 'src/app/services/theme.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ReportesService } from 'src/app/services/reportes/reportes.service';
+import { formatMoney } from 'src/app/utils/formatCurrency';
 
 @Component({
   selector: 'app-tablaegresos-modal',
@@ -23,7 +24,7 @@ export class TablaegresosModalComponent implements OnInit, OnDestroy {
 
   modal = inject(NgbModal);
   localeText = AG_GRID_LOCALE_ES;
-  gridApi!: GridApi;  // Asegúrate de que el GridApi está inicializado correctamente
+  gridApi!: GridApi; // Asegúrate de que el GridApi está inicializado correctamente
 
   // Lista observable de reportes para la tabla
   reportesList: Observable<any[]> = new Observable();
@@ -31,16 +32,21 @@ export class TablaegresosModalComponent implements OnInit, OnDestroy {
   // Columnas de la tabla
   colDefs: ColDef[] = [
     { field: 'nombre', headerName: 'Nombre', filter: true },
-    { field: 'egresos', headerName: 'Egresos', filter: true },
-    { field: 'descripcion', headerName: 'Descripción', filter: true },
-    { field: 'metodo_pago', headerName: 'Método de Pago', filter: true },
-    { field: 'tipo_egreso', headerName: 'Tipo de Egreso', filter: true },
+    {
+      field: 'egresos',
+      headerName: 'Egresos',
+      valueFormatter: (params) => formatMoney(params.value),
+      filter: 'agNumberColumnFilter',
+    },
     {
       field: 'created_at',
       headerName: 'Fecha',
-      filter: true,
-      cellRenderer: (data: any) => new Date(data.value).toLocaleDateString()
-    }
+      filter: 'agDateColumnFilter',
+      cellRenderer: (data: any) => new Date(data.value).toLocaleDateString(),
+    },
+    { field: 'descripcion', headerName: 'Descripción', filter: true },
+    { field: 'metodo_pago', headerName: 'Método de Pago', filter: true },
+    { field: 'tipo_egreso', headerName: 'Tipo de Egreso', filter: true },
   ];
 
   ngOnInit(): void {
@@ -48,9 +54,9 @@ export class TablaegresosModalComponent implements OnInit, OnDestroy {
   }
 
   private fetchReportes() {
-    this.reportesList = this.reportesService.getReportes().pipe(
-      map((resp) => resp)
-    );
+    this.reportesList = this.reportesService
+      .getReportes('egresos')
+      .pipe(map((resp) => resp));
   }
 
   // Método que carga los reportes en la tabla
@@ -65,7 +71,7 @@ export class TablaegresosModalComponent implements OnInit, OnDestroy {
   // Este evento se dispara cuando la cuadrícula se ha inicializado
   gridReady(event: GridReadyEvent): void {
     this.gridApi = event.api;
-     this.gridApi.sizeColumnsToFit();
+    //  this.gridApi.sizeColumnsToFit();
   }
 
   ngOnDestroy(): void {
