@@ -40,8 +40,8 @@
             <label class="form-label" for="">Seleccionar Paquete</label>
             <ng-select [items]="paquetesList | async"
                 (change)="changePaquete($event)"
-                [loading]="loadingPaquetes" [loadingText]="'Cargando...'" bindValue="id_paquetes"
-                placeholder="Seleccionar Paquete" bindLabel="nombre" formControlName="id_paquete">
+                [loading]="loadingPaquetes" [loadingText]="'Cargando...'" bindValue="paquete.id_paquetes"
+                placeholder="Seleccionar Paquete" bindLabel="paquete.nombre" formControlName="id_paquete">
             </ng-select>
         </div>
        

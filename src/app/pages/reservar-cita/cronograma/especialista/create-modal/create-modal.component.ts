@@ -172,8 +172,6 @@ export class CreateModalComponent implements OnInit, AfterViewInit {
   isEnabledDay = (value: number) => {
     const horarios = this.personal?.horarios as any[];
 
-    console.log(horarios);
-
     return horarios.some((horario) =>
       // horario.dia_semana === value
       horario.daysOfWeek.includes(value)
