@@ -5,6 +5,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { LoadingService } from 'src/app/services/loading.service';
 import { SedesService } from 'src/app/services/sedes/sedes.service';
 import flatpickr from 'flatpickr';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-crear-modal',
@@ -17,6 +18,7 @@ export class CrearModalComponent implements AfterViewInit {
   modal = inject(NgbModal);
   sedeService = inject(SedesService);
   loadingService = inject(LoadingService);
+  toast = inject(ToastrService);
   sedeForm: FormGroup;
   isLoading = this.loadingService.isLoading;
 
@@ -64,16 +66,18 @@ export class CrearModalComponent implements AfterViewInit {
 
   save() {
     if (this.sedeForm.valid) {
-      this.loadingService.setLoading(true, 'sede/create');
       this.sedeService.create(this.sedeForm.value).subscribe({
         next: (response: any) => { // Especifica el tipo de `response` si es posible
-          this.loadingService.setLoading(false, 'sede/create');
           this.onSaveComplete.emit();
           this.close();
         },
         error: (error: any) => { // Especifica el tipo de `error` si es posible
-          console.error('Error al crear sede:', error);
-          this.loadingService.setLoading(false, 'sede/create');
+          if (error.error.errors) {
+            const errors = Object.values(error.error.errors).join('\n');
+            this.toast.error(errors, 'Error');
+          } else {
+            this.toast.error('Ocurrio un error al crear la sede', 'Error');
+          }
         }
       });
     }
@@ -87,7 +91,7 @@ export class CrearModalComponent implements AfterViewInit {
     const [hours, minutes] = event.target.value.split(':').map(Number);
     const minEndDate = new Date();
     // Set the minimum end time to 1 minute after the start time
-    minEndDate.setHours(hours, minutes + 1);
+    minEndDate.setHours(hours, minutes + 60);
 
     // Update the end time input with the new minimum date
     this.endTimePicker.nativeElement._flatpickr.set('minDate', minEndDate);

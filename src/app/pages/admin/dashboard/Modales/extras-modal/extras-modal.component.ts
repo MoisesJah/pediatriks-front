@@ -5,13 +5,14 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { LoadingService } from 'src/app/services/loading.service';
 import { ReportesService } from 'src/app/services/reportes/reportes.service';
+import { NgSelectModule } from '@ng-select/ng-select';
 
 @Component({
   selector: 'app-extras-modal',
   templateUrl: './extras-modal.component.html',
   styleUrls: ['./extras-modal.component.scss'],
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule],
+  imports: [ReactiveFormsModule, CommonModule, NgSelectModule],
 })
 export class ExtrasModalComponent {
   extrasForm: FormGroup;
@@ -19,34 +20,26 @@ export class ExtrasModalComponent {
   loadingService = inject(LoadingService);
   reportesService = inject(ReportesService);
   isLoading = this.loadingService.isLoading;
-  metodosPago: string[] = ['Efectivo', 'Yape', 'BCP', 'Interbank', 'BBVA', 'Transferencia'];
-  tipoEgreso: string[] = ['uno', 'dos', 'tres', 'cuatro', 'cinco', 'seis'];
+  metodosPago: string[] = [
+    'Efectivo',
+    'Yape',
+    'BCP',
+    'Interbank',
+    'BBVA',
+    'Transferencia',
+  ];
+  tipoEgreso: string[] = ['Personal', 'Materiales', 'Mantenimiento', 'Administrativos', 'Implementación', 'Varios'];
 
   @Output() onSaveComplete = new EventEmitter<void>();
 
   constructor(private fb: FormBuilder) {
-
     this.extrasForm = this.fb.group({
       nombre: ['', Validators.required],
       descripcion: ['', Validators.required],
       costo: [0, [Validators.required, Validators.min(0)]],
-      metodoPago: ['', Validators.required],
-      tipoEgreso: ['', Validators.required],
+      metodoPago: [null, Validators.required],
+      tipoEgreso: [null, Validators.required],
     });
-  }
-
-  onSubmit() {
-    if (this.extrasForm.valid) {
-      const extrasData = this.extrasForm.value;
-      console.log('Datos de Egreso Extra:', extrasData);
-      this.save();
-    } else {
-      console.log('Formulario inválido');
-    }
-  }
-
-  private resetForm() {
-    this.extrasForm.reset();
   }
 
   close() {
@@ -54,27 +47,16 @@ export class ExtrasModalComponent {
   }
 
   save() {
-    const reportData = {
-        nombre: this.extrasForm.get('nombre')?.value,
-        descripcion: this.extrasForm.get('descripcion')?.value,
-        costo: this.extrasForm.get('costo')?.value,
-        metodoPago: this.extrasForm.get('metodoPago')?.value,
-        tipoEgreso: this.extrasForm.get('tipoEgreso')?.value,
-    };
-
-    console.log('Datos a enviar:', reportData);
-
-    this.reportesService.addReporte(reportData).subscribe({
+    if (this.extrasForm.valid) {
+      this.reportesService.addReporte(this.extrasForm.value).subscribe({
         next: () => {
-            console.log('Reporte guardado con éxito');
-            this.modal.dismissAll();
-            this.onSaveComplete.emit();
-            this.resetForm();
+          this.onSaveComplete.emit();
+          this.close();
         },
-        error: (err: any) => {
-            console.log('Error al guardar el reporte:', err);
+        error: (err) => {
+          console.log(err);
         },
-    });
-}
-
+      });
+    }
+  }
 }

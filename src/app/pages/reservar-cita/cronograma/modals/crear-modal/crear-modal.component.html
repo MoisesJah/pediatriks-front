@@ -98,6 +98,7 @@
         </ng-template>
 
         <div *ngIf="createForm.get('id_personal')?.value && isRecurrente" class="row">
+           <button (click)="jun()">cli</button>
             <div class="form-group d-flex flex-column col mb-3">
                 <label class="form-label" for="kt_calendar_datepicker_end_date">Dias Disponibles</label>
                 <div formArrayName="recurrencia" [ngClass]="{ 'mb-4': diferentSlots()}" class="btn-group">
@@ -108,7 +109,8 @@
                             [ngbPopover]="slot"
                             [popoverContext]="{ slots: getTimeSlots(day.value.dia_semana), index: i }"
                             [ngClass]="{ 'btn-active-success active': isOptionSelected(day.value.dia_semana) && day.value.selectedTimeSlot && !isCurrentDayOfWeek(day.value.dia_semana), 'btn-active-primary active': isCurrentDayOfWeek(day.value.dia_semana), 'cursor-not-allowed': !isEnabledDay(day.value.dia_semana) }">
-                            {{ getDayLabel(day.value.dia_semana) }}
+                            <!-- {{ getDayLabel(day.value.dia_semana) }} -->
+                            {{ day.value | json }}
                         </button>
                         <span class="position-absolute fs-10 fs-sm-8 badge mt-1 rounded-pill bg-success slot-time"  *ngIf="day.value.selectedTimeSlot && !isCurrentDayOfWeek(day.value.dia_semana)">{{day.value.selectedTimeSlot}}</span>
                     </div>

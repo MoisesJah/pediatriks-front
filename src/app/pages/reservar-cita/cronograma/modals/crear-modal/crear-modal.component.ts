@@ -115,6 +115,15 @@ export class CrearModalComponent implements OnInit, AfterViewInit {
     // will be used since specific attribute is not provided
   };
 
+  options = [
+    { label: 'L', value: 1 },
+    { label: 'M', value: 2 },
+    { label: 'MI', value: 3 },
+    { label: 'J', value: 4 },
+    { label: 'V', value: 5 },
+    { label: 'S', value: 6 },
+  ];
+
   constructor(private fb: FormBuilder) {
     this.createForm = this.fb.group({
       id_sede: [null, Validators.required],
@@ -151,7 +160,15 @@ export class CrearModalComponent implements OnInit, AfterViewInit {
     return this.createForm.get('recurrencia') as FormArray;
   }
 
+  jun(){
+    console.log(this.days.controls)
+    
+    console.log(this.options.map((option) => this.createDayGroup(option.value)))
+  }
+
   getDayLabel(diaSemana: number): string {
+    console.log(this.options)
+    console.log(diaSemana)
     const option = this.options.find((o) => o.value === diaSemana);
     return option!.label || ''
   }
@@ -166,15 +183,6 @@ export class CrearModalComponent implements OnInit, AfterViewInit {
     const dayGroup = this.days.at(index) as FormGroup;
     dayGroup.patchValue({ selectedTimeSlot: null });
   }
-
-  options = [
-    { label: 'L', value: 1 },
-    { label: 'M', value: 2 },
-    { label: 'MI', value: 3 },
-    { label: 'J', value: 4 },
-    { label: 'V', value: 5 },
-    { label: 'S', value: 6 },
-  ];
 
   isEnabledDay = (value:number) => {
     const id_personal = this.createForm.get('id_personal')?.value;
@@ -308,8 +316,7 @@ export class CrearModalComponent implements OnInit, AfterViewInit {
 
     this.id_tipopaquete = this.isCitaPaquete && event?.id_tipocita;
 
-    if(!isContinua) this.createForm.get('recurrencia')?.reset()
-   
+    if(!this.isRecurrente) this.days.reset();
 
     const id_paquete = this.createForm.get('id_paquete');
     const num_sesiones = this.createForm.get('num_sesiones');
@@ -433,7 +440,7 @@ export class CrearModalComponent implements OnInit, AfterViewInit {
   }
 
   createCita() {
-    
+    console.log(this.createForm.value);
     if (this.createForm.valid) {
       this.citaService
         .createForTherapy({
