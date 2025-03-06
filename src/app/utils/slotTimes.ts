@@ -63,7 +63,7 @@ export function generateTimeSlots(schedules: Horario[], interval: string): { dia
       // Include slots that start AT OR AFTER the schedule start time
       // AND end AT OR BEFORE the schedule end time
       if (slot.startMinutes >= scheduleStartMinutes && slot.endMinutes <= scheduleEndMinutes) {
-        const timeSlotString = `${slot.start}-${slot.end}`;
+        const timeSlotString = `${slot.start} - ${slot.end}`;
         
         if (!dayEntry.time_slots.includes(timeSlotString)) {
           dayEntry.time_slots.push(timeSlotString);
@@ -144,7 +144,7 @@ export function generateTimeSlotsEsp(schedules: Array<any>, interval: string): A
       // Include slots that start AT OR AFTER the schedule start time
       // AND end AT OR BEFORE the schedule end time
       if (slot.startMinutes >= scheduleStartMinutes && slot.endMinutes <= scheduleEndMinutes) {
-        const timeSlotString = `${slot.start}-${slot.end}`;
+        const timeSlotString = `${slot.start} - ${slot.end}`;
         
         if (!dayEntry.time_slots.includes(timeSlotString)) {
           dayEntry.time_slots.push(timeSlotString);
