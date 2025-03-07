@@ -167,8 +167,6 @@ export class CrearModalComponent implements OnInit, AfterViewInit {
   }
 
   getDayLabel(diaSemana: number): string {
-    console.log(this.options)
-    console.log(diaSemana)
     const option = this.options.find((o) => o.value === diaSemana);
     return option!.label || ''
   }

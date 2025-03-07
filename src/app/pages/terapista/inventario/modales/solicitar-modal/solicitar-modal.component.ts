@@ -5,6 +5,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { LoadingService } from 'src/app/services/loading.service';
 import { SolicitudInventarioService } from 'src/app/services/solicitud-inventario/solicitud-inventarioservice';
 import { AuthService } from 'src/app/services/auth.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-solicitar-modal',
@@ -19,6 +20,7 @@ export class SolicitarModalComponent {
   authService = inject(AuthService);
   solicitudInventarioService = inject(SolicitudInventarioService);
   isLoading = this.loadingService.isLoading;
+  toast = inject(ToastrService)
   user = this.authService.user(); // Acceder al usuario logueado
 
   solicitarForm: FormGroup;
@@ -61,11 +63,12 @@ export class SolicitarModalComponent {
       .enviarSolicitud(idPersonalSolicita, this.inventarioId.toString(), cantidad, idTerapiaSolicita, stockActual)
       .subscribe({
         next: () => {
-          console.log('Solicitud de stock enviada exitosamente.');
           this.onRequestComplete.emit();
         },
         error: (error) => {
-          console.error('Error al enviar la solicitud:', error);
+          if(error.error.invalid){
+            this.toast.error(error.error.invalid,'Error')
+          }
         },
         complete: () => {
           this.loadingService.stopLoading();

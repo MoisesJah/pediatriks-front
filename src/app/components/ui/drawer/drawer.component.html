@@ -81,6 +81,20 @@
                 </span>
               </div>
             </div>
+
+            <a routerLink="/terapista/fichas" routerLinkActive="here" *ngIf="isTerapeuta()" class="menu-item py-2" style="transition: background-color 0.3s; border-radius: 15px"
+                onmouseout="this.style.backgroundColor='';">
+                <span class="menu-link menu-center">
+                  <div class="menu-icon-text-container">
+                    <span class="menu-icon me-0">
+                      <i class="ki-duotone ki-book-square  fs-2tx"><span class="path1"></span><span class="path2"></span><span class="path3"></span></i>
+                    </span>
+                    <span class="menu-text">Fichas</span>
+                  </div>
+                </span>
+                </a>
+
+
         <!--begin:Menu item-->
         <a routerLink="/paquetes" routerLinkActive="here" *ngIf="isPaciente()" class="menu-item py-2" style="transition: background-color 0.3s; border-radius: 15px"
                 onmouseout="this.style.backgroundColor='';">

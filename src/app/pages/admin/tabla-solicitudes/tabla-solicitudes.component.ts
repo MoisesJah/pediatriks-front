@@ -1,4 +1,4 @@
-import { Component, OnInit,inject } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { HeaderComponent } from 'src/app/components/ui/header/header.component';
 import { SolicitudInventarioService } from 'src/app/services/solicitud-inventario/solicitud-inventarioservice';
 import { AgGridAngular } from 'ag-grid-angular';
@@ -14,10 +14,10 @@ import { ActionButtonsComponent } from './acction-buttons/action-buttons/action-
 
 @Component({
   selector: 'app-tabla-solicitudes',
-  standalone:true,
-  imports: [CommonModule,HeaderComponent,AgGridAngular],
+  standalone: true,
+  imports: [CommonModule, HeaderComponent, AgGridAngular],
   templateUrl: './tabla-solicitudes.component.html',
-  styleUrls: ['./tabla-solicitudes.component.scss']
+  styleUrls: ['./tabla-solicitudes.component.scss'],
 })
 export class TablaSolicitudesComponent implements OnInit {
   solicitudInventarioService = inject(SolicitudInventarioService);
@@ -26,7 +26,6 @@ export class TablaSolicitudesComponent implements OnInit {
   theme = inject(ThemeService);
   localeText = AG_GRID_LOCALE_ES;
   solicitudesPendientes: SolicitudInventario[] = [];
-
 
   ngOnInit(): void {
     this.fetchSolicitudes();
@@ -61,15 +60,27 @@ export class TablaSolicitudesComponent implements OnInit {
     {
       headerName: 'Estado',
       valueGetter: (params) => params.data.estado?.nombre || 'N/A',
-      cellRenderer: (params:any) =>{
+      cellRenderer: (params: any) => {
         const estado = params.value;
         switch (estado) {
           case 'aceptado':
-            return '<span class="badge badge-lg badge-light-success">' + estado + '</span>';
+            return (
+              '<span class="badge badge-lg badge-light-success">' +
+              estado +
+              '</span>'
+            );
           case 'negado':
-            return '<span class="badge badge-lg badge-light-danger">' + estado + '</span>';
+            return (
+              '<span class="badge badge-lg badge-light-danger">' +
+              estado +
+              '</span>'
+            );
           case 'pendiente':
-            return '<span class="badge badge-lg badge-light-warning">' + estado + '</span>';
+            return (
+              '<span class="badge badge-lg badge-light-warning">' +
+              estado +
+              '</span>'
+            );
         }
       },
       sortable: true,
@@ -120,39 +131,51 @@ export class TablaSolicitudesComponent implements OnInit {
       .pipe(map((resp) => resp.data));
   }
 
-  loadTabla(){
-    this.fetchSolicitudes();
+  loadPendientes() {
+    return this.solicitudInventarioService
+      .cargarSolicitudesPendientes()
+      .subscribe();
   }
 
+  loadTabla() {
+    this.fetchSolicitudes();
+  }
 
   gridReady(params: any): void {
     // params.api.sizeColumnsToFit();
   }
 
-  aceptarSolicitud(id_solicitud:string,id_personal_aprueba:string) {
-    this.solicitudInventarioService.aceptarSolicitud(id_solicitud,id_personal_aprueba).subscribe({
-      next: () => {
-         this.solicitudesPendientes = this.solicitudesPendientes.filter(s => s.id_solicitud  !== id_solicitud);
+  aceptarSolicitud(id_solicitud: string, id_personal_aprueba: string) {
+    this.solicitudInventarioService
+      .aceptarSolicitud(id_solicitud, id_personal_aprueba)
+      .subscribe({
+        next: () => {
+          this.solicitudesPendientes = this.solicitudesPendientes.filter(
+            (s) => s.id_solicitud !== id_solicitud
+          );
           this.fetchSolicitudes();
+          this.loadPendientes();
         },
-       error: (error) => {
-         console.error('Error al aceptar solicitud:', error);
-       }
-     });
-   }
-
-
-   negarSolicitud(id_solicitud: string, id_personal_aprueba: string) {
-    this.solicitudInventarioService.negarSolicitud(id_solicitud, id_personal_aprueba).subscribe({
-      next: () => {
-        this.solicitudesPendientes = this.solicitudesPendientes.filter(s => s.id_solicitud !== id_solicitud);
-        this.fetchSolicitudes();
-      },
-      error: (error) => {
-        console.error('Error al negar solicitud:', error);
-      }
-    });
+        error: (error) => {
+          console.error('Error al aceptar solicitud:', error);
+        },
+      });
   }
 
-
+  negarSolicitud(id_solicitud: string, id_personal_aprueba: string) {
+    this.solicitudInventarioService
+      .negarSolicitud(id_solicitud, id_personal_aprueba)
+      .subscribe({
+        next: () => {
+          this.solicitudesPendientes = this.solicitudesPendientes.filter(
+            (s) => s.id_solicitud !== id_solicitud
+          );
+          this.fetchSolicitudes();
+          this.loadPendientes();
+        },
+        error: (error) => {
+          console.error('Error al negar solicitud:', error);
+        },
+      });
+  }
 }

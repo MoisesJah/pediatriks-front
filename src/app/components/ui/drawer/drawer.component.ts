@@ -90,11 +90,10 @@ export class DrawerComponent {
 
     // Verificar si es administrador o terapeuta
     if (this.isAdmin()) {
-      // Redirigir al inventario del administrador
       this.router.navigate(['/admin/inventario']);
     } else if (this.isTerapeuta()) {
-      // Redirigir al inventario del terapeuta
-      this.router.navigate(['/terapeuta/inventario']);
+      console.log('yooooo')
+      this.router.navigate(['/terapista/inventario']);
     } else {
       // Manejar otros roles o casos no reconocidos
       this.router.navigate(['/home']);

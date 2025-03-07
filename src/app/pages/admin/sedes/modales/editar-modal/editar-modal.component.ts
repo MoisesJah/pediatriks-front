@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, OnInit, OnDestroy, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
+import { Component, EventEmitter, Input, Output, OnInit, OnDestroy, ViewChild, ElementRef, AfterViewInit, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { SedesService } from 'src/app/services/sedes/sedes.service';
@@ -6,6 +6,7 @@ import { Sede } from 'src/app/models/sede';
 import { Subscription } from 'rxjs';
 import flatpickr from 'flatpickr';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { ToastrService } from 'ngx-toastr';
 
 @UntilDestroy()
 @Component({
@@ -17,6 +18,8 @@ export class EditarModalComponent implements OnInit, OnDestroy, AfterViewInit {
   sedeForm: FormGroup;
   isLoading = false;
   private subscriptions: Subscription = new Subscription();
+
+  toast = inject(ToastrService)
 
   @Input() sedeId!: string;
   @Output() onSaveComplete = new EventEmitter<void>();
@@ -109,9 +112,13 @@ export class EditarModalComponent implements OnInit, OnDestroy, AfterViewInit {
           this.onSaveComplete.emit();
           this.modalService.dismissAll();
         },
-        error: (err) => {
-          console.error('Error al guardar la sede:', err);
-          this.isLoading = false;
+        error: (error) => {
+          if (error.error.errors) {
+            const errors = Object.values(error.error.errors).join('\n');
+            this.toast.error(errors, 'Error');
+          } else {
+            this.toast.error('Ocurrio un error al actualizar la sede', 'Error');
+          }
         }
       });
       this.subscriptions.add(subscription);

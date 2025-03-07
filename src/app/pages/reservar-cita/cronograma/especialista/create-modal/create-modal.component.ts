@@ -205,6 +205,8 @@ export class CreateModalComponent implements OnInit, AfterViewInit {
     const id_paquete = this.createForm.get('id_paquete');
     const num_sesiones = this.createForm.get('num_sesiones');
 
+    if(!this.isRecurrente) this.days.reset();
+
     if (this.isCitaPaquete) {
       id_paquete?.setValidators(Validators.required);
     } else {
