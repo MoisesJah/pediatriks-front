@@ -50,6 +50,8 @@ export class PersonalService {
     data.append('id_sede', personal.id_sede);
     data.append('sueldo', personal.sueldo.toString());
     data.append('id_terapia', personal.id_terapia);
+    data.append('nro_colegiatura', personal.nro_colegiatura);
+    data.append('direccion', personal.direccion);
     data.append('horarios', JSON.stringify(personal.horarios));
     data.append('color', personal.color);
 

@@ -36,7 +36,7 @@ import { ListItemAnimation } from 'src/app/utils/animations';
 })
 export class EditarModalComponent implements OnInit, AfterViewInit {
   modal = inject(NgbModal);
-  toast = inject(ToastrService)
+  toast = inject(ToastrService);
   personalService = inject(PersonalService);
   tipoPersonalService = inject(TipoPersonalService);
   terapiaService = inject(TerapiaService);
@@ -66,7 +66,7 @@ export class EditarModalComponent implements OnInit, AfterViewInit {
     { value: 5, name: 'Viernes' },
     { value: 6, name: 'Sábado' },
   ];
-  
+
   colorTerapia: null | string = null;
 
   loadingGenero: boolean;
@@ -94,6 +94,11 @@ export class EditarModalComponent implements OnInit, AfterViewInit {
       id_terapia: [null, Validators.required],
       horarios: this.fb.array([]),
       cv: [null],
+      nro_colegiatura: [
+        '',
+        [Validators.required, Validators.pattern('^[0-9]*')],
+      ],
+      direccion: [''],
       color: [null, Validators.required],
     });
   }
@@ -130,7 +135,7 @@ export class EditarModalComponent implements OnInit, AfterViewInit {
   }
 
   get colorPalette() {
-    return this.colorTerapia ? generateColorPalette(this.colorTerapia,15) : [];
+    return this.colorTerapia ? generateColorPalette(this.colorTerapia, 15) : [];
   }
 
   ngOnInit(): void {
@@ -153,7 +158,7 @@ export class EditarModalComponent implements OnInit, AfterViewInit {
           const newMinutes = minutes + 60;
           const newHours = hours + Math.floor(newMinutes / 60);
           const remainingMinutes = newMinutes % 60;
-    
+
           this.horarios
             .at(i)
             .get('hora_fin')
@@ -178,8 +183,7 @@ export class EditarModalComponent implements OnInit, AfterViewInit {
       const control = this.editForm.get(key);
       if (Array.isArray(control?.value)) {
         formData.append(key, JSON.stringify(control?.value));
-
-      } else if(control?.value) {
+      } else if (control?.value) {
         formData.append(key, control?.value);
       }
     });
@@ -195,10 +199,7 @@ export class EditarModalComponent implements OnInit, AfterViewInit {
             const errors = Object.values(err.error.errors).join('\n');
             this.toast.error(errors, 'Error');
           } else {
-            this.toast.error(
-              'Ocurrió un error al crear el personal',
-              'Error'
-            );
+            this.toast.error('Ocurrió un error al crear el personal', 'Error');
           }
         },
       });
@@ -207,28 +208,31 @@ export class EditarModalComponent implements OnInit, AfterViewInit {
 
   private loadPersonalData() {
     if (this.personalId) {
-      this.personalService.getById(this.personalId).pipe(untilDestroyed(this)).subscribe({
-        next: (personal) => {
-          this.editForm.patchValue(personal.data);
-          this.colorTerapia = personal.data.terapia?.color;
+      this.personalService
+        .getById(this.personalId)
+        .pipe(untilDestroyed(this))
+        .subscribe({
+          next: (personal) => {
+            this.editForm.patchValue(personal.data);
+            this.colorTerapia = personal.data.terapia?.color;
 
-          if (personal.data.horarios) {
-            personal.data.horarios.forEach((horario: any) => {
-              this.horarios.push(
-                this.fb.group({
-                  id_horario: [horario.id_horario],
-                  dia_semana: [horario.dia_semana, Validators.required],
-                  hora_inicio: [horario.hora_inicio, Validators.required],
-                  hora_fin: [horario.hora_fin, Validators.required],
-                })
-              );
-            });
-          }
-        },
-        error: (err: HttpErrorResponse) => {
-          this.toast.error('Ocurrió un error.','Error')
-        },
-      });
+            if (personal.data.horarios) {
+              personal.data.horarios.forEach((horario: any) => {
+                this.horarios.push(
+                  this.fb.group({
+                    id_horario: [horario.id_horario],
+                    dia_semana: [horario.dia_semana, Validators.required],
+                    hora_inicio: [horario.hora_inicio, Validators.required],
+                    hora_fin: [horario.hora_fin, Validators.required],
+                  })
+                );
+              });
+            }
+          },
+          error: (err: HttpErrorResponse) => {
+            this.toast.error('Ocurrió un error.', 'Error');
+          },
+        });
     }
   }
 

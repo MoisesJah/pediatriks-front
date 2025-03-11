@@ -48,10 +48,15 @@ export class PersonalComponent implements OnInit {
       },
     },
     { field: 'nombre', headerName: 'Nombre', filter: true },
-    { field: 'dni', headerName: 'DNI', filter: true,maxWidth: 110 },
-    { field: 'telefono', headerName: 'Teléfono', filter: true,maxWidth: 120 },
+    { field: 'dni', headerName: 'DNI', filter: true, maxWidth: 110 },
+    { field: 'telefono', headerName: 'Teléfono', filter: true, maxWidth: 120 },
     { field: 'correo', headerName: 'Correo', filter: true },
-    { field: 'genero.nombre', headerName: 'Género', filter: true, maxWidth: 110 },
+    {
+      field: 'genero.nombre',
+      headerName: 'Género',
+      filter: true,
+      maxWidth: 110,
+    },
     { field: 'sede.nombre', headerName: 'Sede', filter: true },
     {
       field: 'sueldo',
@@ -60,6 +65,8 @@ export class PersonalComponent implements OnInit {
       valueFormatter: (params) => formatMoney(params.value),
     },
     { field: 'terapia.nombre', headerName: 'Especialidad', filter: true },
+    { field: 'nro_colegiatura', headerName: 'Nro. Colegiatura', filter: true },
+    { field: 'direccion', headerName: 'Dirección', filter: true },
     {
       headerName: 'Color',
       field: 'color',
@@ -67,7 +74,7 @@ export class PersonalComponent implements OnInit {
       filter: false,
       cellRenderer: (params: any) => {
         return `<div class="h-20px w-20px mt-3 rounded-circle" style="background-color: ${params.value}"></div>`;
-      }
+      },
     },
     {
       field: 'horarios',
@@ -76,7 +83,9 @@ export class PersonalComponent implements OnInit {
       autoHeight: true,
       minWidth: 250,
       valueFormatter: (params) => {
-        return params.data.horarios.map((h: any) => getDayWeek(h.dia_semana)).join(', ');
+        return params.data.horarios
+          .map((h: any) => getDayWeek(h.dia_semana))
+          .join(', ');
       },
       cellRenderer: HorariosListComponent,
     },

@@ -106,6 +106,12 @@ export class CitasComponent implements OnInit {
     selectMirror: true,
     dayMaxEvents: true,
     locale: esLocale,
+    displayEventTime: false,
+    eventDidMount: (info) => {
+      // const container =  info.el.getElementsByClassName('fc-event-title')[0] as HTMLElement
+      // container.innerText = `${info.event.extendedProps.tipocita}`
+      console.log(info.event.title);
+    },
     datesSet: (arg) => {
       this.startWeek = arg.view.activeStart;
       this.endWeek = arg.view.activeEnd;
@@ -126,7 +132,7 @@ export class CitasComponent implements OnInit {
     if (this.personalId) {
       return (this.citasEvent = this.citasService
         .getByPersonal(params)
-        .pipe(map((resp) => resp.data),
+        .pipe(map((resp) => resp.data.map((cita: any) => ({...cita, title: `${cita.tipocita} - ${cita.title}` }))),
           untilDestroyed(this)));
     }
   }

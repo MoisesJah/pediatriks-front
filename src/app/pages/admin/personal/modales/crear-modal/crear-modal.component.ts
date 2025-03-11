@@ -104,6 +104,8 @@ export class CrearModalComponent implements OnInit, AfterViewInit {
       id_terapia: [null, Validators.required],
       cv: [null],
       color: [null, Validators.required],
+      nro_colegiatura: ['', [Validators.required, Validators.pattern('^[0-9]*')]],
+      direccion: [''],
       horarios: this.fb.array([this.createHorario()]),
     });
   }
