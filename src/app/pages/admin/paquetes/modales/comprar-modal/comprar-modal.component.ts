@@ -40,19 +40,25 @@ export class ComprarModalComponent {
   pacienteService = inject(PacienteService);
   isLoading = inject(LoadingService).isLoading;
   form: FormGroup;
-
+  metodosPago = [
+    'Efectivo',
+    'Yape',
+    'BCP',
+    'Interbank',
+    'BBVA',
+    'Transferencia',
+  ];
   @Input() paqueteId: string | { id_paquetes: string } | null = null;
   @Output() onSaveComplete = new EventEmitter<void>();
 
   usuariosList: Observable<IUser[]> = new Observable();
   pacientesList: Observable<IPaciente[]> = new Observable();
-  selectedUser: IUser | null = null;
-  selectedPaciente: IPaciente | null = null;
 
   constructor(private fb: FormBuilder) {
     this.form = this.fb.group({
-      usuario: [null, Validators.required],
-      paciente: [null, Validators.required],
+      usuarioId: [null, Validators.required],
+      pacienteId: [null, Validators.required],
+      metodo_pago: [null, Validators.required],
     });
   }
 
@@ -86,8 +92,6 @@ export class ComprarModalComponent {
       }
     }
 
-    console.log('ID del paquete:', id); // Verificar el ID
-
     if (id) {
       this.paqueteService.getById(id).subscribe({
         next: (paquete) => {
@@ -102,14 +106,13 @@ export class ComprarModalComponent {
     }
   }
 
-  onUserSelect(user: IUser) {
-    this.selectedUser = user;
-    this.form.controls['paciente'].reset();
+  onChangeUser(user: IUser) {
+    this.form.get('paciente')?.reset();
     this.loadPacientesByUser(user.id);
   }
 
   onPacienteSelect(paciente: IPaciente) {
-    this.selectedPaciente = paciente;
+    console.log(paciente)
   }
 
   private loadPacientesByUser(userId: number) {
@@ -131,52 +134,26 @@ export class ComprarModalComponent {
   }
 
   purchase() {
-    if (this.paqueteId === null) {
-      console.error('ID del paquete no está disponible');
-      alert('Por favor, selecciona un paquete válido.');
-      return;
+    if (this.form.valid) {
+      this.paqueteService
+        .purchase({
+          ...this.form.value,
+          paqueteId: this.paqueteId,
+        })
+        .subscribe({
+          next: () => {
+            this.onSaveComplete.emit();
+            this.modal.dismissAll();
+          },
+          error: (err) => {
+            if (err.error.errors) {
+              const errors = Object.values(err.error.errors).join('\n');
+              this.toast.error(errors, 'Error');
+            } else {
+              this.toast.error('Ocurrió un error', 'Error ');
+            }
+          },
+        });
     }
-
-    const id =
-      typeof this.paqueteId === 'string'
-        ? this.paqueteId
-        : this.paqueteId.id_paquetes;
-
-    if (!id) {
-      console.error('ID del paquete no está disponible');
-      alert('Por favor, selecciona un paquete válido.');
-      return;
-    }
-
-    if (!this.selectedUser) {
-      console.error('Usuario no seleccionado');
-      alert('Por favor, selecciona un usuario.');
-      return;
-    }
-
-    if (!this.selectedPaciente) {
-      console.error('Paciente no seleccionado');
-      alert('Por favor, selecciona un paciente.');
-      return;
-    }
-
-    const pacienteId = this.selectedPaciente.id_paciente;
-    const usuarioId = this.selectedUser.id;
-
-    this.paqueteService.purchase(id, pacienteId, usuarioId).subscribe({
-      next: () => {
-        console.log('Compra realizada con éxito');
-        this.onSaveComplete.emit();
-        this.modal.dismissAll();
-      },
-      error: (err) => {
-        if (err.error.errors) {
-          const errors = Object.values(err.error.errors).join('\n');
-          this.toast.error(errors, 'Error');
-        } else {
-          this.toast.error('Ocurrió un error', 'Error ');
-        }
-      },
-    });
   }
 }

@@ -1,18 +1,14 @@
 <div class="modal-header">
   <h4 class="modal-title d-flex align-items-center gap-1" id="modal-basic-title">
     <span>
-      <i style="vertical-align: middle;" class="ki-duotone ki-handcart text-white me-2 fs-2hx">
+      <i style="vertical-align: middle;" class="ki-duotone ki-handcart me-2 fs-1">
         <span class="path1"></span><span class="path2"></span><span class="path3"></span>
       </i>
     </span>
     Adquirir Paquete
   </h4>
-  <button
-    type="button"
-    class="btn btn-sm btn-icon btn-active-color-primary btn-color-gray-800"
-    aria-label="Close"
-    (click)="close()"
-  >
+  <button type="button" class="btn btn-sm btn-icon btn-active-color-primary btn-color-gray-800" aria-label="Close"
+    (click)="close()">
     <i class="ki-duotone ki-cross-square fs-1">
       <span class="path1"></span><span class="path2"></span>
     </i>
@@ -23,44 +19,30 @@
   <p>¿Estás seguro de comprar este Paquete?</p>
   <p>Selecciona el usuario y luego el paciente que desees para continuar con la compra.</p>
 
-  <div class="col-mb-4 mb-3">
-    <ng-select
-  [items]="usuariosList | async"
-  [loading]="isLoading | async"
-  [loadingText]="'Cargando..'"
-  [notFoundText]="'Sin resultados'"
-  bindLabel="name"
-  bindValue="id"
-  placeholder="Selecciona un usuario"
-  (change)="onUserSelect($event)"
-  [compareWith]="compareUsers"
-></ng-select>
-  </div>
-
-  <div class="col-mb-4 mb-3">
-    <ng-select
-  [items]="pacientesList | async"
-  [loading]="isLoading | async"
-  [loadingText]="'Cargando..'"
-  [notFoundText]="'Sin resultados'"
-  bindLabel="nombre"
-  bindValue="id"
-  placeholder="Selecciona un paciente"
-  (change)="onPacienteSelect($event)"
-></ng-select>
-  </div>
+  <form [formGroup]="form">
+    <div class="col-mb-4 mb-3">
+      <ng-select [items]="usuariosList | async" [loading]="isLoading | async" [loadingText]="'Cargando..'"
+        [notFoundText]="'Sin resultados'" bindLabel="name" bindValue="id" placeholder="Selecciona un usuario"
+        (change)="onChangeUser($event)" formControlName="usuarioId" [compareWith]="compareUsers"></ng-select>
+    </div>
+  
+    <div class="col-mb-4 mb-3">
+      <ng-select [items]="pacientesList | async" [loading]="isLoading | async" [loadingText]="'Cargando..'"
+        [notFoundText]="'Sin resultados'" formControlName="pacienteId" bindLabel="nombre" bindValue="id_paciente" placeholder="Selecciona un paciente"
+        (change)="onPacienteSelect($event)"></ng-select>
+    </div>
+  
+    <div class="col mb-3">
+      <ng-select [items]="metodosPago" placeholder="Método de Pago" formControlName="metodo_pago" />
+    </div>
+  </form>
 </div>
 
 <div class="modal-footer">
   <button type="button" class="btn btn-secondary" (click)="close()">
     Cancelar
   </button>
-  <button
-    [disabled]="(isLoading | async) || !selectedUser || !selectedPaciente"
-    type="button"
-    class="btn btn-primary"
-    (click)="purchase()"
-  >
+  <button [disabled]="form.invalid || (isLoading | async)" type="button" class="btn btn-primary" (click)="purchase()">
     Comprar
     <span *ngIf="isLoading | async" class="spinner-border spinner-border-sm align-middle ms-2"></span>
   </button>
