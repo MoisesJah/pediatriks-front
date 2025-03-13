@@ -67,7 +67,7 @@ export class ModalEditComponent implements OnInit, AfterViewInit, OnDestroy {
   horarios: number[] = [];
 
   selectedStatus: any;
-  fichasLoading = false
+  fichasLoading = false;
 
   personalList: Observable<Personal[]> = new Observable();
   statusList: Observable<any[]> = new Observable();
@@ -141,6 +141,31 @@ export class ModalEditComponent implements OnInit, AfterViewInit, OnDestroy {
     return Number(this.event?.terapia.duracion.split(':')[1]);
   }
 
+  onStartTimeChange(event: any) {
+    const { selectedDates, dateStr, instance } = event;
+    const selectedDate = selectedDates[0];
+    let minutes = selectedDate.getMinutes();
+    let hours = selectedDate.getHours();
+
+    // Calculate the total time in minutes
+    const totalMinutes = hours * 60 + minutes;
+
+    // Calculate the next valid time
+    const nextIncrement = Math.ceil(totalMinutes / 45) * 45;
+
+    // Convert back to hours and minutes
+    hours = Math.floor(nextIncrement / 60);
+    minutes = nextIncrement % 60;
+
+    // Set the new time
+    const newDate = new Date(selectedDate);
+    newDate.setHours(hours, minutes, 0);
+
+    // Update Flatpickr's selected date without triggering onChange again
+    instance.setDate(newDate, false);
+
+  }
+
   endTimeValidation() {
     const horaInicio = this.editEventForm.get('hora_inicio')?.value;
 
@@ -198,7 +223,7 @@ export class ModalEditComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   getFichas() {
-    this.fichasLoading = true
+    this.fichasLoading = true;
     this.fichasList = this.fichasService
       .getBySesion(this.event?.sesion.id_sesion!)
       .pipe(
@@ -226,8 +251,9 @@ export class ModalEditComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngAfterViewInit() {
     this.editEventForm.get('id_status')?.valueChanges.subscribe((value) => {
-      if(value === 2){ //Asistió
-        this.getFichas()
+      if (value === 2) {
+        //Asistió
+        this.getFichas();
       }
     });
     this.editEventForm.valueChanges.subscribe(() => this.endTimeValidation());
@@ -239,15 +265,15 @@ export class ModalEditComponent implements OnInit, AfterViewInit, OnDestroy {
         }
       });
 
-      window.addEventListener('focus', () => {
-        this.getFichas()
-      })
+    window.addEventListener('focus', () => {
+      this.getFichas();
+    });
   }
 
   ngOnDestroy(): void {
     window.removeEventListener('focus', () => {
-      this.getFichas()
-    })
+      this.getFichas();
+    });
   }
 
   loadPersonal() {
@@ -279,14 +305,14 @@ export class ModalEditComponent implements OnInit, AfterViewInit, OnDestroy {
       .getById(id_cita, id_sesion)
       .pipe(untilDestroyed(this))
       .subscribe((resp) => {
-        const id_status = resp.data.sesion.status.id_status
+        const id_status = resp.data.sesion.status.id_status;
 
         this.editEventForm.patchValue({
           id_cita: resp.data.id_cita,
           id_sesion: resp.data.sesion.id_sesion,
           id_personal: resp.data.sesion.personal.id_personal,
           // id_status: id_status === 1 ? null : id_status,
-          id_status: (this.isTerapista && id_status === 1) ? null : id_status,
+          id_status: this.isTerapista && id_status === 1 ? null : id_status,
           fecha_inicio: resp.data.sesion.fecha_inicio,
           hora_inicio: resp.data.sesion.hora_inicio,
           hora_fin: resp.data.sesion.hora_fin,
@@ -301,7 +327,7 @@ export class ModalEditComponent implements OnInit, AfterViewInit, OnDestroy {
           ...this.editEventForm.value,
           id_cita: this.event?.id_cita!,
           id_sesion: this.event?.sesion.id_sesion!,
-          id_terapia: this.event?.terapia.id_terapia
+          id_terapia: this.event?.terapia.id_terapia,
         })
         .subscribe({
           next: () => {

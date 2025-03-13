@@ -42,7 +42,7 @@
         <div class="form-group col">
           <label class="form-label" for="edit_kt_calendar_datepicker_start_time">Hora de Inicio</label>
           <input type="text" class="form-control" mwlFlatpickr [readOnly]="isTerapista"
-            [minuteIncrement]="minutesTerapia" [options]="horaInicioOptions" id="edit_kt_calendar_datepicker_start_time"
+            [minuteIncrement]="minutesTerapia" (flatpickrChange)="onStartTimeChange($event)" [options]="horaInicioOptions" id="edit_kt_calendar_datepicker_start_time"
             formControlName="hora_inicio" placeholder="Seleccionar Hora de Inicio" />
         </div>
         <div class="form-group col">
