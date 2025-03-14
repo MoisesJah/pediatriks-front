@@ -1,0 +1,72 @@
+<app-header>
+    <ng-container header-title>
+        <h1 class="d-flex align-items-center text-white fw-bold my-1">
+            Historial de Asistencia
+        </h1>
+
+    </ng-container>
+</app-header>
+
+<div class="content d-flex flex-column flex-column-fluid">
+    <div class="container-xxl">
+        <div class="card shadow p-2 px-4">
+          <div class="d-flex py-4 justify-content-between align-items-center">
+            <form data-kt-search-element="form" class=" position-relative" autocomplete="off">
+              <!--begin::Hidden input(Added to disable form autocomplete)-->
+              <input type="hidden">
+              <!--end::Hidden input-->
+    
+              <!--begin::Icon-->
+              <i class="ki-duotone ki-magnifier fs-2 search-icon position-absolute top-50 translate-middle-y ms-4"><span
+                  class="path1"></span><span class="path2"></span></i> <!--end::Icon-->
+    
+              <!--begin::Input-->
+              <input type="search" (input)="onFilterTextBoxChanged()" id="asistencia-search"
+                class="form-control custom-form-control ps-13" name="search" value="" placeholder="Búsqueda"
+                data-kt-search-element="input">
+              <!--end::Input-->
+            </form>
+            <div class="d-flex align-items-center gap-3">
+                <button type="button" class="btn btn-secondary" [disabled]="loadingHorario" (click)="openConfirmModal()">Marcar Asistencia</button>
+              <button type="button" class="btn btn-light-primary" (click)="loadTabla()">
+                <span class="d-flex align-items-center">
+                  <span class="fa-solid fa-rotate-right"></span>
+                  <span class="ms-2">Actualizar</span>
+                </span>
+              </button>
+              <!-- <button type="button" class="btn btn-primary" (click)="openCreateModal()">
+                <span class="d-flex align-items-center">
+                  <span class="ki-solid ki-plus text-white fs-1"></span>
+                  <span class="text-white ms-2">Añadir</span>
+                </span>
+              </button> -->
+            </div>
+          </div>
+    
+          <div style="height: calc(100dvh - 281px)" [ngClass]="[theme.getThemeMode() === 'light' ? 'ag-theme-quartz' : 'ag-theme-quartz-dark']">
+            @defer {
+            <ag-grid-angular
+              style="width: 100%; height: 100%"
+              [rowData]="asistenciaList | async"
+              [columnDefs]="colDefs"
+              [enableCellTextSelection]="true"
+              (gridReady)="gridReady($event)"
+              [localeText]="localeText"
+              [ariaHidden]="true"
+              [pagination]="true"
+              [loading]="isLoading | async" loadingMessage="Cargando..."
+            ></ag-grid-angular>
+            }@loading {
+              <div
+                class="d-flex justify-content-center align-items-center"
+                style="height: 100%"
+              >
+                <div class="spinner-border" role="status">
+                  <span class='visually-hidden'>Loading...</span>
+                </div>
+              </div>
+              }
+          </div>
+        </div>
+      </div>
+</div>

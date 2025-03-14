@@ -36,6 +36,13 @@ const routes: Routes = [
     loadComponent: () =>
       import('./fichas/fichas.component').then((m) => m.FichasComponent),
   },
+  {
+    path:'asistencia',
+    loadComponent: () =>
+      import('./asistencia/asistencia.component').then(
+        (m) => m.AsistenciaComponent
+      ),
+  }
 ];
 
 @NgModule({

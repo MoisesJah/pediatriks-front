@@ -1,0 +1,38 @@
+<div class="modal-header">
+    <h4 class="modal-title d-flex align-items-center gap-1" id="modal-basic-title">
+        <span class="text-primary">
+            <i class="ki-duotone ki-time text-gray-900 fs-2x"><span class="path1"></span><span class="path2"></span></i>
+        </span>
+        Confirmar Asistencia
+    </h4>
+    <button type="button" class="btn btn-sm btn-icon btn-active-color-primary btn-color-gray-800" aria-label="Close"
+        (click)="close()">
+        <i class="ki-duotone ki-cross-square fs-1">
+            <span class="path1"></span><span class="path2"></span>
+        </i>
+    </button>
+</div>
+
+<div class="modal-body">
+   
+
+        <p class="fw-bold fs-4 alert alert-primary rounded">{{auth?.nombre}} &bull; {{auth?.terapia.nombre}}</p>
+
+        @if (showBanner) {
+        <div class="alert alert-warning rounded">
+            <div class="d-flex fs-6 gap-3 align-items-start">
+                <i class="ki-duotone ki-timer fs-1">
+                    <span class="path1"></span>
+                    <span class="path2"></span>
+                    <span class="path3"></span>
+                </i>
+                <div class="d-flex flex-column gap-3">
+
+                    <span><strong>Hora Actual:</strong> {{ currentDate | date: 'HH:mm'}}</span>
+                    <span>Asistencia depues de {{ todayHorario }} se marcará como tarde</span>
+                </div>
+            </div>
+        </div>
+        }
+        <button class="btn btn-primary">Marcar Asistencia</button>
+    </div>
