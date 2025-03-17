@@ -15,6 +15,7 @@ import { ColDef, GridReadyEvent, GridApi } from 'ag-grid-community';
 import { ActionButtonsComponent } from './modals/action-buttons/action-buttons.component';
 import { AG_GRID_LOCALE_ES } from '@ag-grid-community/locale';
 import { ThemeService } from 'src/app/services/theme.service';
+import { BtnLinkInfoComponent } from './modals/btn-link-info/btn-link-info.component';
 
 @UntilDestroy()
 @Component({
@@ -48,6 +49,10 @@ export class PacientesComponent implements OnInit {
     { field: 'user.name', headerName: 'Apoderado', filter: true },
     { field: 'parentesco.nombre', headerName: 'Parentesco', filter: true },
     { field: 'colegio', headerName: 'Colegio', filter: true },
+    {
+      headerName: 'Informes',
+      cellRenderer: BtnLinkInfoComponent
+    },
     {
       headerName: 'Acciones',
       cellRenderer: ActionButtonsComponent,

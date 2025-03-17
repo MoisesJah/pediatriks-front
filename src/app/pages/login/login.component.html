@@ -58,7 +58,7 @@
                 <!--begin::Password-->
                 <input type="password" formControlName="password" placeholder="Contraseña" name="password" autocomplete="off" class="form-control bg-transparent" />
                 <!--end::Password-->
-                <div (click)="openSendLinkModal()" class="text-gray-700 link-primary text-end mt-3 fw-semibold fs-6 cursor-pointer">¿Olvidó su contraseña?</div>
+                <div [ngClass]="{'pe-none': (isLoading | async)}" (click)="openSendLinkModal()" class="text-gray-700 link-primary text-end mt-3 fw-semibold fs-6 cursor-pointer">¿Olvidó su contraseña?</div>
 
               </div>
               <!--end::Input group=-->

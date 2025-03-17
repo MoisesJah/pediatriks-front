@@ -1,9 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, inject, Output } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { UntilDestroy } from '@ngneat/until-destroy';
 import { AsistenciaService } from 'src/app/services/asistencia/asistencia.service';
 import { AuthService } from 'src/app/services/auth.service';
+import { LoadingService } from 'src/app/services/loading.service';
 
+@UntilDestroy()
 @Component({
   selector: 'app-check-asistencia',
   standalone: true,
@@ -16,6 +19,7 @@ export class CheckAsistenciaComponent {
   modal = inject(NgbModal);
   asistenciaService = inject(AsistenciaService);
   auth = inject(AuthService).user()?.personal;
+  isLoading = inject(LoadingService).isLoading;
   @Output() onRequestComplete = new EventEmitter<void>();
 
   todayHorario = '';
@@ -30,6 +34,7 @@ export class CheckAsistenciaComponent {
       .create({
         id_personal: this.auth?.id_personal!,
         fecha: this.currentDate,
+        id_status: this.showBanner ? 2 : 1,
       })
       .subscribe({
         next: () => {

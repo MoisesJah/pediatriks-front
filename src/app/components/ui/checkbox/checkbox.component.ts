@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { NgbAccordionModule, NgbCollapseModule } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
@@ -7,7 +7,8 @@ import { NgbAccordionModule, NgbCollapseModule } from '@ng-bootstrap/ng-bootstra
   standalone: true,
   imports: [NgbAccordionModule, CommonModule,NgbCollapseModule],
   templateUrl: './checkbox.component.html',
-  styleUrl: './checkbox.component.scss'
+  styleUrl: './checkbox.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CheckboxComponent implements OnInit {
   @Input() items: any[] = [];

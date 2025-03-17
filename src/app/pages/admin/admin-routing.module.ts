@@ -28,6 +28,13 @@ const routes: Routes = [
       ),
   },
   {
+    path: 'pacientes/:id',
+    loadComponent: () =>
+      import('./pacientes/informacion/informacion.component').then(
+        (m) => m.InformacionComponent
+      ),
+  },
+  {
     path: 'personal',
     loadComponent: () =>
       import('./personal/personal.component').then((m) => m.PersonalComponent),

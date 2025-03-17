@@ -56,7 +56,7 @@ export class AsistenciaComponent implements OnInit {
     },
     {
       headerName: 'Status',
-      field: 'status',
+      field: 'status.nombre',
       cellClass: 'fw-bold',
       filter: 'agTextColumnFilter',
       minWidth: 250,

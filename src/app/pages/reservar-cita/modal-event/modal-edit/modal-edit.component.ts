@@ -115,6 +115,7 @@ export class ModalEditComponent implements OnInit, AfterViewInit, OnDestroy {
     noCalendar: true,
     minTime: '08:00',
     maxTime: '20:00',
+    minuteIncrement: 1,
     dateFormat: 'H:i',
   };
 
@@ -143,27 +144,40 @@ export class ModalEditComponent implements OnInit, AfterViewInit, OnDestroy {
 
   onStartTimeChange(event: any) {
     const { selectedDates, dateStr, instance } = event;
-    const selectedDate = selectedDates[0];
-    let minutes = selectedDate.getMinutes();
-    let hours = selectedDate.getHours();
+    if (!instance.isOpen) return; // Only handle changes when the picker is open
 
-    // Calculate the total time in minutes
+    const currentTime = selectedDates[0];
+    const minutes = currentTime.getMinutes();
+    const hours = currentTime.getHours();
+
     const totalMinutes = hours * 60 + minutes;
 
-    // Calculate the next valid time
-    const nextIncrement = Math.ceil(totalMinutes / 45) * 45;
+    const increment = 45;
+
+    // Determine if increment or decrement button was clicked
+    const isIncrement = totalMinutes > (instance.lastTime || 0);
+    const isDecrement = totalMinutes < (instance.lastTime || Infinity);
+
+    let newTotalMinutes;
+    if (isIncrement) {
+      newTotalMinutes = totalMinutes + increment - 1;
+    } else if (isDecrement) {
+      newTotalMinutes = totalMinutes - increment + 1;
+    } else {
+      newTotalMinutes = totalMinutes;
+    }
 
     // Convert back to hours and minutes
-    hours = Math.floor(nextIncrement / 60);
-    minutes = nextIncrement % 60;
+    const newHours = Math.floor(newTotalMinutes / 60) % 24;
+    const newMinutes = newTotalMinutes % 60;
 
-    // Set the new time
-    const newDate = new Date(selectedDate);
-    newDate.setHours(hours, minutes, 0);
+    // Update the time
+    const newTime = new Date(currentTime);
+    newTime.setHours(newHours);
+    newTime.setMinutes(newMinutes);
+    instance.setDate(newTime, false);
 
-    // Update Flatpickr's selected date without triggering onChange again
-    instance.setDate(newDate, false);
-
+    instance.lastTime = newTotalMinutes;
   }
 
   endTimeValidation() {

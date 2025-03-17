@@ -1,0 +1,41 @@
+<app-header>
+    <ng-container header-title>
+        <h1 class="d-flex flex-column text-white fw-bold my-1">
+            {{currentPaciente?.nombre}}
+        </h1>
+    </ng-container>
+</app-header>
+
+<div class="content d-flex flex-column flex-column-fluid">
+    <div class="container-xxl" id="kt_content_container">
+        <div class="card shadow-sm px-2 py-4">
+            <div class="row p-4">
+                <div class="col-12 col-md-6">
+                    <h3>Información Contacto</h3>
+                    <div class="d-flex flex-column">
+                        <div class="d-flex align-items-center gap-3">
+                            <p  class="text-gray-600 d-flex">Nombre:</p><span>{{currentPaciente?.user.name}}</span>
+                        </div>
+                        <div class="d-flex align-items-center gap-3">
+                            <p class="text-gray-600 d-flex">Correo:</p><span>{{currentPaciente?.user.email}}</span>
+                        </div>
+                        <div class="d-flex align-items-center gap-3">
+
+                            <p class="text-gray-600 d-flex">Teléfono:</p>
+                            <span>{{currentPaciente?.user.telefono}}</span>
+                        </div>
+                        <div class="d-flex align-items-center gap-3">
+                            <p class="text-gray-600 d-flex">Dirección:</p>
+                            <span>{{currentPaciente?.user.direccion}}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-12 col-md-6">
+                    <h3>Información Personal</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <app-info-tabs />
+</div>
