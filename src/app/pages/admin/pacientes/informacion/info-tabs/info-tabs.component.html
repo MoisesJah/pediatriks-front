@@ -1,64 +1,66 @@
-<div class="container-xxl">
+<div class="container-xxl my-6">
 
-    <ul ngbNav #nav="ngbNav" class="nav nav-tabs fw-medium nav-line-tabs nav-line-tabs-2x fs-6">
-        <li [ngbNavItem]="1">
-            <a class="d-flex align-items-center gap-1" ngbNavLink><i class="ki-duotone ki-pulse fs-3">
-                    <span class="path1"></span>
-                    <span class="path2"></span>
-                </i>Terapias</a>
-            <ng-template ngbNavContent>
-                uno
-                <!-- <app-tabla-inventario /> -->
-            </ng-template>
-        </li>
-        <li [ngbNavItem]="2">
-            <a ngbNavLink class="d-flex align-items-center gap-1">
-                <i class="ki-duotone ki-calendar fs-3">
-                    <span class="path1"></span>
-                    <span class="path2"></span>
-                </i>
-                Horarios</a>
-            <ng-template ngbNavContent>
-                dos
-                <!-- <app-stock-terapistas /> -->
-            </ng-template>
-        </li>
-        <li [ngbNavItem]="3">
-            <a ngbNavLink class="d-flex align-items-center gap-1">
-                <i class="ki-duotone ki-time fs-3">
-                    <span class="path1"></span>
-                    <span class="path2"></span>
-                </i>
-                Asistencia</a>
-            <ng-template ngbNavContent>
-                tres
-                <!-- <app-stock-terapistas /> -->
-            </ng-template>
-        </li>
-        <li [ngbNavItem]="4">
-            <a ngbNavLink class="d-flex align-items-center gap-1">
-                <i class="ki-duotone ki-document fs-3">
-                    <span class="path1"></span>
-                    <span class="path2"></span>
-                </i>Informes</a>
-            <ng-template ngbNavContent>
-                tres
-                <!-- <app-stock-terapistas /> -->
-            </ng-template>
-        </li>
-        <li [ngbNavItem]="5">
-            <a ngbNavLink class="d-flex align-items-center gap-1">
-                <i class="ki-duotone ki-package fs-3">
-                    <span class="path1"></span>
-                    <span class="path2"></span>
-                    <span class="path3"></span>
-                </i>Paquetes</a>
-            <ng-template ngbNavContent>
-                tres
-                <!-- <app-stock-terapistas /> -->
-            </ng-template>
-        </li>
-    </ul>
+    <div class="main-tab-container">
+        <ul ngbNav #nav="ngbNav" class="nav d-flex flex-nowrap justify-content-around nav-tabs fw-medium nav-line-tabs nav-line-tabs-2x fs-6">
+            <li [ngbNavItem]="1">
+                <a class="d-flex align-items-center gap-1" ngbNavLink><i class="ki-duotone ki-pulse fs-3">
+                        <span class="path1"></span>
+                        <span class="path2"></span>
+                    </i>Terapias</a>
+                <ng-template ngbNavContent>
+                    uno
+                    <!-- <app-tabla-inventario /> -->
+                </ng-template>
+            </li>
+            <li [ngbNavItem]="2">
+                <a ngbNavLink class="d-flex align-items-center gap-1">
+                    <i class="ki-duotone ki-calendar fs-3">
+                        <span class="path1"></span>
+                        <span class="path2"></span>
+                    </i>
+                    Horarios</a>
+                <ng-template ngbNavContent>
+                    dos
+                    <!-- <app-stock-terapistas /> -->
+                </ng-template>
+            </li>
+            <li [ngbNavItem]="3">
+                <a ngbNavLink class="d-flex align-items-center gap-1">
+                    <i class="ki-duotone ki-time fs-3">
+                        <span class="path1"></span>
+                        <span class="path2"></span>
+                    </i>
+                    Asistencia</a>
+                <ng-template ngbNavContent>
+                    tres
+                    <!-- <app-stock-terapistas /> -->
+                </ng-template>
+            </li>
+            <li [ngbNavItem]="4">
+                <a ngbNavLink class="d-flex align-items-center gap-1">
+                    <i class="ki-duotone ki-document fs-3">
+                        <span class="path1"></span>
+                        <span class="path2"></span>
+                    </i>Informes</a>
+                <ng-template ngbNavContent>
+                    tres
+                    <!-- <app-stock-terapistas /> -->
+                </ng-template>
+            </li>
+            <li [ngbNavItem]="5">
+                <a ngbNavLink class="d-flex align-items-center gap-1">
+                    <i class="ki-duotone ki-package fs-3">
+                        <span class="path1"></span>
+                        <span class="path2"></span>
+                        <span class="path3"></span>
+                    </i>Paquetes</a>
+                <ng-template ngbNavContent>
+                    tres
+                    <!-- <app-stock-terapistas /> -->
+                </ng-template>
+            </li>
+        </ul>
+    </div>
 
     <div [ngbNavOutlet]="nav" class="mt-2"></div>
 

@@ -152,7 +152,7 @@ export class ModalEditComponent implements OnInit, AfterViewInit, OnDestroy {
 
     const totalMinutes = hours * 60 + minutes;
 
-    const increment = 45;
+    const increment = this.minutesTerapia;
 
     // Determine if increment or decrement button was clicked
     const isIncrement = totalMinutes > (instance.lastTime || 0);

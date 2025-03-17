@@ -77,6 +77,11 @@ ng-select {
   background-color: var(--bs-success)!important
 }
 
+.main-tab-container{
+  width: 100%;
+  overflow-x: overlay;
+}
+
 .slot-time{
   width: max-content;
   top: 130%;

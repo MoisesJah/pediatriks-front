@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { NgbPopoverModule } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
@@ -8,6 +8,7 @@ import { NgbPopoverModule } from '@ng-bootstrap/ng-bootstrap';
   imports: [NgbPopoverModule, CommonModule],
   templateUrl: './slot-time-picker.component.html',
   styleUrl: './slot-time-picker.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SlotTimePickerComponent {
   @Output() selectedSlot = new EventEmitter();
