@@ -160,7 +160,7 @@
             </div>
             <div class="menu-item">
               <div class="menu-content" *ngFor="let item of adminList">
-                <a routerLink="{{ item.link }}" [routerLinkActive]="['active']" #activeLink="routerLinkActive"
+                <a tabindex="0" routerLink="{{ item.link }}" [routerLinkActive]="['active']" #activeLink="routerLinkActive"
                   class="menu-link">
                   <span class="menu-bullet">
                     <span class="bullet bullet-dot"></span>

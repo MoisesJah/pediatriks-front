@@ -70,7 +70,7 @@
         <div class="form-group col-5">
           <label class="form-label" for="edit_event_status">Status de la Sesión</label>
           <ng-select [items]="statusList | async" (change)="changeStatus($event)" [loading]="isLoading | async"
-            [loadingText]="'Cargando...'" bindValue="id_status" placeholder="Seleccionar Status" bindLabel="nombre"
+            [loadingText]="'Cargando...'" bindValue="id_status" placeholder="Seleccionar" bindLabel="nombre"
             formControlName="id_status">
             <ng-template ng-option-tmp let-item="item" let-search="searchTerm">
               <div class="d-flex align-items-center gap-2">

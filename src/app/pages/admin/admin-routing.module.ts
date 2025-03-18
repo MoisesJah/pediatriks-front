@@ -40,6 +40,13 @@ const routes: Routes = [
       import('./personal/personal.component').then((m) => m.PersonalComponent),
   },
   {
+    path: 'asistencia',
+    loadComponent: () =>
+      import('./asistencia/asistencia.component').then(
+        (m) => m.AsistenciaComponent
+      ),
+  },
+  {
     path: 'paquetes',
     loadComponent: () =>
       import('./paquetes/paquetes.component').then((m) => m.PaquetesComponent),

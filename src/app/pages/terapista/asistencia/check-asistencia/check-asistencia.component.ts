@@ -34,6 +34,7 @@ export class CheckAsistenciaComponent {
       .create({
         id_personal: this.auth?.id_personal!,
         fecha: this.currentDate,
+        hora_asistencia: this.currentDate.toTimeString().slice(0, 8),
         id_status: this.showBanner ? 2 : 1,
       })
       .subscribe({

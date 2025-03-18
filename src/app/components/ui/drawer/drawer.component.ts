@@ -25,6 +25,10 @@ export class DrawerComponent {
       link: '/admin/personal',
     },
     {
+      nombre: 'Asistencia',
+      link: '/admin/asistencia',
+    },
+    {
       nombre: 'Pacientes',
       link: '/admin/pacientes',
     },

@@ -27,7 +27,7 @@
               <!--end::Input-->
             </form>
             <div class="d-flex align-items-center gap-3">
-              <button *ngIf="btnVisible" type="button" class="btn btn-secondary" [disabled]="loadingHorario" (click)="openConfirmModal()">Marcar Asistencia</button>
+              <button *ngIf="btnVisible && isCurrentDayInSchedule" type="button" class="btn btn-secondary" [disabled]="loadingHorario" (click)="openConfirmModal()">Marcar Asistencia</button>
               <button type="button" class="btn btn-light-primary" (click)="loadTabla()">
                 <span class="d-flex align-items-center">
                   <span class="fa-solid fa-rotate-right"></span>

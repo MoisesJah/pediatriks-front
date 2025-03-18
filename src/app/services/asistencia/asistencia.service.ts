@@ -7,6 +7,7 @@ import { environment } from 'src/environments/environment';
 })
 export class AsistenciaService {
   apiUrl = environment.apiUrl;
+  status_url = `${this.apiUrl}/asistencia-status`;
 
   constructor(private http: HttpClient) {}
 
@@ -20,5 +21,13 @@ export class AsistenciaService {
 
   create(data: any) {
     return this.http.post(`${this.apiUrl}/asistencia/add`, data);
+  }
+
+  update(data: any, id: string) {
+    return this.http.put(`${this.apiUrl}/asistencia/update/${id}`, data);
+  }
+
+  getStatusList() {
+    return this.http.get(`${this.status_url}`);
   }
 }

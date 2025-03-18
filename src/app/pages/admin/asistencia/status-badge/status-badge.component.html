@@ -1,0 +1,22 @@
+@switch (status) {
+    @case('asistió') {
+    <span class="badge text-capitalize fs-7 badge-light-success rounded-pill">
+        {{status}}
+    </span>
+    }
+    @case ('inasistencia') {
+    <span class="badge text-capitalize fs-7 badge-light-danger rounded-pill">
+        {{status}}
+    </span>
+    }
+    @case ('tardanza') {
+    <span class="badge text-capitalize fs-7 badge-light-warning rounded-pill">
+        {{status}}
+    </span>
+    }
+    @case ('justificado') {
+    <span class="badge text-capitalize fs-7 badge-light-twitter rounded-pill">
+        {{status}}
+    </span>
+    }
+}
