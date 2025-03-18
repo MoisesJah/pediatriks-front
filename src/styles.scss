@@ -82,6 +82,12 @@ ng-select {
   overflow-x: overlay;
 }
 
+@media only screen and (max-width: 570px) {
+  .row-mb-gap-3{
+    row-gap: 1.5rem;
+  }
+ }
+
 .slot-time{
   width: max-content;
   top: 130%;
