@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, inject, OnInit, Output } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, inject, OnInit, Output } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -20,7 +20,7 @@ import { LoadingService } from 'src/app/services/loading.service';
   imports: [CommonModule, ReactiveFormsModule, NgSelectModule],
   templateUrl: './edit-status.component.html',
 })
-export class EditStatusComponent implements OnInit {
+export class EditStatusComponent implements OnInit, AfterViewInit {
   modal = inject(NgbModal);
   isLoading = inject(LoadingService).isLoading;
   asistenciaService = inject(AsistenciaService);
@@ -31,12 +31,15 @@ export class EditStatusComponent implements OnInit {
 
   statusList = new Observable();
 
-  constructor(fb: FormBuilder) {
-    this.form = fb.group({
+  constructor(private fb: FormBuilder) {
+    this.form = this.fb.group({
       id_status: [null, Validators.required],
-      // id_personal: [null, Validators.required],
       observaciones: [''],
     });
+  }
+
+  ngAfterViewInit(): void {
+      this.form.valueChanges.subscribe(v=>console.log(v))
   }
 
   getIcon(name: string) {

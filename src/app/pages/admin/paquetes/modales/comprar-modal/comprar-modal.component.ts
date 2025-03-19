@@ -68,7 +68,7 @@ export class ComprarModalComponent {
   }
 
   private fetchUsuarios() {
-    this.usuariosList = this.usuarioService.getPacientes().pipe(
+    this.usuariosList = this.usuarioService.getUsersWithPacientes().pipe(
       untilDestroyed(this),
       map((resp) => resp.data || []),
       catchError((error) => {
@@ -107,12 +107,12 @@ export class ComprarModalComponent {
   }
 
   onChangeUser(user: IUser) {
-    this.form.get('paciente')?.reset();
+    this.form.get('pacienteId')?.reset();
     this.loadPacientesByUser(user.id);
   }
 
   onPacienteSelect(paciente: IPaciente) {
-    console.log(paciente)
+    // console.log(paciente)
   }
 
   private loadPacientesByUser(userId: number) {

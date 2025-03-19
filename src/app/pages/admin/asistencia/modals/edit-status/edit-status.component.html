@@ -19,7 +19,7 @@
         <div class="form-group">
             <label class="form-label required" for="status">Status</label>
             <ng-select [items]="statusList | async" [loading]="isLoading | async" [loadingText]="'Cargando...'"
-                bindValue="id_status" placeholder="Seleccionar" bindLabel="nombre" formControlName="id_status" >
+                bindValue="id" placeholder="Seleccionar" bindLabel="nombre" formControlName="id_status" >
                 <ng-template ng-option-tmp let-item="item" let-search="searchTerm">
                     <div class="d-flex align-items-center gap-2">
                         <span [ngClass]="getIcon(item.nombre)"></span>

@@ -14,8 +14,12 @@ export class UserService {
     return this.http.get<{ data: IUser[] }>(`${this.apiUrl}/usuario/list`);
   }
 
-  getPacientes() {
+  getUsersWithPacienteType() {
     return this.http.get<{ data: IUser[] }>(`${this.apiUrl}/usuario/list/paciente`);
+  }
+
+  getUsersWithPacientes() {
+    return this.http.get<{ data: IUser[] }>(`${this.apiUrl}/usuario/list/pacientes`);
   }
 
   getById(id: number) {

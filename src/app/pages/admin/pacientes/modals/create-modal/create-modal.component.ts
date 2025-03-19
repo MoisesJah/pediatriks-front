@@ -61,7 +61,7 @@ export class CreateModalComponent implements AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit(): void {
-    this.userList = this.userService.getPacientes().pipe(
+    this.userList = this.userService.getUsersWithPacienteType().pipe(
       untilDestroyed(this),
       map((response) => {
         const usersData = response as { data: IUser[] };
