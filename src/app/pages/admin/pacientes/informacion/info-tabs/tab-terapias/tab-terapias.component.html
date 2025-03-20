@@ -4,10 +4,10 @@
         <div class="d-flex flex-column gap-4">
 
             <ng-container *ngFor="let terapia of terapiasList | async">
-                <div class=" card card-body border-1 d-flex align-items-center">
+                <div class=" card card-body border-1 border-gray-300 d-flex flex-row">
                     <span class="h-15px w-15px me-3 rounded-circle d-inline-block"
                     [ngStyle]="{ 'background-color': terapia.color }"></span>
-                    <span class="fw-bold">{{ terapia.terapia }}</span>
+                    <span class="fw-bold fs-5">{{ terapia.terapia }}</span>
                 </div>
             </ng-container>
         </div>

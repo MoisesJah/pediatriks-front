@@ -1,0 +1,6 @@
+<div class="mt-4" style="height: calc(100dvh - 281px)"
+    [ngClass]="[theme.getThemeMode() === 'light' ? 'ag-theme-quartz' : 'ag-theme-quartz-dark']">
+    <ag-grid-angular style="width: 100%; height: 100%" [rowData]="horariosList | async" [columnDefs]="columnDefs"
+          [loading]="isLoading | async" loadingMessage="Cargando..." [localeText]="localeText"
+        [enableCellTextSelection]="true" [ariaHidden]="true" [pagination]="true"></ag-grid-angular>
+</div>

@@ -19,8 +19,9 @@
                     </i>
                     Horarios</a>
                 <ng-template ngbNavContent>
-                    dos
-                    <!-- <app-stock-terapistas /> -->
+                   @defer () {
+                    <app-tab-horarios />
+                   }
                 </ng-template>
             </li>
             <li [ngbNavItem]="3">
@@ -31,8 +32,9 @@
                     </i>
                     Asistencia</a>
                 <ng-template ngbNavContent>
-                    tres
-                    <!-- <app-stock-terapistas /> -->
+                    @defer () {
+                        <app-tab-asistencia />
+                    }
                 </ng-template>
             </li>
             <li [ngbNavItem]="4">
@@ -42,8 +44,9 @@
                         <span class="path2"></span>
                     </i>Informes</a>
                 <ng-template ngbNavContent>
-                    tres
-                    <!-- <app-stock-terapistas /> -->
+                   @defer () {
+                    <app-tab-informes />
+                   }
                 </ng-template>
             </li>
             <li [ngbNavItem]="5">
@@ -54,8 +57,9 @@
                         <span class="path3"></span>
                     </i>Paquetes</a>
                 <ng-template ngbNavContent>
-                    tres
-                    <!-- <app-stock-terapistas /> -->
+                    @defer () {
+                        <app-tab-paquetes />
+                    }
                 </ng-template>
             </li>
         </ul>

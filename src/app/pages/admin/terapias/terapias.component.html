@@ -41,7 +41,7 @@
         </div>
       </div>
 
-      <div style="height: calc(100dvh - 281px)" [ngClass]="[theme.getThemeMode() === 'light' ? 'ag-theme-quartz' : 'ag-theme-quartz-dark']">
+      <!-- <div style="height: calc(100dvh - 281px)" [ngClass]="[theme.getThemeMode() === 'light' ? 'ag-theme-quartz' : 'ag-theme-quartz-dark']">
         @defer {
         <ag-grid-angular
           style="width: 100%; height: 100%"
@@ -65,7 +65,25 @@
             </div>
           </div>
           }
-      </div>
+      </div> -->
+      
+      @if (isLoading | async) {
+        <div class="d-flex justify-content-center align-items-center" style="height: 100%">
+          <div class="spinner-border" role="status">
+            <span class="visually-hidden">Loading...</span>
+          </div>
+        </div>
+      }@else {
+
+        <div class="row">
+
+          @for (terapia of terapiasList | async; track $index) {
+            <div class="card col-md-4 card-body border-1 border-gray-300">
+              <h1>{{ terapia.nombre }}</h1>
+            </div>
+          }
+        </div>
+      }
     </div>
   </div>
 </div>
