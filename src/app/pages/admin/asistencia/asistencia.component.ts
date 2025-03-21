@@ -19,7 +19,7 @@ import { UpdateBtnComponent } from './modals/update-btn/update-btn.component';
 @Component({
   selector: 'app-asistencia',
   standalone: true,
-  imports: [CommonModule, AgGridModule, HeaderComponent],
+  imports: [CommonModule, AgGridModule],
   templateUrl: './asistencia.component.html',
   styleUrl: './asistencia.component.scss',
 })

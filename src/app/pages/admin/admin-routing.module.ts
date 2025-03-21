@@ -41,9 +41,10 @@ const routes: Routes = [
   },
   {
     path: 'asistencia',
+
     loadComponent: () =>
-      import('./asistencia/asistencia.component').then(
-        (m) => m.AsistenciaComponent
+      import('./asistencia/main-tabs/main-tabs.component').then(
+        (m) => m.MainTabsComponent
       ),
   },
   {

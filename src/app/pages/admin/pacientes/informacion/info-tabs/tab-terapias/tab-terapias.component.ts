@@ -3,6 +3,7 @@ import { ChangeDetectionStrategy, Component, inject, OnInit } from '@angular/cor
 import { ActivatedRoute } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { map, Observable } from 'rxjs';
+import { LoadingService } from 'src/app/services/loading.service';
 import { ReporteService } from 'src/app/services/paciente/reporte/reporte.service';
 
 @UntilDestroy()
@@ -17,6 +18,7 @@ import { ReporteService } from 'src/app/services/paciente/reporte/reporte.servic
 export class TabTerapiasComponent implements OnInit {
   reporteService = inject(ReporteService)
   activatedRoute = inject(ActivatedRoute)
+  isLoading = inject(LoadingService).isLoading
 
   id_paciente = this.activatedRoute.snapshot.paramMap.get('id')
 

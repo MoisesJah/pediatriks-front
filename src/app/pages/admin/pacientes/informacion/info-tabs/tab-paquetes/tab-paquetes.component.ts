@@ -8,7 +8,7 @@ import {
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { AgGridAngular } from 'ag-grid-angular';
 import { ColDef } from 'ag-grid-community';
-import { map, Observable } from 'rxjs';
+import { BehaviorSubject, map, Observable } from 'rxjs';
 import { ReporteService } from 'src/app/services/paciente/reporte/reporte.service';
 import { ThemeService } from 'src/app/services/theme.service';
 
@@ -31,6 +31,20 @@ export class TabPaquetesComponent implements OnInit {
   paquetesList = new Observable();
   historialData = []
 
+  private historialSubjects = new Map<string, BehaviorSubject<any[]>>();
+  private dataLoaded = new Map<string, boolean>();
+
+  // Method to get or create a BehaviorSubject for a paquete ID
+  getHistorialSubject(id: string): BehaviorSubject<any[]> {
+    if (!this.historialSubjects.has(id)) {
+      // Create a new BehaviorSubject with empty array initial value
+      const subject = new BehaviorSubject<any[]>([]);
+      this.historialSubjects.set(id, subject);
+    }
+    
+    return this.historialSubjects.get(id)!;
+  }
+
   columnDefs: ColDef[] = [
     { field: 'id_pa', headerName: 'ID', filter: true },
     { field: 'num_sesiones', headerName: 'N° Sesiones', filter: true },
@@ -44,8 +58,17 @@ export class TabPaquetesComponent implements OnInit {
     this.getPaquetes();
   }
 
-  getHistorial(id: string) {
-   this.reporteService
+  loadHistorialData(id: string, forceRefresh: boolean = false): void {
+    // Check if we've already loaded data for this ID
+    // if (this.dataLoaded.get(id)) {
+    //   return; // Data already loaded, do nothing
+    // }
+    
+    // // Mark as loading
+    // this.dataLoaded.set(id, true);
+    
+    // Fetch data for this ID
+    this.reporteService
       .getPaquetes(this.id_paciente!)
       .pipe(
         map((resp: any) =>
@@ -54,11 +77,13 @@ export class TabPaquetesComponent implements OnInit {
           )
         ),
         untilDestroyed(this)
-      ).subscribe((data) => {
-        this.historialData = data;
-      })
+      )
+      .subscribe((data) => {
+        // Get the BehaviorSubject and update its value
+        const subject = this.getHistorialSubject(id);
+        subject.next(data);
+      });
   }
-
 
   // onShow(id: string) {
   //   if (!this.historialData[id]) {

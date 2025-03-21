@@ -1,13 +1,27 @@
 <div>
-    <h1>Terapias</h1>
 
-        <div class="d-flex flex-column gap-4">
+    <div *ngIf="isLoading | async">
+        <div class="loading-container d-flex justify-content-center align-items-center">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Cargando...</span>
+            </div>
+        </div>
+    </div>
+
+        <div class="row gap-3">
 
             <ng-container *ngFor="let terapia of terapiasList | async">
-                <div class=" card card-body border-1 border-gray-300 d-flex flex-row">
-                    <span class="h-15px w-15px me-3 rounded-circle d-inline-block"
-                    [ngStyle]="{ 'background-color': terapia.color }"></span>
-                    <span class="fw-bold fs-5">{{ terapia.terapia }}</span>
+                <div class="col-md-4  card  border-1 border-gray-300">
+                    <div class="card-body">
+
+                        <div>
+
+                            <span [ngStyle]="{ 'background-color': terapia.color }" class="h-15px w-15px me-3 rounded-circle d-inline-block"></span>
+                            <span class="fw-bold fs-5">{{ terapia.terapia }}</span>
+                        </div>
+
+                        <span class="fs-5">{{ terapia.terapista }}</span>
+                    </div>
                 </div>
             </ng-container>
         </div>

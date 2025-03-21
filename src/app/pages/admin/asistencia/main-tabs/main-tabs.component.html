@@ -1,0 +1,28 @@
+<app-header>
+    <ng-container header-title>
+      <h1 class="d-flex flex-column text-gray-900 fw-bold my-1">
+        <span class="" style="color: white">Asistencias</span>
+      </h1>
+    </ng-container>
+  </app-header>
+
+<div class="content bg-body   d-flex flex-column flex-column-fluid">
+    <div class="container-xxl">
+    <ul ngbNav #nav="ngbNav" class="nav nav-tabs fw-medium nav-line-tabs nav-line-tabs-2x fs-6">
+        <li [ngbNavItem]="1">
+            <a ngbNavLink>Asistencia del Personal</a>
+            <ng-template ngbNavContent>
+    
+                <app-asistencia />
+            </ng-template>
+        </li>
+        <li [ngbNavItem]="2">
+            <a ngbNavLink>Permisos del Personal</a>
+            <ng-template ngbNavContent>
+                <app-tabla-permisos />
+            </ng-template>
+        </li>
+    </ul>
+</div>
+<div [ngbNavOutlet]="nav" class="mt-2"></div>
+</div>
