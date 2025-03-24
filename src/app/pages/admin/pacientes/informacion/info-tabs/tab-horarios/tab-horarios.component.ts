@@ -42,6 +42,11 @@ export class TabHorariosComponent implements OnInit {
         return `${data.data.hora_inicio} - ${data.data.hora_fin}`;
       },
     },
+    {
+      field:'tipo_cita',
+      headerName: 'Tipo de Cita',
+      filter: true
+    },
     { field: 'terapia', headerName: 'Terapia', filter: true },
     { field: 'terapista', headerName: 'Terapista', filter: true },
   ];

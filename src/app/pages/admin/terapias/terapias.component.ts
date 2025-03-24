@@ -17,6 +17,7 @@ import { AG_GRID_LOCALE_ES } from '@ag-grid-community/locale';
 import { formatMoney } from 'src/app/utils/formatCurrency';
 import { LoadingService } from 'src/app/services/loading.service';
 import { ThemeService } from 'src/app/services/theme.service';
+import { ListaPacientesComponent } from './modals/lista-pacientes/lista-pacientes.component';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -29,7 +30,7 @@ import { ThemeService } from 'src/app/services/theme.service';
 export class TerapiasComponent implements OnInit, OnDestroy {
   modal = inject(NgbModal);
   terapias = inject(TerapiaService);
-  theme = inject(ThemeService)
+  theme = inject(ThemeService);
   isLoading = inject(LoadingService).isLoading;
 
   private gridApi!: GridApi;
@@ -42,13 +43,18 @@ export class TerapiasComponent implements OnInit, OnDestroy {
       headerName: 'Color',
       field: 'color',
       maxWidth: 75,
-      filter:false,
+      filter: false,
       cellRenderer: (params: any) => {
         return `<div class="h-20px w-20px mt-3 rounded-circle" style="background-color: ${params.value}"></div>`;
-      }
+      },
     },
-    { field: 'nombre', headerName: 'Nombre', filter: true, resizable: true, },
-    { field: 'descripcion', headerName: 'Descripción', filter: true, resizable: true, },
+    { field: 'nombre', headerName: 'Nombre', filter: true, resizable: true },
+    {
+      field: 'descripcion',
+      headerName: 'Descripción',
+      filter: true,
+      resizable: true,
+    },
     {
       field: 'precio',
       headerName: 'Precio',
@@ -64,7 +70,8 @@ export class TerapiasComponent implements OnInit, OnDestroy {
       field: 'duracion',
       maxWidth: 150,
       filter: 'agNumberColumnFilter',
-      valueFormatter: (params) => params.value ? `${params.value.substring(0, 5)} min` : '',
+      valueFormatter: (params) =>
+        params.value ? `${params.value.substring(0, 5)} min` : '',
       resizable: true,
     },
     {
@@ -119,7 +126,7 @@ export class TerapiasComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {}
 
-  loadTabla(){
+  loadTabla() {
     this.fetchTerapias();
   }
 
@@ -158,5 +165,13 @@ export class TerapiasComponent implements OnInit, OnDestroy {
     modalRef.componentInstance.onSaveComplete.subscribe(() => {
       this.fetchTerapias();
     });
+  }
+
+  openPacientesModal(id: string) {
+    const modalRef = this.modal.open(ListaPacientesComponent, {
+      centered: true,
+    });
+
+    modalRef.componentInstance.id_terapia = id;
   }
 }

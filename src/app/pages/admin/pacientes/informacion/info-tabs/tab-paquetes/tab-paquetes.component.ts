@@ -1,3 +1,4 @@
+import { AG_GRID_LOCALE_ES } from '@ag-grid-community/locale';
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
@@ -8,7 +9,8 @@ import {
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { AgGridAngular } from 'ag-grid-angular';
 import { ColDef } from 'ag-grid-community';
-import { BehaviorSubject, map, Observable } from 'rxjs';
+import { BehaviorSubject, finalize, map, Observable } from 'rxjs';
+import { LoadingService } from 'src/app/services/loading.service';
 import { ReporteService } from 'src/app/services/paciente/reporte/reporte.service';
 import { ThemeService } from 'src/app/services/theme.service';
 
@@ -23,27 +25,20 @@ import { ThemeService } from 'src/app/services/theme.service';
 export class TabPaquetesComponent implements OnInit {
   reporteService = inject(ReporteService);
   activatedRoute = inject(ActivatedRoute);
+  isLoading = inject(LoadingService).isLoading;
   theme = inject(ThemeService);
 
   id_paciente = this.activatedRoute.snapshot.paramMap.get('id');
 
+  localeText = AG_GRID_LOCALE_ES;
+
   historialList = new Observable();
   paquetesList = new Observable();
-  historialData = []
+  historialData = [];
 
   private historialSubjects = new Map<string, BehaviorSubject<any[]>>();
   private dataLoaded = new Map<string, boolean>();
-
-  // Method to get or create a BehaviorSubject for a paquete ID
-  getHistorialSubject(id: string): BehaviorSubject<any[]> {
-    if (!this.historialSubjects.has(id)) {
-      // Create a new BehaviorSubject with empty array initial value
-      const subject = new BehaviorSubject<any[]>([]);
-      this.historialSubjects.set(id, subject);
-    }
-    
-    return this.historialSubjects.get(id)!;
-  }
+  private loadingStates = new Map<string, BehaviorSubject<boolean>>();
 
   columnDefs: ColDef[] = [
     { field: 'id_pa', headerName: 'ID', filter: true },
@@ -58,16 +53,29 @@ export class TabPaquetesComponent implements OnInit {
     this.getPaquetes();
   }
 
+  getHistorialSubject(id: string): BehaviorSubject<any[]> {
+    if (!this.historialSubjects.has(id)) {
+      // Create a new BehaviorSubject with empty array initial value
+      const subject = new BehaviorSubject<any[]>([]);
+      this.historialSubjects.set(id, subject);
+    }
+
+    return this.historialSubjects.get(id)!;
+  }
+
+  // Method to get or create a loading state for a specific ID
+  getLoadingState(id: string): BehaviorSubject<boolean> {
+    if (!this.loadingStates.has(id)) {
+      // Create a new BehaviorSubject with false initial value (not loading)
+      const subject = new BehaviorSubject<boolean>(false);
+      this.loadingStates.set(id, subject);
+    }
+    return this.loadingStates.get(id)!;
+  }
+
   loadHistorialData(id: string, forceRefresh: boolean = false): void {
-    // Check if we've already loaded data for this ID
-    // if (this.dataLoaded.get(id)) {
-    //   return; // Data already loaded, do nothing
-    // }
-    
-    // // Mark as loading
-    // this.dataLoaded.set(id, true);
-    
-    // Fetch data for this ID
+    this.getLoadingState(id).next(true);
+
     this.reporteService
       .getPaquetes(this.id_paciente!)
       .pipe(
@@ -76,6 +84,7 @@ export class TabPaquetesComponent implements OnInit {
             compra.historial.filter((item: any) => item.id_paq === id)
           )
         ),
+        finalize(() => this.getLoadingState(id).next(false)),
         untilDestroyed(this)
       )
       .subscribe((data) => {
@@ -84,16 +93,6 @@ export class TabPaquetesComponent implements OnInit {
         subject.next(data);
       });
   }
-
-  // onShow(id: string) {
-  //   if (!this.historialData[id]) {
-  //     // this.isLoading = true;
-  //     this.getHistorial(id).subscribe((data) => {
-  //       this.historialData[id] = data; // Store historial data
-  //       // this.isLoading = false;
-  //     });
-  //   }
-  // }
 
   getPaquetes() {
     this.paquetesList = this.reporteService.getPaquetes(this.id_paciente!).pipe(

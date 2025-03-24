@@ -56,10 +56,6 @@ export class TerapiaService {
     return this.http.get<any[]>(`${this.apiUrl}/terapia/getcitas`);
   }
 
-  getPacientesByTerapia(id: string): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/terapia/getpacientes/terapia/${id}`);
-  }
-
   getAllPacientes(): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/terapia/getpacientes`);
   }
@@ -70,5 +66,9 @@ export class TerapiaService {
 
   getAllHorarios(): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/terapia/gethorarios`);
+  }
+
+  getPacientesByTerapia(id: string): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/terapia/pacientes/${id}`);
   }
 }

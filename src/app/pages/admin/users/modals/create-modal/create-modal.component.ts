@@ -76,6 +76,7 @@ export class CreateModalComponent implements OnInit {
         email: event.correo,
         dni: event.dni,
         telefono: event.telefono,
+        direccion: event.direccion
       });
     } else {
       this.userForm.reset({

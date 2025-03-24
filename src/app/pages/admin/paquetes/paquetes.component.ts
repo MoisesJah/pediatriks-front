@@ -45,9 +45,10 @@ import { animate, query, stagger, style, transition, trigger } from '@angular/an
   animations: [
     trigger('paquetesListAnimation', [
       transition(':enter', [
-        style({ opacity: 0 }),
-        animate('300ms', style({ opacity: 1 })),
+        style({ opacity: 0, scale:0.9 }),
+        animate('300ms', style({ opacity: 1, scale:1 })),
       ]),
+      transition(':leave', [animate('200ms', style({opacity: 0, scale:0.9}))]),
     ]),
   ],
   styleUrls: ['./paquetes.component.scss'],

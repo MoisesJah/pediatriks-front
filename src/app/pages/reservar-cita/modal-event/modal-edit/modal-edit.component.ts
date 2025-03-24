@@ -17,18 +17,12 @@ import flatpickr from 'flatpickr';
 import { Spanish } from 'flatpickr/dist/l10n/es.js';
 import { PersonalService } from 'src/app/services/personal/personal.service';
 import {
-  catchError,
-  combineLatest,
-  debounceTime,
-  distinctUntilChanged,
   distinctUntilKeyChanged,
   filter,
   finalize,
   map,
   Observable,
   of,
-  Subject,
-  switchMap,
   tap,
 } from 'rxjs';
 import { Personal } from 'src/app/models/personal';
@@ -140,44 +134,6 @@ export class ModalEditComponent implements OnInit, AfterViewInit, OnDestroy {
 
   get minutesTerapia() {
     return Number(this.event?.terapia.duracion.split(':')[1]);
-  }
-
-  onStartTimeChange(event: any) {
-    const { selectedDates, dateStr, instance } = event;
-    if (!instance.isOpen) return; // Only handle changes when the picker is open
-
-    const currentTime = selectedDates[0];
-    const minutes = currentTime.getMinutes();
-    const hours = currentTime.getHours();
-
-    const totalMinutes = hours * 60 + minutes;
-
-    const increment = this.minutesTerapia;
-
-    // Determine if increment or decrement button was clicked
-    const isIncrement = totalMinutes > (instance.lastTime || 0);
-    const isDecrement = totalMinutes < (instance.lastTime || Infinity);
-
-    let newTotalMinutes;
-    if (isIncrement) {
-      newTotalMinutes = totalMinutes + increment - 1;
-    } else if (isDecrement) {
-      newTotalMinutes = totalMinutes - increment + 1;
-    } else {
-      newTotalMinutes = totalMinutes;
-    }
-
-    // Convert back to hours and minutes
-    const newHours = Math.floor(newTotalMinutes / 60) % 24;
-    const newMinutes = newTotalMinutes % 60;
-
-    // Update the time
-    const newTime = new Date(currentTime);
-    newTime.setHours(newHours);
-    newTime.setMinutes(newMinutes);
-    instance.setDate(newTime, false);
-
-    instance.lastTime = newTotalMinutes;
   }
 
   endTimeValidation() {
