@@ -12,12 +12,13 @@ import { ThemeService } from 'src/app/services/theme.service';
 import { formatDate } from 'src/app/utils/formatDate';
 import { UpdateBtnComponent } from '../modals/update-btn/update-btn.component';
 import { StatusBadgeComponent } from '../status-badge/status-badge.component';
+import { CreateComponent } from './modals/create/create.component';
 
 @UntilDestroy()
 @Component({
   selector: 'app-tabla-permisos',
   standalone: true,
-  imports: [AgGridAngular,CommonModule],
+  imports: [AgGridAngular, CommonModule],
   templateUrl: './tabla-permisos.component.html',
 })
 export class TablaPermisosComponent implements OnInit {
@@ -68,7 +69,6 @@ export class TablaPermisosComponent implements OnInit {
     // },
   ];
 
-
   loadPermisos() {
     this.permisosList = this.permisoService.getAll().pipe(
       map((resp: any) => resp.data),
@@ -91,12 +91,13 @@ export class TablaPermisosComponent implements OnInit {
     );
   }
 
-
-  close(){
+  close() {
     this.modal.dismissAll();
   }
 
   openCreateModal() {
-    this.modal.open(UpdateBtnComponent, { size: 'xl' });
+    const modalRef = this.modal.open(CreateComponent, {
+      centered: true,
+    });
   }
 }

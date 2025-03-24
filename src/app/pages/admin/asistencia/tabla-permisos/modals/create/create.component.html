@@ -1,0 +1,50 @@
+<div class="modal-header">
+    <h4 class="modal-title d-flex align-items-center gap-1" id="modal-basic-title">
+        <span class="text-primary">
+            <i style="vertical-align: middle;" class="ki-duotone ki-add-files text-gray-900 fs-1">
+                <span class="path1"></span><span class="path2"></span>
+                <span class="path3"></span></i>
+        </span>
+        Crear Permiso
+    </h4>
+    <button type="button" class="btn btn-sm btn-icon btn-active-color-primary btn-color-gray-800" aria-label="Close"
+        (click)="close()">
+        <i class="ki-duotone ki-cross-square fs-1"><span class="path1"></span><span class="path2"></span></i>
+    </button>
+</div>
+
+<div class="modal-body">
+    <form [formGroup]="form" class="form d-flex flex-column gap-4">
+        <div class="form-group">
+            <label class="form-label required" for="status">Seleccionar Personal</label>
+            <ng-select [items]="personalList | async" [loading]="isLoading | async" [loadingText]="'Cargando...'"
+                bindValue="id_personal" placeholder="Seleccionar" bindLabel="nombre"
+                formControlName="id_personal"></ng-select>
+        </div>
+        <div class="form-group row">
+            <div class="col-6">
+                <label class="form-label required" for="status">Fecha de Inicio</label>
+                <input placeholder="Seleccionar" type="date" mwlFlatpickr (flatpickrChange)="startDateChange($event)" [options]="optionsInicio" class="form-control" formControlName="fecha_inicio" />
+            </div>
+            <div class="col-6">
+                <label class="form-label required" for="status">Fecha de Fin</label>
+                <input type="date" placeholder="Seleccionar" mwlFlatpickr id="end_date" class="form-control" formControlName="fecha_fin" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="form-label required" for="status">Tipo de Permiso</label>
+            <ng-select [items]="tipoPermisoList | async" [loading]="isLoading | async" [loadingText]="'Cargando...'"
+                bindValue="id" placeholder="Seleccionar" bindLabel="nombre"
+                formControlName="id_permiso"></ng-select>
+        </div>
+        <div>
+            <label for="status" class="form-label">Notas</label>
+            <textarea class="form-control" id="exampleFormControlTextarea1" rows="2" formControlName="notas"></textarea>
+        </div>
+    </form>
+</div>
+
+<div class="modal-footer">  
+    <button type="button" class="btn btn-light" (click)="close()">Cerrar</button>   
+    <button type="button" class="btn btn-primary" (click)="crearPermiso()" [disabled]="form.invalid">Guardar</button>
+</div>

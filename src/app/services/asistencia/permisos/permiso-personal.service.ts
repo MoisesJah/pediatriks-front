@@ -7,11 +7,16 @@ import { environment } from 'src/environments/environment';
 })
 export class PermisoPersonalService {
   private apiUrl = `${environment.apiUrl}/personal-permiso`;
+  private permisoUrl = `${environment.apiUrl}/tipo-permiso`;
 
   constructor(private http: HttpClient) { }
 
   getAll() {
     return this.http.get(`${this.apiUrl}/list`);
+  }
+
+  tipoPermisos(){
+    return this.http.get(`${this.permisoUrl}/list`);
   }
 
   getById(id: string) {
