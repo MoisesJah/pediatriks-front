@@ -43,11 +43,12 @@ export class CreateComponent implements OnInit, AfterViewInit {
     altFormat: 'd/m/Y',
     altInput: true,
     monthSelectorType: 'dropdown',
+    minDate: new Date(),
   };
 
   optionsFin: FlatpickrDefaultsInterface = {
     ...this.optionsInicio,
-    minDate: '',
+    minDate: new Date(),
   }
 
   private updateEndDatePicker(minDate: Date): void {
@@ -97,12 +98,12 @@ export class CreateComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    flatpickr('#end_date',{
-      locale: Spanish,
-      altFormat: 'd/m/Y',
-      altInput: true,
-      minDate: this.form.get('fecha_inicio')?.value
-    });
+    // flatpickr('#end_date',{
+    //   locale: Spanish,
+    //   altFormat: 'd/m/Y',
+    //   altInput: true,
+    //   minDate: this.form.get('fecha_inicio')?.value
+    // });
   }
 
   close() {

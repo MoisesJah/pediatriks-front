@@ -88,6 +88,12 @@ ng-select {
   }
  }
 
+@media (min-width: 992px) {
+  .content.tabs-asistencia {
+    padding-top: 16px !important;
+  }
+}
+
 .slot-time{
   width: max-content;
   top: 130%;

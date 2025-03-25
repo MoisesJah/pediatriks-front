@@ -89,6 +89,7 @@ export class ReservarCitaComponent implements OnInit, OnDestroy, AfterViewInit {
     slotDuration: '00:45:00',
     slotMinTime: '08:00',
     slotMaxTime: '20:01:00',
+    displayEventTime: false,
     slotLabelFormat: {
       hour: 'numeric',
       minute: '2-digit',

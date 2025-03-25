@@ -15,6 +15,10 @@ export class AsistenciaService {
     return this.http.get(`${this.apiUrl}/asistencia/list`);
   }
 
+  getById(id: string) {
+    return this.http.get(`${this.apiUrl}/asistencia/list/${id}`);
+  }
+
   getByPersonal(id: string) {
     return this.http.get(`${this.apiUrl}/asistencia/personal/${id}`);
   }

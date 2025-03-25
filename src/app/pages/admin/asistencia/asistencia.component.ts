@@ -64,7 +64,7 @@ export class AsistenciaComponent implements OnInit {
       headerName: 'Acciones',
       cellRendererParams: (params: any) => {
         return {
-          openModal: () => this.openUpdateModal(params.data.id_asistencia),
+          openModal: () => this.openUpdateModal(params.data.id),
         };
       },
       cellRenderer: UpdateBtnComponent,

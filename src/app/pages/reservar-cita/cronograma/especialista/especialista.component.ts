@@ -109,6 +109,7 @@ export class EspecialistaComponent implements OnInit {
     initialView: 'timeGridWeek',
     weekends: true,
     editable: true,
+    displayEventTime: false,
     loading: (isLoading) => {
       this.loadingCalendar = isLoading;
     },

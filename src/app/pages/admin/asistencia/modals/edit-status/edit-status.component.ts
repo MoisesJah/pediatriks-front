@@ -9,7 +9,7 @@ import {
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { AsistenciaService } from 'src/app/services/asistencia/asistencia.service';
 import { LoadingService } from 'src/app/services/loading.service';
 
@@ -20,7 +20,7 @@ import { LoadingService } from 'src/app/services/loading.service';
   imports: [CommonModule, ReactiveFormsModule, NgSelectModule],
   templateUrl: './edit-status.component.html',
 })
-export class EditStatusComponent implements OnInit, AfterViewInit {
+export class EditStatusComponent implements OnInit {
   modal = inject(NgbModal);
   isLoading = inject(LoadingService).isLoading;
   asistenciaService = inject(AsistenciaService);
@@ -38,8 +38,16 @@ export class EditStatusComponent implements OnInit, AfterViewInit {
     });
   }
 
-  ngAfterViewInit(): void {
-      this.form.valueChanges.subscribe(v=>console.log(v))
+  getRecord(){
+    this.asistenciaService.getById(this.id_asistencia).pipe(
+      map((resp: any) => resp.data),
+      untilDestroyed(this)
+    ).subscribe((data: any) => {
+      this.form.patchValue({
+        id_status: data.status.id,
+        observaciones: data.observaciones
+      })
+    })
   }
 
   getIcon(name: string) {
@@ -59,6 +67,7 @@ export class EditStatusComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.getStatusList();
+    this.getRecord();
   }
 
   close() {

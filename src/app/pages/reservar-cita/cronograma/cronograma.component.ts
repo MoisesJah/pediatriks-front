@@ -108,6 +108,7 @@ export class CronogramaComponent implements OnInit {
     allDaySlot: false,
     expandRows: true,
     slotLabelInterval: '00:05:00',
+    displayEventTime: false,
     slotMinTime: '08:00',
     slotMaxTime: '20:00:00',
     slotLabelFormat: {

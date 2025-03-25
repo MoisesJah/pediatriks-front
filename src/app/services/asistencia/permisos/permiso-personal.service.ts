@@ -28,7 +28,7 @@ export class PermisoPersonalService {
   }
 
   update(id: string, permiso: any) {    
-    return this.http.post(`${this.apiUrl}/edit/${id}`, permiso);
+    return this.http.put(`${this.apiUrl}/edit/${id}`, permiso);
   }
 
   delete(id: string) {

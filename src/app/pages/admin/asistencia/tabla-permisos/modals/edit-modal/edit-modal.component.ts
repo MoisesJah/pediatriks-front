@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, inject, Output } from '@angular/core';
+import { Component, ElementRef, EventEmitter, inject, Output, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NgSelectModule } from '@ng-select/ng-select';
@@ -25,6 +25,8 @@ export class EditModalComponent {
   personalService = inject(PersonalService);
   isLoading = inject(LoadingService).isLoading;
   @Output() onSaveComplete = new EventEmitter<void>();
+  @ViewChild('start_date') startDate!: ElementRef;
+  @ViewChild('end_date') endDateInput!: ElementRef;
 
   form: FormGroup;
 
@@ -34,23 +36,41 @@ export class EditModalComponent {
     locale: Spanish,
     altFormat: 'd/m/Y',
     altInput: true,
+    minDate: new Date().toISOString().split('T')[0],
     monthSelectorType: 'dropdown',
   };
 
   optionsFin: FlatpickrDefaultsInterface = {
     ...this.optionsInicio,
-    minDate: '',
+    minDate: new Date(),
   };
+
+  private updateEndDatePicker(minDate: Date): void {
+    const endPicker = this.endDateInput.nativeElement._flatpickr;
+    if (endPicker) {
+      endPicker.set('minDate', minDate);
+      // this.form.get('')?.enable();
+      
+      // Clear end date if it's now invalid
+      const endDateValue = this.form.get('fecha_fin')?.value;
+      if (endDateValue && new Date(endDateValue) < minDate) {
+        this.form.get('fecha_fin')?.reset();
+        endPicker.clear();
+      }
+    }
+  }
 
   startDateChange(event: any) {
     const { selectedDates } = event;
 
-    flatpickr('#end_date', {
-      locale: Spanish,
-      altFormat: 'd/m/Y',
-      altInput: true,
-      minDate: selectedDates[0],
-    });
+    this.updateEndDatePicker(selectedDates[0]);
+
+    // flatpickr('#end_date', {
+    //   locale: Spanish,
+    //   altFormat: 'd/m/Y',
+    //   altInput: true,
+    //   minDate: selectedDates[0],
+    // });
   }
 
   personalList: Observable<any> = new Observable();
@@ -88,7 +108,6 @@ export class EditModalComponent {
           id_permiso: permiso.id_permiso,
         });
 
-
       });
   }
 
@@ -114,20 +133,19 @@ export class EditModalComponent {
   }
 
   crearPermiso() {
-    console.log(this.form.value);
-    // if (this.form.valid) {
-    //   this.permisoService
-    //     .update(this.permisoId!, this.form.value)
-    //     .pipe(untilDestroyed(this))
-    //     .subscribe({
-    //       next: () => {
-    //         this.onSaveComplete.emit();
-    //         this.close();
-    //       },
-    //       error: (error) => {
-    //         console.log(error);
-    //       },
-    //     });
-    // }
+    if (this.form.valid) {
+      this.permisoService
+        .update(this.permisoId!, this.form.value)
+        .pipe(untilDestroyed(this))
+        .subscribe({
+          next: () => {
+            this.onSaveComplete.emit();
+            this.close();
+          },
+          error: (error) => {
+            console.log(error);
+          },
+        });
+    }
   }
 }

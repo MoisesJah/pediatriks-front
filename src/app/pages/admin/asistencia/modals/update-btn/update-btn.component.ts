@@ -7,7 +7,10 @@ import { ICellRendererParams } from 'ag-grid-community';
   standalone: true,
   imports: [],
   template: `
-    <button type="button" class="btn btn-success btn-sm" (click)="openModal()">Actualizar</button>
+    <button type="button" class="btn btn-success btn-sm" (click)="openModal()">
+    <i class="bi bi-pencil-square"></i>  
+    Actualizar
+    </button>
   `,
 })
 export class UpdateBtnComponent implements ICellRendererAngularComp {

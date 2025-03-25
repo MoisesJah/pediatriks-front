@@ -15,6 +15,7 @@ import { StatusBadgeComponent } from '../status-badge/status-badge.component';
 import { CreateComponent } from './modals/create/create.component';
 import { ActionButtonsComponent } from '../../terapias/modals/action-buttons/action-buttons.component';
 import { EditModalComponent } from './modals/edit-modal/edit-modal.component';
+import { DeleteModalComponent } from './modals/delete-modal/delete-modal.component';
 
 @UntilDestroy()
 @Component({
@@ -24,7 +25,6 @@ import { EditModalComponent } from './modals/edit-modal/edit-modal.component';
   templateUrl: './tabla-permisos.component.html',
 })
 export class TablaPermisosComponent implements OnInit {
-  
   permisoService = inject(PermisoPersonalService);
   modal = inject(NgbModal);
   isLoading = inject(LoadingService).isLoading;
@@ -71,15 +71,15 @@ export class TablaPermisosComponent implements OnInit {
       filter: true,
     },
     {
-          headerName: 'Acciones',
-          cellRenderer: ActionButtonsComponent,
-          cellRendererParams: {
-            onEdit: (data: any) => this.openEditModal(data),
-            onDelete: (data: any) => this.openDeleteModal(data),
-          },
-          maxWidth: 100,
-          resizable: false,
-        },
+      headerName: 'Acciones',
+      cellRenderer: ActionButtonsComponent,
+      cellRendererParams: {
+        onEdit: (data: any) => this.openEditModal(data),
+        onDelete: (data: any) => this.openDeleteModal(data),
+      },
+      maxWidth: 100,
+      resizable: false,
+    },
   ];
 
   loadPermisos() {
@@ -119,16 +119,25 @@ export class TablaPermisosComponent implements OnInit {
   }
 
   openDeleteModal(data: any) {
-    
+    const modalRef = this.modal.open(DeleteModalComponent, {
+      centered: true,
+      backdrop: 'static',
+    });
+
+    modalRef.componentInstance.permisoId = data.id;
+
+    modalRef.componentInstance.onSaveComplete.subscribe(() => {
+      this.loadTabla();
+    });
   }
 
   openEditModal(data: any) {
     const modalRef = this.modal.open(EditModalComponent, {
       centered: true,
       backdrop: 'static',
-    })
+    });
 
-    modalRef.componentInstance.permisoId = data.id
+    modalRef.componentInstance.permisoId = data.id;
 
     modalRef.componentInstance.onSaveComplete.subscribe(() => {
       this.loadTabla();

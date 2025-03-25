@@ -5,6 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 import {
   NgbAccordionModule,
   NgbCollapseModule,
+  NgbProgressbarModule,
 } from '@ng-bootstrap/ng-bootstrap';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { AgGridAngular } from 'ag-grid-angular';
@@ -13,12 +14,13 @@ import { BehaviorSubject, finalize, map, Observable } from 'rxjs';
 import { LoadingService } from 'src/app/services/loading.service';
 import { ReporteService } from 'src/app/services/paciente/reporte/reporte.service';
 import { ThemeService } from 'src/app/services/theme.service';
+import { formatDate } from 'src/app/utils/formatDate';
 
 @UntilDestroy()
 @Component({
   selector: 'app-tab-paquetes',
   standalone: true,
-  imports: [AgGridAngular, CommonModule, NgbAccordionModule],
+  imports: [AgGridAngular, CommonModule, NgbAccordionModule, NgbProgressbarModule],
   templateUrl: './tab-paquetes.component.html',
   styleUrl: './tab-paquetes.component.scss',
 })
@@ -41,11 +43,10 @@ export class TabPaquetesComponent implements OnInit {
   private loadingStates = new Map<string, BehaviorSubject<boolean>>();
 
   columnDefs: ColDef[] = [
-    { field: 'id_pa', headerName: 'ID', filter: true },
     { field: 'num_sesiones', headerName: 'N° Sesiones', filter: true },
     { field: 'metodo_pago', headerName: 'Método de Pago', filter: true },
     { field: 'precio', headerName: 'Precio', filter: true },
-    { field: 'fecha_compra', headerName: 'Fecha Compra', filter: true },
+    { field: 'created_at', headerName: 'Fecha Compra', filter: true, cellRenderer: (data: any) => formatDate(data.data.created_at) },
   ];
 
   ngOnInit(): void {
