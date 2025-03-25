@@ -13,6 +13,8 @@ import { formatDate } from 'src/app/utils/formatDate';
 import { UpdateBtnComponent } from '../modals/update-btn/update-btn.component';
 import { StatusBadgeComponent } from '../status-badge/status-badge.component';
 import { CreateComponent } from './modals/create/create.component';
+import { ActionButtonsComponent } from '../../terapias/modals/action-buttons/action-buttons.component';
+import { EditModalComponent } from './modals/edit-modal/edit-modal.component';
 
 @UntilDestroy()
 @Component({
@@ -22,6 +24,7 @@ import { CreateComponent } from './modals/create/create.component';
   templateUrl: './tabla-permisos.component.html',
 })
 export class TablaPermisosComponent implements OnInit {
+  
   permisoService = inject(PermisoPersonalService);
   modal = inject(NgbModal);
   isLoading = inject(LoadingService).isLoading;
@@ -41,32 +44,42 @@ export class TablaPermisosComponent implements OnInit {
     { field: 'personal.nombre', headerName: 'Terapista', filter: true },
     { field: 'personal.terapia.nombre', headerName: 'Terapia', filter: true },
     {
-      field: 'fecha',
-      headerName: 'Fecha',
+      field: 'fecha_inicio',
+      headerName: 'Fecha Inicio',
       filter: 'agDateColumnFilter',
       valueFormatter: (data: any) => formatDate(data.value),
     },
     {
-      field: 'status.nombre',
+      field: 'fecha_fin',
+      headerName: 'Fecha Fin',
+      filter: 'agDateColumnFilter',
+      valueFormatter: (data: any) => formatDate(data.value),
+    },
+    {
+      field: 'permiso.nombre',
       headerName: 'Tipo de Permiso',
+      minWidth: 250,
+      cellRenderer: (data: any) => {
+        return `<span class="badge badge-light-primary rounded-pill fs-7">${data.data.permiso.nombre}</span>`;
+      },
       filter: true,
     },
     {
-      field: 'observaciones',
-      headerName: 'Notas',
+      field: 'notas',
+      headerName: 'Observaciones',
+      wrapText: false,
       filter: true,
     },
-    // {
-    //   headerName: 'Acciones',
-    //   cellRendererParams: (params: any) => {
-    //     return {
-    //       openModal: () => this.openUpdateModal(params.data.id_asistencia),
-    //     };
-    //   },
-    //   cellRenderer: UpdateBtnComponent,
-    //   resizable: false,
-    //   maxWidth: 200,
-    // },
+    {
+          headerName: 'Acciones',
+          cellRenderer: ActionButtonsComponent,
+          cellRendererParams: {
+            onEdit: (data: any) => this.openEditModal(data),
+            onDelete: (data: any) => this.openDeleteModal(data),
+          },
+          maxWidth: 100,
+          resizable: false,
+        },
   ];
 
   loadPermisos() {
@@ -98,6 +111,27 @@ export class TablaPermisosComponent implements OnInit {
   openCreateModal() {
     const modalRef = this.modal.open(CreateComponent, {
       centered: true,
+    });
+
+    modalRef.componentInstance.onSaveComplete.subscribe(() => {
+      this.loadTabla();
+    });
+  }
+
+  openDeleteModal(data: any) {
+    
+  }
+
+  openEditModal(data: any) {
+    const modalRef = this.modal.open(EditModalComponent, {
+      centered: true,
+      backdrop: 'static',
+    })
+
+    modalRef.componentInstance.permisoId = data.id
+
+    modalRef.componentInstance.onSaveComplete.subscribe(() => {
+      this.loadTabla();
     });
   }
 }

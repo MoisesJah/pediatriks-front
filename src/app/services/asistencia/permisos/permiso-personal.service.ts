@@ -24,7 +24,7 @@ export class PermisoPersonalService {
   }
 
   create(permiso: any) {
-    return this.http.post(`${this.apiUrl}/create`, permiso);
+    return this.http.post(`${this.apiUrl}/add`, permiso);
   }
 
   update(id: string, permiso: any) {    
