@@ -20,7 +20,7 @@
               class="path1"></span><span class="path2"></span></i> <!--end::Icon-->
 
           <!--begin::Input-->
-          <input type="search" (input)="onFilterTextBoxChanged()" id="terapia-search"
+          <input type="search" [formControl]="searchControl" id="terapia-search"
             class="form-control custom-form-control ps-13" name="search" value="" placeholder="Búsqueda"
             data-kt-search-element="input">
           <!--end::Input-->

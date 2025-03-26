@@ -14,6 +14,7 @@ import { ThemeService } from 'src/app/services/theme.service';
 import { AG_GRID_LOCALE_ES } from '@ag-grid-community/locale';
 import { GridApi, ColDef, GridReadyEvent } from 'ag-grid-community';
 import { formatDate } from 'src/app/utils/formatDate';
+import { StatusBadgeComponent } from '../../admin/asistencia/status-badge/status-badge.component';
 
 @UntilDestroy()
 @Component({
@@ -55,11 +56,10 @@ export class AsistenciaComponent implements OnInit {
       filter: 'agDateColumnFilter',
     },
     {
-      headerName: 'Status',
       field: 'status.nombre',
-      cellClass: 'fw-bold',
-      filter: 'agTextColumnFilter',
-      minWidth: 250,
+      headerName: 'Status',
+      filter: true,
+      cellRenderer: StatusBadgeComponent,
     },
   ];
 

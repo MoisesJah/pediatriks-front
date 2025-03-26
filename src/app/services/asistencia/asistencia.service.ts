@@ -31,6 +31,10 @@ export class AsistenciaService {
     return this.http.put(`${this.apiUrl}/asistencia/update/${id}`, data);
   }
 
+  delete(id: string) {
+    return this.http.delete(`${this.apiUrl}/asistencia/delete/${id}`);
+  }
+
   getStatusList() {
     return this.http.get(`${this.status_url}`);
   }

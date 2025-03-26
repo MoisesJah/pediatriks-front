@@ -88,7 +88,7 @@ export class ModalEditComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   canEditSession() {
-    return !this.event || this.event.sesion.num_cambios > 0;
+    return !this.event || this.event.sesion.num_cambios > 0 && this.event.sesion.status.id_status != 2;
   }
 
   getIcon(status: string): string {

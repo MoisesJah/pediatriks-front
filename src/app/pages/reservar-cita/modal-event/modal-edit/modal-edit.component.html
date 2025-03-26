@@ -7,9 +7,9 @@
             class="path1"></span><span class="path2"></span></i>
       </span>
       <span>
-        Editar Cita &bull;
-        <span [ngClass]="getCambiosRestantes() === 0 ? 'text-warning' : ''">
-          ({{getCambiosRestantes()}} cambios restantes)
+        Editar Cita 
+        <span *ngIf="event?.sesion.status.id_status != 2 " [ngClass]="getCambiosRestantes() === 0 ? 'text-warning' : ''">
+          &bull; ({{getCambiosRestantes()}} cambios restantes)
         </span>
       </span>
     </h4>
@@ -19,8 +19,8 @@
     </button>
   </div>
   <div class="modal-body">
-    <span class="text-danger mb-4 d-block" *ngIf="!canEditSession()">No se puede editar esta sesión (0) cambios
-      restantes</span>
+    <span class="text-danger mb-4 d-block" *ngIf="!canEditSession()">No se puede editar esta sesión 
+      </span>
     <form class="form d-flex flex-column gap-4" [formGroup]="editEventForm">
       <section class="row">
         <div class="form-group col">

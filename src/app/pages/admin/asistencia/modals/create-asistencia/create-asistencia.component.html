@@ -1,1 +1,66 @@
-<p>create-asistencia works!</p>
+<div class="modal-header">
+    <h4 class="modal-title d-flex align-items-center gap-1" id="modal-basic-title">
+        <span class="text-primary">
+            <i style="vertical-align: middle;" class="ki-duotone ki-add-files text-gray-900 fs-1">
+                <span class="path1"></span><span class="path2"></span>
+                <span class="path3"></span></i>
+        </span>
+        Crear Asistencia
+    </h4>
+    <button type="button" class="btn btn-sm btn-icon btn-active-color-primary btn-color-gray-800" aria-label="Close"
+        (click)="close()">
+        <i class="ki-duotone ki-cross-square fs-1"><span class="path1"></span><span class="path2"></span></i>
+    </button>
+</div>
+
+<div class="modal-body">
+    <form [formGroup]="form" class="form d-flex flex-column gap-4">
+        <div class="form-group">
+            <label class="form-label required" for="status">Seleccionar Personal</label>
+            <ng-select [items]="personalList | async" [loading]="isLoading | async" [loadingText]="'Cargando...'"
+                bindValue="id_personal" placeholder="Seleccionar" bindLabel="nombre"
+                formControlName="id_personal"></ng-select>
+        </div>
+        <div class="form-group row">
+            <div class="col-6">
+                <label class="form-label required" for="status">Fecha</label>
+                <input placeholder="Seleccionar" type="date" mwlFlatpickr [options]="optionsFecha" class="form-control"
+                    formControlName="fecha" />
+            </div>
+            <div *ngIf="!isInasistencia" class="col-6">
+                <label class="form-label required" for="status">Hora de Asistencia</label>
+                <input type="date" placeholder="Seleccionar" #end_date mwlFlatpickr [options]="optionsHora"
+                    id="end_date" class="form-control" formControlName="hora_asistencia" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="form-label required" for="status">Status</label>
+            <ng-select [items]="statusList | async" (change)="statusChange($event)" [loading]="isLoading | async" [loadingText]="'Cargando...'"
+                bindValue="id" placeholder="Seleccionar" bindLabel="nombre" formControlName="id_status">
+                <ng-template ng-option-tmp let-item="item" let-search="searchTerm">
+                    <div class="d-flex align-items-center gap-2">
+                        <span [ngClass]="getIcon(item.nombre)"></span>
+                        <span class="fw-medium text-capitalize">{{ item.nombre }}</span>
+                    </div>
+                </ng-template>
+                <ng-template ng-label-tmp let-item="item" let-search="searchTerm">
+                    <div class="d-flex align-items-center gap-2">
+                        <span [ngClass]="getIcon(item.nombre)"></span>
+                        <span class="fw-medium text-capitalize">{{ item.nombre }}</span>
+                    </div>
+                </ng-template>
+            </ng-select>
+        </div>
+        <div>
+            <label for="status" class="form-label">Observaciones</label>
+            <textarea class="form-control" id="exampleFormControlTextarea1" rows="2" formControlName="observaciones"></textarea>
+        </div>
+    </form>
+</div>
+
+<div class="modal-footer">
+    <button type="button" class="btn btn-light" (click)="close()">Cerrar</button>
+    <button type="button" class="btn btn-primary" (click)="create()"
+        [disabled]="form.invalid || (isLoading | async)">Guardar
+    </button>
+</div>

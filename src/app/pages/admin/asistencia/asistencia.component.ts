@@ -14,6 +14,9 @@ import { StatusBadgeComponent } from './status-badge/status-badge.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { EditStatusComponent } from './modals/edit-status/edit-status.component';
 import { UpdateBtnComponent } from './modals/update-btn/update-btn.component';
+import { CreateAsistenciaComponent } from './modals/create-asistencia/create-asistencia.component';
+import { ActionButtonsComponent } from '../pacientes/modals/action-buttons/action-buttons.component';
+import { DeleteAsistenciaComponent } from './modals/delete-asistencia/delete-asistencia.component';
 
 @UntilDestroy()
 @Component({
@@ -62,14 +65,13 @@ export class AsistenciaComponent implements OnInit {
     },
     {
       headerName: 'Acciones',
-      cellRendererParams: (params: any) => {
-        return {
-          openModal: () => this.openUpdateModal(params.data.id),
-        };
+      cellRenderer: ActionButtonsComponent,
+      cellRendererParams: {
+        onEdit: (data: any) => this.openUpdateModal(data),
+        onDelete: (data: any) => this.openDeleteModal(data.id),
       },
-      cellRenderer: UpdateBtnComponent,
+      maxWidth: 100,
       resizable: false,
-      maxWidth: 200,
     },
   ];
 
@@ -99,9 +101,33 @@ export class AsistenciaComponent implements OnInit {
     );
   }
 
-  openUpdateModal(id_asistencia: number) {
+  openCreateModal() {
+    const modalRef = this.modal.open(CreateAsistenciaComponent, {
+      centered: true,
+    });
+
+    modalRef.componentInstance.onSaveComplete.subscribe(() => {
+      this.loadTabla();
+    });
+  }
+
+  openUpdateModal(data: any) {
     const modalRef = this.modal.open(EditStatusComponent, {
       centered: true,
+      backdrop: 'static',
+    });
+
+    modalRef.componentInstance.id_asistencia = data.id;
+
+    modalRef.componentInstance.onSaveComplete.subscribe(() => {
+      this.loadTabla();
+    });
+  }
+
+  openDeleteModal(id_asistencia: number) {
+    const modalRef = this.modal.open(DeleteAsistenciaComponent, {
+      centered: true,
+      size: 'sm',
       backdrop: 'static',
     });
 

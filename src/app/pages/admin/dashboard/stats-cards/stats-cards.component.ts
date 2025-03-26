@@ -1,9 +1,10 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, formatCurrency } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { BehaviorSubject, finalize, map, Observable } from 'rxjs';
 import { LoadingService } from 'src/app/services/loading.service';
 import { ReportesService } from 'src/app/services/reportes/reportes.service';
+import { formatMoney } from 'src/app/utils/formatCurrency';
 
 @UntilDestroy()
 @Component({
@@ -48,12 +49,18 @@ export class StatsCardsComponent implements OnInit {
 
     this.statsList = this.reportesService.getStats().pipe(
       map((resp: any) => {
-        const stats = Object.keys(resp.data).map((key, index) => ({
-          key,
-          value: resp.data[key],
-          icon: this.icons[index % this.icons.length],
-          // loading: this.getLoadingState(resp[key])
-        }));
+        const stats = Object.keys(resp.data).map((key, index) => {
+          let value = resp.data[key];
+          if (key === 'Ingresos' || key === 'Egresos') {
+            value = formatMoney(value);
+          }
+          return {
+            key,
+            value,
+            icon: this.icons[index % this.icons.length],
+            loading: this.getLoadingState(resp[key])
+          };
+        });
         return stats;
       }),
       finalize(() => (this.cardsLoading = false)),

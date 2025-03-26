@@ -17,8 +17,26 @@
 <div class="modal-body">
     <form [formGroup]="form" class="d-flex flex-column gap-4">
         <div class="form-group">
+            <label class="form-label required" for="status">Seleccionar Personal</label>
+            <ng-select [items]="personalList | async" [loading]="isLoading | async" [loadingText]="'Cargando...'"
+                bindValue="id_personal" placeholder="Seleccionar" bindLabel="nombre"
+                formControlName="id_personal"></ng-select>
+        </div>
+        <div class="form-group row">
+            <div class="col-6">
+                <label class="form-label required" for="status">Fecha</label>
+                <input placeholder="Seleccionar" type="date" mwlFlatpickr [options]="optionsFecha" class="form-control"
+                    formControlName="fecha" />
+            </div>
+            <div *ngIf="!isInasistencia" class="col-6">
+                <label class="form-label required" for="status">Hora de Asistencia</label>
+                <input type="date" placeholder="Seleccionar" #end_date mwlFlatpickr [options]="optionsHora"
+                    id="end_date" class="form-control" formControlName="hora_asistencia" />
+            </div>
+        </div>
+        <div class="form-group">
             <label class="form-label required" for="status">Status</label>
-            <ng-select [items]="statusList | async" [loading]="isLoading | async" [loadingText]="'Cargando...'"
+            <ng-select [items]="statusList | async" (change)="statusChange($event)" [loading]="isLoading | async" [loadingText]="'Cargando...'"
                 bindValue="id" placeholder="Seleccionar" bindLabel="nombre" formControlName="id_status" >
                 <ng-template ng-option-tmp let-item="item" let-search="searchTerm">
                     <div class="d-flex align-items-center gap-2">

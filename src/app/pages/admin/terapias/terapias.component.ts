@@ -8,8 +8,7 @@ import { Terapia } from 'src/app/models/terapia';
 import { HeaderComponent } from 'src/app/components/ui/header/header.component';
 import { EditModalComponent } from './modals/edit-modal/edit-modal.component';
 import { DeleteModalComponent } from './modals/delete-modal/delete-modal.component';
-import { AgGridAngular } from 'ag-grid-angular';
-import { map, Observable } from 'rxjs';
+import { BehaviorSubject, combineLatest, map, Observable, startWith } from 'rxjs';
 import { ActionButtonsComponent } from './modals/action-buttons/action-buttons.component';
 import { ColDef, GridReadyEvent, GridApi } from 'ag-grid-community';
 import { AG_GRID_LOCALE_ES } from '@ag-grid-community/locale';
@@ -18,12 +17,13 @@ import { formatMoney } from 'src/app/utils/formatCurrency';
 import { LoadingService } from 'src/app/services/loading.service';
 import { ThemeService } from 'src/app/services/theme.service';
 import { ListaPacientesComponent } from './modals/lista-pacientes/lista-pacientes.component';
+import { FormControl, ReactiveFormsModule } from '@angular/forms';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
   selector: 'app-terapias',
   standalone: true,
-  imports: [CommonModule, HeaderComponent, AgGridAngular],
+  imports: [CommonModule, HeaderComponent, ReactiveFormsModule],
   templateUrl: './terapias.component.html',
   styleUrl: './terapias.component.scss',
 })
@@ -35,8 +35,23 @@ export class TerapiasComponent implements OnInit, OnDestroy {
 
   private gridApi!: GridApi;
 
-  terapiasList: Observable<Terapia[]> = new Observable();
   localeText = AG_GRID_LOCALE_ES;
+  
+  searchControl = new FormControl('');
+  private inventarioSubject = new BehaviorSubject<Terapia[]>([]);
+  
+  public terapiasList = combineLatest([
+      this.inventarioSubject.asObservable(),
+      this.searchControl.valueChanges.pipe(startWith(this.searchControl.value)),
+    ]).pipe(
+      map(([terapia, searchTerm]) =>
+        searchTerm
+          ? terapia.filter((t) =>
+              t.nombre.toLowerCase().includes(searchTerm.toLowerCase())
+            )
+          : terapia
+      )
+    );
 
   colDefs: ColDef[] = [
     {
@@ -92,12 +107,12 @@ export class TerapiasComponent implements OnInit, OnDestroy {
   }
 
   fetchTerapias() {
-    this.terapiasList = this.terapias.getAll().pipe(
-      map((resp) => {
-        return resp.data as Terapia[];
-      }),
+    this.terapias.getAll().pipe(
+      map((resp) =>  resp.data as Terapia[]),
       untilDestroyed(this)
-    );
+    ).subscribe((terapias) => {
+      this.inventarioSubject.next(terapias);
+    })
   }
 
   gridReady(params: GridReadyEvent) {
