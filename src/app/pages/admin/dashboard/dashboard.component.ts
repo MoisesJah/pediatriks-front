@@ -11,11 +11,13 @@ import { LoadingService } from 'src/app/services/loading.service';
 import { DatePipe } from '@angular/common';
 import { TablaingresosModalComponent } from './Modales/tablaingresos-modal/tablaingresos-modal.component';
 import { TablaegresosModalComponent } from './Modales/tablaegresos-modal/tablaegresos-modal.component';
+import { Spanish } from 'flatpickr/dist/l10n/es';
+import { StatsCardsComponent } from './stats-cards/stats-cards.component';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [HeaderComponent],
+  imports: [HeaderComponent,StatsCardsComponent],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'],
   providers: [ReportesService]
@@ -52,9 +54,9 @@ export class AdminDashboardComponent implements AfterViewInit {
   initializeFlatpickr() {
     const options: Partial<BaseOptions> = {
       mode: 'range',
+      locale: Spanish,
       dateFormat: 'Y-m-d',
       onChange: (selectedDates: Date[]) => {
-        console.log(selectedDates);
         if (selectedDates.length === 2) {
           this.startDate = this.datePipe.transform(selectedDates[0], 'yyyy-MM-dd')!;
           this.endDate = this.datePipe.transform(selectedDates[1], 'yyyy-MM-dd')!;

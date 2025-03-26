@@ -29,4 +29,8 @@ export class ReportesService {
   addReporte(data: { nombre: string; descripcion?: string; costo: number; metodoPago?: string; tipoEgreso?: string }): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/create`, data);
   }
+
+  getStats(): Observable<any> {
+    return this.http.get<any>(`${this.apiUrl}/stats`);
+  }
 }

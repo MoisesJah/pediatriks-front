@@ -6,37 +6,45 @@
   </ng-container>
 </app-header>
 
-<div class="card content card-flush h-xl-50 scaled-container">
-  <div class="card-header py-5">
-    <h3 class="card-title fw-bold text-gray-800">Tabla de Reportes</h3>
-    <div class="card-toolbar d-flex align-items-center">
-      <button id="btnIngresos" class="btn btn-sm btn-light mx-2" (click)="reloadReportTable()">Actualizar</button>
-      <input id="dateRangePicker" class="btn btn-sm btn-light d-flex align-items-center px-4" placeholder="Selecciona un rango de Fechas" />
-      <button id="btnIngresos" class="btn btn-sm btn-light mx-2" (click)="toggleIngresos()">Ingresos</button>
-      <button id="btnEgresos" class="btn btn-sm btn-light" (click)="toggleEgresos()">Egresos</button>
+<div class="content d-flex flex-column flex-column-fluid">
+
+  <div class="container-xxl">
+
+  <app-stats-cards />
+  <div class="card card-flush h-xl-50 scaled-container">
+    <div class="card-header py-5">
+      <h3 class="card-title fw-bold text-gray-800">Tabla de Reportes</h3>
+      <div class="card-toolbar d-flex align-items-center">
+        <button id="btnIngresos" class="btn btn-sm btn-light mx-2" (click)="reloadReportTable()">Actualizar</button>
+        <input id="dateRangePicker" class="btn btn-sm btn-light d-flex align-items-center px-4"
+          placeholder="Selecciona un rango de Fechas" />
+        <button id="btnIngresos" class="btn btn-sm btn-light mx-2" (click)="toggleIngresos()">Ingresos</button>
+        <button id="btnEgresos" class="btn btn-sm btn-light" (click)="toggleEgresos()">Egresos</button>
+      </div>
+    </div>
+
+    <div class="card-body d-flex justify-content-between flex-column pb-0 px-0 pt-1">
+      <canvas id="kt_charts_widget_20" class="min-h-auto ps-4 pe-6" style="height: 400px; width: 100%;"></canvas>
     </div>
   </div>
 
-  <div class="card-body d-flex justify-content-between flex-column pb-0 px-0 pt-1">
-    <canvas id="kt_charts_widget_20" class="min-h-auto ps-4 pe-6" style="height: 400px; width: 100%;"></canvas>
+  <div class="card-footer text-center">
+    <button class="btn btn-info me-2" (click)="openExtrasModal()">
+      <i class="ki-duotone ki-bill fs-2x"><span class="path1"></span><span class="path2"></span><span
+          class="path3"></span><span class="path4"></span><span class="path5"></span><span class="path6"></span></i>
+      <span>Egresos Extras</span>
+    </button>
+    <button class="btn btn-success me-2" (click)="openIngresosModal()">
+      <i class="ki-duotone ki-arrow-up-refraction fs-2x"><span class="path1"></span><span class="path2"></span></i>
+      <span>Tabla de Ingresos</span>
+    </button>
+    <button class="btn btn-danger" (click)="openEgresosModal()">
+      <i class="ki-duotone ki-arrow-down-refraction fs-2x"><span class="path1"></span><span class="path2"></span></i>
+
+      <span>Tabla de Egresos</span>
+    </button>
   </div>
+
 </div>
 
-<div class="card-footer text-center">
-  <button class="btn btn-info me-2" (click)="openExtrasModal()">
-    <i class="ki-duotone ki-bill fs-2x"><span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span><span class="path5"></span><span class="path6"></span></i>
-    <span>Egresos Extras</span>
-  </button>
-  <button class="btn btn-success me-2" (click)="openIngresosModal()">
-    <i class="ki-duotone ki-arrow-up-refraction fs-2x"><span class="path1"></span><span class="path2"></span></i>
-    <span>Tabla de Ingresos</span>
-  </button>
-  <button class="btn btn-danger" (click)="openEgresosModal()">
-    <i class="ki-duotone ki-arrow-down-refraction fs-2x"><span class="path1"></span><span class="path2"></span></i>
-
-    <span>Tabla de Egresos</span>
-  </button>
 </div>
-
-
-
