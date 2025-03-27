@@ -30,6 +30,10 @@ export class FichaResultService {
     return this.http.get<{ data: any }>(`${this.apiUrl}/list/${id}`);
   }
 
+  exists(id: string, id_sesion: string) {
+    return this.http.get<{ data: any }>(`${this.apiUrl}/exists/${id}/${id_sesion}`);
+  }
+
   update(id: string, body: any) {
     return this.http.put(`${this.apiUrl}/edit/${id}`, body);
   }

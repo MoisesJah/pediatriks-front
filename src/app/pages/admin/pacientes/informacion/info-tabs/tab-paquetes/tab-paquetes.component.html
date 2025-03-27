@@ -1,7 +1,7 @@
 <div class="d-flex flex-column gap-4">
     @let list = paquetesList | async;
 
-    <div *ngIf="isLoading | async" class="loading-container d-flex justify-content-center align-items-center">
+    <div *ngIf="paquetesLoading" class="loading-container d-flex justify-content-center align-items-center">
         <div class="spinner-border text-primary" role="status">
             <span class="visually-hidden">Cargando...</span>
         </div>

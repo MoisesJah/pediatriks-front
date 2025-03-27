@@ -14,7 +14,7 @@ import { CitaService } from 'src/app/services/citas/cita.service';
 @Component({
   selector: 'app-survey',
   standalone: true,
-  imports: [SurveyModule],
+  imports: [SurveyModule, RouterLink],
   templateUrl: './survey.component.html',
   styleUrl: './survey.component.scss',
 })
@@ -30,8 +30,13 @@ export class SurveyComponent implements OnInit, AfterViewInit {
 
   showCloseMg: boolean = false;
 
+  fichaResultExists = null
+
   ngOnInit(): void {
-    this.getFicha();
+    if(!this.fichaResultExists){
+      this.getFicha()
+    }
+    this.getFichaExists()
   }
 
   mergePaciente(survey: Model) {
@@ -47,6 +52,12 @@ export class SurveyComponent implements OnInit, AfterViewInit {
         colegio: paciente.data.colegio,
       });
     });
+  }
+
+  getFichaExists(){
+    this.fichaResult.exists(this.sesionId!, this.fichaId!).subscribe((resp) => {
+      this.fichaResultExists = resp.data
+    })
   }
 
   getFicha() {

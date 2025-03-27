@@ -1,0 +1,33 @@
+<div class="modal-body">
+    <div class="d-flex py-4 justify-content-between align-items-center">
+        <h3>Lista de Atenciones</h3>
+
+        <!-- Botón Actualizar -->
+        <div class="d-flex align-items-center gap-3">
+            <button type="button" class="btn btn-sm btn-light-primary" (click)="getLista()">
+                <span class="d-flex align-items-center">
+                    <span class="fa-solid fa-rotate-right"></span>
+                    <span class="ms-2">Actualizar</span>
+                </span>
+            </button>
+
+            <button type="button" class="btn btn-sm btn-icon btn-active-color-primary btn-color-gray-800"
+                aria-label="Close" (click)="close()">
+                <i class="ki-duotone ki-cross-square fs-1">
+                    <span class="path1"></span>
+                    <span class="path2"></span>
+                </i>
+            </button>
+        </div>
+    </div>
+
+    <div style="height: calc(100dvh - 281px)" id="myGrid"
+        [ngClass]="[theme.getThemeMode() === 'light' ? 'ag-theme-quartz' : 'ag-theme-quartz-dark']">
+        <ag-grid-angular style="width: 100%; height: 100%" 
+        [localeText]="localeText" [pagination]="true"
+            [loading]="isLoading | async" 
+            [rowData]="atencionesList | async" 
+            [columnDefs]="colDefs">
+        </ag-grid-angular>
+    </div>
+</div>

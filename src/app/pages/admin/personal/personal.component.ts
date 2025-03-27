@@ -18,6 +18,8 @@ import { CvViewerComponent } from './modales/cv-viewer/cv-viewer.component';
 import { ThemeService } from 'src/app/services/theme.service';
 import { getDayWeek } from 'src/app/utils/getdayWeek';
 import { HorariosListComponent } from './modales/horarios-list/horarios-list.component';
+import { BtnAtencionesComponent } from './btn-atenciones/btn-atenciones.component';
+import { AtencionesPersonalComponent } from './atenciones-personal/atenciones-personal.component';
 
 @Component({
   selector: 'app-personal',
@@ -65,6 +67,15 @@ export class PersonalComponent implements OnInit {
       valueFormatter: (params) => formatMoney(params.value),
     },
     { field: 'terapia.nombre', headerName: 'Especialidad', filter: true },
+    {
+      headerName: 'Atenciones',
+      cellRenderer: BtnAtencionesComponent,
+      cellRendererParams: (data: any) => {
+        return {
+          openModal: () => this.openAtencionesModal(data.data),
+        };
+      },
+    },
     { field: 'nro_colegiatura', headerName: 'Nro. Colegiatura', filter: true },
     { field: 'direccion', headerName: 'Dirección', filter: true },
     {
@@ -161,5 +172,15 @@ export class PersonalComponent implements OnInit {
     modalRef.componentInstance.onSaveComplete.subscribe(() => {
       this.fetchPersonal();
     });
+  }
+
+  openAtencionesModal(personal: Personal) {
+    const modalRef = this.modal.open(AtencionesPersonalComponent, {
+      size: 'xl',
+      animation: true,
+      centered: true,
+    });
+    modalRef.componentInstance.id_personal = personal.id_personal;
+    console.log(personal);
   }
 }

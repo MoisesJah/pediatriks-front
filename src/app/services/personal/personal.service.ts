@@ -21,6 +21,11 @@ export class PersonalService {
     );
   }
 
+  getAtenciones(id: string) {
+    return this.http.get<{ data: any }>(
+      `${this.apiUrl}/personal/atenciones/${id}`    
+    );
+  }
 
   getPersonalByUser(id: number) {
     return this.http.get<{ data: Personal }>(

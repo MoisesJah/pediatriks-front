@@ -27,7 +27,7 @@ import { formatDate } from 'src/app/utils/formatDate';
 export class TabPaquetesComponent implements OnInit {
   reporteService = inject(ReporteService);
   activatedRoute = inject(ActivatedRoute);
-  isLoading = inject(LoadingService).isLoading;
+  paquetesLoading = false
   theme = inject(ThemeService);
 
   id_paciente = this.activatedRoute.snapshot.paramMap.get('id');
@@ -96,8 +96,10 @@ export class TabPaquetesComponent implements OnInit {
   }
 
   getPaquetes() {
+    this.paquetesLoading = true
     this.paquetesList = this.reporteService.getPaquetes(this.id_paciente!).pipe(
       map((resp: any) => resp.data.compras),
+      finalize(() => (this.paquetesLoading = false)),
       untilDestroyed(this)
     );
   }
