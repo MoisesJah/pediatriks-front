@@ -89,9 +89,14 @@ export class SurveyComponent implements OnInit, AfterViewInit {
               console.log(this.showCloseMg)
               options.showSaveSuccess('Ficha Guardada Correctamente!');
             },
-            error: () => {
+            error: (err) => {
               this.showCloseMg = false;
-              options.showSaveError();
+              if(err.status == 403){
+                options.showSaveError('Sin Autorizacion!');
+              }else{
+                options.showSaveError();
+              }
+              // options.showSaveError();
             },
           });
       });

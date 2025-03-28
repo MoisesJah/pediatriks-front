@@ -23,12 +23,12 @@ export class StatsCardsComponent implements OnInit {
   statsList = new Observable();
 
   icons = [
-    '<i class="ki-duotone ki-people fs-2x text-primary"><span class="path1"></span> <span class="path2"></span> <span class="path3"></span> <span class="path4"></span> <span class="path5"></span> </i>',
-    '<i class="ki-duotone ki-calendar fs-2x text-primary"> <span class="path1"></span> <span class="path2"></span></i>',
+    '<i class="ki-duotone ki-people fs-2x text-info"><span class="path1"></span> <span class="path2"></span> <span class="path3"></span> <span class="path4"></span> <span class="path5"></span> </i>',
+    '<i class="ki-duotone ki-calendar fs-2x text-warning"> <span class="path1"></span> <span class="path2"></span></i>',
     '<i class="ki-duotone ki-user-square fs-2x text-primary"> <span class="path1"></span> <span class="path2"></span> <span class="path3"></span> </i>',
     '<i class="ki-duotone ki-thermometer fs-2x text-primary"> <span class="path1"></span> <span class="path2"></span> </i>',
-    '<i class="ki-duotone ki-arrow-up-refraction fs-2x text-primary"><span class="path1"></span><span class="path2"></span></i>',
-    '<i class="ki-duotone ki-arrow-down-refraction fs-2x text-primary"><span class="path1"></span><span class="path2"></span></i>',
+    '<i class="ki-duotone ki-arrow-up-refraction fs-2x text-success"><span class="path1"></span><span class="path2"></span></i>',
+    '<i class="ki-duotone ki-arrow-down-refraction fs-2x text-danger"><span class="path1"></span><span class="path2"></span></i>',
   ];
 
   ngOnInit(): void {
