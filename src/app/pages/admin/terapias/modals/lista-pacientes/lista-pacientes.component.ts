@@ -10,6 +10,7 @@ import { Terapia } from 'src/app/models/terapia';
 import { LoadingService } from 'src/app/services/loading.service';
 import { TerapiaService } from 'src/app/services/terapia/terapia.service';
 import { ThemeService } from 'src/app/services/theme.service';
+import { formatDate } from 'src/app/utils/formatDate';
 
 @UntilDestroy()
 @Component({
@@ -19,11 +20,11 @@ import { ThemeService } from 'src/app/services/theme.service';
   templateUrl: './lista-pacientes.component.html',
 })
 export class ListaPacientesComponent {
-  terapiaService = inject(TerapiaService)
-  isLoading = inject(LoadingService).isLoading
-  theme = inject(ThemeService)
-  modal = inject(NgbModal)
-  id_terapia = ''
+  terapiaService = inject(TerapiaService);
+  isLoading = inject(LoadingService).isLoading;
+  theme = inject(ThemeService);
+  modal = inject(NgbModal);
+  id_terapia = '';
 
   private gridApi!: GridApi;
 
@@ -32,8 +33,14 @@ export class ListaPacientesComponent {
 
   colDefs: ColDef[] = [
     { field: 'nombre', headerName: 'Nombre', filter: true },
-    { field: 'dni', headerName: 'DNI', filter: true, resizable: true, },
-    { field: 'fecha_nacimiento', headerName: 'Fecha Nacimiento', filter: 'agDateColumnFilter', resizable: true, },
+    { field: 'dni', headerName: 'DNI', filter: true, resizable: true },
+    {
+      field: 'fecha_nacimiento',
+      headerName: 'Fecha Nacimiento',
+      valueFormatter: (params) => formatDate(params.value),
+      filter: 'agDateColumnFilter',
+      resizable: true,
+    },
   ];
 
   ngOnInit(): void {
@@ -41,10 +48,12 @@ export class ListaPacientesComponent {
   }
 
   fetchPacientes() {
-    this.pacientesList = this.terapiaService.getPacientesByTerapia(this.id_terapia).pipe(
-      map((resp: any) => resp.data),
-      untilDestroyed(this)
-    );
+    this.pacientesList = this.terapiaService
+      .getPacientesByTerapia(this.id_terapia)
+      .pipe(
+        map((resp: any) => resp.data),
+        untilDestroyed(this)
+      );
   }
 
   getLista() {
@@ -62,7 +71,7 @@ export class ListaPacientesComponent {
     );
   }
 
-  close(){
-    this.modal.dismissAll()
+  close() {
+    this.modal.dismissAll();
   }
 }

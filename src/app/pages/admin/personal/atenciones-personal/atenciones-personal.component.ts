@@ -9,6 +9,7 @@ import { map, Observable } from 'rxjs';
 import { LoadingService } from 'src/app/services/loading.service';
 import { PersonalService } from 'src/app/services/personal/personal.service';
 import { ThemeService } from 'src/app/services/theme.service';
+import { formatDate } from 'src/app/utils/formatDate';
 
 @UntilDestroy()
 @Component({
@@ -18,31 +19,53 @@ import { ThemeService } from 'src/app/services/theme.service';
   templateUrl: './atenciones-personal.component.html',
 })
 export class AtencionesPersonalComponent implements OnInit {
-  personalService = inject(PersonalService)
-  isLoading = inject(LoadingService).isLoading
-  modal = inject(NgbModal)
-  atencionesList = new Observable()
-  theme = inject(ThemeService)
+  personalService = inject(PersonalService);
+  isLoading = inject(LoadingService).isLoading;
+  modal = inject(NgbModal);
+  atencionesList = new Observable();
+  theme = inject(ThemeService);
 
-  id_personal = ''
+  id_personal = '';
 
   localeText = AG_GRID_LOCALE_ES;
   gridApi!: GridApi;
 
-  colDefs: ColDef[] = []
+  colDefs: ColDef[] = [
+    {
+      field: 'fecha',
+      headerName: 'Fecha',
+      valueFormatter: (params) => formatDate(params.value),
+      filter: 'agDateColumnFilter',
+    },
+    {
+      field: 'hora',
+      headerName: 'Horario',
+    },
+    {
+      field: 'tipocita.nombre',
+      headerName: 'Tipo de cita',
+    },
+    {
+      field: 'paciente.nombre',
+      headerName: 'Paciente',
+      minWidth: 275,
+    }
+  ];
 
   close() {
     this.modal.dismissAll();
   }
 
   ngOnInit(): void {
-   this.getLista()
+    this.getLista();
   }
 
-  getLista(){
-    this.atencionesList = this.personalService.getAtenciones(this.id_personal).pipe(
-      map((res: any) => res.data),
-      untilDestroyed(this)
-    )
+  getLista() {
+    this.atencionesList = this.personalService
+      .getAtenciones(this.id_personal)
+      .pipe(
+        map((res: any) => res.data),
+        untilDestroyed(this)
+      );
   }
 }

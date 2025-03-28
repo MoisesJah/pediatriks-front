@@ -25,7 +25,7 @@
             <span class="ms-2">Actualizar</span>
           </span>
         </button>
-        <button class="btn btn-secondary" (click)="openTablaInventarioModal()">
+        <button class="btn btn-secondary btn-outline d-flex align-items-center" (click)="openTablaInventarioModal()">
           <span class="ki-solid ki-abstract-28 fs-4"></span>
           <span class="ms-2">Registros</span>
         </button>
@@ -45,7 +45,7 @@
     </div>
 
 
-    <div class="row my-5 row-mb-gap-3">
+    <div class="row my-5" style="row-gap: 1.15rem;">
       <div class="col-md-4" *ngFor="let item of inventarioList | async">
         <div class="card border-1 border-gray-300">
           <!-- Contenedor de botones e imagen -->

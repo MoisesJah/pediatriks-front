@@ -14,20 +14,26 @@ import { BehaviorSubject, finalize, map, Observable } from 'rxjs';
 import { LoadingService } from 'src/app/services/loading.service';
 import { ReporteService } from 'src/app/services/paciente/reporte/reporte.service';
 import { ThemeService } from 'src/app/services/theme.service';
+import { formatMoney } from 'src/app/utils/formatCurrency';
 import { formatDate } from 'src/app/utils/formatDate';
 
 @UntilDestroy()
 @Component({
   selector: 'app-tab-paquetes',
   standalone: true,
-  imports: [AgGridAngular, CommonModule, NgbAccordionModule, NgbProgressbarModule],
+  imports: [
+    AgGridAngular,
+    CommonModule,
+    NgbAccordionModule,
+    NgbProgressbarModule,
+  ],
   templateUrl: './tab-paquetes.component.html',
   styleUrl: './tab-paquetes.component.scss',
 })
 export class TabPaquetesComponent implements OnInit {
   reporteService = inject(ReporteService);
   activatedRoute = inject(ActivatedRoute);
-  paquetesLoading = false
+  paquetesLoading = false;
   theme = inject(ThemeService);
 
   id_paciente = this.activatedRoute.snapshot.paramMap.get('id');
@@ -45,8 +51,43 @@ export class TabPaquetesComponent implements OnInit {
   columnDefs: ColDef[] = [
     { field: 'num_sesiones', headerName: 'N° Sesiones', filter: true },
     { field: 'metodo_pago', headerName: 'Método de Pago', filter: true },
-    { field: 'precio', headerName: 'Precio', filter: true },
-    { field: 'created_at', headerName: 'Fecha Compra', filter: true, cellRenderer: (data: any) => formatDate(data.data.created_at) },
+    {
+      field: 'precio',
+      headerName: 'Precio',
+      valueFormatter: (params) => formatMoney(params.value),
+      filter: true,
+    },
+    {
+      field: 'created_at',
+      headerName: 'Fecha Compra',
+      filter: 'agDateColumnFilter',
+      filterParams: {
+        comparator: (filterLocalDateAtMidnight: Date, cellValue: string) => {
+          const dateAsString = cellValue;
+
+          if (dateAsString == null) {
+            return 0;
+          }
+
+          // In the example application, dates are stored as dd/mm/yyyy
+          // We create a Date object for comparison against the filter date
+          const dateParts = dateAsString.slice(0, 10).split('/');
+          const year = Number(dateParts[2]);
+          const month = Number(dateParts[1]) - 1;
+          const day = Number(dateParts[0]);
+          const cellDate = new Date(year, month, day);
+
+          // Now that both parameters are Date objects, we can compare
+          if (cellDate < filterLocalDateAtMidnight) {
+            return -1;
+          } else if (cellDate > filterLocalDateAtMidnight) {
+            return 1;
+          }
+          return 0;
+        },
+      },
+      cellClass: 'fw-semibold text-gray-600 text-center',
+    },
   ];
 
   ngOnInit(): void {
@@ -96,7 +137,7 @@ export class TabPaquetesComponent implements OnInit {
   }
 
   getPaquetes() {
-    this.paquetesLoading = true
+    this.paquetesLoading = true;
     this.paquetesList = this.reporteService.getPaquetes(this.id_paciente!).pipe(
       map((resp: any) => resp.data.compras),
       finalize(() => (this.paquetesLoading = false)),
