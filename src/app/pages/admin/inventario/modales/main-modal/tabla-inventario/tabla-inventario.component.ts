@@ -34,7 +34,8 @@ export class TablaInventarioComponent implements OnInit, OnDestroy {
     { field: 'personal_solicita.nombre', headerName: 'Terapista', filter: true },
     { field: 'terapia.nombre', headerName: 'Terapia', filter: true },
     { field: 'item.nombre', headerName: 'Item', filter: true },
-    { field: 'cantidad', headerName: 'Cantidad', filter: true },
+    { field: 'cantidad', headerName: 'Cantidad', filter: 'agNumberColumnFilter' },
+    { field: 'stock_terapista', headerName: 'Stock Terapista', filter: 'agNumberColumnFilter' },
     {
       field: 'fecha_solicitud',
       headerName: 'Fecha',
