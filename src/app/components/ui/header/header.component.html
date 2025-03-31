@@ -49,42 +49,44 @@
             </div>
             <div class="notification-list scroll-y mh-325px my-5 ">
               <!-- Verificar si hay notificaciones pendientes -->
-              <div *ngIf="!loading && solicitudesPendientes.length === 0" class="text-center">
+              <div *ngIf="!loading && solicitudesPendientes.length === 0" class="container text-center">
                 <span class="text-muted">No tienes ninguna notificación pendiente</span>
               </div>
 
-              <div *ngIf="loading" class="row mx-2 gap-2">
+              <div *ngIf="loading" class="row w-100 container gap-2">
                 <span class="placeholder col-12 rounded-1 h-5px"></span>
                 <span class="placeholder col-12 rounded-1 h-5px"></span>
                 <span class="placeholder col-12 rounded-1 h-5px"></span>
               </div>
 
               <!-- Mostrar la lista de notificaciones si existen -->
-              <div *ngFor="let solicitud of solicitudesPendientes"
-                class="menu menu-column menu-rounded menu-gray-800 menu-state-bg menu-state-color fw-semibold fs-6"
-                style="width: 250px">
-                <div class="menu-item px-3 py-2">
-                  <div class="d-flex align-items-center">
-                    <div class="d-flex flex-column">
-                      <span class="fw-bold fs-5">Solicitud de {{ solicitud.personal_solicita.nombre }}</span>
-                      <span class="text-muted fs-7">Ítem: {{ solicitud.item.nombre }}</span>
-                      <span class="text-muted fs-7">Cantidad solicitada: {{ solicitud.cantidad }}</span>
-                      <span class="text-muted fs-7">Estado: {{ solicitud.estado.nombre }}</span>
-                      <span class="text-muted fs-7">Stock del Terapista: {{ solicitud.stock_terapista }}</span>
+              <ng-container *ngIf="!loading && solicitudesPendientes.length > 0">
+                <div *ngFor="let solicitud of solicitudesPendientes"
+                  class="menu menu-column menu-rounded menu-gray-800 menu-state-bg menu-state-color fw-semibold fs-6"
+                  style="width: 250px">
+                  <div class="menu-item px-3 py-2">
+                    <div class="d-flex align-items-center">
+                      <div class="d-flex flex-column">
+                        <span class="fw-bold fs-5">Solicitud de {{ solicitud.personal_solicita.nombre }}</span>
+                        <span class="text-muted fs-7">Ítem: {{ solicitud.item.nombre }}</span>
+                        <span class="text-muted fs-7">Cantidad solicitada: {{ solicitud.cantidad }}</span>
+                        <span class="text-muted fs-7">Estado: {{ solicitud.estado.nombre }}</span>
+                        <span class="text-muted fs-7">Stock del Terapista: {{ solicitud.stock_terapista }}</span>
+                      </div>
                     </div>
                   </div>
-                </div>
 
-                <!-- Botones de acción -->
-                <div class="menu-item px-3 d-flex justify-content-between">
-                  <button (click)="aceptarSolicitud(solicitud.id_solicitud,user.id)"
-                    class="btn btn-sm btn-success me-2">Aceptar</button>
-                  <button (click)="negarSolicitud(solicitud.id_solicitud,user.id)"
-                    class="btn btn-sm btn-danger me-2">Negar</button>
-                </div>
+                  <!-- Botones de acción -->
+                  <div class="menu-item px-3 d-flex justify-content-between">
+                    <button (click)="aceptarSolicitud(solicitud.id_solicitud,user.id)"
+                      class="btn btn-sm btn-success me-2">Aceptar</button>
+                    <button (click)="negarSolicitud(solicitud.id_solicitud,user.id)"
+                      class="btn btn-sm btn-danger me-2">Negar</button>
+                  </div>
 
-                <div class="separator my-2"></div>
-              </div>
+                  <div class="separator my-2"></div>
+                </div>
+              </ng-container>
             </div>
             <div class="py-3 text-center border-top">
               <a (click)="navegarATablaSolicitudes()" class="btn btn-color-gray-600 btn-active-color-primary">Ver todas

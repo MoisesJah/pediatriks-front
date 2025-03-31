@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output, inject } from '@angular/core';
 import { HeaderComponent } from 'src/app/components/ui/header/header.component';
 import { SolicitudInventarioService } from 'src/app/services/solicitud-inventario/solicitud-inventarioservice';
 import { AgGridAngular } from 'ag-grid-angular';
@@ -11,6 +11,7 @@ import { InventarioService } from 'src/app/services/inventario/inventario.servic
 import { SolicitudInventario } from 'src/app/models/solicitud-inventario';
 import { LoadingService } from 'src/app/services/loading.service';
 import { ActionButtonsComponent } from './acction-buttons/action-buttons/action-buttons.component';
+import { SolicitudEventService } from 'src/app/services/solicitud-inventario/solicitud-event/solicitud-event.service';
 
 @Component({
   selector: 'app-tabla-solicitudes',
@@ -21,6 +22,7 @@ import { ActionButtonsComponent } from './acction-buttons/action-buttons/action-
 })
 export class TablaSolicitudesComponent implements OnInit {
   solicitudInventarioService = inject(SolicitudInventarioService);
+  solicitudEventService = inject(SolicitudEventService);
   solicitudes: Observable<SolicitudInventario[]> = new Observable();
   isLoading = inject(LoadingService).isLoading;
   theme = inject(ThemeService);
@@ -154,6 +156,7 @@ export class TablaSolicitudesComponent implements OnInit {
             (s) => s.id_solicitud !== id_solicitud
           );
           this.fetchSolicitudes();
+          this.solicitudEventService.notifySolicitudProcesada(id_solicitud);
           this.loadPendientes();
         },
         error: (error) => {
@@ -171,6 +174,7 @@ export class TablaSolicitudesComponent implements OnInit {
             (s) => s.id_solicitud !== id_solicitud
           );
           this.fetchSolicitudes();
+          this.solicitudEventService.notifySolicitudProcesada(id_solicitud);
           this.loadPendientes();
         },
         error: (error) => {

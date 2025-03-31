@@ -110,7 +110,7 @@ export class CitasComponent implements OnInit {
     eventDidMount: (info) => {
       // const container =  info.el.getElementsByClassName('fc-event-title')[0] as HTMLElement
       // container.innerText = `${info.event.extendedProps.tipocita}`
-      console.log(info.event.title);
+      // console.log(info.event.title);
     },
     datesSet: (arg) => {
       this.startWeek = arg.view.activeStart;
