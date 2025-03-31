@@ -160,12 +160,6 @@ export class CrearModalComponent implements OnInit, AfterViewInit {
     return this.createForm.get('recurrencia') as FormArray;
   }
 
-  jun(){
-    console.log(this.days.controls)
-    
-    console.log(this.options.map((option) => this.createDayGroup(option.value)))
-  }
-
   getDayLabel(diaSemana: number): string {
     const option = this.options.find((o) => o.value === diaSemana);
     return option!.label || ''
@@ -314,7 +308,11 @@ export class CrearModalComponent implements OnInit, AfterViewInit {
 
     this.id_tipopaquete = this.isCitaPaquete && event?.id_tipocita;
 
-    if(!this.isRecurrente) this.days.reset();
+    if(!this.isRecurrente) {
+      this.days.value.forEach((day: any) => {
+        day.selectedTimeSlot = null
+      })
+    };
 
     const id_paquete = this.createForm.get('id_paquete');
     const num_sesiones = this.createForm.get('num_sesiones');

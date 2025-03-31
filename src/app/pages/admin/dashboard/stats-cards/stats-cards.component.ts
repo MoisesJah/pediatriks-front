@@ -57,6 +57,7 @@ export class StatsCardsComponent implements OnInit {
           return {
             key,
             value,
+            label: ['Ingresos', 'Egresos','Citas'].includes(key) ? 'Este Mes' : 'Total', 
             icon: this.icons[index % this.icons.length],
             loading: this.getLoadingState(resp[key])
           };

@@ -35,7 +35,8 @@ export class MiStockComponent implements OnInit {
     { field: 'stock', headerName: 'Stock', filter: 'agNumberColumnFilter' },
     {
       field: 'created_at',
-      headerName: 'Última Solictud Aprobada',
+      minWidth: 250,
+      headerName: 'Última Solicitud Aprobada',
       filter: 'agDateColumnFilter',
       filterParams: {
         comparator: (filterLocalDateAtMidnight: Date, cellValue: string) => {
