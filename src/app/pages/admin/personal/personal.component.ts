@@ -68,13 +68,8 @@ export class PersonalComponent implements OnInit {
     },
     { field: 'terapia.nombre', headerName: 'Especialidad', filter: true },
     {
-      headerName: 'Atenciones',
+      headerName: 'Informes',
       cellRenderer: BtnAtencionesComponent,
-      cellRendererParams: (data: any) => {
-        return {
-          openModal: () => this.openAtencionesModal(data.data),
-        };
-      },
     },
     { field: 'nro_colegiatura', headerName: 'Nro. Colegiatura', filter: true },
     { field: 'direccion', headerName: 'Dirección', filter: true },

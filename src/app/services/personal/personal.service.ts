@@ -21,9 +21,24 @@ export class PersonalService {
     );
   }
 
-  getAtenciones(id: string) {
-    return this.http.get<{ data: any }>(
-      `${this.apiUrl}/personal/atenciones/${id}`    
+  getAtenciones(body: any) {
+    return this.http.post<{ data: any }>(
+      `${this.apiUrl}/personal/stats?type=atenciones`,
+      body
+    );
+  }
+
+  getAsistencias(body: any) {
+    return this.http.post<{ data: any }>(
+      `${this.apiUrl}/personal/stats?type=asistencias`,
+      body
+    );
+  }
+
+  getStatMensual(body: any) {
+    return this.http.post<{ data: any }>(
+      `${this.apiUrl}/personal/stats?type=mensual`,
+      body
     );
   }
 
@@ -84,7 +99,9 @@ export class PersonalService {
   }
 
   getAvailable() {
-    return this.http.get<{ data: Personal[] }>(`${this.apiUrl}/personal/available`);
+    return this.http.get<{ data: Personal[] }>(
+      `${this.apiUrl}/personal/available`
+    );
   }
 
   delete(id: string) {

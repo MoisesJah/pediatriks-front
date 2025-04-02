@@ -40,6 +40,13 @@ const routes: Routes = [
       import('./personal/personal.component').then((m) => m.PersonalComponent),
   },
   {
+    path: 'personal/:id',
+    loadComponent: () =>
+      import('./personal/informacion/informacion.component').then(
+        (m) => m.InformacionComponent
+      ),
+  },
+  {
     path: 'asistencia',
 
     loadComponent: () =>

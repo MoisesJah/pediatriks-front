@@ -1,21 +1,21 @@
 import { Component } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { ICellRendererAngularComp } from 'ag-grid-angular';
 import { ICellRendererParams } from 'ag-grid-community';
 
 @Component({
   selector: 'app-btn-atenciones',
   standalone: true,
-  imports: [],
+  imports: [RouterLink],
   templateUrl: './btn-atenciones.component.html',
 })
 export class BtnAtencionesComponent implements ICellRendererAngularComp {
-    openModal!: () => void
+  url = '';
 
-  agInit(params: ICellRendererParams<any, any, any> & { openModal: () => void }): void {
-    this.openModal = params.openModal
+  agInit(params: ICellRendererParams): void {
+    this.url = params.data.id_personal;
   }
-  refresh(params: ICellRendererParams<any, any, any>): boolean {
-    return false
+  refresh(params: ICellRendererParams): boolean {
+    return false;
   }
-
 }

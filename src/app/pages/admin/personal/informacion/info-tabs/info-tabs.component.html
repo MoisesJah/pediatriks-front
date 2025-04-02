@@ -1,0 +1,45 @@
+<div class="container-xxl my-6">
+
+    <div class="main-tab-container">
+        <ul ngbNav #nav="ngbNav" class="nav d-flex flex-nowrap justify-content-around nav-tabs fw-medium nav-line-tabs nav-line-tabs-2x fs-6">
+            <li [ngbNavItem]="1">
+                <a class="d-flex align-items-center gap-1" ngbNavLink> <i class="ki-duotone ki-calendar fs-3">
+                    <span class="path1"></span>
+                    <span class="path2"></span>
+                </i>Atenciones</a>
+                <ng-template ngbNavContent>
+                        <app-info-atenciones />
+                </ng-template>
+            </li>
+            <li [ngbNavItem]="2">
+                <a ngbNavLink class="d-flex align-items-center gap-1">
+                    <i class="ki-duotone ki-time fs-3">
+                        <span class="path1"></span>
+                        <span class="path2"></span>
+                    </i>
+                    Horarios</a>
+                <ng-template ngbNavContent>
+                   @defer () {
+                    <app-info-asistencias />
+                   }
+                </ng-template>
+            </li>
+            <li [ngbNavItem]="3">
+                <a ngbNavLink class="d-flex align-items-center gap-1">
+                    <i class="ki-duotone ki-calendar fs-3">
+                        <span class="path1"></span>
+                        <span class="path2"></span>
+                    </i>
+                    Asistencia</a>
+                <ng-template ngbNavContent>
+                    @defer () {
+                        <app-tab-asistencia />
+                    }
+                </ng-template>
+            </li>
+        </ul>
+    </div>
+
+    <div [ngbNavOutlet]="nav" class="mt-2"></div>
+
+</div>
