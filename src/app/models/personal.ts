@@ -14,6 +14,8 @@ export interface Personal {
   correo: string;
   genero: string;
   sueldo: number;
+  direccion: string;
+  nro_colegiatura: string;
   created_at: Date;
   updated_at: Date;
   deleted_at: Date | null;

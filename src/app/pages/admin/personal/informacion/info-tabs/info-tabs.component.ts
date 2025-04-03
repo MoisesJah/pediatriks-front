@@ -7,6 +7,7 @@ import { TabInformesComponent } from '../../../pacientes/informacion/info-tabs/t
 import { TabPaquetesComponent } from '../../../pacientes/informacion/info-tabs/tab-paquetes/tab-paquetes.component';
 import { InfoAtencionesComponent } from './info-atenciones/info-atenciones.component';
 import { InfoAsistenciasComponent } from './info-asistencias/info-asistencias.component';
+import { InfoMensualComponent } from './info-mensual/info-mensual.component';
 
 @Component({
   selector: 'app-info-tabs',
@@ -14,7 +15,8 @@ import { InfoAsistenciasComponent } from './info-asistencias/info-asistencias.co
   imports: [
     NgbNavModule,
     InfoAtencionesComponent,
-    InfoAsistenciasComponent
+    InfoAsistenciasComponent,
+    InfoMensualComponent
   ],
   templateUrl: './info-tabs.component.html',
 })

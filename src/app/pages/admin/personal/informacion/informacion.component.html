@@ -10,12 +10,9 @@
     <div class="container-xxl" id="kt_content_container">
         <div class="card border-1 border-gray-300 px-2 py-4">
             <div class="row row-mb-gap-3 p-4">
-                <div class="col-12">
-                    <h3>Información Personal</h3>
-
+                <h3>Información Personal</h3>
+                <div class="col-md-4">
                     <div class="d-flex flex-column gap-3 fs-5 mt-4">
-                        <div class="d-flex align-items-center gap-3">
-                        </div>
                         <div class="d-flex align-items-center gap-3">
                             <span class="text-gray-600 d-flex">DNI:</span><span>{{currentPersonal?.dni}}</span>
                         </div>
@@ -23,7 +20,29 @@
                             <span class="text-gray-600 d-flex">Especialidad:</span>
                             <span>{{currentPersonal?.terapia.nombre}}</span>
                         </div>
-                        
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="d-flex flex-column gap-3 fs-5 mt-4">
+                        <div class="d-flex align-items-center gap-3">
+                            <span class="text-gray-600 d-flex">Correo:</span><span>{{currentPersonal?.correo}}</span>
+                        </div>
+                        <div class="d-flex align-items-center gap-3">
+                            <span class="text-gray-600 d-flex">Teléfono:</span>
+                            <span>{{currentPersonal?.telefono}}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="d-flex flex-column gap-3 fs-5 mt-4">
+                        <div class="d-flex align-items-center gap-3">
+                            <span class="text-gray-600 d-flex">N°
+                                Colegiatura:</span><span>{{currentPersonal?.nro_colegiatura}}</span>
+                        </div>
+                        <div class="d-flex align-items-center gap-3">
+                            <span class="text-gray-600 d-flex">Dirección:</span>
+                            <span>{{currentPersonal?.direccion}}</span>
+                        </div>
                     </div>
                 </div>
             </div>

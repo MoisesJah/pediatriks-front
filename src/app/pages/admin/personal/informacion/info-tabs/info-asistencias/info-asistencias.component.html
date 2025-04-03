@@ -8,23 +8,37 @@
 
         <div class="card">
             @for (item of permisosList; track $index) {
-                <div class="card-body">
-                    <span class="fw-bold">{{item.fecha_inicio | date }}</span>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6 d-flex flex-column">
+                        <h5>Fecha Inicio</h5>
+                        <span class="fw-bold">{{item.fecha_inicio | date: 'fullDate': 'es-ES' }}</span>
+                    </div>
+                    <div class="col-md-6 d-flex flex-column">
+                        <h5>Fecha Fin</h5>
+                        <span class="fw-bold">{{item.fecha_fin | date: 'fullDate': 'es-ES' }}</span>
+                    </div>
                 </div>
+            </div>
+            }@empty {
+            <div class="card-body">
+                <span class="fw-bold">No hay permisos registrados</span>
+            </div>
             }
         </div>
 
     </div>
 
     <div class="row">
-        <div class="card col-6 p-6">
-            <h1 class="text-danger">Faltas</h1>
-            <p>Registro de ausencias
+        <div class="col-md-6">
+            <div class="card p-6">
+                <h1 class="text-danger">Faltas</h1>
+                <p>Registro de ausencias
 
-            </p>
-    
-            <div class="card border-1 border-gray-300">
-                @for (item of faltasList; track $index) {
+                </p>
+
+                <div class="card border-1 border-gray-300">
+                    @for (item of faltasList; track $index) {
                     <div class="card-body">
                         <div class="d-flex gap-2">
                             <i class="ki-duotone ki-calendar fs-1">
@@ -34,22 +48,32 @@
                             <span class="fw-bold">{{item.fecha | date: 'fullDate': 'es-ES' }}</span>
                         </div>
                     </div>
-                }
+                    }@empty {
+                    <div class="card-body">
+                        <span class="fw-bold">No hay faltas registradas</span>
+                    </div>
+                    }
+                </div>
             </div>
         </div>
-    
-        <div class="card col-6 p-4">
-            <h1 class="text-warning">Tardanzas</h1>
-            <p>Registro de llegadas tarde
+        <div class="col-md-6">
+            <div class="card p-4">
+                <h1 class="text-warning">Tardanzas</h1>
+                <p>Registro de llegadas tarde
 
-            </p>
-    
-            <div class="card">
-                @for (item of tardanzaList; track $index) {
+                </p>
+
+                <div class="card">
+                    @for (item of tardanzaList; track $index) {
                     <div class="card-body">
                         <span class="fw-bold">{{item.fecha | date }}</span>
                     </div>
-                }
+                    }@empty {
+                    <div class="card-body">
+                        <span class="fw-bold">No hay tardanzas registradas</span>
+                    </div>
+                    }
+                </div>
             </div>
         </div>
     </div>
