@@ -9,9 +9,9 @@
     @let list = listStats | async;
 
     <div *ngIf="!(isLoading | async)" class="table-responsive">
-        <table class="table bg-white">
+        <table class="table bg-body table-rounded table-striped border table-row-bordered gy-7 gs-7">
             <thead>
-                <tr>
+                <tr class="fw-semibold fs-6 text-gray-800 border-bottom border-gray-200">
                     <th scope="col">Mes</th>
                     <th scope="col">Atenciones</th>
                     <th scope="col">Permisos</th>
