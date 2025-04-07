@@ -16,7 +16,10 @@ import {
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { FlatpickrDefaultsInterface, FlatpickrModule } from 'angularx-flatpickr';
+import {
+  FlatpickrDefaultsInterface,
+  FlatpickrModule,
+} from 'angularx-flatpickr';
 import { Spanish } from 'flatpickr/dist/l10n/es';
 import { ToastrService } from 'ngx-toastr';
 import { map, Observable } from 'rxjs';
@@ -31,7 +34,7 @@ import { PersonalService } from 'src/app/services/personal/personal.service';
   imports: [CommonModule, ReactiveFormsModule, NgSelectModule, FlatpickrModule],
   templateUrl: './edit-status.component.html',
 })
-export class EditStatusComponent implements OnInit {
+export class EditStatusComponent implements OnInit, AfterViewInit {
   modal = inject(NgbModal);
   isLoading = inject(LoadingService).isLoading;
   asistenciaService = inject(AsistenciaService);
@@ -123,6 +126,14 @@ export class EditStatusComponent implements OnInit {
     }
   }
 
+  ngAfterViewInit(): void {
+    this.form.get('id_status')?.valueChanges.subscribe((value) => {
+      if (value === 3) {
+        this.isInasistencia = true;
+      }
+    });
+  }
+
   ngOnInit(): void {
     this.getStatusList();
     this.getRecord();
@@ -147,8 +158,11 @@ export class EditStatusComponent implements OnInit {
             if (error.error.errors) {
               const errors = Object.values(error.error.errors).join('\n');
               this.toast.error(errors, 'Error');
-            }else {
-              this.toast.error('Ocurrio un error al actualizar la asistencia', 'Error');
+            } else {
+              this.toast.error(
+                'Ocurrio un error al actualizar la asistencia',
+                'Error'
+              );
             }
           },
         });
