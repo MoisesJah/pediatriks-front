@@ -1,5 +1,5 @@
 import { AG_GRID_LOCALE_ES } from '@ag-grid-community/locale';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
@@ -9,7 +9,7 @@ import { map, Observable } from 'rxjs';
 import { LoadingService } from 'src/app/services/loading.service';
 import { ReporteService } from 'src/app/services/paciente/reporte/reporte.service';
 import { ThemeService } from 'src/app/services/theme.service';
-import { formatDate } from 'src/app/utils/formatDate';
+import { formatDate, longDate } from 'src/app/utils/formatDate';
 
 @UntilDestroy()
 @Component({
@@ -31,8 +31,9 @@ export class TabHorariosComponent implements OnInit {
     {
       field: 'fecha_sesion',
       headerName: 'Fecha',
-      filter: 'agDateColumnFilter',
-      cellRenderer: (data: any) => formatDate(data.data.fecha_sesion),
+      filter: 'agTextColumnFilter',
+      minWidth: 250,
+      cellRenderer: (data: any) => longDate(data.data.fecha_sesion),
     },
     {
       field: 'hora',

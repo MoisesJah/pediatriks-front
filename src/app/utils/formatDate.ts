@@ -5,3 +5,10 @@ export const formatDate = (date: string) =>
     year: 'numeric',
     timeZone: 'UTC',
   }).format(new Date(date));
+
+
+export const longDate = (date: string) =>
+  new Intl.DateTimeFormat('es-PE', {
+    dateStyle: 'full',
+    timeZone: 'UTC',
+  }).format(new Date(date));
