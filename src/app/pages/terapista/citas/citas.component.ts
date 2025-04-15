@@ -28,7 +28,7 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 @Component({
   selector: 'app-citas',
   standalone: true,
-  imports: [HeaderComponent, FullCalendarModule,CommonModule],
+  imports: [HeaderComponent, FullCalendarModule, CommonModule],
   templateUrl: './citas.component.html',
   styleUrl: './citas.component.scss',
 })
@@ -85,7 +85,7 @@ export class CitasComponent implements OnInit {
     eventTimeFormat: {
       hour: 'numeric',
       minute: '2-digit',
-      meridiem: 'short'
+      meridiem: 'short',
     },
     selectConstraint: 'businessHours',
     initialView: 'timeGridWeek',
@@ -119,26 +119,39 @@ export class CitasComponent implements OnInit {
     },
   };
 
-  getPersonalId(){
-    this.personalService.getPersonalByUser(this.userService.user()?.id!).pipe(
-      map((resp: any) => resp.data.id_personal),
-      tap((id) => this.personalId = id),
-      tap(() => this.loadCitas(this.bodyParams)),
-      untilDestroyed(this)
-    ).subscribe();
+  getPersonalId() {
+    this.personalService
+      .getPersonalByUser(this.userService.user()?.id!)
+      .pipe(
+        map((resp: any) => resp.data.id_personal),
+        tap((id) => (this.personalId = id)),
+        tap(() => this.loadCitas(this.bodyParams)),
+        untilDestroyed(this)
+      )
+      .subscribe();
   }
 
   loadCitas(params: any) {
     if (this.personalId) {
-      return (this.citasEvent = this.citasService
-        .getByPersonal(params)
-        .pipe(map((resp) => resp.data.map((cita: any) => ({...cita, title: `${cita.tipocita} - ${cita.title}` }))),
-          untilDestroyed(this)));
+      return (this.citasEvent = this.citasService.getByPersonal(params).pipe(
+        map((resp) =>
+          resp.data.map((cita: any) => ({
+            ...cita,
+            title:
+              cita.tipocita === 'Evaluación'
+                ? `${cita.tipocita} - ${cita.title}`
+                : cita.title,
+          }))
+        ),
+        untilDestroyed(this)
+      ));
     }
   }
 
   handleEventClick(clickInfo: EventClickArg) {
     const event = clickInfo.event;
+
+    
 
     const modalRef = this.modalService.open(ModalViewEventComponent, {
       centered: true,

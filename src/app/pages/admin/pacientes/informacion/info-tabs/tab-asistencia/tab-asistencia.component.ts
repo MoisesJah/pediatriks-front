@@ -10,7 +10,7 @@ import { StatusBadgeComponent } from 'src/app/pages/terapista/modals/status-badg
 import { LoadingService } from 'src/app/services/loading.service';
 import { ReporteService } from 'src/app/services/paciente/reporte/reporte.service';
 import { ThemeService } from 'src/app/services/theme.service';
-import { formatDate } from 'src/app/utils/formatDate';
+import { formatDate, longDate } from 'src/app/utils/formatDate';
 
 @UntilDestroy()
 @Component({
@@ -33,7 +33,8 @@ export class TabAsistenciaComponent implements OnInit {
       field: 'fecha_sesion',
       headerName: 'Fecha',
       filter: 'agDateColumnFilter',
-      cellRenderer: (data: any) => formatDate(data.data.fecha_sesion),
+      minWidth: 275,
+      cellRenderer: (data: any) => longDate(data.data.fecha_sesion),
     },
     {
       field: 'hora',
@@ -53,6 +54,8 @@ export class TabAsistenciaComponent implements OnInit {
     {
       field: 'status',
       headerName: 'Status',
+      maxWidth:120,
+      resizable: false,
       filter: true,
       cellRenderer: StatusBadgeComponent,
     },

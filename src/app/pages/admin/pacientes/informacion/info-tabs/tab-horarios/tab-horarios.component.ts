@@ -32,7 +32,7 @@ export class TabHorariosComponent implements OnInit {
       field: 'fecha_sesion',
       headerName: 'Fecha',
       filter: 'agTextColumnFilter',
-      minWidth: 250,
+      minWidth: 275,
       cellRenderer: (data: any) => longDate(data.data.fecha_sesion),
     },
     {
@@ -49,7 +49,7 @@ export class TabHorariosComponent implements OnInit {
       filter: true
     },
     { field: 'terapia', headerName: 'Terapia', filter: true },
-    { field: 'terapista', headerName: 'Terapista', filter: true },
+    { field: 'terapista', headerName: 'Terapista', filter: true, minWidth:250 },
   ];
 
   horariosList = new Observable();

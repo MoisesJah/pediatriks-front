@@ -12,14 +12,15 @@
         <li [ngbNavItem]="1">
             <a ngbNavLink>Asistencia del Personal</a>
             <ng-template ngbNavContent>
-    
                 <app-asistencia />
             </ng-template>
         </li>
         <li [ngbNavItem]="2">
             <a ngbNavLink>Permisos del Personal</a>
             <ng-template ngbNavContent>
-                <app-tabla-permisos />
+                @defer () {
+                    <app-tabla-permisos />
+                }
             </ng-template>
         </li>
     </ul>
