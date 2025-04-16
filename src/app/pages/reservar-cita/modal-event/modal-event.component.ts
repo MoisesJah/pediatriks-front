@@ -16,10 +16,11 @@ import {
   FormBuilder,
   FormControl,
   FormGroup,
+  ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
 import { ModalEditComponent } from './modal-edit/modal-edit.component'; // Asegúrate de importar el componente de edición
-import { distinctUntilChanged, map, Observable, take } from 'rxjs';
+import { distinctUntilChanged, finalize, map, Observable, take } from 'rxjs';
 import { Terapia } from 'src/app/models/terapia';
 import { Sede } from 'src/app/models/sede';
 import { IPaciente } from 'src/app/models/paciente';
@@ -35,13 +36,17 @@ import { TipocitaService } from 'src/app/services/tipocita/tipocita.service';
 import { PaqueteService } from 'src/app/services/paquetes/paquete.service';
 import { Paquete } from 'src/app/models/paquetes';
 import { CitaService } from 'src/app/services/citas/cita.service';
-import { FlatpickrDefaultsInterface } from 'angularx-flatpickr';
+import { FlatpickrDefaultsInterface, FlatpickrModule } from 'angularx-flatpickr';
 import Spanish from 'flatpickr/dist/l10n/es.js';
 import { el } from '@fullcalendar/core/internal-common';
+import { CommonModule } from '@angular/common';
+import { NgSelectModule } from '@ng-select/ng-select';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
   selector: 'app-modal-event',
+  standalone: true,
+  imports: [FlatpickrModule, CommonModule, ReactiveFormsModule, NgSelectModule],
   templateUrl: './modal-event.component.html',
   styleUrls: ['./modal-event.component.scss'],
 })
@@ -70,25 +75,27 @@ export class ModalCreateEventComponent implements OnInit, AfterViewInit {
   tipoCitasList: Observable<TipoCita[]> = new Observable();
   paquetesList: Observable<any> = new Observable();
 
+  loadingPacientes = false;
+  loadingSedes = false;
+  loadingPersonal = false;
+  loadingTerapias = false;
+  loadingTipoCitas = false;
+  loadingPaquetes = false;
+
+  selectedPaquete: Paquete | null = null;
+
   eventForm: FormGroup;
   minDate: string;
 
   startDate!: string;
   startTime!: string;
   endTime!: string;
-  
+
   es = Spanish.es;
 
-  isCitaContinua = false;
+  isRecurrente = false;
   terapiasId: string[] = [];
   paquetesId: any[] = [];
-
-  timeOptions: FlatpickrDefaultsInterface = {
-    enableTime: true,
-    noCalendar: true,
-    dateFormat: 'H:i',
-    // will be used since specific attribute is not provided
-  };
 
   avaiblePersonal: any[] = [];
 
@@ -102,10 +109,9 @@ export class ModalCreateEventComponent implements OnInit, AfterViewInit {
 
     this.eventForm = this.fb.group({
       id_paciente: [null, Validators.required],
+      id_paquete: [null],
       id_sede: [null, Validators.required],
       fecha_inicio: ['', Validators.required],
-      hora_inicio: ['', Validators.required],
-      hora_fin: ['', Validators.required],
       id_tipocita: [null, Validators.required],
       detalle: this.fb.array([this.createDetalle()]),
     });
@@ -124,20 +130,14 @@ export class ModalCreateEventComponent implements OnInit, AfterViewInit {
   }
 
   changeTipoCita(event: any) {
-    this.isCitaContinua = event?.nombre && event?.nombre !== 'Evaluación';
-    if (this.isCitaContinua) {
-      this.detalle.controls.forEach((control) => {
-        control.get('id_paquete')?.setValidators(Validators.required);
-      });
+    this.isRecurrente = event && event.recurrente;
+    if (this.isRecurrente) {
+      this.loadPaquetes()
     }
   }
 
   changePaquete(event: any, index: number) {
-    const detalleArray = this.eventForm.get('detalle') as FormArray;
-    const sesionesControl = detalleArray
-      .at(index)
-      ?.get('num_sesiones') as FormControl;
-    sesionesControl.setValue(event?.cantidadsesiones);
+    this.selectedPaquete = event;
   }
 
   toggleOption(option: { label: string; value: string }, index: number) {
@@ -204,7 +204,7 @@ export class ModalCreateEventComponent implements OnInit, AfterViewInit {
   }
 
   getTerapiaId(event: any, index: number) {
-    if (this.isCitaContinua && event) {
+    if (this.isRecurrente && event) {
       this.terapiasId[index] = event.id_terapia;
       this.terapiaService
         .getPaquetesByTerapia(event.id_terapia)
@@ -256,7 +256,7 @@ export class ModalCreateEventComponent implements OnInit, AfterViewInit {
                   this.avaiblePersonal[index] = [];
                 }
               });
-          }else{
+          } else {
             this.avaiblePersonal[index] = [];
             this.detalle.at(index).get('id_personal')?.setValue(null);
           }
@@ -279,16 +279,29 @@ export class ModalCreateEventComponent implements OnInit, AfterViewInit {
   }
 
   loadTipoCitas() {
+    this.loadingTipoCitas = true;
     this.tipoCitasList = this.tipoCitaService.getAll().pipe(
       map((resp) => resp.data),
-      untilDestroyed(this)
+      untilDestroyed(this),
+      finalize(() => (this.loadingTipoCitas = false))
     );
   }
 
   loadPacientes() {
+    this.loadingPacientes = true;
     this.pacientesList = this.pacienteService.getAll().pipe(
       map((resp) => resp.data),
-      untilDestroyed(this)
+      untilDestroyed(this),
+      finalize(() => (this.loadingPacientes = false))
+    );
+  }
+
+  loadPaquetes() {
+    this.loadingPaquetes = true;
+    this.paquetesList = this.paquetesService.getAll().pipe(
+      map((resp) => resp.data),
+      untilDestroyed(this),
+      finalize(() => (this.loadingPaquetes = false))
     );
   }
 

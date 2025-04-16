@@ -9,7 +9,7 @@ import { ModalViewEventComponent } from './modal-view-event/modal-view-event.com
 
 @NgModule({
   declarations: [
-    ModalCreateEventComponent,
+    // ModalCreateEventComponent,
     ModalViewEventComponent
   ],
   imports: [
@@ -22,7 +22,7 @@ import { ModalViewEventComponent } from './modal-view-event/modal-view-event.com
     FlatpickrModule.forRoot() // Agrega FlatpickrModule a los imports
   ],
   exports: [
-    ModalCreateEventComponent
+    // ModalCreateEventComponent
   ]
 })
 export class ModalEventModule { }

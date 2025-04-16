@@ -51,7 +51,6 @@ registerLocaleData(localeEs);
       // messageClass:'toastr-message',
       // progressBar:true
     }), // ToastrModule added
-    ModalEventModule,
     UserModalsModule,
     ModalEditModule,
     DropdownComponent,

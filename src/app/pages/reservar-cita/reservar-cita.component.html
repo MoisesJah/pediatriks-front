@@ -14,10 +14,10 @@
       <div class="card-header">
         <h2 class="card-title fw-bold">{{ cronogramaActual?.nombre }}</h2>
         <div class="card-toolbar d-flex">
-         
+
          <div>
+          <button class="btn btn-primary" (click)="openModal()">Nueva Cita</button>
           <app-dropdown #dropdown></app-dropdown>
-          <!-- <ng-select [items]="terapiasList" bindLabel="nombre" (change)="handleSelectChange($event)" placeholder="Seleccionar Terapia" bindValue="id_terapia"></ng-select> -->
          </div>
         </div>
       </div>

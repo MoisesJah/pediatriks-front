@@ -1,92 +1,178 @@
 <!-- Modal para agregar nuevo evento -->
 <div class="modal-header">
   <h4 class="modal-title">
-    <i style="vertical-align: text-top;" class="ki-duotone ki-calendar-add text-gray-900 fs-1"><span class="path1"></span><span class="path2"></span><span class="path3"></span><span class="path4"></span><span class="path5"></span><span class="path6"></span></i>  
+    <i
+      style="vertical-align: text-top"
+      class="ki-duotone ki-calendar-add text-gray-900 fs-1"
+      ><span class="path1"></span><span class="path2"></span
+      ><span class="path3"></span><span class="path4"></span
+      ><span class="path5"></span><span class="path6"></span
+    ></i>
     Registrar Nueva Cita
   </h4>
-  <button type="button" class="btn btn-sm btn-icon btn-active-color-primary btn-color-gray-800" aria-label="Close"
-    (click)="closeModal()">
-    <i class="ki-duotone ki-cross-square fs-1"><span class="path1"></span><span class="path2"></span></i>
+  <button
+    type="button"
+    class="btn btn-sm btn-icon btn-active-color-primary btn-color-gray-800"
+    aria-label="Close"
+    (click)="closeModal()"
+  >
+    <i class="ki-duotone ki-cross-square fs-1"
+      ><span class="path1"></span><span class="path2"></span
+    ></i>
   </button>
 </div>
 
 <div class="modal-body">
   <form [formGroup]="eventForm" class="form d-flex flex-column gap-4">
     <div class="row">
-      <div class="form-group col-6 mb-3">
-        <label class="form-label" for="patient_selection">Seleccionar Paciente</label>
-        <ng-select formControlName="id_paciente" [items]="pacientesList | async" bindValue="id_paciente"
-          [loadingText]="'Cargando..'" placeholder="Seleccionar" bindLabel="nombre"></ng-select>
+      <div class="form-group col-3">
+        <label class="form-label" for="kt_calendar_datepicker_date"
+          >Fecha de Inicio</label
+        >
+        <input
+          type="text"
+          mwlFlatpickr
+          [locale]="es"
+          altFormat="d/m/Y"
+          [disableMobile]="true"
+          [monthSelectorType]="'dropdown'"
+          [altInput]="true"
+          class="form-control"
+          id="kt_calendar_datepicker_date"
+          formControlName="fecha_inicio"
+          placeholder="Seleccionar Fecha"
+        />
       </div>
       <div class="form-group col-6 mb-3">
+        <label class="form-label" for="patient_selection"
+          >Seleccionar Paciente</label
+        >
+        <ng-select
+          formControlName="id_paciente"
+          [items]="pacientesList | async"
+          bindValue="id_paciente"
+          [loadingText]="'Cargando..'"
+          placeholder="Seleccionar"
+          bindLabel="nombre"
+        ></ng-select>
+      </div>
+      <div class="form-group col-3 mb-3">
         <label class="form-label" for="id_paquete">Tipo de Cita</label>
-        <ng-select (change)="changeTipoCita($event)" formControlName="id_tipocita" [items]="tipoCitasList | async"
-          bindValue="id_tipocita" [loadingText]="'Cargando..'" placeholder="Seleccionar" bindLabel="nombre"></ng-select>
-      </div>
-      <div class="form-group col-6 mb-3">
-        <label class="form-label" for="id_paquete">Seleccionar Sede</label>
-        <ng-select formControlName="id_sede" [items]="sedesList | async" bindValue="id_sede"
-          [loadingText]="'Cargando..'" placeholder="Seleccionar" bindLabel="nombre"></ng-select>
+        <ng-select
+          (change)="changeTipoCita($event)"
+          formControlName="id_tipocita"
+          [items]="tipoCitasList | async"
+          bindValue="id_tipocita"
+          [loadingText]="'Cargando..'"
+          placeholder="Seleccionar"
+          bindLabel="nombre"
+        ></ng-select>
       </div>
     </div>
 
     <div class="row">
-      <div class="form-group col">
-        <label class="form-label" for="kt_calendar_datepicker_date">Fecha</label>
-        <input type="text" mwlFlatpickr [noCalendar]="true" altFormat="d/m/Y" [altInput]="true" class="form-control" id="kt_calendar_datepicker_date" formControlName="fecha_inicio"
-         placeholder="Seleccionar Fecha(s)" />
+      <div class="form-group col-6">
+        <label class="form-label" for="id_paquete">Seleccionar Sede</label>
+        <ng-select
+          formControlName="id_sede"
+          [items]="sedesList | async"
+          bindValue="id_sede"
+          [loadingText]="'Cargando..'"
+          placeholder="Seleccionar"
+          bindLabel="nombre"
+        ></ng-select>
       </div>
-      <div class="form-group col">
-        <label class="form-label" for="kt_calendar_datepicker_start_time">Hora de Inicio</label>
-        <input type="text" readonly class="form-control" id="kt_calendar_datepicker_start_time"
-          formControlName="hora_inicio" placeholder="Seleccionar Hora de Inicio" />
-      </div>
-      <div class="form-group col">
-        <label class="form-label" for="kt_calendar_datepicker_end_time">Hora de Fin</label>
-        <input type="text" readonly class="form-control" id="kt_calendar_datepicker_end_time" formControlName="hora_fin"
-         placeholder="Seleccionar Hora de Fin" />
+
+      <div *ngIf="isRecurrente" class="form-group col-6">
+        <label class="form-label" for="id_paquete">Seleccionar Paquete</label>
+        <ng-select
+          formControlName="id_paquete"
+          [items]="paquetesList | async"
+          [loading]="loadingPaquetes"
+          (change)="changePaquete($event)"
+          bindValue="id_paquetes"
+          [loadingText]="'Cargando..'"
+          placeholder="Seleccionar"
+          bindLabel="nombre"
+        ></ng-select>
       </div>
     </div>
 
     <div formArrayName="detalle">
-      <div class="d-flex justify-content-between  align-items-center">
-        <label class="form-label fw-bolder fs-5" for="">Detalle de la Cita</label>
-        <button class="btn btn-primary fs-10 btn-sm btn-icon" (click)="addInfoTerapia()">
-          <span><i class="ki-duotone ki-plus">
-              <span class="path1"></span><span class="path2"></span>
-            </i></span>
+      <div class="d-flex justify-content-between align-items-center">
+        <label class="form-label fw-bolder fs-5" for=""
+          >Detalle de la Cita</label
+        >
+        <button
+          type="button"
+          *ngIf="isRecurrente"
+          class="btn btn-primary fs-10 btn-sm btn-icon"
+          (click)="addInfoTerapia()"
+        >
+          <span
+            ><i class="ki-duotone ki-plus">
+              <span class="path1"></span><span class="path2"></span> </i
+          ></span>
         </button>
       </div>
       <ng-container *ngFor="let terapia of detalle.controls; let i = index">
-        <div class="form-group d-flex flex-column gap-3 position-relative p-4 border-2 mt-2 border-dashed border-gray-300 rounded"
-          [formGroupName]="i">
-          <div *ngIf="i > 0" class="position-absolute end-0" style="transform: translateY(-18px) translateX(12px);"><button
-              class="btn btn-sm fs-10 btn-icon btn-active-color-danger btn-danger" (click)="removeInfoTerapia(i)">
+        <div
+          class="form-group d-flex flex-column gap-3 position-relative p-4 border-2 mt-2 border-dashed border-gray-300 rounded"
+          [formGroupName]="i"
+        >
+          <div
+            *ngIf="i > 0"
+            class="position-absolute end-0"
+            style="transform: translateY(-18px) translateX(12px)"
+          >
+            <button
+              class="btn btn-sm fs-10 btn-icon btn-active-color-danger btn-danger"
+              (click)="removeInfoTerapia(i)"
+            >
               <i class="ki-solid ki-cross"></i>
             </button>
           </div>
-         
 
           <div class="row">
             <div class="col-6">
               <label class="form-label" for="">Terapia</label>
-              <ng-select [items]="terapiasList | async" bindValue="id_terapia" [loadingText]="'Cargando..'"
-                placeholder="Seleccionar" bindLabel="nombre" (change)="getTerapiaId($event,i)" formControlName="id_terapia"></ng-select>
+              <ng-select
+                [items]="terapiasList | async"
+                bindValue="id_terapia"
+                [loadingText]="'Cargando..'"
+                placeholder="Seleccionar"
+                bindLabel="nombre"
+                (change)="getTerapiaId($event, i)"
+                formControlName="id_terapia"
+              ></ng-select>
             </div>
             <div class="col-6">
               <label class="form-label" for="">Especialista</label>
-              <ng-select [items]="avaiblePersonal[i]" bindValue="id_personal" [loadingText]="'Cargando..'"
-                placeholder="Seleccionar" bindLabel="nombre" formControlName="id_personal"></ng-select>
+              <ng-select
+                [items]="avaiblePersonal[i]"
+                bindValue="id_personal"
+                [loadingText]="'Cargando..'"
+                placeholder="Seleccionar"
+                bindLabel="nombre"
+                formControlName="id_personal"
+              ></ng-select>
             </div>
           </div>
 
           <div *ngIf="isCitaContinua" class="row">
-            <div  class="form-group d-flex flex-column col mb-3">
-              <label class="form-label" for="kt_calendar_datepicker_end_date">Dias de Recurrencia</label>
+            <div class="form-group d-flex flex-column col mb-3">
+              <label class="form-label" for="kt_calendar_datepicker_end_date"
+                >Dias de Recurrencia</label
+              >
               <div class="btn-group">
-                <button *ngFor="let option of options" class="btn btn-outline"
-                  [ngClass]="{ 'btn-active-primary active': isOptionSelected(option,i) }"
-                  (click)="toggleOption(option,i)">
+                <button
+                  *ngFor="let option of options"
+                  class="btn btn-outline"
+                  [ngClass]="{
+                    'btn-active-primary active': isOptionSelected(option, i)
+                  }"
+                  (click)="toggleOption(option, i)"
+                >
                   {{ option.label }}
                 </button>
               </div>
@@ -100,11 +186,14 @@
         </div>
       </ng-container>
     </div>
-
   </form>
 </div>
 
 <div *ngIf="!event" class="modal-footer">
-  <button type="button" class="btn btn-secondary" (click)="closeModal()">Cancelar</button>
-  <button type="button" class="btn btn-primary" (click)="submitEvent()">Guardar</button>
+  <button type="button" class="btn btn-secondary" (click)="closeModal()">
+    Cancelar
+  </button>
+  <button type="button" class="btn btn-primary" (click)="submitEvent()">
+    Guardar
+  </button>
 </div>
