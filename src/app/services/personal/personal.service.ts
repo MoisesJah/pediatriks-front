@@ -28,6 +28,13 @@ export class PersonalService {
     );
   }
 
+  getHorariosLibre(body:any){
+    return this.http.post<{ data: any }>(
+      `${this.apiUrl}/personal/disponible`,
+      body
+    )
+  }
+
   getAsistencias(body: any) {
     return this.http.post<{ data: any }>(
       `${this.apiUrl}/personal/stats?type=asistencias`,

@@ -36,12 +36,16 @@ export class TerapiaService {
   }
 
   // Nuevos métodos
-  getPersonalByTerapia(id: string): Observable<any> {
-    return this.http.get<any>(`${this.apiUrl}/terapia/getpersonal/terapia/${id}`);
+  getPersonalByTerapia(body:any): Observable<any> {
+    return this.http.post<any>(`${this.apiUrl}/terapia/getpersonal/terapia`, body);
   }
 
   getPaquetesByTerapia(id: string) {
     return this.http.get<any>(`${this.apiUrl}/terapia/getpaquetes/${id}`);
+  }
+
+  getByPaquete(id:string){
+    return this.http.get(`${this.apiUrl}/terapia/paquetes/${id}`);
   }
 
   getAllPersonal(): Observable<any[]> {

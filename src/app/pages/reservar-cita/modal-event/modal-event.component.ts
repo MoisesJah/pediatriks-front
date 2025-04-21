@@ -20,7 +20,16 @@ import {
   Validators,
 } from '@angular/forms';
 import { ModalEditComponent } from './modal-edit/modal-edit.component'; // Asegúrate de importar el componente de edición
-import { distinctUntilChanged, finalize, map, Observable, take } from 'rxjs';
+import {
+  BehaviorSubject,
+  distinctUntilChanged,
+  finalize,
+  map,
+  Observable,
+  Subject,
+  switchMap,
+  take,
+} from 'rxjs';
 import { Terapia } from 'src/app/models/terapia';
 import { Sede } from 'src/app/models/sede';
 import { IPaciente } from 'src/app/models/paciente';
@@ -36,11 +45,15 @@ import { TipocitaService } from 'src/app/services/tipocita/tipocita.service';
 import { PaqueteService } from 'src/app/services/paquetes/paquete.service';
 import { Paquete } from 'src/app/models/paquetes';
 import { CitaService } from 'src/app/services/citas/cita.service';
-import { FlatpickrDefaultsInterface, FlatpickrModule } from 'angularx-flatpickr';
+import {
+  FlatpickrDefaultsInterface,
+  FlatpickrModule,
+} from 'angularx-flatpickr';
 import Spanish from 'flatpickr/dist/l10n/es.js';
 import { el } from '@fullcalendar/core/internal-common';
 import { CommonModule } from '@angular/common';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { ListHorariosComponent } from './list-horarios/list-horarios.component';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -65,8 +78,6 @@ export class ModalCreateEventComponent implements OnInit, AfterViewInit {
   citaService = inject(CitaService);
 
   @ViewChild('startTimePicker') startTimePicker!: ElementRef;
-  @ViewChild('endTimePicker') endTimePicker!: ElementRef;
-  @ViewChild('datePicker') datePicker!: ElementRef;
 
   terapiasList: Observable<Terapia[]> = new Observable();
   sedesList: Observable<Sede[]> = new Observable();
@@ -82,10 +93,16 @@ export class ModalCreateEventComponent implements OnInit, AfterViewInit {
   loadingTipoCitas = false;
   loadingPaquetes = false;
 
+   selectedPackageSubject = new BehaviorSubject<string | null>(null);
+
+  terapiasListItems: {
+    observable: Observable<Terapia[]>;
+    loading: BehaviorSubject<boolean>;
+  }[] = [];
+
   selectedPaquete: Paquete | null = null;
 
   eventForm: FormGroup;
-  minDate: string;
 
   startDate!: string;
   startTime!: string;
@@ -104,8 +121,6 @@ export class ModalCreateEventComponent implements OnInit, AfterViewInit {
     private modalService: NgbModal,
     private fb: FormBuilder
   ) {
-    const today = new Date();
-    this.minDate = this.formatDate(today);
 
     this.eventForm = this.fb.group({
       id_paciente: [null, Validators.required],
@@ -117,14 +132,6 @@ export class ModalCreateEventComponent implements OnInit, AfterViewInit {
     });
   }
 
-  options = [
-    { label: 'L', value: 1 },
-    { label: 'M', value: 2 },
-    { label: 'MI', value: 3 },
-    { label: 'J', value: 4 },
-    { label: 'V', value: 5 },
-  ];
-
   get detalle() {
     return this.eventForm.get('detalle') as FormArray;
   }
@@ -132,55 +139,29 @@ export class ModalCreateEventComponent implements OnInit, AfterViewInit {
   changeTipoCita(event: any) {
     this.isRecurrente = event && event.recurrente;
     if (this.isRecurrente) {
-      this.loadPaquetes()
+      this.loadPaquetes();
     }
   }
 
   changePaquete(event: any, index: number) {
-    this.selectedPaquete = event;
+    const paqueteId = event?.id_paquetes || null;
+    this.selectedPackageSubject.next(paqueteId);
+
+    this.detalle.reset()
   }
 
-  toggleOption(option: { label: string; value: string }, index: number) {
-    const detalleArray = this.eventForm.get('detalle') as FormArray;
-    const recurrenciaControl = detalleArray
-      .at(index)
-      ?.get('recurrencia') as FormControl;
-    const recurrenciaValue = recurrenciaControl.value as string[];
-
-    const indexValue = recurrenciaValue.indexOf(option.value);
-    if (indexValue === -1) {
-      recurrenciaControl.setValue([...recurrenciaValue, option.value]);
-    } else {
-      recurrenciaControl.setValue(
-        recurrenciaValue.filter((value) => value !== option.value)
-      );
+  loadInitialTerapias() {
+    this.terapiasListItems = [];
+    
+    // Initialize for each form item
+    for (let i = 0; i < this.detalle.length; i++) {
+      this.loadTerapiasForItem(i);
     }
-  }
-
-  isOptionSelected = (
-    option: { label: string; value: string },
-    index: number
-  ) => {
-    const detalleArray = this.eventForm.get('detalle') as FormArray;
-    const recurrenciaValue = detalleArray.at(index)?.get('recurrencia')
-      ?.value as string[];
-    return recurrenciaValue?.includes(option.value);
-  };
-
-  onStartTimeChange(event: any, index: number): void {
-    const [hours, minutes] = event.dateString.split(':').map(Number);
-    const minEndDate = new Date();
-    minEndDate.setHours(hours, minutes + 5);
-    const horaFinControl = this.detalle
-      .at(index)
-      ?.get('hora_fin') as FormControl;
-    horaFinControl.setValue(minEndDate.toTimeString().slice(0, 5));
   }
 
   createDetalle() {
     return this.fb.group({
       id_terapia: [null, Validators.required],
-      id_paquete: [null],
       num_sesiones: [null],
       id_personal: [null, Validators.required],
       recurrencia: this.fb.control([]),
@@ -189,18 +170,53 @@ export class ModalCreateEventComponent implements OnInit, AfterViewInit {
 
   addInfoTerapia() {
     this.detalle.push(this.createDetalle());
+    const index = this.detalle.length - 1;
+
+    this.loadTerapiasForItem(index)
+  }
+
+  loadTerapiasForItem(index:number){
+    const loadingState = new BehaviorSubject<boolean>(true);
+
+    // Create item-specific observable that reacts to package changes
+    const terapiasObservable = this.selectedPackageSubject.pipe(
+      switchMap(packageId => {
+        loadingState.next(true);
+        
+        // If packageId is null (default), get all terapias
+        // Otherwise, get by package
+        const observable = packageId 
+          ? this.terapiaService.getByPaquete(packageId) 
+          : this.terapiaService.getAll();
+        
+        return observable.pipe(
+          map((resp:any) => resp.data),
+          finalize(() => loadingState.next(false))
+        );
+      }),
+      untilDestroyed(this)
+    );
+    
+    // Store loading state and observable for this item
+    this.terapiasListItems[index] = {
+      observable: terapiasObservable,
+      loading: loadingState
+    };
+    
   }
 
   removeInfoTerapia(i: number) {
     this.detalle.removeAt(i);
+    this.terapiasListItems.splice(i, 1);
   }
 
   ngOnInit() {
-    this.loadTerapias();
+    // this.loadTerapias();
     this.loadSedes();
     this.loadPacientes();
-    this.loadPersonal();
     this.loadTipoCitas();
+
+    this.loadInitialTerapias()
   }
 
   getTerapiaId(event: any, index: number) {
@@ -232,29 +248,24 @@ export class ModalCreateEventComponent implements OnInit, AfterViewInit {
           const body = {
             id_terapia: array[index].id_terapia,
             fecha_inicio: array[index].fecha_inicio,
-            hora_inicio: array[index].hora_inicio,
-            hora_fin: array[index].hora_fin,
             id_sede,
           };
 
           const requiredFields = [
             body.id_terapia,
-            body.fecha_inicio,
-            body.hora_inicio,
-            body.hora_fin,
           ];
 
           if (requiredFields.every(Boolean) && id_sede) {
-            this.citaService
-              .getAvailablePersonal(body)
+            this.terapiaService
+              .getPersonalByTerapia(body)
               .pipe(take(1))
               .subscribe({
                 next: (resp: any) => {
-                  this.avaiblePersonal[index] = resp.data;
+                  this.avaiblePersonal[index] = resp.data.personal;
                 },
                 error: () => {
                   this.avaiblePersonal[index] = [];
-                }
+                },
               });
           } else {
             this.avaiblePersonal[index] = [];
@@ -264,12 +275,26 @@ export class ModalCreateEventComponent implements OnInit, AfterViewInit {
       });
   }
 
-  loadTerapias() {
-    this.terapiasList = this.terapiaService.getAll().pipe(
-      map((resp) => resp.data),
-      untilDestroyed(this)
-    );
-  }
+  // loadTerapias() {
+  //   this.terapiasList = this.paqueteId.pipe(
+  //     switchMap(packageId => {
+  //       if (packageId !== null) {
+  //         // When package ID is selected, get by package
+  //         return this.terapiaService.getByPaquete(packageId).pipe(
+  //           map((resp: any) => resp.data)
+  //         );
+  //       } else {
+  //         // Initially or when no package is selected, get all
+  //         return this.terapiaService.getAll().pipe(
+  //           map((resp) => resp.data)
+  //         );
+  //       }
+  //     }),
+  //     untilDestroyed(this)
+  //   );
+
+  //   this.paqueteId.next(null);
+  // }
 
   loadSedes() {
     this.sedesList = this.sedesService.getAll().pipe(
@@ -347,17 +372,16 @@ export class ModalCreateEventComponent implements OnInit, AfterViewInit {
     // });
   }
 
-  deleteEvent() {
-    if (this.event) {
-      this.eventDeleted.emit(this.event.id);
-      this.activeModal.close();
+  showHorarios(index:number){
+    const modalRef = this.modalService.open(ListHorariosComponent, {
+      centered:true,
+      size: 'lg',
+      backdrop: 'static',
+    })
+    
+    modalRef.componentInstance.body = {
+      id_personal: this.detalle.at(index).get('id_personal')?.value,
+      fecha: this.eventForm.get('fecha_inicio')?.value,
     }
-  }
-
-  private formatDate(date: Date): string {
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    return `${year}-${month}-${day}`;
   }
 }

@@ -1,0 +1,45 @@
+<div class="modal-content">
+    <div class="modal-header">
+        <h4 class="modal-title">Horarios</h4>
+        <button type="button" class="close" aria-label="Close" (click)="closeModal()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+
+    <div class="modal-body d-flex">
+        <div ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-pills flex-column" orientation="vertical">
+            <ng-container *ngFor="let horario of horarios; let i = index" [ngbNavItem]="i">
+                <a ngbNavLink class="btn btn-sm btn-primary">{{ horario.day }}</a>
+                <ng-template ngbNavContent>
+                    <app-list-slot [slot]="horario.available_slots"></app-list-slot>
+                    <h1>{{horario.day}} - {{active}}</h1>
+                </ng-template>
+            </ng-container>
+
+            
+        </div>
+
+        <div [ngbNavOutlet]="nav" class="ms-4"></div>
+
+    </div>
+
+    <!-- <div class="d-flex">
+        <ul ngbNav #nav="ngbNav" class="nav-pills flex-column">
+            @for (id of [1, 2, 3]; track id) {
+                <li [ngbNavItem]="id">
+                    <button ngbNavLink>
+                        Tab {{ id }}
+                        <span class="btn-close ms-3 fw-light" (click)="close($event, id)"></span>
+                    </button>
+                    <ng-template ngbNavContent>
+                        <p>Tab {{ id }} content</p>
+                    </ng-template>
+                </li>
+            }
+            
+        </ul>
+        
+        <div [ngbNavOutlet]="nav" class="mt-2"></div>
+    </div> -->
+
+</div>

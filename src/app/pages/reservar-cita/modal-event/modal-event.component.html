@@ -49,6 +49,7 @@
         >
         <ng-select
           formControlName="id_paciente"
+          [loading]="loadingPacientes"
           [items]="pacientesList | async"
           bindValue="id_paciente"
           [loadingText]="'Cargando..'"
@@ -61,6 +62,7 @@
         <ng-select
           (change)="changeTipoCita($event)"
           formControlName="id_tipocita"
+          [loading]="loadingTipoCitas"
           [items]="tipoCitasList | async"
           bindValue="id_tipocita"
           [loadingText]="'Cargando..'"
@@ -76,6 +78,7 @@
         <ng-select
           formControlName="id_sede"
           [items]="sedesList | async"
+          [loading]="loadingSedes"
           bindValue="id_sede"
           [loadingText]="'Cargando..'"
           placeholder="Seleccionar"
@@ -137,7 +140,8 @@
             <div class="col-6">
               <label class="form-label" for="">Terapia</label>
               <ng-select
-                [items]="terapiasList | async"
+              [items]="terapiasListItems[i]?.observable | async"
+                [loading]="terapiasListItems[i]?.loading | async"
                 bindValue="id_terapia"
                 [loadingText]="'Cargando..'"
                 placeholder="Seleccionar"
@@ -159,30 +163,17 @@
             </div>
           </div>
 
-          <div *ngIf="isCitaContinua" class="row">
-            <div class="form-group d-flex flex-column col mb-3">
-              <label class="form-label" for="kt_calendar_datepicker_end_date"
-                >Dias de Recurrencia</label
-              >
-              <div class="btn-group">
-                <button
-                  *ngFor="let option of options"
-                  class="btn btn-outline"
-                  [ngClass]="{
-                    'btn-active-primary active': isOptionSelected(option, i)
-                  }"
-                  (click)="toggleOption(option, i)"
-                >
-                  {{ option.label }}
-                </button>
-              </div>
+          <div class="row" *ngIf="(selectedPackageSubject | async) !== null">
+            <div class="col-6">
+              <label for="">N° Sesiones</label>
+              <input type="number" class="form-control" formControlName="num_sesiones" min="1">
             </div>
-            <!-- <div  class="form-group mb-3 col">
-              <label class="form-label" for="calendar_event_title">Paquete de la Cita</label>
-              <ng-select (change)="changePaquete($event,i)" [items]="paquetesId[i]" bindValue="id_paquetes" formControlName="id_paquete" [loadingText]="'Cargando..'"
-                placeholder="Seleccionar" bindLabel="nombre"></ng-select>
-            </div> -->
+
+            <div class="col-6" *ngIf="eventForm.get('detalle').at(i).get('id_personal').value">
+              <button [disabled]="!eventForm.get('fecha_inicio').value" type="button" class="btn btn-primary" (click)="showHorarios(i)">Ver Horarioss</button>
+            </div>
           </div>
+
         </div>
       </ng-container>
     </div>
@@ -193,7 +184,7 @@
   <button type="button" class="btn btn-secondary" (click)="closeModal()">
     Cancelar
   </button>
-  <button type="button" class="btn btn-primary" (click)="submitEvent()">
+  <button type="button" [disabled]="eventForm.invalid" class="btn btn-primary" (click)="submitEvent()">
     Guardar
   </button>
 </div>
