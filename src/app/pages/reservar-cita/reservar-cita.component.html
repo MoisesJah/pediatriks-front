@@ -14,11 +14,21 @@
       <div class="card-header">
         <h2 class="card-title fw-bold">{{ cronogramaActual?.nombre }}</h2>
         <div class="card-toolbar d-flex">
-
-         <div>
-          <button class="btn btn-primary" (click)="openModal()">Nueva Cita</button>
-          <app-dropdown #dropdown></app-dropdown>
-         </div>
+          <div class="d-flex gap-2 align-items-center">
+            <button
+              type="button"
+              class="btn btn-primary btn-flex"
+              (click)="openModal()"
+            >
+              <i class="ki-duotone fs-2 ki-plus-square">
+                <span class="path1"></span>
+                <span class="path2"></span>
+                <span class="path3"></span>
+              </i>
+              Nueva Cita
+            </button>
+            <app-dropdown #dropdown></app-dropdown>
+          </div>
         </div>
       </div>
 
@@ -31,19 +41,25 @@
         "
       >
         <div class="demo-app-main">
-         @defer () {
-          <full-calendar [ngClass]="{ 'opacity-50': isLoading | async }" *ngIf="calendarVisible" [loading]=" isLoading | async" [events]="citasEvent | async" [options]="calendarOptions">
+          @defer () {
+          <full-calendar
+            [ngClass]="{ 'opacity-50': isLoading | async }"
+            *ngIf="calendarVisible"
+            [loading]="isLoading | async"
+            [events]="citasEvent | async"
+            [options]="calendarOptions"
+          >
           </full-calendar>
-         }@placeholder() {
+          }@placeholder() {
           <div
-          class="d-flex justify-content-center align-items-center"
-          style="height: 100%"
-        >
-          <div class="spinner-border" role="status">
-            <span class="visually-hidden">Loading...</span>
+            class="d-flex justify-content-center align-items-center"
+            style="height: 100%"
+          >
+            <div class="spinner-border" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
           </div>
-        </div>
-         }
+          }
         </div>
       </div>
     </div>

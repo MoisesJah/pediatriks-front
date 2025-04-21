@@ -9,7 +9,11 @@ import {
   AfterViewInit,
   inject,
 } from '@angular/core';
-import { NgbActiveModal, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import {
+  NgbActiveModal,
+  NgbModal,
+  NgbTooltipModule,
+} from '@ng-bootstrap/ng-bootstrap';
 import { CalendarEvent } from 'src/app/models/calendar-event';
 import {
   FormArray,
@@ -59,7 +63,13 @@ import { ListHorariosComponent } from './list-horarios/list-horarios.component';
 @Component({
   selector: 'app-modal-event',
   standalone: true,
-  imports: [FlatpickrModule, CommonModule, ReactiveFormsModule, NgSelectModule],
+  imports: [
+    FlatpickrModule,
+    CommonModule,
+    ReactiveFormsModule,
+    NgSelectModule,
+    NgbTooltipModule,
+  ],
   templateUrl: './modal-event.component.html',
   styleUrls: ['./modal-event.component.scss'],
 })
@@ -93,7 +103,7 @@ export class ModalCreateEventComponent implements OnInit, AfterViewInit {
   loadingTipoCitas = false;
   loadingPaquetes = false;
 
-   selectedPackageSubject = new BehaviorSubject<string | null>(null);
+  selectedPackageSubject = new BehaviorSubject<string | null>(null);
 
   terapiasListItems: {
     observable: Observable<Terapia[]>;
@@ -115,13 +125,13 @@ export class ModalCreateEventComponent implements OnInit, AfterViewInit {
   paquetesId: any[] = [];
 
   avaiblePersonal: any[] = [];
+  selectedHorarios: any[] = [];
 
   constructor(
     public activeModal: NgbActiveModal,
     private modalService: NgbModal,
     private fb: FormBuilder
   ) {
-
     this.eventForm = this.fb.group({
       id_paciente: [null, Validators.required],
       id_paquete: [null],
@@ -147,12 +157,12 @@ export class ModalCreateEventComponent implements OnInit, AfterViewInit {
     const paqueteId = event?.id_paquetes || null;
     this.selectedPackageSubject.next(paqueteId);
 
-    this.detalle.reset()
+    this.detalle.reset();
   }
 
   loadInitialTerapias() {
     this.terapiasListItems = [];
-    
+
     // Initialize for each form item
     for (let i = 0; i < this.detalle.length; i++) {
       this.loadTerapiasForItem(i);
@@ -172,37 +182,36 @@ export class ModalCreateEventComponent implements OnInit, AfterViewInit {
     this.detalle.push(this.createDetalle());
     const index = this.detalle.length - 1;
 
-    this.loadTerapiasForItem(index)
+    this.loadTerapiasForItem(index);
   }
 
-  loadTerapiasForItem(index:number){
+  loadTerapiasForItem(index: number) {
     const loadingState = new BehaviorSubject<boolean>(true);
 
     // Create item-specific observable that reacts to package changes
     const terapiasObservable = this.selectedPackageSubject.pipe(
-      switchMap(packageId => {
+      switchMap((packageId) => {
         loadingState.next(true);
-        
+
         // If packageId is null (default), get all terapias
         // Otherwise, get by package
-        const observable = packageId 
-          ? this.terapiaService.getByPaquete(packageId) 
+        const observable = packageId
+          ? this.terapiaService.getByPaquete(packageId)
           : this.terapiaService.getAll();
-        
+
         return observable.pipe(
-          map((resp:any) => resp.data),
+          map((resp: any) => resp.data),
           finalize(() => loadingState.next(false))
         );
       }),
       untilDestroyed(this)
     );
-    
+
     // Store loading state and observable for this item
     this.terapiasListItems[index] = {
       observable: terapiasObservable,
-      loading: loadingState
+      loading: loadingState,
     };
-    
   }
 
   removeInfoTerapia(i: number) {
@@ -216,7 +225,7 @@ export class ModalCreateEventComponent implements OnInit, AfterViewInit {
     this.loadPacientes();
     this.loadTipoCitas();
 
-    this.loadInitialTerapias()
+    this.loadInitialTerapias();
   }
 
   getTerapiaId(event: any, index: number) {
@@ -251,9 +260,7 @@ export class ModalCreateEventComponent implements OnInit, AfterViewInit {
             id_sede,
           };
 
-          const requiredFields = [
-            body.id_terapia,
-          ];
+          const requiredFields = [body.id_terapia];
 
           if (requiredFields.every(Boolean) && id_sede) {
             this.terapiaService
@@ -372,16 +379,20 @@ export class ModalCreateEventComponent implements OnInit, AfterViewInit {
     // });
   }
 
-  showHorarios(index:number){
+  showHorarios(index: number) {
     const modalRef = this.modalService.open(ListHorariosComponent, {
-      centered:true,
+      centered: true,
       size: 'lg',
       backdrop: 'static',
-    })
-    
+    });
+
     modalRef.componentInstance.body = {
       id_personal: this.detalle.at(index).get('id_personal')?.value,
       fecha: this.eventForm.get('fecha_inicio')?.value,
-    }
+    };
+
+    modalRef.componentInstance.selectedSlots.subscribe((resp: any) => {
+      this.selectedHorarios[index] = resp;
+    });
   }
 }
