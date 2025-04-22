@@ -193,11 +193,13 @@
             <div *ngIf="selectedHorarios[i]">
               <div *ngFor="let horario of selectedHorarios[i]">
                 <div class="d-flex align-items-center">
-                  <span class="fw-bold me-2">{{ horario.day }}</span>
-                  <span class="fw-bold me-2"
-                    >{{ horario.selectedSlot.start_time }} -
-                    {{ horario.selectedSlot.end_time }}</span
-                  >
+                  <div class="badge badge-success">
+                    <span class="fw-bold me-2">{{ horario.day }}</span>
+                    <span class="fw-bold me-2"
+                      >{{ horario.selectedSlot.start_time }} -
+                      {{ horario.selectedSlot.end_time }}</span
+                    >
+                  </div>
                 </div>
               </div>
             </div>

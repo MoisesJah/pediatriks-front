@@ -4,8 +4,10 @@ import {
   EventEmitter,
   inject,
   Input,
+  OnChanges,
   OnInit,
   Output,
+  SimpleChanges,
 } from '@angular/core';
 import {
   NgbActiveModal,
@@ -28,6 +30,7 @@ export class ListHorariosComponent implements OnInit {
   modal = inject(NgbActiveModal);
   isLoading = false;
   personalService = inject(PersonalService);
+  @Input() preSelections: { [date: string]: any } = {};
   @Output() selectedSlots = new EventEmitter();
 
   body = {
@@ -38,21 +41,25 @@ export class ListHorariosComponent implements OnInit {
   selectedHorarios: { [date: string]: any } = {};
 
   active: number = 0;
-  slotSelections: { [date: string]: any } = {};
+  // slotSelections: { [date: string]: any } = {};
 
   horarios: any[] = [];
 
   ngOnInit(): void {
     this.getLista();
+
+    if (this.preSelections) {
+      this.selectedHorarios = { ...this.preSelections };
+    }
   }
 
   onSelectedSlots(slots: any) {
     if (slots.selectedSlot) {
       this.selectedHorarios[slots.date] = slots;
-      this.slotSelections[slots.date] = slots.selectedSlot;
+      // this.slotSelections[slots.date] = slots.selectedSlot;
     } else {
       delete this.selectedHorarios[slots.date];
-      this.slotSelections[slots.date] = null;
+      // this.slotSelections[slots.date] = null;
     }
   }
 
@@ -64,7 +71,7 @@ export class ListHorariosComponent implements OnInit {
     // Remove from the list
     delete this.selectedHorarios[date];
     // Tell the slot component to deselect
-    this.slotSelections[date] = null;
+    // this.slotSelections[date] = null;
   }
 
   getLista() {
@@ -113,7 +120,7 @@ export class ListHorariosComponent implements OnInit {
     </div>
   `,
 })
-export class SlotTime {
+export class SlotTime implements OnInit, OnChanges {
   @Input() slot: any = [];
   @Output() selectedSlots = new EventEmitter();
   @Input() currentSelection: any;
@@ -128,15 +135,22 @@ export class SlotTime {
     );
   }
 
-  ngOnChanges() {
+  ngOnInit(): void {
+    if (this.currentSelection) {
+      console.log('on init', this.currentSelection);
+      this.selectedItem = this.currentSelection;
+    }
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
     // Sync with parent's selection state
-    if (this.currentSelection === null) {
-      this.selectedItem = null;
+    if (changes['currentSelection']) {
+      this.selectedItem = this.currentSelection;
+      console.log(changes['currentSelection']);
     }
   }
 
   selectedSlot(slot: any) {
-    console.log('subitem', slot);
     if (this.selectedItem === slot) {
       this.selectedItem = null;
     } else {

@@ -391,6 +391,10 @@ export class ModalCreateEventComponent implements OnInit, AfterViewInit {
       fecha: this.eventForm.get('fecha_inicio')?.value,
     };
 
+    modalRef.componentInstance.preSelections = {
+      ...this.selectedHorarios[index],
+    };
+
     modalRef.componentInstance.selectedSlots.subscribe((resp: any) => {
       this.selectedHorarios[index] = resp;
     });

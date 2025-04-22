@@ -36,7 +36,7 @@
           <a ngbNavLink class="btn btn-sm">{{ horario.day }}</a>
           <ng-template ngbNavContent>
             <app-list-slot
-              [currentSelection]="slotSelections[horario.date] || null"
+              [currentSelection]="selectedHorarios[horario.date] || null"
               (selectedSlots)="onSelectedSlots($event)"
               [slot]="horario"
             ></app-list-slot>
