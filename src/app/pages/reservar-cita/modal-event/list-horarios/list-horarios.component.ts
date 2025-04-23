@@ -49,7 +49,14 @@ export class ListHorariosComponent implements OnInit {
     this.getLista();
 
     if (this.preSelections) {
-      this.selectedHorarios = { ...this.preSelections };
+      this.selectedHorarios = {};
+
+      // Transfer each preSelection using the date as key
+      Object.values(this.preSelections).forEach((selection) => {
+        if (selection.date) {
+          this.selectedHorarios[selection.date] = selection;
+        }
+      });
     }
   }
 
@@ -70,8 +77,7 @@ export class ListHorariosComponent implements OnInit {
   removeSlot(date: string) {
     // Remove from the list
     delete this.selectedHorarios[date];
-    // Tell the slot component to deselect
-    // this.slotSelections[date] = null;
+    
   }
 
   getLista() {
