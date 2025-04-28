@@ -33,7 +33,7 @@
           [ngbNavItem]="i"
           [destroyOnHide]="false"
         >
-          <a ngbNavLink class="btn btn-sm">{{ horario.day }}</a>
+          <a ngbNavLink class="btn btn-sm text-capitalize">{{ horario.day }}</a>
           <ng-template ngbNavContent>
             <app-list-slot
               [currentSelection]="selectedHorarios[horario.date]?.selectedSlot || null"

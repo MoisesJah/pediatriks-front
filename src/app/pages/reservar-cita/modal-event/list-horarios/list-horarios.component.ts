@@ -77,7 +77,6 @@ export class ListHorariosComponent implements OnInit {
   removeSlot(date: string) {
     // Remove from the list
     delete this.selectedHorarios[date];
-    
   }
 
   getLista() {
@@ -89,7 +88,9 @@ export class ListHorariosComponent implements OnInit {
         untilDestroyed(this)
       )
       .subscribe((resp) => {
-        this.horarios = resp.data;
+        this.horarios =
+          resp.data.sort((a: any, b: any) => a.day_of_week - b.day_of_week) ||
+          [];
       });
   }
 
@@ -107,20 +108,39 @@ export class ListHorariosComponent implements OnInit {
   standalone: true,
   imports: [NgbNavModule, CommonModule],
   template: `
-    <div class="d-flex flex-column gap-3 px-4 py-2" style="min-width: 200px">
-      <span
+    <div class="d-flex flex-column gap-3 px-4" style="min-width: 200px">
+      <span class="fs-3"
         >Horarios disponibles <strong>{{ slot.date_formatted }}</strong></span
       >
-      <div class="row gap-1">
+
+      <div class="rounded border">
         <div
-          (click)="selectedSlot(item)"
-          [class.bg-primary]="isSelected(item)"
-          class="col-4 border cursor-pointer px-2 py-1 rounded"
-          *ngFor="let item of slot.available_slots"
+          *ngFor="let row of gridSlotTime; let lastRow = last; trackBy: trackByRow"
+          class="row g-0"
         >
-          <span class="fw-bold"
-            >{{ item.start_time }} - {{ item.end_time }}</span
+          <div 
+            *ngFor="let slot of row; let lastInRow = last"
+            class="col-4 border-end border-bottom"
+            [class.border-start]="first"
+            [class.bg-light]="slot.isEmpty"
           >
+            <!-- First column border and last row border handling -->
+            <div
+              *ngIf="!slot.isEmpty"
+              class="p-3 h-100 cursor-pointer"
+              [class.bg-primary]="isSelected(slot)"
+              (click)="selectedSlot(slot)"
+              [class.border-bottom-0]="lastRow"
+              [class.border-end-0]="lastInRow"
+            >
+              <span *ngIf="slot.isEmpty" class="p-3 h-100 bg-light"></span>
+              <span class="fw-bold"
+                >{{ slot.start_time }} - {{ slot.end_time }}
+                  {{lastInRow}} - {{lastRow}}
+                </span
+              >
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -146,6 +166,33 @@ export class SlotTime implements OnInit, OnChanges {
       console.log('on init', this.currentSelection);
       this.selectedItem = this.currentSelection;
     }
+  }
+
+  trackByRow(index: number, row: any[]): string {
+    return row.map(slot => slot.id || slot.start_time || slot.end_time || 'empty').join('-');
+  }
+
+  get gridSlotTime() {
+    const rows = [];
+    // Create a copy of the items array
+    const itemsCopy = [...this.slot.available_slots];
+
+    // Calculate how many placeholders we need to add
+    const remainder = itemsCopy.length % 3;
+    if (remainder > 0) {
+      // Add empty placeholder items to complete the row
+      const placeholdersNeeded = 3 - remainder;
+      for (let i = 0; i < placeholdersNeeded; i++) {
+        itemsCopy.push({ isEmpty: true });
+      }
+    }
+
+    // Organize items into rows of 3
+    for (let i = 0; i < itemsCopy.length; i += 3) {
+      rows.push(itemsCopy.slice(i, i + 3));
+    }
+
+    return rows;
   }
 
   ngOnChanges(changes: SimpleChanges) {
