@@ -120,6 +120,15 @@ export class ModalCreateEventComponent implements OnInit, AfterViewInit {
 
   es = Spanish.es;
 
+  metodosPago = [
+    'Efectivo',
+    'Yape',
+    'BCP',
+    'Interbank',
+    'BBVA',
+    'Transferencia',
+  ];
+
   isRecurrente = false;
   terapiasId: string[] = [];
   paquetesId: any[] = [];
@@ -138,6 +147,7 @@ export class ModalCreateEventComponent implements OnInit, AfterViewInit {
       id_sede: [null, Validators.required],
       fecha_inicio: ['', Validators.required],
       id_tipocita: [null, Validators.required],
+      metodo_pago: [null],
       detalle: this.fb.array([this.createDetalle()]),
     });
   }
@@ -154,6 +164,11 @@ export class ModalCreateEventComponent implements OnInit, AfterViewInit {
   }
 
   changePaquete(event: any, index: number) {
+    if (event) {
+      this.selectedPaquete = event;
+      this.eventForm.get('metodo_pago')?.setValidators([Validators.required]);
+    }
+
     const paqueteId = event?.id_paquetes || null;
     this.selectedPackageSubject.next(paqueteId);
 
@@ -397,6 +412,7 @@ export class ModalCreateEventComponent implements OnInit, AfterViewInit {
 
     modalRef.componentInstance.selectedSlots.subscribe((resp: any) => {
       this.selectedHorarios[index] = resp;
+      this.detalle?.at(index)?.get('recurrencia')?.setValue(resp);
     });
   }
 }

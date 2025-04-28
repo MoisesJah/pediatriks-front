@@ -171,6 +171,7 @@ export class SlotTime implements OnInit, OnChanges {
   }
 
   trackByRow(index: number, row: any[]): string {
+    // console.log('row', row);
     return row
       .map((slot) => slot.id || slot.start_time || slot.end_time || 'empty')
       .join('-');
@@ -216,6 +217,7 @@ export class SlotTime implements OnInit, OnChanges {
     this.selectedSlots.emit({
       date: this.slot.date,
       day: this.slot.day,
+      num_day: this.slot.day_of_week,
       date_formatted: this.slot.date_formatted,
       selectedSlot: this.selectedItem,
     });
