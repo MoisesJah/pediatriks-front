@@ -115,10 +115,14 @@ export class ListHorariosComponent implements OnInit {
 
       <div class="rounded border">
         <div
-          *ngFor="let row of gridSlotTime; let lastRow = last; trackBy: trackByRow"
+          *ngFor="
+            let row of gridSlotTime;
+            let lastRow = last;
+            trackBy: trackByRow
+          "
           class="row g-0"
         >
-          <div 
+          <div
             *ngFor="let slot of row; let lastInRow = last"
             class="col-4 border-end border-bottom"
             [class.border-start]="first"
@@ -136,9 +140,7 @@ export class ListHorariosComponent implements OnInit {
               <span *ngIf="slot.isEmpty" class="p-3 h-100 bg-light"></span>
               <span class="fw-bold"
                 >{{ slot.start_time }} - {{ slot.end_time }}
-                  {{lastInRow}} - {{lastRow}}
-                </span
-              >
+              </span>
             </div>
           </div>
         </div>
@@ -169,7 +171,9 @@ export class SlotTime implements OnInit, OnChanges {
   }
 
   trackByRow(index: number, row: any[]): string {
-    return row.map(slot => slot.id || slot.start_time || slot.end_time || 'empty').join('-');
+    return row
+      .map((slot) => slot.id || slot.start_time || slot.end_time || 'empty')
+      .join('-');
   }
 
   get gridSlotTime() {
