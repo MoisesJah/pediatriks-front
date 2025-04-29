@@ -25,7 +25,7 @@
 <div class="modal-body">
   <form [formGroup]="eventForm" class="form d-flex flex-column gap-4">
     <div class="row">
-      <div class="form-group col-3">
+      <div class="form-group col-md-6">
         <label class="form-label" for="kt_calendar_datepicker_date"
           >Fecha de Inicio</label
         >
@@ -43,7 +43,7 @@
           placeholder="Seleccionar Fecha"
         />
       </div>
-      <div class="form-group col-6 mb-3">
+      <div class="form-group col-md-6 mb-3">
         <label class="form-label" for="patient_selection"
           >Seleccionar Paciente</label
         >
@@ -57,7 +57,7 @@
           bindLabel="nombre"
         ></ng-select>
       </div>
-      <div class="form-group col-3 mb-3">
+      <!-- <div class="form-group col-3 mb-3">
         <label class="form-label" for="id_paquete">Tipo de Cita</label>
         <ng-select
           (change)="changeTipoCita($event)"
@@ -69,7 +69,7 @@
           placeholder="Seleccionar"
           bindLabel="nombre"
         ></ng-select>
-      </div>
+      </div> -->
     </div>
 
     <div class="row">
@@ -86,7 +86,7 @@
         ></ng-select>
       </div>
 
-      <div *ngIf="isRecurrente" class="form-group col-6">
+      <div class="form-group col-6">
         <label class="form-label" for="id_paquete">Seleccionar Paquete</label>
         <ng-select
           formControlName="id_paquete"
@@ -103,12 +103,14 @@
 
     <div *ngIf="(selectedPackageSubject | async) !== null" class="row">
       <div class="form-group col-md-6">
-        <label class="form-label" for="id_paquete">Total de Sesiones</label>
+        <label class="form-label" for="id_paquete"
+          >Total de Sesiones Paquete</label
+        >
         <input
           readonly
           type="number"
           class="form-control bg-light"
-          value="{{ selectedPaquete.cantidadsesiones }}"
+          [value]="selectedPaquete.cantidadsesiones"
         />
       </div>
       <div class="form-group col-md-6">

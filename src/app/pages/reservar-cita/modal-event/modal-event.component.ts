@@ -54,7 +54,6 @@ import {
   FlatpickrModule,
 } from 'angularx-flatpickr';
 import Spanish from 'flatpickr/dist/l10n/es.js';
-import { el } from '@fullcalendar/core/internal-common';
 import { CommonModule } from '@angular/common';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { ListHorariosComponent } from './list-horarios/list-horarios.component';
@@ -143,7 +142,7 @@ export class ModalCreateEventComponent implements OnInit, AfterViewInit {
   ) {
     this.eventForm = this.fb.group({
       id_paciente: [null, Validators.required],
-      id_paquete: [null],
+      id_paquete: [null, Validators.required],
       id_sede: [null, Validators.required],
       fecha_inicio: ['', Validators.required],
       id_tipocita: [null, Validators.required],
@@ -159,11 +158,10 @@ export class ModalCreateEventComponent implements OnInit, AfterViewInit {
   changeTipoCita(event: any) {
     this.isRecurrente = event && event.recurrente;
     if (this.isRecurrente) {
-      this.loadPaquetes();
     }
   }
 
-  changePaquete(event: any, index: number) {
+  changePaquete(event: any, index?: number) {
     if (event) {
       this.selectedPaquete = event;
       this.eventForm.get('metodo_pago')?.setValidators([Validators.required]);
@@ -239,13 +237,14 @@ export class ModalCreateEventComponent implements OnInit, AfterViewInit {
     this.loadSedes();
     this.loadPacientes();
     this.loadTipoCitas();
+    this.loadPaquetes();
 
     this.loadInitialTerapias();
   }
 
   getTerapiaId(event: any, index: number) {
     const id_sede = this.eventForm.get('id_sede')?.value;
-    const body = this.detalle.at(index).value
+    const body = this.detalle.at(index).value;
 
     if (id_sede && body.id_terapia) {
       this.terapiaService
@@ -259,7 +258,7 @@ export class ModalCreateEventComponent implements OnInit, AfterViewInit {
             this.avaiblePersonal[index] = [];
           },
         });
-    }else {
+    } else {
       this.avaiblePersonal[index] = [];
       this.detalle.at(index).get('id_personal')?.setValue(null);
     }
@@ -269,7 +268,8 @@ export class ModalCreateEventComponent implements OnInit, AfterViewInit {
     this.eventForm.valueChanges
       .pipe(
         distinctUntilChanged(
-          (prev, curr) => prev.id_sede === curr.id_sede && prev.detalle === curr.detalle
+          (prev, curr) =>
+            prev.id_sede === curr.id_sede && prev.detalle === curr.detalle
         )
       )
       .subscribe((value) => {
@@ -334,12 +334,21 @@ export class ModalCreateEventComponent implements OnInit, AfterViewInit {
   }
 
   loadTipoCitas() {
-    this.loadingTipoCitas = true;
-    this.tipoCitasList = this.tipoCitaService.getAll().pipe(
-      map((resp) => resp.data),
-      untilDestroyed(this),
-      finalize(() => (this.loadingTipoCitas = false))
-    );
+    this.tipoCitaService
+      .getAll()
+      .pipe(
+        map((resp) => resp.data),
+        untilDestroyed(this),
+        finalize(() => (this.loadingTipoCitas = false))
+      )
+      .subscribe((data) => {
+        // const data = resp.data;
+        const paquete = data.find((d) => d.nombre === 'Paquete');
+        if (paquete) {
+          this.eventForm.get('id_tipocita')?.setValue(paquete.id_tipocita);
+        }
+        return data;
+      });
   }
 
   loadPacientes() {
