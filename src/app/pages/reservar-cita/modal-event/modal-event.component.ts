@@ -244,16 +244,24 @@ export class ModalCreateEventComponent implements OnInit, AfterViewInit {
   }
 
   getTerapiaId(event: any, index: number) {
-    if (this.isRecurrente && event) {
-      this.terapiasId[index] = event.id_terapia;
+    const id_sede = this.eventForm.get('id_sede')?.value;
+    const body = this.detalle.at(index).value
+
+    if (id_sede && body.id_terapia) {
       this.terapiaService
-        .getPaquetesByTerapia(event.id_terapia)
+        .getPersonalByTerapia({ id_sede, id_terapia: body.id_terapia })
         .pipe(take(1))
-        .subscribe((resp) => (this.paquetesId[index] = resp.data));
-    } else {
-      this.paquetesId[index] = [];
+        .subscribe({
+          next: (resp: any) => {
+            this.avaiblePersonal[index] = resp.data.personal || [];
+          },
+          error: () => {
+            this.avaiblePersonal[index] = [];
+          },
+        });
+    }else {
+      this.avaiblePersonal[index] = [];
       this.detalle.at(index).get('id_personal')?.setValue(null);
-      this.detalle.at(index).get('id_paquete')?.setValue(null);
     }
   }
 
@@ -261,7 +269,7 @@ export class ModalCreateEventComponent implements OnInit, AfterViewInit {
     this.eventForm.valueChanges
       .pipe(
         distinctUntilChanged(
-          (prev, curr) => JSON.stringify(prev) === JSON.stringify(curr)
+          (prev, curr) => prev.id_sede === curr.id_sede && prev.detalle === curr.detalle
         )
       )
       .subscribe((value) => {
@@ -283,7 +291,7 @@ export class ModalCreateEventComponent implements OnInit, AfterViewInit {
               .pipe(take(1))
               .subscribe({
                 next: (resp: any) => {
-                  this.avaiblePersonal[index] = resp.data.personal;
+                  this.avaiblePersonal[index] = resp.data.personal || [];
                 },
                 error: () => {
                   this.avaiblePersonal[index] = [];
