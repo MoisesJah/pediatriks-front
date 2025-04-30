@@ -185,7 +185,7 @@ export class ModalCreateEventComponent implements OnInit, AfterViewInit {
   createDetalle() {
     return this.fb.group({
       id_terapia: [null, Validators.required],
-      num_sesiones: [null],
+      num_sesiones: [null, Validators.required],
       id_personal: [null, Validators.required],
       recurrencia: this.fb.control([]),
     });
