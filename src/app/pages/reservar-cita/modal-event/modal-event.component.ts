@@ -16,11 +16,14 @@ import {
 } from '@ng-bootstrap/ng-bootstrap';
 import { CalendarEvent } from 'src/app/models/calendar-event';
 import {
+  AbstractControl,
   FormArray,
   FormBuilder,
   FormControl,
   FormGroup,
   ReactiveFormsModule,
+  ValidationErrors,
+  ValidatorFn,
   Validators,
 } from '@angular/forms';
 import { ModalEditComponent } from './modal-edit/modal-edit.component'; // Asegúrate de importar el componente de edición
@@ -165,7 +168,14 @@ export class ModalCreateEventComponent implements OnInit, AfterViewInit {
     if (event) {
       this.selectedPaquete = event;
       this.eventForm.get('metodo_pago')?.setValidators([Validators.required]);
+
+      const max = event.cantidadsesiones;
+      this.detalle.setValidators(
+        max ? this.maxSesionesSumValidator(max) : null
+      );
     }
+
+    this.detalle.updateValueAndValidity();
 
     const paqueteId = event?.id_paquetes || null;
     this.selectedPackageSubject.next(paqueteId);
@@ -185,10 +195,29 @@ export class ModalCreateEventComponent implements OnInit, AfterViewInit {
   createDetalle() {
     return this.fb.group({
       id_terapia: [null, Validators.required],
-      num_sesiones: [null, Validators.required],
+      num_sesiones: [null, [Validators.required, Validators.min(1)]],
       id_personal: [null, Validators.required],
       recurrencia: this.fb.control([]),
     });
+  }
+
+  maxSesionesSumValidator(maxSum: number): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      if (!control.value || !Array.isArray(control.value)) {
+        return null;
+      }
+
+      const sum = control.value.reduce((total, item) => {
+        return total + (item.num_sesiones || 0);
+      }, 0);
+
+      console.log(sum);
+      console.log(maxSum);
+
+      return sum > maxSum
+        ? { maxSumExceeded: { maxSum, actualSum: sum } }
+        : null;
+    };
   }
 
   addInfoTerapia() {
@@ -269,8 +298,10 @@ export class ModalCreateEventComponent implements OnInit, AfterViewInit {
       .pipe(
         distinctUntilChanged(
           (prev, curr) =>
-            prev.id_sede === curr.id_sede && prev.detalle === curr.detalle
-        )
+            prev.id_sede === curr.id_sede &&
+            JSON.stringify(prev.detalle) === JSON.stringify(curr.detalle)
+        ),
+        untilDestroyed(this)
       )
       .subscribe((value) => {
         const id_sede = value.id_sede;
@@ -299,32 +330,14 @@ export class ModalCreateEventComponent implements OnInit, AfterViewInit {
               });
           } else {
             this.avaiblePersonal[index] = [];
-            this.detalle.at(index).get('id_personal')?.setValue(null);
+            this.detalle
+              .at(index)
+              .get('id_personal')
+              ?.setValue(null, { emitEvent: false });
           }
         });
       });
   }
-
-  // loadTerapias() {
-  //   this.terapiasList = this.paqueteId.pipe(
-  //     switchMap(packageId => {
-  //       if (packageId !== null) {
-  //         // When package ID is selected, get by package
-  //         return this.terapiaService.getByPaquete(packageId).pipe(
-  //           map((resp: any) => resp.data)
-  //         );
-  //       } else {
-  //         // Initially or when no package is selected, get all
-  //         return this.terapiaService.getAll().pipe(
-  //           map((resp) => resp.data)
-  //         );
-  //       }
-  //     }),
-  //     untilDestroyed(this)
-  //   );
-
-  //   this.paqueteId.next(null);
-  // }
 
   loadSedes() {
     this.sedesList = this.sedesService.getAll().pipe(
@@ -376,35 +389,18 @@ export class ModalCreateEventComponent implements OnInit, AfterViewInit {
     );
   }
 
-  openEditModal() {
-    // Cierra el modal actual
-    this.activeModal.close();
-
-    // Abre el modal de edición
-    setTimeout(() => {
-      const modalRef = this.modalService.open(ModalEditComponent, {
-        size: 'lg',
-      });
-      modalRef.componentInstance.event = this.event;
-      modalRef.componentInstance.isEditMode = true;
-
-      // Suscríbete al evento de actualización del evento
-      modalRef.componentInstance.eventUpdated.subscribe(
-        (updatedEvent: CalendarEvent) => {
-          // Aquí puedes manejar la lógica de actualización, como emitir eventos o actualizar datos
-          this.eventSubmitted.emit(updatedEvent);
-          console.log('Event updated:', updatedEvent);
-        }
-      );
-    }, 300); // Ajusta el tiempo si es necesario
-  }
-
   closeModal() {
     this.activeModal.dismiss();
   }
 
   submitEvent() {
-    console.log(this.eventForm.value);
+    const data = {
+      ...this.eventForm.value,
+      monto: this.selectedPaquete?.preciopaquete,
+      sesiones_totales: this.selectedPaquete?.cantidadsesiones,
+      num_cambios: this.selectedPaquete?.num_cambios,
+    };
+    console.log(data);
     // this.citaService.create(this.eventForm.value).subscribe((resp) => {
     //   this.eventSubmitted.emit();
     //   this.closeModal();

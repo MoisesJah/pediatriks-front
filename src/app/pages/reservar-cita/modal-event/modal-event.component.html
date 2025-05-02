@@ -184,7 +184,10 @@
             </div>
           </div>
 
-          <div class="row" *ngIf="(selectedPackageSubject | async) !== null">
+          <div
+            class="row align-items-end"
+            *ngIf="(selectedPackageSubject | async) !== null"
+          >
             <div class="col-6">
               <label class="form-label">N° Sesiones</label>
               <input
@@ -204,9 +207,15 @@
                 [ngbTooltip]="'Seleccione una fecha'"
                 [disabled]="!eventForm.get('fecha_inicio').value"
                 type="button"
-                class="btn btn-primary"
+                class="btn btn-primary btn-flex"
                 (click)="showHorarios(i)"
               >
+                <i class="ki-duotone ki-calendar-search fs-1">
+                  <span class="path1"></span>
+                  <span class="path2"></span>
+                  <span class="path3"></span>
+                  <span class="path4"></span>
+                </i>
                 {{ selectedHorarios[i] ? "Cambiar Horarios" : "Ver Horarios" }}
               </button>
             </div>
