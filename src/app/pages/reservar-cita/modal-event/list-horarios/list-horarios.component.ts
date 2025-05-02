@@ -96,6 +96,7 @@ export class ListHorariosComponent implements OnInit {
 
   reservarHorarios() {
     this.selectedSlots.emit(this.selectedList);
+    this.modal.close();
   }
 
   closeModal() {
@@ -113,7 +114,7 @@ export class ListHorariosComponent implements OnInit {
         >Horarios disponibles <strong>{{ slot.date_formatted }}</strong></span
       >
 
-      <div class="rounded border">
+      <div class="rounded overflow-hidden border">
         <div
           *ngFor="
             let row of gridSlotTime;
@@ -123,9 +124,14 @@ export class ListHorariosComponent implements OnInit {
           class="row g-0"
         >
           <div
-            *ngFor="let slot of row; let lastInRow = last"
-            class="col-4 border-end border-bottom"
-            [class.border-start]="first"
+            *ngFor="
+              let slot of row;
+              let firstInRow = first;
+              let lastInRow = last
+            "
+            class="col-4 position-relative"
+            [class.border-end]="!lastInRow"
+            [class.border-bottom]="!lastRow"
             [class.bg-light]="slot.isEmpty"
           >
             <!-- First column border and last row border handling -->
@@ -134,8 +140,6 @@ export class ListHorariosComponent implements OnInit {
               class="p-3 h-100 cursor-pointer"
               [class.bg-primary]="isSelected(slot)"
               (click)="selectedSlot(slot)"
-              [class.border-bottom-0]="lastRow"
-              [class.border-end-0]="lastInRow"
             >
               <span *ngIf="slot.isEmpty" class="p-3 h-100 bg-light"></span>
               <span class="fw-bold"

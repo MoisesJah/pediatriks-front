@@ -1,15 +1,9 @@
 <div class="modal-content">
   <div class="modal-header">
     <h4 class="modal-title">Horarios de {{ horarios[0]?.personal }}</h4>
-    <button
-      type="button"
-      class="btn btn-sm btn-icon btn-active-color-primary btn-color-gray-800"
-      aria-label="Close"
-      (click)="closeModal()"
-    >
-      <i class="ki-duotone ki-cross-square fs-1"
-        ><span class="path1"></span><span class="path2"></span
-      ></i>
+    <button type="button" class="btn btn-sm btn-icon btn-active-color-primary btn-color-gray-800" aria-label="Close"
+      (click)="closeModal()">
+      <i class="ki-duotone ki-cross-square fs-1"><span class="path1"></span><span class="path2"></span></i>
     </button>
   </div>
 
@@ -20,26 +14,13 @@
       </div>
     </div>
 
-    <div *ngIf="!isLoading" class="d-flex">
-      <div
-        ngbNav
-        #nav="ngbNav"
-        [(activeId)]="active"
-        class="nav-pills flex-column"
-        orientation="vertical"
-      >
-        <ng-container
-          *ngFor="let horario of horarios; let i = index"
-          [ngbNavItem]="i"
-          [destroyOnHide]="false"
-        >
+    <div *ngIf="!isLoading" class="d-flex justify-content-center">
+      <div ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-pills flex-column" orientation="vertical">
+        <ng-container *ngFor="let horario of horarios; let i = index" [ngbNavItem]="i" [destroyOnHide]="false">
           <a ngbNavLink class="btn btn-sm text-capitalize">{{ horario.day }}</a>
           <ng-template ngbNavContent>
-            <app-list-slot
-              [currentSelection]="selectedHorarios[horario.date]?.selectedSlot || null"
-              (selectedSlots)="onSelectedSlots($event)"
-              [slot]="horario"
-            ></app-list-slot>
+            <app-list-slot [currentSelection]="selectedHorarios[horario.date]?.selectedSlot || null"
+              (selectedSlots)="onSelectedSlots($event)" [slot]="horario"></app-list-slot>
           </ng-template>
         </ng-container>
       </div>
@@ -47,23 +28,20 @@
       <div [ngbNavOutlet]="nav" class="ms-4"></div>
     </div>
 
-    <div *ngIf="selectedList.length > 0" class="d-flex flex-column">
-      <h2>Horarios Seleccionados</h2>
-      <div *ngFor="let horario of selectedList">
-        <div class="d-flex align-items-center">
-          <span class="fw-bold me-2">{{ horario.day }}</span>
-          <span class="fw-bold me-2"
-            >{{ horario.selectedSlot.start_time }} -
-            {{ horario.selectedSlot.end_time }}</span
-          >
-          <button
-            type="button"
-            class="btn btn-sm btn-danger"
-            (click)="removeSlot(horario.date)"
-          >
-            X
-          </button>
-        </div>
+    <div *ngIf="selectedList.length > 0" class="d-flex border p-3 mt-5 flex-column">
+      <h3>Horarios Seleccionados</h3>
+      <div class="d-flex align-items-center gap-2 flex-wrap">
+        
+          <span class="badge badge-secondary badge-lg" *ngFor="let horario of selectedList">
+            <span class="fw-bold ps-2 me-2">{{ horario.day }}</span>
+            <span class="fw-bold me-2">{{ horario.selectedSlot.start_time }} -
+              {{ horario.selectedSlot.end_time }}</span>
+            <button class="btn btn-sm btn-icon btn-flush btn-active-color-danger btn-color-gray-800" aria-label="Close"
+              (click)="removeSlot(horario.date)"><i class="ki-duotone fs-2 ki-cross-circle">
+                <span class="path1"></span>
+                <span class="path2"></span>
+              </i></button>
+          </span>
       </div>
     </div>
   </div>
@@ -72,12 +50,7 @@
     <button type="button" class="btn btn-sm btn-light" (click)="closeModal()">
       Cerrar
     </button>
-    <button
-      type="button"
-      [disabled]="!selectedList.length"
-      class="btn btn-sm btn-primary"
-      (click)="reservarHorarios()"
-    >
+    <button type="button" [disabled]="!selectedList.length" class="btn btn-sm btn-primary" (click)="reservarHorarios()">
       Confirmar
     </button>
   </div>
