@@ -24,6 +24,7 @@ export interface Cita {
     fecha_repro?: string;
     status: SesionStatus;
     num_sesion: number;
+    max_num_sesion:number
     num_cambios: number;
   };
 }

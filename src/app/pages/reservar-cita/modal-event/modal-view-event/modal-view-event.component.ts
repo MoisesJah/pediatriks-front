@@ -50,7 +50,7 @@ export class ModalViewEventComponent implements OnInit {
     if(!this.event?.tipo_cita.recurrente) {
       return 'Sesión'
     }
-    return `# Sesión ${sesion}`;
+    return `# Sesión ${sesion} / ${this.event.sesion.max_num_sesion}`;
   }
 
   sessionStatus(status: string) {

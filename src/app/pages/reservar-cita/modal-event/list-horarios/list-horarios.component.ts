@@ -96,7 +96,7 @@ export class ListHorariosComponent implements OnInit {
 
   reservarHorarios() {
     this.selectedSlots.emit(this.selectedList);
-    this.modal.close();
+    this.closeModal();
   }
 
   closeModal() {
@@ -113,19 +113,19 @@ export class ListHorariosComponent implements OnInit {
       <span class="fs-3"
         >Horarios disponibles <strong>{{ slot.date_formatted }}</strong></span
       >
-
       <div class="rounded overflow-hidden border">
         <div
           *ngFor="
             let row of gridSlotTime;
+            trackBy: trackByRow;
             let lastRow = last;
-            trackBy: trackByRow
           "
           class="row g-0"
         >
           <div
             *ngFor="
               let slot of row;
+              trackBy: trackBySlot;
               let firstInRow = first;
               let lastInRow = last
             "
@@ -169,16 +169,19 @@ export class SlotTime implements OnInit, OnChanges {
 
   ngOnInit(): void {
     if (this.currentSelection) {
-      console.log('on init', this.currentSelection);
       this.selectedItem = this.currentSelection;
     }
   }
 
-  trackByRow(index: number, row: any[]): string {
-    // console.log('row', row);
-    return row
-      .map((slot) => slot.id || slot.start_time || slot.end_time || 'empty')
-      .join('-');
+  trackByRow(index: number, row: any[]): number {
+    return index
+  }
+
+  trackBySlot(index: number, item: any): string {
+    // Using parent index + current index + start_time as a composite key
+    const groupIndex = index; // This is the parent group index
+    const slotKey = item.isEmpty ? 'empty' : item.start_time;
+    return `${groupIndex}-${index}-${slotKey}`;
   }
 
   get gridSlotTime() {
@@ -208,7 +211,6 @@ export class SlotTime implements OnInit, OnChanges {
     // Sync with parent's selection state
     if (changes['currentSelection']) {
       this.selectedItem = this.currentSelection;
-      console.log(changes['currentSelection']);
     }
   }
 

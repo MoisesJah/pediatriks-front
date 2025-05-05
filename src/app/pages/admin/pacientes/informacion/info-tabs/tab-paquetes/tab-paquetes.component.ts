@@ -16,6 +16,7 @@ import { ReporteService } from 'src/app/services/paciente/reporte/reporte.servic
 import { ThemeService } from 'src/app/services/theme.service';
 import { formatMoney } from 'src/app/utils/formatCurrency';
 import { formatDate } from 'src/app/utils/formatDate';
+import { SessionProgressComponent } from './session-progress/session-progress.component';
 
 @UntilDestroy()
 @Component({
@@ -49,13 +50,20 @@ export class TabPaquetesComponent implements OnInit {
   private loadingStates = new Map<string, BehaviorSubject<boolean>>();
 
   columnDefs: ColDef[] = [
-    { field: 'num_sesiones', headerName: 'N° Sesiones', filter: true },
-    { field: 'metodo_pago', headerName: 'Método de Pago', filter: true },
+    { field: 'nombre', headerName: 'Nombre', filter: true },
     {
       field: 'precio',
       headerName: 'Precio',
       valueFormatter: (params) => formatMoney(params.value),
       filter: true,
+    },
+    { field: 'metodo_pago', headerName: 'Método de Pago', filter: true },
+    {
+      headerName: 'N° Sesiones',
+      minWidth: 200,
+      filter: false,
+      sortable: false,
+      cellRenderer: SessionProgressComponent,
     },
     {
       field: 'created_at',

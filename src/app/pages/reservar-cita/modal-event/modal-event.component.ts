@@ -181,6 +181,7 @@ export class ModalCreateEventComponent implements OnInit, AfterViewInit {
     this.selectedPackageSubject.next(paqueteId);
 
     this.detalle.reset();
+    this.selectedHorarios = [];
   }
 
   loadInitialTerapias() {

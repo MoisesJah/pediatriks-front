@@ -181,16 +181,23 @@
       </div>
     </div>
 
-    <ng-template #slot let-slots="slots" let-index="index">
+    <ng-template #slot let-slots="slots" let-dayPopover="dayPopover" let-index="index">
       <app-slot-time-picker
-        (deleselected)="onDeselect(index)"
+        (deleselected)="onDeselect(dayPopover, index)"
         (selectedSlot)="onSlotSelected(index, $event)"
         [slotTimes]="slots"
+        [currentSelection]="days.at(index).get('selectedTimeSlot')?.value || null"
       />
     </ng-template>
 
+    <div *ngIf="loadingHorarios" class="d-flex flex-center">
+      <div class="spinner-border" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+    </div>
+
     <div
-      *ngIf="createForm.get('id_personal')?.value && isRecurrente"
+      *ngIf="createForm.get('id_personal')?.value && isRecurrente && !loadingHorarios"
       class="row"
     >
       <div class="form-group d-flex flex-column col mb-3">
@@ -218,9 +225,12 @@
               "
               [disableTooltip]="isEnabledDay(day.value.dia_semana)"
               [ngbPopover]="slot"
+              #dayPopover="ngbPopover"
               placement="top"
+              [autoClose]="false"
               [popoverContext]="{
                 slots: getTimeSlots(day.value.dia_semana),
+                dayPopover: dayPopover,
                 index: i
               }"
               [ngClass]="{
@@ -237,12 +247,12 @@
               {{ getDayLabel(day.value.dia_semana) }}
             </button>
             <span
-              class="position-absolute fs-10 fs-sm-8 badge mt-1 rounded-pill bg-success slot-time"
+              class="position-absolute fs-10 fs-sm-8 badge mt-1 rounded-pill slot-time"
+              [ngClass]="isCurrentDayOfWeek(day.value.dia_semana) ? 'bg-primary' : 'bg-success'"
               *ngIf="
-                day.value.selectedTimeSlot &&
-                !isCurrentDayOfWeek(day.value.dia_semana)
+                day.value.selectedTimeSlot
               "
-              >{{ day.value.selectedTimeSlot }}</span
+              >{{ day.value.selectedTimeSlot.start_time }} - {{ day.value.selectedTimeSlot.end_time }}</span
             >
           </div>
         </div>
