@@ -142,7 +142,7 @@ export class CrearModalComponent implements OnInit, AfterViewInit {
       // id_terapia: [null, Validators.required],
       id_personal: [null, Validators.required],
       id_tipocita: [null, Validators.required],
-      id_paquete: [null],
+      id_paciente_paquete: [null],
       fecha_inicio: [null, Validators.required],
       hora_inicio: [null, Validators.required],
       hora_fin: [null, Validators.required],
@@ -248,16 +248,18 @@ export class CrearModalComponent implements OnInit, AfterViewInit {
   }
 
   changePaquete(event: any) {
-    const paquetesControl = this.createForm.get('id_paquete') as FormControl;
+    const paquetesControl = this.createForm.get(
+      'id_paciente_paquete'
+    ) as FormControl;
     const sesionesControl = this.createForm.get('num_sesiones') as FormControl;
-    this.maxSesiones = event?.num_sesiones;
+    this.maxSesiones = event?.sesiones_totales - event?.sesiones_programadas;
     this.num_cambios = event?.num_cambios;
 
     if (paquetesControl.value) {
-      sesionesControl.setValue(event.num_sesiones);
+      sesionesControl.setValue(this.maxSesiones);
       sesionesControl.setValidators([
         Validators.required,
-        Validators.max(event.num_sesiones),
+        Validators.max(this.maxSesiones),
       ]);
     } else {
       sesionesControl.setValue(null);
@@ -312,7 +314,7 @@ export class CrearModalComponent implements OnInit, AfterViewInit {
     const selectedTimeSlot = {
       start_time: this.createForm.get('hora_inicio')?.value,
       end_time: this.createForm.get('hora_fin')?.value,
-    }
+    };
 
     if (value === dayOfWeek) {
       recurrenciaControl.controls
@@ -494,38 +496,38 @@ export class CrearModalComponent implements OnInit, AfterViewInit {
 
   createCita() {
     console.log(this.createForm.value);
-    // if (this.createForm.valid) {
-    //   this.citaService
-    //     .createForTherapy({
-    //       ...this.createForm.value,
-    //       num_cambios: this.num_cambios || 2,
-    //       id_terapia: this.terapia.id_terapia,
-    //       recurrencia: this.days.value.filter(
-    //         (day: any) => day.selectedTimeSlot
-    //       ),
-    //     })
-    //     .subscribe({
-    //       next: (data: any) => {
-    //         this.eventSubmitted.emit();
-    //         this.closeModal();
-    //         if (!data.message.startsWith('Cita')) {
-    //           this.toast.info(data.message, 'Cita Creada', {
-    //             disableTimeOut: true,
-    //             closeButton: true,
-    //             // progressBar: true,
-    //             // progressAnimation: 'increasing',
-    //           });
-    //         }
-    //       },
-    //       error: (err) => {
-    //         if (err.error.errors) {
-    //           const errors = Object.values(err.error.errors).join('\n');
-    //           this.toast.error(errors, 'Error');
-    //         } else {
-    //           this.toast.error('Ocurrió un error al crear la cita', 'Error');
-    //         }
-    //       },
-    //     });
-    // }
+    if (this.createForm.valid) {
+      this.citaService
+        .createForTherapy({
+          ...this.createForm.value,
+          num_cambios: this.num_cambios || 2,
+          id_terapia: this.terapia.id_terapia,
+          recurrencia: this.days.value.filter(
+            (day: any) => day.selectedTimeSlot
+          ),
+        })
+        .subscribe({
+          next: (data: any) => {
+            this.eventSubmitted.emit();
+            this.closeModal();
+            if (!data.message.startsWith('Cita')) {
+              this.toast.info(data.message, 'Cita Creada', {
+                disableTimeOut: true,
+                closeButton: true,
+                // progressBar: true,
+                // progressAnimation: 'increasing',
+              });
+            }
+          },
+          error: (err) => {
+            if (err.error.errors) {
+              const errors = Object.values(err.error.errors).join('\n');
+              this.toast.error(errors, 'Error');
+            } else {
+              this.toast.error('Ocurrió un error al crear la cita', 'Error');
+            }
+          },
+        });
+    }
   }
 }

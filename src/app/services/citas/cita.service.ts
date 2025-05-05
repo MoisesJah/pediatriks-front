@@ -43,10 +43,7 @@ export class CitaService {
   }
 
   createForTherapy(cita: any) {
-    return this.http.post<{ data: Cita }>(
-      `${this.apiUrl}/citas/add/therapy`,
-      cita
-    );
+    return this.http.post<{ data: Cita }>(`${this.apiUrl}/citas/create`, cita);
   }
 
   getByPersonal(body: any) {
@@ -57,21 +54,30 @@ export class CitaService {
     return this.http.get<{ data: any }>(`${this.apiUrl}/citas/paciente/${id}`);
   }
 
-  getCitasByPersonal(body: { id_personal: string; startWeek: string; endWeek: string }) {
+  getCitasByPersonal(body: {
+    id_personal: string;
+    startWeek: string;
+    endWeek: string;
+  }) {
     return this.http.post<{ data: any }>(`${this.apiUrl}/citas/personal`, body);
   }
 
-
-  getCitasByFecha(id_personal: string, fecha_inicio: string, fecha_fin: string): Observable<any> {
+  getCitasByFecha(
+    id_personal: string,
+    fecha_inicio: string,
+    fecha_fin: string
+  ): Observable<any> {
     const body = {
       id_personal,
       fecha_inicio,
-      fecha_fin
+      fecha_fin,
     };
 
-    return this.http.post<{ data: any }>(`${this.apiUrl}/citas/filtrar-por-fechas`, body);
+    return this.http.post<{ data: any }>(
+      `${this.apiUrl}/citas/filtrar-por-fechas`,
+      body
+    );
   }
-
 
   getAvailablePersonal(body: any) {
     return this.http.post<{ data: any }>(
@@ -91,7 +97,7 @@ export class CitaService {
   delete(body: any) {
     // return this.http.delete(`${this.apiUrl}/citas/delete`, body);
     return this.http.delete(`${this.apiUrl}/citas/delete`, {
-      body
+      body,
     });
   }
 }

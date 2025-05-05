@@ -33,7 +33,7 @@ export class TablaingresosModalComponent implements OnInit, OnDestroy {
   colDefs: ColDef[] = [
     { field: 'nombre', minWidth: 250, headerName: 'Nombre', filter: true },
     {
-      field: 'ingresos',
+      field: 'monto',
       headerName: 'Ingresos',
       valueFormatter: (params) => formatMoney(params.value),
       filter: 'agNumberColumnFilter',

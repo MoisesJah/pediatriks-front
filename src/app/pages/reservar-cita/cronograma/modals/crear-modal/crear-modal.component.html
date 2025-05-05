@@ -83,11 +83,17 @@
           (change)="changePaquete($event)"
           [loading]="loadingPaquetes"
           [loadingText]="'Cargando...'"
-          bindValue="paquete.id_paquetes"
+          bindValue="id"
           placeholder="Seleccionar Paquete"
-          bindLabel="paquete.nombre"
-          formControlName="id_paquete"
+          formControlName="id_paciente_paquete"
         >
+          <ng-template ng-option-tmp let-item="item">
+            <span> {{ item.paquete.nombre }} #{{ item.numero_paquete }} </span>
+          </ng-template>
+
+          <ng-template ng-label-tmp let-item="item">
+            <span> {{ item.paquete.nombre }} #{{ item.numero_paquete }} </span>
+          </ng-template>
         </ng-select>
       </div>
     </section>
@@ -126,7 +132,7 @@
         <!--  <label class="form-label" for="kt_calendar_datepicker_end_time">Hora de Fin</label>
                   <input type="text" class="form-control" id="kt_calendar_datepicker_end_time" formControlName="hora_fin"
                     readonly placeholder="Seleccionar Hora de Fin" /> -->
-        @if(this.createForm.get('id_paquete')?.value){
+        @if(this.createForm.get('id_paciente_paquete')?.value){
         <label class="form-label" for=""
           >N° de Sesiones ({{ maxSesiones }})</label
         >
@@ -181,23 +187,32 @@
       </div>
     </div>
 
-    <ng-template #slot let-slots="slots" let-dayPopover="dayPopover" let-index="index">
+    <ng-template
+      #slot
+      let-slots="slots"
+      let-dayPopover="dayPopover"
+      let-index="index"
+    >
       <app-slot-time-picker
         (deleselected)="onDeselect(dayPopover, index)"
         (selectedSlot)="onSlotSelected(index, $event)"
         [slotTimes]="slots"
-        [currentSelection]="days.at(index).get('selectedTimeSlot')?.value || null"
+        [currentSelection]="
+          days.at(index).get('selectedTimeSlot')?.value || null
+        "
       />
     </ng-template>
 
-    <div *ngIf="loadingHorarios" class="d-flex flex-center">
+    <div *ngIf="loadingHorarios && isRecurrente" class="d-flex flex-center">
       <div class="spinner-border" role="status">
         <span class="visually-hidden">Loading...</span>
       </div>
     </div>
 
     <div
-      *ngIf="createForm.get('id_personal')?.value && isRecurrente && !loadingHorarios"
+      *ngIf="
+        createForm.get('id_personal')?.value && isRecurrente && !loadingHorarios
+      "
       class="row"
     >
       <div class="form-group d-flex flex-column col mb-3">
@@ -248,11 +263,14 @@
             </button>
             <span
               class="position-absolute fs-10 fs-sm-8 badge mt-1 rounded-pill slot-time"
-              [ngClass]="isCurrentDayOfWeek(day.value.dia_semana) ? 'bg-primary' : 'bg-success'"
-              *ngIf="
-                day.value.selectedTimeSlot
+              [ngClass]="
+                isCurrentDayOfWeek(day.value.dia_semana)
+                  ? 'bg-primary'
+                  : 'bg-success'
               "
-              >{{ day.value.selectedTimeSlot.start_time }} - {{ day.value.selectedTimeSlot.end_time }}</span
+              *ngIf="day.value.selectedTimeSlot"
+              >{{ day.value.selectedTimeSlot.start_time }} -
+              {{ day.value.selectedTimeSlot.end_time }}</span
             >
           </div>
         </div>

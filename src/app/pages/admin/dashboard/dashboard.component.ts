@@ -1,4 +1,10 @@
-import { Component, inject,AfterViewInit, OnDestroy, OnInit } from '@angular/core';
+import {
+  Component,
+  inject,
+  AfterViewInit,
+  OnDestroy,
+  OnInit,
+} from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import flatpickr from 'flatpickr';
 import { BaseOptions } from 'flatpickr/dist/types/options';
@@ -17,10 +23,10 @@ import { StatsCardsComponent } from './stats-cards/stats-cards.component';
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [HeaderComponent,StatsCardsComponent],
+  imports: [HeaderComponent, StatsCardsComponent],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'],
-  providers: [ReportesService]
+  providers: [ReportesService],
 })
 export class AdminDashboardComponent implements AfterViewInit {
   chart: any;
@@ -33,7 +39,10 @@ export class AdminDashboardComponent implements AfterViewInit {
   isLoading = inject(LoadingService).isLoading;
   modal = inject(NgbModal);
 
-  constructor(private reportesService: ReportesService, private datePipe: DatePipe) {}
+  constructor(
+    private reportesService: ReportesService,
+    private datePipe: DatePipe
+  ) {}
 
   ngAfterViewInit() {
     this.initializeFlatpickr();
@@ -41,15 +50,14 @@ export class AdminDashboardComponent implements AfterViewInit {
     this.loadChartData();
   }
 
-
   setDefaultDateRange() {
-  const now = new Date();
-  const firstDayOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
-  const lastDayOfMonth = new Date(now.getFullYear(), now.getMonth() +1, 0);
+    const now = new Date();
+    const firstDayOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+    const lastDayOfMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0);
 
-  this.startDate = firstDayOfMonth.toISOString().split('T')[0];
-  this.endDate = lastDayOfMonth.toISOString().split('T')[0];
-}
+    this.startDate = firstDayOfMonth.toISOString().split('T')[0];
+    this.endDate = lastDayOfMonth.toISOString().split('T')[0];
+  }
 
   initializeFlatpickr() {
     const options: Partial<BaseOptions> = {
@@ -58,30 +66,42 @@ export class AdminDashboardComponent implements AfterViewInit {
       dateFormat: 'Y-m-d',
       onChange: (selectedDates: Date[]) => {
         if (selectedDates.length === 2) {
-          this.startDate = this.datePipe.transform(selectedDates[0], 'yyyy-MM-dd')!;
-          this.endDate = this.datePipe.transform(selectedDates[1], 'yyyy-MM-dd')!;
+          this.startDate = this.datePipe.transform(
+            selectedDates[0],
+            'yyyy-MM-dd'
+          )!;
+          this.endDate = this.datePipe.transform(
+            selectedDates[1],
+            'yyyy-MM-dd'
+          )!;
           this.applyFilters();
         }
-      }
+      },
     };
 
-    const dateRangePicker = document.querySelector('#dateRangePicker') as HTMLElement;
+    const dateRangePicker = document.querySelector(
+      '#dateRangePicker'
+    ) as HTMLElement;
     if (dateRangePicker) flatpickr(dateRangePicker, options);
   }
 
   loadChartData() {
-  this.reportesService.getReportesFiltrados(this.startDate, this.endDate, this.montoMin).subscribe((data) => {
-    this.originalData = data;
-    this.updateChartData(data);
-  });
-}
+    this.reportesService
+      .getReportesFiltrados(this.startDate, this.endDate, this.montoMin)
+      .subscribe((data) => {
+        this.originalData = data;
+        this.updateChartData(data);
+      });
+  }
 
   applyFilters() {
-    this.reportesService.getReportesFiltrados(this.startDate, this.endDate, this.montoMin).subscribe((data) => {
-      this.originalData = data;
-      console.log(data);
-      this.updateChartData(data);
-    });
+    this.reportesService
+      .getReportesFiltrados(this.startDate, this.endDate, this.montoMin)
+      .subscribe((data) => {
+        this.originalData = data;
+        console.log(data);
+        this.updateChartData(data);
+      });
   }
 
   updateChartData(data: any) {
@@ -94,8 +114,9 @@ export class AdminDashboardComponent implements AfterViewInit {
       this.chart.destroy();
     }
 
-
-    const ctx = document.getElementById('kt_charts_widget_20') as HTMLCanvasElement;
+    const ctx = document.getElementById(
+      'kt_charts_widget_20'
+    ) as HTMLCanvasElement;
     if (ctx) {
       this.chart = new Chart(ctx, {
         type: 'line',
@@ -104,14 +125,18 @@ export class AdminDashboardComponent implements AfterViewInit {
           datasets: [
             {
               label: 'Ingresos',
-              data: this.showIngresos ? ingresos : Array(ingresos.length).fill(null),
+              data: this.showIngresos
+                ? ingresos
+                : Array(ingresos.length).fill(null),
               borderColor: 'rgb(23, 198, 83)',
               borderWidth: 2,
               fill: false,
             },
             {
               label: 'Egresos',
-              data: this.showEgresos ? egresos : Array(egresos.length).fill(null),
+              data: this.showEgresos
+                ? egresos
+                : Array(egresos.length).fill(null),
               borderColor: 'rgba(228, 40, 85, 1)',
               borderWidth: 2,
               fill: false,
@@ -131,23 +156,21 @@ export class AdminDashboardComponent implements AfterViewInit {
               display: true,
               title: {
                 display: true,
-                text: 'Fecha'
+                text: 'Fecha',
               },
             },
             y: {
               display: true,
               title: {
                 display: true,
-                text: 'Cantidad'
-              }
-            }
-          }
-        }
+                text: 'Cantidad',
+              },
+            },
+          },
+        },
       });
     }
   }
-
-
 
   fillMissingDates(data: any[]): any[] {
     const daysInMonth = [];
@@ -157,18 +180,19 @@ export class AdminDashboardComponent implements AfterViewInit {
 
     while (currentDate <= endDate) {
       const dateString = currentDate.toISOString().split('T')[0];
-      const report = data.find(r => new Date(r.created_at).toISOString().split('T')[0] === dateString);
+      const report = data.find(
+        (r) => new Date(r.created_at).toISOString().split('T')[0] === dateString
+      );
       daysInMonth.push({
         created_at: dateString,
         ingresos: report ? report.ingresos : null,
-        egresos: report ? report.egresos : null
+        egresos: report ? report.egresos : null,
       });
       currentDate.setDate(currentDate.getDate() + 1);
     }
 
     return daysInMonth;
   }
-
 
   toggleIngresos() {
     this.showIngresos = !this.showIngresos;
@@ -197,20 +221,18 @@ export class AdminDashboardComponent implements AfterViewInit {
   }
 
   openIngresosModal() {
-     this.modal.open(TablaingresosModalComponent, {
+    this.modal.open(TablaingresosModalComponent, {
       size: 'xl',
       animation: true,
       centered: true,
     });
-
   }
 
   openEgresosModal() {
-      this.modal.open(TablaegresosModalComponent, {
+    this.modal.open(TablaegresosModalComponent, {
       size: 'xl',
       animation: true,
       centered: true,
     });
-
   }
 }

@@ -33,7 +33,7 @@ export class TablaegresosModalComponent implements OnInit, OnDestroy {
   colDefs: ColDef[] = [
     { field: 'nombre', headerName: 'Nombre', filter: true },
     {
-      field: 'egresos',
+      field: 'monto',
       headerName: 'Egresos',
       valueFormatter: (params) => formatMoney(params.value),
       filter: 'agNumberColumnFilter',
@@ -44,7 +44,15 @@ export class TablaegresosModalComponent implements OnInit, OnDestroy {
       filter: 'agDateColumnFilter',
       cellRenderer: (data: any) => new Date(data.value).toLocaleDateString(),
     },
-    { field: 'descripcion', headerName: 'Descripción', filter: true },
+    {
+      field: 'descripcion',
+      headerName: 'Descripción',
+      cellStyle: { 'white-space': 'normal' },
+      minWidth: 350,
+      wrapText: true,
+      autoHeight: true,
+      filter: true,
+    },
     { field: 'metodo_pago', headerName: 'Método de Pago', filter: true },
     { field: 'tipo_egreso', headerName: 'Tipo de Egreso', filter: true },
   ];
