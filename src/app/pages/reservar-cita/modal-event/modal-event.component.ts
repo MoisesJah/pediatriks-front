@@ -402,10 +402,10 @@ export class ModalCreateEventComponent implements OnInit, AfterViewInit {
       num_cambios: this.selectedPaquete?.num_cambios,
     };
     console.log(data);
-    // this.citaService.create(this.eventForm.value).subscribe((resp) => {
-    //   this.eventSubmitted.emit();
-    //   this.closeModal();
-    // });
+    this.citaService.createForTherapy(data).subscribe((resp) => {
+      this.eventSubmitted.emit();
+      this.closeModal();
+    });
   }
 
   showHorarios(index: number) {
