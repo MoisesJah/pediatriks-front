@@ -60,6 +60,7 @@ import Spanish from 'flatpickr/dist/l10n/es.js';
 import { CommonModule } from '@angular/common';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { ListHorariosComponent } from './list-horarios/list-horarios.component';
+import { ToastrService } from 'ngx-toastr';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -88,6 +89,7 @@ export class ModalCreateEventComponent implements OnInit, AfterViewInit {
   paquetesService = inject(PaqueteService);
   isLoading = inject(LoadingService).isLoading;
   citaService = inject(CitaService);
+  toast = inject(ToastrService);
 
   @ViewChild('startTimePicker') startTimePicker!: ElementRef;
 
@@ -212,9 +214,6 @@ export class ModalCreateEventComponent implements OnInit, AfterViewInit {
         return total + (item.num_sesiones || 0);
       }, 0);
 
-      console.log(sum);
-      console.log(maxSum);
-
       return sum > maxSum
         ? { maxSumExceeded: { maxSum, actualSum: sum } }
         : null;
@@ -292,6 +291,10 @@ export class ModalCreateEventComponent implements OnInit, AfterViewInit {
       this.avaiblePersonal[index] = [];
       this.detalle.at(index).get('id_personal')?.setValue(null);
     }
+
+    this.eventForm.get('id_sede')?.valueChanges.subscribe(() => {
+      console.log('cambio');
+    });
   }
 
   ngAfterViewInit() {
@@ -401,10 +404,26 @@ export class ModalCreateEventComponent implements OnInit, AfterViewInit {
       sesiones_totales: this.selectedPaquete?.cantidadsesiones,
       num_cambios: this.selectedPaquete?.num_cambios,
     };
-    console.log(data);
-    this.citaService.createForTherapy(data).subscribe((resp) => {
-      this.eventSubmitted.emit();
-      this.closeModal();
+    this.citaService.createForTherapy(data).subscribe({
+      next: (resp: any) => {
+        if (resp.status === 'success') {
+          this.toast.success(resp.message, 'Cita creada');
+        } else {
+          this.toast.info(resp.message, 'Cita creada', {
+            disableTimeOut: true,
+            closeButton: true,
+          });
+        }
+        this.closeModal();
+      },
+      error: (err) => {
+        if (err.error.errors) {
+          const errors = Object.values(err.error.errors).join('\n');
+          this.toast.error(errors, 'Error');
+        } else {
+          this.toast.error(err.error.message, 'Error al crear la cita');
+        }
+      },
     });
   }
 
