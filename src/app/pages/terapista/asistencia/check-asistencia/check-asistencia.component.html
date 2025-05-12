@@ -1,52 +1,74 @@
 <div class="modal-header">
-    <h4 class="modal-title d-flex align-items-center gap-1" id="modal-basic-title">
-        <span class="text-primary">
-            <i style="vertical-align: text-top;" class="ki-duotone ki-time text-gray-900 fs-2x"><span class="path1"></span><span class="path2"></span></i>
-        </span>
-        Confirmar Asistencia
-    </h4>
-    <button type="button" class="btn btn-sm btn-icon btn-active-color-primary btn-color-gray-800" aria-label="Close"
-        (click)="close()">
-        <i class="ki-duotone ki-cross-square fs-1">
-            <span class="path1"></span><span class="path2"></span>
-        </i>
-    </button>
+  <h4
+    class="modal-title d-flex align-items-center gap-1"
+    id="modal-basic-title"
+  >
+    <span class="text-primary">
+      <i
+        style="vertical-align: text-top"
+        class="ki-duotone ki-time text-gray-900 fs-2x"
+        ><span class="path1"></span><span class="path2"></span
+      ></i>
+    </span>
+    Confirmar Asistencia
+  </h4>
+  <button
+    type="button"
+    class="btn btn-sm btn-icon btn-active-color-primary btn-color-gray-800"
+    aria-label="Close"
+    (click)="close()"
+  >
+    <i class="ki-duotone ki-cross-square fs-1">
+      <span class="path1"></span><span class="path2"></span>
+    </i>
+  </button>
 </div>
 
 <div class="modal-body">
+  <div class="d-flex gap-3 alert alert-secondary rounded align-items-center">
+    <i class="ki-duotone ki-timer text-primary fs-3x">
+      <span class="path1"></span>
+      <span class="path2"></span>
+      <span class="path3"></span>
+    </i>
+    <div
+      [ngClass]="{ 'mb-3': !showBanner }"
+      class="d-flex text-gray-900 flex-column gap-2"
+    >
+      <span class="d-flex fs-5 align-items-center gap-2">
+        <strong>Hora Actual:</strong> {{ currentDate | date : "HH:mm" }}
+      </span>
+      <span class="fw-bold fs-3"
+        >{{ auth?.nombre }} &bull; {{ auth?.terapia.nombre }}</span
+      >
+    </div>
+  </div>
 
-    <div class="d-flex gap-3 alert alert-primary rounded align-items-center">
-
-        <i class="ki-duotone ki-timer text-primary fs-3x">
-            <span class="path1"></span>
-            <span class="path2"></span>
-            <span class="path3"></span>
+  @if (showBanner) {
+  <div class="alert alert-warning rounded">
+    <div class="d-flex fs-6 gap-3 align-items-start">
+      <div class="d-flex align-items-center gap-3">
+        <i
+          style="vertical-align: text-top"
+          class="ki-duotone ki-information text-warning fs-1"
+        >
+          <span class="path1"></span>
+          <span class="path2"></span>
+          <span class="path3"></span>
         </i>
-        <div [ngClass]="{'mb-3': !showBanner}" class="d-flex flex-column gap-2">
-
-            <span class="d-flex fs-5 align-items-center gap-2">
-                <strong>Hora Actual:</strong> {{ currentDate | date: 'HH:mm'}}
-            </span>
-            <span class="fw-bold fs-3">{{auth?.nombre}} &bull; {{auth?.terapia.nombre}}</span>
-        </div>
+        <span
+          >Asistencia después de {{ todayHorario }} se marcará como tarde</span
+        >
+      </div>
     </div>
-
-
-    @if (showBanner) {
-    <div class="alert alert-warning rounded">
-        <div class="d-flex fs-6 gap-3 align-items-start">
-
-            <div class="d-flex gap-3">
-                <i class="ki-duotone ki-information text-warning fs-1">
-                    <span class="path1"></span>
-                    <span class="path2"></span>
-                    <span class="path3"></span>
-                </i>
-                <span>Asistencia después de {{ todayHorario }} se marcará como tarde</span>
-            </div>
-        </div>
-    </div>
-    }
-    <button (click)="confirmAsistencia()" [disabled]="isLoading | async" type="button"
-        class="btn btn-success w-100">Marcar Asistencia</button>
+  </div>
+  }
+  <button
+    (click)="confirmAsistencia()"
+    [disabled]="isLoading | async"
+    type="button"
+    class="btn btn-success w-100"
+  >
+    Marcar Asistencia
+  </button>
 </div>

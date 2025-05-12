@@ -56,7 +56,7 @@ import { ToastrService } from 'ngx-toastr';
 import { SlotTimePickerComponent } from './slot-time-picker/slot-time-picker.component';
 import { generateTimeSlots } from 'src/app/utils/slotTimes';
 
-type sltos = {
+export type slots = {
   day_of_week: number;
   available_slots: [{ start_time: string; end_time: string }];
 };
@@ -115,7 +115,7 @@ export class CrearModalComponent implements OnInit, AfterViewInit {
   loadingTipoCitas = false;
 
   activePersonal: Personal | null = null;
-  slotTimeList: sltos[] = [];
+  slotTimeList: slots[] = [];
 
   createForm: FormGroup;
 
@@ -516,6 +516,7 @@ export class CrearModalComponent implements OnInit, AfterViewInit {
                 closeButton: true,
               });
             }
+            this.eventSubmitted.emit();
             this.closeModal();
           },
           error: (err) => {
