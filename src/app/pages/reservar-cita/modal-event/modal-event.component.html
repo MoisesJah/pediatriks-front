@@ -240,6 +240,12 @@
         </div>
       </ng-container>
     </div>
+
+    <div *ngIf="this.eventForm.hasError('maxSumExceeded', 'detalle')">
+      <span class="text-danger"
+        >El número de sesiones supera el máximo permitido</span
+      >
+    </div>
   </form>
 </div>
 
@@ -249,10 +255,15 @@
   </button>
   <button
     type="button"
-    [disabled]="eventForm.invalid"
+    [disabled]="eventForm.invalid || (isLoading | async)"
     class="btn btn-primary"
     (click)="submitEvent()"
   >
     Guardar
+
+    <span
+      *ngIf="isLoading | async"
+      class="spinner-border spinner-border-sm align-middle ms-2"
+    ></span>
   </button>
 </div>

@@ -495,7 +495,7 @@ export class CrearModalComponent implements OnInit, AfterViewInit {
   }
 
   createCita() {
-    console.log(this.createForm.value);
+    // console.log(this.createForm.value);
     if (this.createForm.valid) {
       this.citaService
         .createForTherapy({
@@ -507,24 +507,23 @@ export class CrearModalComponent implements OnInit, AfterViewInit {
           ),
         })
         .subscribe({
-          next: (data: any) => {
-            this.eventSubmitted.emit();
-            this.closeModal();
-            if (!data.message.startsWith('Cita')) {
-              this.toast.info(data.message, 'Cita Creada', {
+          next: (resp: any) => {
+            if (resp.status === 'success') {
+              this.toast.success(resp.message, 'Cita creada');
+            } else {
+              this.toast.info(resp.message, 'Cita creada', {
                 disableTimeOut: true,
                 closeButton: true,
-                // progressBar: true,
-                // progressAnimation: 'increasing',
               });
             }
+            this.closeModal();
           },
           error: (err) => {
             if (err.error.errors) {
               const errors = Object.values(err.error.errors).join('\n');
               this.toast.error(errors, 'Error');
             } else {
-              this.toast.error('Ocurrió un error al crear la cita', 'Error');
+              this.toast.error(err.error.message, 'Error al crear la cita');
             }
           },
         });

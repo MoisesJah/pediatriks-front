@@ -39,7 +39,10 @@ import { TerapiaService } from 'src/app/services/terapia/terapia.service';
 import { TipocitaService } from 'src/app/services/tipocita/tipocita.service';
 import { CurrentPersonal } from '../especialista.component';
 import { ToastrService } from 'ngx-toastr';
-import { generateTimeSlots, generateTimeSlotsEsp } from 'src/app/utils/slotTimes';
+import {
+  generateTimeSlots,
+  generateTimeSlotsEsp,
+} from 'src/app/utils/slotTimes';
 import { SlotTimePickerComponent } from '../../modals/crear-modal/slot-time-picker/slot-time-picker.component';
 
 @UntilDestroy({ checkProperties: true })
@@ -205,11 +208,11 @@ export class CreateModalComponent implements OnInit, AfterViewInit {
     const id_paquete = this.createForm.get('id_paquete');
     const num_sesiones = this.createForm.get('num_sesiones');
 
-    if(!this.isRecurrente) {
+    if (!this.isRecurrente) {
       this.days.value.forEach((day: any) => {
-        day.selectedTimeSlot = null
-      })
-    };
+        day.selectedTimeSlot = null;
+      });
+    }
 
     if (this.isCitaPaquete) {
       id_paquete?.setValidators(Validators.required);
@@ -359,27 +362,28 @@ export class CreateModalComponent implements OnInit, AfterViewInit {
           id_sede: this.personal?.sede.id_sede,
           id_terapia: this.personal?.terapia.id_terapia,
           id_personal: this.personal?.id_personal,
-          recurrencia: this.days.value.filter((day: any) => day.selectedTimeSlot),
+          recurrencia: this.days.value.filter(
+            (day: any) => day.selectedTimeSlot
+          ),
         })
         .subscribe({
-          next: (data: any) => {
-            this.onSaveComplete.emit();
-            this.closeModal();
-            if (!data.message.startsWith('Cita')) {
-              this.toast.info(data.message, 'Cita Creada', {
+          next: (resp: any) => {
+            if (resp.status === 'success') {
+              this.toast.success(resp.message, 'Cita creada');
+            } else {
+              this.toast.info(resp.message, 'Cita creada', {
                 disableTimeOut: true,
                 closeButton: true,
-                // progressBar: true,
-                // progressAnimation: 'increasing',
               });
             }
+            this.closeModal();
           },
           error: (err) => {
             if (err.error.errors) {
               const errors = Object.values(err.error.errors).join('\n');
               this.toast.error(errors, 'Error');
             } else {
-              this.toast.error('Ocurrió un error al crear la cita', 'Error');
+              this.toast.error(err.error.message, 'Error al crear la cita');
             }
           },
         });
