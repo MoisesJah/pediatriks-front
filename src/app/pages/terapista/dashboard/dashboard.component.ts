@@ -5,7 +5,12 @@ import { HeaderComponent } from 'src/app/components/ui/header/header.component';
 import { ActivatedRoute } from '@angular/router';
 import { ThemeService } from 'src/app/services/theme.service';
 import { AgGridAngular } from 'ag-grid-angular';
-import { ColDef, GridReadyEvent, GridApi } from 'ag-grid-community';
+import {
+  ColDef,
+  GridReadyEvent,
+  GridApi,
+  RowHeightParams,
+} from 'ag-grid-community';
 import { AG_GRID_LOCALE_ES } from '@ag-grid-community/locale';
 import { catchError, of, map, Observable } from 'rxjs';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
@@ -23,6 +28,8 @@ import { getWeekStartEndDates } from 'src/app/utils/getdatesFromWeek';
 import { ConfirmAsistioComponent } from '../modals/confirm-asistio/confirm-asistio.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { BtnAssitsComponent } from '../modals/btn-assits/btn-assits.component';
+import { Spanish } from 'flatpickr/dist/l10n/es';
+import { ToastrService } from 'ngx-toastr';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -41,6 +48,7 @@ export class DashboardComponent implements OnInit {
   modal = inject(NgbModal);
   datePipe = inject(DatePipe);
   personalService = inject(PersonalService);
+  toastService = inject(ToastrService);
 
   citas: Observable<any[]> = new Observable();
   user = this.authService.user();
@@ -60,7 +68,7 @@ export class DashboardComponent implements OnInit {
       headerName: 'Fecha de Cita',
       valueFormatter: (params) => formatDate(params.value, 'dd/MM/yyyy', 'en'),
       cellRenderer: (params: any) => {
-        console.log(params);
+        // console.log(params);
         return `<span class="d-flex gap-2 align-items-center"><i class="ki-outline ki-calendar text-gray-900 fs-2"></i>${params.valueFormatted}</span>`;
       },
       filter: 'agDateColumnFilter',
@@ -94,16 +102,48 @@ export class DashboardComponent implements OnInit {
       cellRenderer: StatusBadgeComponent,
     },
     {
-      field: 'id',
-      headerName: 'Asistencia',
+      // field: 'id',
+      headerName: 'Confirmar Asistencia',
+      minWidth: 300,
+      autoHeight: true,
       filter: false,
       resizable: false,
-      cellRenderer: BtnAssitsComponent,
-      cellRendererParams: {
-        openModal: (params:any) => this.openConfirmModal(params),
+      cellRendererSelector: (params: any) => {
+        const estado = params.data.estado.toLowerCase() !== 'asistió';
+        return estado ? { component: BtnAssitsComponent } : undefined;
       },
-    }
+      cellRendererParams: {
+        handleStatus: (id_sesion: string, status: number) =>
+          this.updateStatus(id_sesion, status),
+      },
+    },
   ];
+
+  updateStatus(id_sesion: string, id_status: number) {
+    this.citaService
+      .updateStatus({
+        id_sesion: id_sesion,
+        id_status: id_status,
+      })
+      .pipe(untilDestroyed(this))
+      .subscribe({
+        next: () => {
+          this.loadCitas();
+          // this.citaUpdated.emit();
+          // this.close();
+        },
+        error: (err) => {
+          if (err.error.errors) {
+            const errors = Object.values(err.error.errors).join('');
+            this.toastService.error(errors, 'Error');
+          }
+        },
+      });
+  }
+
+  getRowHeight = (params: RowHeightParams) => {
+    return 70;
+  };
 
   constructor(
     private route: ActivatedRoute,
@@ -116,15 +156,15 @@ export class DashboardComponent implements OnInit {
     // Inicializar el flatpickr para seleccionar el rango de fechas
     flatpickr('#dateRangePicker', {
       mode: 'range',
+      locale: Spanish,
       dateFormat: 'Y-m-d',
       onClose: (selectedDates) => {
         if (selectedDates.length === 2) {
           const [startDate, endDate] = selectedDates;
-          this.startWeek = startDate
-          this.endWeek = endDate
+          this.startWeek = startDate;
+          this.endWeek = endDate;
 
-          this.loadCitas()
-         
+          this.loadCitas();
         }
       },
     });
@@ -140,11 +180,11 @@ export class DashboardComponent implements OnInit {
       backdrop: 'static',
     });
 
-    modalRef.componentInstance.id_sesion = id_cita
+    modalRef.componentInstance.id_sesion = id_cita;
 
     modalRef.componentInstance.citaUpdated.subscribe(() => {
       this.loadCitas();
-    })
+    });
   }
 
   filtrarCitasPorFechas(fechaInicio: string, fechaFin: string) {
@@ -179,7 +219,7 @@ export class DashboardComponent implements OnInit {
         .getCitasByPersonal({
           id_personal,
           startWeek: this.startWeek.toISOString(),
-          endWeek: this.endWeek.toISOString()
+          endWeek: this.endWeek.toISOString(),
         })
         .pipe(
           map((response) => {
