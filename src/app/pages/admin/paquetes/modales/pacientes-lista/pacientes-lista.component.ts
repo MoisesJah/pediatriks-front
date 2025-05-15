@@ -14,48 +14,49 @@ import { ThemeService } from 'src/app/services/theme.service';
 @Component({
   selector: 'app-pacientes-lista',
   standalone: true,
-  imports: [CommonModule,AgGridAngular,AsyncPipe],
+  imports: [CommonModule, AgGridAngular, AsyncPipe],
   templateUrl: './pacientes-lista.component.html',
-  styleUrl: './pacientes-lista.component.scss'
+  styleUrl: './pacientes-lista.component.scss',
 })
 export class PacientesListaComponent implements OnInit {
-  paqueteService = inject(PaqueteService)
-  isLoading = inject(LoadingService).isLoading
-  theme = inject(ThemeService)
-  modal = inject(NgbModal)
+  paqueteService = inject(PaqueteService);
+  isLoading = inject(LoadingService).isLoading;
+  theme = inject(ThemeService);
+  modal = inject(NgbModal);
   localeText = AG_GRID_LOCALE_ES;
 
-  listPacientes = new Observable()
+  listPacientes = new Observable();
 
   colDefs: ColDef[] = [
     {
       field: 'paciente.nombre',
       headerName: 'Paciente',
       cellClass: 'fw-bold',
-      filter: true
+      minWidth: 275,
+      filter: true,
     },
     {
       field: 'paquete.nombre',
-      headerName: 'Paquete'
+      headerName: 'Paquete',
     },
     {
-      field: 'num_sesiones',
-      headerName: 'Sesiones Restantes'
-    }
-  ]
+      field: 'sesiones_pendientes',
+      headerName: 'Sesiones Restantes',
+    },
+  ];
 
   ngOnInit(): void {
-      this.getLista()
+    this.getLista();
   }
 
-  getLista(){
+  getLista() {
     this.listPacientes = this.paqueteService.getListPacientes().pipe(
       map((resp) => resp.data),
       untilDestroyed(this)
-    )
+    );
   }
 
-  close(){
-    this.modal.dismissAll()
+  close() {
+    this.modal.dismissAll();
   }
 }
