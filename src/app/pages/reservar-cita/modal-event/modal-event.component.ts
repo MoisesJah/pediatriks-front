@@ -414,6 +414,7 @@ export class ModalCreateEventComponent implements OnInit, AfterViewInit {
             closeButton: true,
           });
         }
+        this.eventSubmitted.emit();
         this.closeModal();
       },
       error: (err) => {
