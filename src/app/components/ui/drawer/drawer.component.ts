@@ -8,7 +8,7 @@ import { AuthService } from '../../../services/auth.service';
   standalone: true,
   templateUrl: './drawer.component.html',
   styleUrl: './drawer.component.scss',
-  imports: [CommonModule, RouterLink,RouterLinkActive]
+  imports: [CommonModule, RouterLink, RouterLinkActive],
 })
 export class DrawerComponent {
   router = inject(Router);
@@ -47,7 +47,7 @@ export class DrawerComponent {
     {
       nombre: 'Fichas',
       link: '/admin/fichas',
-    }
+    },
   ];
 
   isAdmin(): boolean {
@@ -63,6 +63,14 @@ export class DrawerComponent {
   isTerapeuta(): boolean {
     // Utiliza la función del servicio de autenticación para verificar si es terapeuta
     return this.authService.isTerapista();
+  }
+
+  isSecretaria(): boolean {
+    return this.authService.isSecretaria();
+  }
+
+  get canMatch() {
+    return this.isAdmin() || this.isSecretaria();
   }
 
   navigateToInicio(event: Event): void {
@@ -93,10 +101,9 @@ export class DrawerComponent {
     target.classList.add('selected');
 
     // Verificar si es administrador o terapeuta
-    if (this.isAdmin()) {
+    if (this.isAdmin() || this.isSecretaria()) {
       this.router.navigate(['/admin/inventario']);
     } else if (this.isTerapeuta()) {
-      console.log('yooooo')
       this.router.navigate(['/terapista/inventario']);
     } else {
       // Manejar otros roles o casos no reconocidos

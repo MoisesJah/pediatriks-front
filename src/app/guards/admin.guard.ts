@@ -5,7 +5,13 @@ import { inject } from '@angular/core';
 export const adminGuard: CanMatchFn = (route, segments) => {
   const authService = inject(AuthService);
 
-  if (!authService.isAdmin()) {
+  // if (!authService.isAdmin() || !authService.isSecretaria()) {
+  //   return false;
+  // }
+
+  const canMatch = authService.isAdmin() || authService.isSecretaria();
+
+  if (!canMatch) {
     return false;
   }
 

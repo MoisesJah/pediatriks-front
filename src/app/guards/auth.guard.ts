@@ -27,6 +27,9 @@ export const authGuard: CanActivateFn = (route, state) => {
       case 'paciente':
         redirectUrl = '/dashboard';
         break;
+      case 'secretaria':
+        redirectUrl = '/admin/reservar-cita';
+        break;
       default:
         break;
     }
@@ -34,12 +37,26 @@ export const authGuard: CanActivateFn = (route, state) => {
     return false;
   }
 
-  if (authService.isAdmin() && !isAdminRoute && !state.url.includes('ficha-result')) {
+  if (
+    (authService.isAdmin() || authService.isSecretaria()) &&
+    !isAdminRoute &&
+    !state.url.includes('ficha-result')
+  ) {
     router.navigateByUrl('/admin/dashboard');
     return false;
   }
 
-  if (authService.isAuthenticated() && !authService.isAdmin() && isAdminRoute) {
+  if (authService.isSecretaria() && state.url.includes('dashboard')) {
+    router.navigateByUrl('/admin/reservar-cita');
+    return false;
+  }
+
+  if (
+    authService.isAuthenticated() &&
+    !authService.isAdmin() &&
+    !authService.isSecretaria() &&
+    isAdminRoute
+  ) {
     const redirectUrl = authService.isTerapista()
       ? '/terapista/dashboard'
       : '/dashboard';

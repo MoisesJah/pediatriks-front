@@ -17,7 +17,7 @@ export class LoginComponent {
   router = inject(Router);
   modal = inject(NgbModal);
 
-  errors: Record<string,string> = {"error":""};
+  errors: Record<string, string> = { error: '' };
 
   loginForm = new FormGroup({
     email: new FormControl('', {
@@ -38,6 +38,7 @@ export class LoginComponent {
   redirectToDashboard(value: any) {
     this.storeCredentials(value.token, value.user);
 
+    console.log(value.user);
     switch (value.user.tipo_user) {
       case 'administrador':
         this.router.navigate(['/admin/dashboard']);
@@ -45,7 +46,12 @@ export class LoginComponent {
       case 'paciente':
         this.router.navigate(['/dashboard']);
         break;
+      case 'secretaria':
+        console.log('secretaria');
+        this.router.navigate(['/admin/reservar-cita']);
+        break;
       case 'terapista':
+        console.log('terapeuta');
         this.router.navigate(['/terapista/dashboard']);
         break;
       default:
@@ -56,7 +62,7 @@ export class LoginComponent {
   openSendLinkModal() {
     this.modal.open(ResetPasswordComponent, {
       centered: true,
-    })
+    });
   }
 
   handleSubmit() {

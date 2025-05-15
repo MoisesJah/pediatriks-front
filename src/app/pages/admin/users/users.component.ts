@@ -61,6 +61,10 @@ export class UsersComponent implements OnInit, OnDestroy {
             return `<span class="badge badge-light-success badge-lg">${params.value}</span>`;
           case 'paciente':
             return `<span class="badge badge-light-secondary badge-lg">${params.value}</span>`;
+          case 'secretaria':
+            return `<span class="badge badge-light-warning badge-lg">${params.value}</span>`;
+          default:
+            return '';
         }
       },
     },

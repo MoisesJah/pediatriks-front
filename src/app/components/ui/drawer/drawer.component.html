@@ -1,22 +1,51 @@
-<div #drawer id="kt_aside" class="aside drawer drawer-on drawer-start" data-kt-drawer="true" data-kt-drawer-name="aside"
-  data-kt-drawer-activate="{default: true, lg: false}" data-kt-drawer-overlay="true" data-kt-drawer-width="auto"
-  data-kt-drawer-direction="start" data-kt-drawer-toggle="#kt_aside_toggle">
+<div
+  #drawer
+  id="kt_aside"
+  class="aside drawer drawer-on drawer-start"
+  data-kt-drawer="true"
+  data-kt-drawer-name="aside"
+  data-kt-drawer-activate="{default: true, lg: false}"
+  data-kt-drawer-overlay="true"
+  data-kt-drawer-width="auto"
+  data-kt-drawer-direction="start"
+  data-kt-drawer-toggle="#kt_aside_toggle"
+>
   <!--begin::Logo-->
   <div class="aside-logo flex-column-auto pt-10" id="">
     <a routerLink="/dashboard">
-      <img alt="Logo" src="assets/media/logos/usuario.svg" class="h-70px" title="Paciente" />
+      <img
+        alt="Logo"
+        src="assets/media/logos/usuario.svg"
+        class="h-70px"
+        title="Paciente"
+      />
     </a>
   </div>
   <!--end::Logo-->
   <!--begin::Nav-->
-  <div class="aside-menu flex-column-fluid pt-0 pb-7 py-lg-10" id="kt_aside_menu">
+  <div
+    class="aside-menu flex-column-fluid pt-0 pb-7 py-lg-10"
+    id="kt_aside_menu"
+  >
     <!--begin::Aside menu-->
-    <div id="kt_aside_menu_wrapper" class="w-100 hover-scroll-y scroll-lg-ms d-flex">
-      <div id=""
-        class="menu menu-column menu-title-gray-600 menu-state-primary menu-state-icon-primary menu-state-bullet-primary menu-icon-gray-500 menu-arrow-gray-500 fw-semibold fs-6 my-auto">
-        <div data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-placement="right-start"
-          class="menu-item py-2" style="transition: background-color 0.3s; border-radius: 15px"
-          onmouseout="this.style.backgroundColor='';" (click)="navigateToInicio($event)">
+    <div
+      id="kt_aside_menu_wrapper"
+      class="w-100 hover-scroll-y scroll-lg-ms d-flex"
+    >
+      <div
+        id=""
+        class="menu menu-column menu-title-gray-600 menu-state-primary menu-state-icon-primary menu-state-bullet-primary menu-icon-gray-500 menu-arrow-gray-500 fw-semibold fs-6 my-auto"
+      >
+        <div
+          *ngIf="!isSecretaria()"
+          routerLinkActive="here"
+          data-kt-menu-trigger="{default: 'click', lg: 'hover'}"
+          data-kt-menu-placement="right-start"
+          class="menu-item py-2"
+          style="transition: background-color 0.3s; border-radius: 15px"
+          onmouseout="this.style.backgroundColor='';"
+          (click)="navigateToInicio($event)"
+        >
           <span class="menu-link menu-center">
             <div class="menu-icon-text-container">
               <span class="menu-icon me-0">
@@ -30,10 +59,16 @@
           </span>
         </div>
 
-        <a *ngIf="isTerapeuta()" routerLink="/terapista/asistencia" routerLinkActive="here"
-          data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-placement="right-start"
-          class="menu-item py-2" style="transition: background-color 0.3s; border-radius: 15px"
-          onmouseout="this.style.backgroundColor='';">
+        <a
+          *ngIf="isTerapeuta()"
+          routerLink="/terapista/asistencia"
+          routerLinkActive="here"
+          data-kt-menu-trigger="{default: 'click', lg: 'hover'}"
+          data-kt-menu-placement="right-start"
+          class="menu-item py-2"
+          style="transition: background-color 0.3s; border-radius: 15px"
+          onmouseout="this.style.backgroundColor='';"
+        >
           <!--begin:Menu link-->
           <span class="menu-link menu-center">
             <div class="menu-icon-text-container">
@@ -50,15 +85,23 @@
         </a>
 
         <!--begin:Menu item-->
-        <a *ngIf="!isPaciente()" [routerLink]="[isAdmin() ? '/admin/reservar-cita' : '/terapista/citas']"
-          routerLinkActive="here" data-kt-menu-trigger="{default: 'click', lg: 'hover'}"
-          data-kt-menu-placement="right-start" class="menu-item py-2"
-          style="transition: background-color 0.3s; border-radius: 15px" onmouseout="this.style.backgroundColor='';">
+        <a
+          *ngIf="!isPaciente()"
+          [routerLink]="[
+            canMatch ? '/admin/reservar-cita' : '/terapista/citas'
+          ]"
+          routerLinkActive="here"
+          data-kt-menu-trigger="{default: 'click', lg: 'hover'}"
+          data-kt-menu-placement="right-start"
+          class="menu-item py-2"
+          style="transition: background-color 0.3s; border-radius: 15px"
+          onmouseout="this.style.backgroundColor='';"
+        >
           <!--begin:Menu link-->
           <span class="menu-link menu-center">
             <div class="menu-icon-text-container">
               <span class="menu-icon me-0">
-                <i class="ki-duotone ki-calendar-add" style="font-size: 2em;">
+                <i class="ki-duotone ki-calendar-add" style="font-size: 2em">
                   <span class="path1"></span>
                   <span class="path2"></span>
                   <span class="path3"></span>
@@ -77,16 +120,24 @@
         </a>
         <!--end:Menu item-->
 
-        <div id=""
-          class="menu menu-column menu-title-gray-600 menu-state-primary menu-state-icon-primary menu-state-bullet-primary menu-icon-gray-500 menu-arrow-gray-500 fw-semibold fs-6 my-auto">
-          <div routerLinkActive="here" data-kt-menu-trigger="{default: 'click', lg: 'hover'}"
-            data-kt-menu-placement="right-start" class="menu-item py-2"
-            style="transition: background-color 0.3s; border-radius: 15px" onmouseout="this.style.backgroundColor='';"
-            (click)="navigateToInventario($event)">
+        <div
+          id=""
+          class="menu menu-column menu-title-gray-600 menu-state-primary menu-state-icon-primary menu-state-bullet-primary menu-icon-gray-500 menu-arrow-gray-500 fw-semibold fs-6 my-auto"
+        >
+          <div
+            *ngIf="!isPaciente()"
+            routerLinkActive="here"
+            data-kt-menu-trigger="{default: 'click', lg: 'hover'}"
+            data-kt-menu-placement="right-start"
+            class="menu-item py-2"
+            style="transition: background-color 0.3s; border-radius: 15px"
+            onmouseout="this.style.backgroundColor='';"
+            (click)="navigateToInventario($event)"
+          >
             <span class="menu-link menu-center">
               <div class="menu-icon-text-container">
                 <span class="menu-icon me-0">
-                  <i class="ki-duotone ki-lots-shopping" style="font-size: 2em;">
+                  <i class="ki-duotone ki-lots-shopping" style="font-size: 2em">
                     <span class="path1"></span>
                     <span class="path2"></span>
                     <span class="path3"></span>
@@ -103,23 +154,36 @@
           </div>
         </div>
 
-        <a routerLink="/terapista/fichas" routerLinkActive="here" *ngIf="isTerapeuta()" class="menu-item py-2"
-          style="transition: background-color 0.3s; border-radius: 15px" onmouseout="this.style.backgroundColor='';">
+        <a
+          routerLink="/terapista/fichas"
+          routerLinkActive="here"
+          *ngIf="isTerapeuta()"
+          class="menu-item py-2"
+          style="transition: background-color 0.3s; border-radius: 15px"
+          onmouseout="this.style.backgroundColor='';"
+        >
           <span class="menu-link menu-center">
             <div class="menu-icon-text-container">
               <span class="menu-icon me-0">
-                <i class="ki-duotone ki-book-square  fs-2tx"><span class="path1"></span><span class="path2"></span><span
-                    class="path3"></span></i>
+                <i class="ki-duotone ki-book-square fs-2tx"
+                  ><span class="path1"></span><span class="path2"></span
+                  ><span class="path3"></span
+                ></i>
               </span>
               <span class="menu-text">Fichas</span>
             </div>
           </span>
         </a>
 
-
         <!--begin:Menu item-->
-        <a routerLink="/paquetes" routerLinkActive="here" *ngIf="isPaciente()" class="menu-item py-2"
-          style="transition: background-color 0.3s; border-radius: 15px" onmouseout="this.style.backgroundColor='';">
+        <a
+          routerLink="/paquetes"
+          routerLinkActive="here"
+          *ngIf="isPaciente()"
+          class="menu-item py-2"
+          style="transition: background-color 0.3s; border-radius: 15px"
+          onmouseout="this.style.backgroundColor='';"
+        >
           <span class="menu-link menu-center">
             <div class="menu-icon-text-container">
               <span class="menu-icon me-0">
@@ -134,12 +198,17 @@
         </a>
         <!--end:Menu item-->
         <!--begin:Menu item-->
-        <div *ngIf="isAdmin()" (mouseenter)="showSubMenu = true" (mouseleave)="showSubMenu = false"
-          class="menu-item py-2  menu-dropdown" style="transition: background-color 0.3s; border-radius: 15px">
+        <div
+          *ngIf="canMatch"
+          (mouseenter)="showSubMenu = true"
+          (mouseleave)="showSubMenu = false"
+          class="menu-item py-2 menu-dropdown"
+          style="transition: background-color 0.3s; border-radius: 15px"
+        >
           <span class="menu-link menu-center">
             <div class="menu-icon-text-container">
               <span class="menu-icon me-0">
-                <i class="ki-duotone ki-user-tick" style="font-size: 2em;">
+                <i class="ki-duotone ki-user-tick" style="font-size: 2em">
                   <span class="path1"></span>
                   <span class="path2"></span>
                   <span class="path3"></span>
@@ -150,9 +219,18 @@
           </span>
 
           <!-- Submenú -->
-          <div class="menu-sub menu-sub-dropdown px-2 py-4 w-250px mh-75 overflow-auto"
-            style="z-index:107; position:fixed; transition: all cubic-bezier(0.5, 0, 0, 1) 0.3s; margin:0px; transform: translate(42%, -100%);"
-            *ngIf="showSubMenu" [ngStyle]="{ display: showSubMenu ? 'inline-block' : 'none' }">
+          <div
+            class="menu-sub menu-sub-dropdown px-2 py-4 w-250px mh-75 overflow-auto"
+            style="
+              z-index: 107;
+              position: fixed;
+              transition: all cubic-bezier(0.5, 0, 0, 1) 0.3s;
+              margin: 0px;
+              transform: translate(42%, -100%);
+            "
+            *ngIf="showSubMenu"
+            [ngStyle]="{ display: showSubMenu ? 'inline-block' : 'none' }"
+          >
             <div class="menu-item">
               <div class="menu-content">
                 <span class="menu-section fs-5 fw-bolder ps-1 py-1">Admin</span>
@@ -160,8 +238,13 @@
             </div>
             <div class="menu-item">
               <div class="menu-content" *ngFor="let item of adminList">
-                <a tabindex="0" routerLink="{{ item.link }}" [routerLinkActive]="['active']" #activeLink="routerLinkActive"
-                  class="menu-link">
+                <a
+                  tabindex="0"
+                  routerLink="{{ item.link }}"
+                  [routerLinkActive]="['active']"
+                  #activeLink="routerLinkActive"
+                  class="menu-link"
+                >
                   <span class="menu-bullet">
                     <span class="bullet bullet-dot"></span>
                   </span>
@@ -169,7 +252,6 @@
                 </a>
               </div>
             </div>
-
           </div>
         </div>
 

@@ -8,7 +8,12 @@ import {
   ViewChild,
 } from '@angular/core';
 import { HeaderComponent } from '../ui/header/header.component';
-import { NavigationEnd, Router, RouterLink, RouterLinkActive } from '@angular/router';
+import {
+  NavigationEnd,
+  Router,
+  RouterLink,
+  RouterLinkActive,
+} from '@angular/router';
 import { NgbOffcanvas } from '@ng-bootstrap/ng-bootstrap';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { DrawerComponent } from '../ui/drawer/drawer.component';
@@ -17,7 +22,7 @@ import { AuthService } from '../../services/auth.service';
 @Component({
   selector: 'app-layout',
   standalone: true,
-  imports: [CommonModule,RouterLink,RouterLinkActive,NgOptimizedImage],
+  imports: [CommonModule, RouterLink, RouterLinkActive, NgOptimizedImage],
   templateUrl: './layout.component.html',
   styleUrl: './layout.component.scss',
 })
@@ -83,15 +88,21 @@ export class LayoutComponent implements OnInit {
     return this.authService.isAdmin();
   }
 
+  get canMatch() {
+    return this.isAdmin() || this.isSecretaria();
+  }
+
   isPaciente(): boolean {
     return this.authService.isPaciente();
+  }
+
+  isSecretaria() {
+    return this.authService.isSecretaria();
   }
 
   isTerapista(): boolean {
     return this.authService.isTerapista();
   }
-
-
 
   navigateToInicio(event: Event): void {
     event.preventDefault();
@@ -107,8 +118,7 @@ export class LayoutComponent implements OnInit {
     } else if (this.isPaciente()) {
       // Redirigir al inicio del Paciente
       this.router.navigate(['/dashboard']);
-    }
-    else if (this.isTerapista()) {
+    } else if (this.isTerapista()) {
       // Redirigir al inicio del Paciente
       this.router.navigate(['terapista/dashboard']);
     } else {
@@ -133,7 +143,7 @@ export class LayoutComponent implements OnInit {
     target.classList.add('selected');
 
     // Verificar si es administrador o terapeuta
-    if (this.isAdmin()) {
+    if (this.isAdmin() || this.isSecretaria()) {
       // Redirigir al inventario del administrador
       this.router.navigate(['/admin/inventario']);
     } else if (this.isTerapista()) {
@@ -144,5 +154,4 @@ export class LayoutComponent implements OnInit {
       this.router.navigate(['/home']);
     }
   }
-
 }
