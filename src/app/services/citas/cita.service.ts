@@ -43,7 +43,7 @@ export class CitaService {
   }
 
   createForTherapy(cita: any) {
-    return this.http.post<{ data: Cita }>(`${this.apiUrl}/citas/create`, cita);
+    return this.http.post<{ data: Cita }>(`${this.apiUrl}/citas/create `, cita);
   }
 
   getByPersonal(body: any) {
